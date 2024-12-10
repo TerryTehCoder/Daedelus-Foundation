@@ -9,56 +9,93 @@
 /datum/game_mode/mixed
 	name = "Mixed"
 	weight = GAMEMODE_WEIGHT_COMMON
-
-	var/list/antag_weight_map = list(
-		/datum/antagonist_selector/traitor = 100,
-		/datum/antagonist_selector/vampire = 20,
-		/datum/antagonist_selector/wizard = 1,
+	restricted_jobs = list(JOB_CYBORG, JOB_AI)
+	protected_jobs = list(
+		JOB_SITE_DIRECTOR,
+		JOB_HUMAN_RESOURCES_DIRECTOR,
+		JOB_SECURITY_DIRECTOR,
+		JOB_ENGINEERING_DIRECTOR,
+		JOB_MEDICAL_DIRECTOR,
+		JOB_EZ_COMMANDER,
+		JOB_SENIOR_EZ_GUARD,
+		JOB_EZ_GUARD,
+		JOB_JUNIOR_EZ_GUARD,
+		JOB_RAISA_AGENT,
+		JOB_LCZ_COMMANDER,
+		JOB_SENIOR_LCZ_GUARD,
+		JOB_LCZ_GUARD,
+		JOB_JUNIOR_LCZ_GUARD,
+		JOB_HCZ_COMMANDER,
+		JOB_SENIOR_HCZ_GUARD,
+		JOB_HCZ_GUARD,
+		JOB_JUNIOR_HCZ_GUARD
 	)
 
-	var/list/antag_selectors = list()
+	force_pre_setup_check = TRUE
 
-/datum/game_mode/mixed/New()
-	. = ..()
-	var/list/for_reference = antag_weight_map.Copy()
-	antag_weight_map.Cut()
-
-	for(var/selector_path in for_reference)
-		antag_weight_map[new selector_path] = for_reference[selector_path]
-
-/datum/game_mode/mixed/Destroy(force, ...)
-	QDEL_LIST(antag_weight_map)
-	return ..()
+	var/list/antag_weight_map = list(
+		ROLE_TRAITOR = MIXED_WEIGHT_TRAITOR,
+		ROLE_CHANGELING = MIXED_WEIGHT_CHANGELING,
+		ROLE_HERETIC = MIXED_WEIGHT_HERETIC,
+		ROLE_WIZARD = MIXED_WEIGHT_WIZARD
+	)
 
 /datum/game_mode/mixed/pre_setup()
 	. = ..()
 
-	var/number_of_antags = max(1, round(length(SSticker.ready_players) * MIXED_ANTAG_COEFF))
+	var/list/antag_pool = list()
 
-	var/list/player_pool = SSticker.ready_players.Copy()
-	var/list/antagonist_pool = list()
+	var/number_of_antags = max(1, round(length(SSticker.ready_players) * MIXED_ANTAG_COEFF))
 
 	//Setup a list of antags to try to spawn
 	while(number_of_antags)
-		antagonist_pool[pick_weight(antag_weight_map)] += 1
+		antag_pool[pick_weight(antag_weight_map)] += 1
 		number_of_antags--
 
-	for(var/datum/antagonist_selector/selector in shuffle(antagonist_pool))
-		selector.setup(antagonist_pool[selector], player_pool)
-		player_pool -= selector.selected_mobs
+	var/list/role_to_players_map = list(
+		ROLE_TRAITOR = list(),
+		ROLE_HERETIC = list(),
+		ROLE_CHANGELING = list(),
+		ROLE_WIZARD = list()
+	)
 
-/datum/game_mode/mixed/setup_antags()
-	for(var/datum/antagonist_selector/selector in antag_weight_map)
-		selector.give_antag_datums()
-	return ..()
+	//Filter out our possible_antags list into a mixed-specific map of role : elligible players
+	for(var/mob/dead/new_player/candidate_player in possible_antags)
+		var/client/candidate_client = GET_CLIENT(candidate_player)
 
-/datum/game_mode/mixed/post_setup(report)
-	. = ..()
-	for(var/datum/antagonist_selector/selector in antag_weight_map)
-		selector.post_setup()
+		for(var/role in antag_pool)
+			if (is_banned_from(candidate_player.ckey, list(role, ROLE_SYNDICATE)))
+				continue
 
-#undef MIXED_WEIGHT_TRAITOR
-#undef MIXED_WEIGHT_CHANGELING
-#undef MIXED_WEIGHT_HERETIC
-#undef MIXED_WEIGHT_WIZARD
-#undef MIXED_ANTAG_COEFF
+			var/list/antag_prefs = candidate_client.prefs.read_preference(/datum/preference/blob/antagonists)
+			if(antag_prefs[role])
+				role_to_players_map[role] += candidate_player
+				continue
+
+	if(antag_pool[ROLE_TRAITOR])
+		for(var/i in 1 to antag_pool[ROLE_TRAITOR])
+			if(!length(role_to_players_map[ROLE_TRAITOR]))
+				break
+			var/mob/M = pick_n_take(role_to_players_map[ROLE_TRAITOR])
+			select_antagonist(M.mind, /datum/antagonist/traitor)
+
+	if(antag_pool[ROLE_CHANGELING])
+		for(var/i in 1 to antag_pool[ROLE_CHANGELING])
+			if(!length(role_to_players_map[ROLE_CHANGELING]))
+				break
+			var/mob/M = pick_n_take(role_to_players_map[ROLE_CHANGELING])
+			select_antagonist(M.mind, /datum/antagonist/changeling)
+
+	if(antag_pool[ROLE_HERETIC])
+		for(var/i in 1 to antag_pool[ROLE_HERETIC])
+			if(!length(role_to_players_map[ROLE_HERETIC]))
+				break
+			var/mob/M = pick_n_take(role_to_players_map[ROLE_HERETIC])
+			select_antagonist(M.mind, /datum/antagonist/heretic)
+
+	if(length(GLOB.wizardstart) && antag_pool[ROLE_WIZARD])
+		for(var/i in 1 to antag_pool[ROLE_WIZARD])
+			if(!length(role_to_players_map[ROLE_WIZARD]))
+				break
+			var/mob/M = pick_n_take(role_to_players_map[ROLE_WIZARD])
+			select_antagonist(M.mind, /datum/antagonist/wizard)

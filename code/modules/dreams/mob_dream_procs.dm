@@ -11,7 +11,7 @@
 	if(!has_status_effect(/datum/status_effect/incapacitating/sleeping))
 		return
 
-	dream_type = locate(dream_type) in GLOB.dream_controller.all_dreams_weighted
+	dream_type = locate(dream_type) in GLOB.all_dreams_weighted
 	if(dream_type)
 		do_dream(dream_type)
 		return TRUE
@@ -39,19 +39,13 @@
 		return null
 
 	var/list/dream_pool
-	if(mind?.assigned_role?.title == JOB_DETECTIVE)
-		dream_pool = GLOB.dream_controller.get_dreams(DREAM_CLASS_DETECTIVE).Copy()
-
-	else if(mind && HAS_TRAIT(mind, TRAIT_AETHERITE))
-		dream_pool = GLOB.dream_controller.get_dreams(DREAM_CLASS_AETHERITE).Copy()
+	var/datum/dream/dream
+	if(mind?.assigned_role?.title == JOB_INVESTIGATIONS_AGENT)
+		dream_pool = GLOB.detective_dreams_weighted.Copy()
 
 	else
-		dream_pool = GLOB.dream_controller.get_dreams(DREAM_CLASS_GENERIC).Copy()
+		dream_pool = GLOB.generic_dreams_weighted.Copy()
 
-	if(mind.has_antag_datum(/datum/antagonist/vampire) || locate(/datum/pathogen/blood_plague) in diseases)
-		dream_pool += GLOB.dream_controller.get_dreams(DREAM_CLASS_VAMPIRE).Copy()
-
-	var/datum/dream/dream
 	while(length(dream_pool))
 		dream = pick_weight(dream_pool)
 		dream_pool -= dream
