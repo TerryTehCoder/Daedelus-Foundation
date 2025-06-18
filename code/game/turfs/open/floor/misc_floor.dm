@@ -290,3 +290,158 @@
 
 /turf/open/floor/cult/airless
 	initial_gas = AIRLESS_ATMOS
+
+/turf/open/floor/tiled
+	name = "steel floor"
+	icon = 'icons/turf/floors-ported.dmi'
+	icon_state = "steel"
+	floor_tile = /obj/item/stack/tile
+
+/turf/open/floor/tiled/dark
+	name = "dark floor"
+	icon_state = "dark"
+	floor_tile = /obj/item/stack/tile/floor_dark
+
+/turf/open/floor/tiled/dark/airless
+	initial_gas = AIRLESS_ATMOS
+
+/turf/open/floor/tiled/white
+	name = "white floor"
+	icon_state = "white"
+	floor_tile = /obj/item/stack/tile/floor_white
+
+/turf/open/floor/tiled/white/airless
+	name = "airless floor"
+	initial_gas = AIRLESS_ATMOS
+	temperature = TCMB
+
+/turf/open/floor/tiled/dark/airless
+	initial_gas = null
+
+/turf/open/floor/tiled/white/airless
+	name = "airless floor"
+	initial_gas = null
+	temperature = TCMB
+
+/turf/open/floor/tiled/freezer
+	name = "tiles"
+	icon_state = "freezer"
+
+/turf/open/floor/tiled/techmaint
+	name = "floor"
+	icon_state = "techmaint"
+	floor_tile = /obj/item/stack/tile
+
+// SIDED
+
+/turf/open/floor/tiled/corner
+	name = "floor"
+	icon_state = "steel_corner"
+	floor_tile = /obj/item/stack/tile/corner
+
+/turf/open/floor/tiled/white/corner
+	name = "floor"
+	icon_state = "white_corner"
+	floor_tile = /obj/item/stack/tile/corner/white
+
+/turf/open/floor/tiled/dark/corner
+	name = "floor"
+	icon_state = "dark_corner"
+	floor_tile = /obj/item/stack/tile/corner/dark
+
+/turf/open/floor/tiled/horizontal
+	name = "floor"
+	icon_state = "steel_horizontal"
+	floor_tile = /obj/item/stack/tile/horizontal
+
+/turf/open/floor/tiled/vertical
+	name = "floor"
+	icon_state = "steel_vertical"
+	floor_tile = /obj/item/stack/tile/vertical
+
+/turf/open/floor/tiled/white/horizontal
+	name = "floor"
+	icon_state = "white_horizontal"
+	floor_tile = /obj/item/stack/tile/horizontal/white
+
+/turf/open/floor/tiled/white/vertical
+	name = "floor"
+	icon_state = "white_vertical"
+	floor_tile = /obj/item/stack/tile/vertical/white
+
+/turf/open/floor/tiled/dark/horizontal
+	name = "floor"
+	icon_state = "dark_horizontal"
+	floor_tile = /obj/item/stack/tile/horizontal/dark
+
+/turf/open/floor/tiled/dark/vertical
+	name = "floor"
+	icon_state = "dark_vertical"
+	floor_tile = /obj/item/stack/tile/vertical/dark
+
+/turf/open/floor/tiled/small
+	name = "floor"
+	icon_state = "steel_small"
+	floor_tile = /obj/item/stack/tile/small
+
+/turf/open/floor/tiled/white/small
+	name = "floor"
+	icon_state = "white_small"
+	floor_tile = /obj/item/stack/tile/small/white
+
+/turf/open/floor/tiled/dark/small
+	name = "floor"
+	icon_state = "dark_small"
+	floor_tile = /obj/item/stack/tile/small/dark
+
+// MONOTILES
+
+/turf/open/floor/tiled/monotile
+	name = "floor"
+	icon_state = "monotile"
+	floor_tile = /obj/item/stack/tile/mono
+
+/turf/open/floor/tiled/dark/monotile
+	name = "floor"
+	icon_state = "monotiledark"
+	floor_tile = /obj/item/stack/tile/mono/dark
+
+/turf/open/floor/tiled/white/monotile
+	name = "floor"
+	icon_state = "monotilewhite"
+	floor_tile = /obj/item/stack/tile/mono/white
+
+/turf/open/floor/tiled/monofloor
+	name = "floor"
+	icon_state = "monotile"
+	floor_tile = /obj/item/stack/tile/mono
+
+// DESIGNED
+
+/turf/open/floor/tiled/steel_grid
+	name = "floor"
+	icon_state = "steel_grid"
+	floor_tile = /obj/item/stack/tile/grid
+
+/turf/open/floor/tiled/steel_ridged
+	name = "floor"
+	icon_state = "steel_ridged"
+	floor_tile = /obj/item/stack/tile/ridge
+
+/turf/open/floor/tiled/old_tile
+	name = "floor"
+	icon_state = "tile_full"
+
+/turf/open/floor/tiled/old_cargo
+	name = "floor"
+	icon_state = "cargo_one_full"
+
+/turf/open/floor/tiled/kafel_full
+	name = "floor"
+	icon_state = "kafel_full"
+
+/turf/open/floor/concrete
+	name = "concrete"
+	desc = "Stone-like artificial material."
+	icon = 'icons/turf/floors-ported.dmi'
+	icon_state = "concrete"

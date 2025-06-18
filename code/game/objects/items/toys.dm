@@ -1557,3 +1557,85 @@ GLOBAL_LIST_EMPTY(intento_players)
 
 #undef GROAN_AAAU
 #undef GROAN_UUUA
+
+//Office Desk Toys and Plushies - Ported from Tegu?
+
+/obj/item/toy/desk
+	name = "desk toy master"
+	desc = "A object that does not exist. Parent Item"
+	icon = 'icons/obj/toy.dmi'
+
+	var/on = 0
+	var/activation_sound = 'sound/weapons/magin.ogg'
+
+/obj/item/toy/desk/update_icon()
+	..()
+	if(on)
+		icon_state = "[initial(icon_state)]-on"
+	else
+		icon_state = "[initial(icon_state)]"
+
+/obj/item/toy/desk/attack_self(mob/user)
+	on = !on
+	if(on && activation_sound)
+		playsound(src.loc, activation_sound, 75, 1)
+	update_icon()
+	return 1
+
+/obj/item/toy/desk/newtoncradle
+	name = "\improper Newton's cradle"
+	desc = "A ancient 21th century super-weapon model demonstrating that Sir Isaac Newton is the deadliest sonuvabitch in space."
+	icon_state = "newtoncradle"
+
+/obj/item/toy/desk/fan
+	name = "office fan"
+	desc = "Your greatest fan."
+	icon_state= "fan"
+
+/obj/item/toy/desk/officetoy
+	name = "office toy"
+	desc = "A generic microfusion powered office desk toy. Only generates magnetism and ennui."
+	icon_state= "desktoy"
+
+/obj/item/toy/desk/dippingbird
+	name = "dipping bird toy"
+	desc = "A ancient human bird idol, worshipped by clerks and desk jockeys."
+	icon_state= "dippybird"
+
+//Small plushies.
+/obj/item/toy/plushie
+	name = "generic small plush"
+	desc = "A very generic small plushie. It seems to not want to exist."
+	icon = 'icons/obj/toy.dmi'
+	icon_state = "nymphplushie"
+
+/obj/item/toy/plushie/attack_self(mob/living/user)
+	if(!user.combat_mode)
+		user.visible_message(span_notice("<b>\The [user]</b> hugs [src]!"),span_notice("You hug [src]!"))
+	else if (user.combat_mode)
+		user.visible_message(span_warning("<b>\The [user]</b> punches [src]!"),span_warning("You punch [src]!"))
+
+/obj/item/toy/plushie/nymph
+	name = "diona nymph plush"
+	desc = "A plushie of an adorable diona nymph! While its level of self-awareness is still being debated, its level of cuteness is not."
+	icon_state = "nymphplushie"
+
+/obj/item/toy/plushie/mouse
+	name = "mouse plush"
+	desc = "A plushie of a delightful mouse! What was once considered a vile rodent is now your very best friend."
+	icon_state = "mouseplushie"
+
+/obj/item/toy/plushie/kitten
+	name = "kitten plush"
+	desc = "A plushie of a cute kitten! Watch as it purrs it's way right into your heart."
+	icon_state = "kittenplushie"
+
+/obj/item/toy/plushie/lizard
+	name = "lizard plush"
+	desc = "A plushie of a scaly lizard! Very controversial, after being accused as \"racist\" by some Unathi."
+	icon_state = "lizardplushie"
+
+/obj/item/toy/plushie/spider
+	name = "spider plush"
+	desc = "A plushie of a fuzzy spider! It has eight legs - all the better to hug you with."
+	icon_state = "spiderplushie"

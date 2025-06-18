@@ -16,7 +16,8 @@
 		H.show_to(user)
 	if(hud_trait)
 		ADD_TRAIT(user, hud_trait, GLASSES_TRAIT)
-
+	if(findtext(src.type, "/prescription")) //Janky but it works.
+		REMOVE_TRAIT(user, TRAIT_NEARSIGHT, GLASSES_TRAIT)
 /obj/item/clothing/glasses/hud/unequipped(mob/living/carbon/human/user)
 	..()
 	if(!istype(user) || user.glasses != src)
@@ -26,6 +27,8 @@
 		H.hide_from(user)
 	if(hud_trait)
 		REMOVE_TRAIT(user, hud_trait, GLASSES_TRAIT)
+	if(findtext(src.type, "/prescription"))
+		ADD_TRAIT(user, TRAIT_NEARSIGHT, GLASSES_TRAIT)
 
 /obj/item/clothing/glasses/hud/emp_act(severity)
 	. = ..()
@@ -185,3 +188,19 @@
 	icon_state = "sun"
 	inhand_icon_state = "sunglasses"
 
+// Prescription glasses with HUDS - Ported from Baystation12
+
+/obj/item/clothing/glasses/hud/health/prescription
+	name = "prescription health scanner HUD"
+	desc = "A medical HUD integrated with a set of prescription glasses."
+	icon_state = "healthhudpresc"
+
+/obj/item/clothing/glasses/hud/security/prescription
+	name = "prescription security HUD"
+	desc = "A security HUD integrated with a set of prescription glasses."
+	icon_state = "sechudpresc"
+
+/obj/item/clothing/glasses/hud/science/prescription
+	name = "prescription scienceHUD"
+	desc = "A science HUD integrated with a set of prescription glasses."
+	icon_state = "scihudpresc"

@@ -154,3 +154,37 @@
 	icon_state = "smoothiron"
 	base_icon_state = "smoothiron"
 	tile_type = /obj/item/stack/overfloor_catwalk/titanium
+
+// SCP Coloration Reskins
+
+/obj/structure/overfloor_catwalk/keter
+	icon_state = "keter"
+	base_icon_state = "keter"
+	tile_type = /obj/item/stack/overfloor_catwalk/iron
+
+/obj/structure/overfloor_catwalk/safe
+	icon_state = "safe"
+	base_icon_state = "safe"
+	tile_type = /obj/item/stack/overfloor_catwalk/iron
+
+/obj/structure/overfloor_catwalk/euclid
+	icon_state = "euclid"
+	base_icon_state = "euclid"
+	tile_type = /obj/item/stack/overfloor_catwalk/iron
+
+// General SCP ports from baycode.
+
+/obj/structure/overfloor_catwalk/lightdarkiron
+	icon_state = "lightdark_iron"
+	base_icon_state = "lightdark_iron"
+	tile_type = /obj/item/stack/overfloor_catwalk/iron
+
+/obj/structure/overfloor_catwalk/lightgrey
+	icon_state = "lightgrey"
+	base_icon_state = "lightgrey"
+	tile_type = /obj/item/stack/overfloor_catwalk/iron
+
+/obj/structure/overfloor_catwalk/mesh
+	icon_state = "mesh_catwalk"
+	base_icon_state = "mesh_catwalk"
+	tile_type = /obj/item/stack/overfloor_catwalk/iron

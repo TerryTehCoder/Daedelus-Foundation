@@ -402,25 +402,12 @@
 		random_plant_states += "plant-[number]"
 	random_plant_states += "applebush"
 
+// Specific flora paths (As opposed to the [mostly] randomized one's above)
 
 /obj/item/kirbyplants/dead
 	name = "RD's potted plant"
 	desc = "A gift from the botanical staff, presented after the RD's reassignment. There's a tag on it that says \"Y'all come back now, y'hear?\"\nIt doesn't look very healthy..."
 	icon_state = "plant-25"
-	trimmable = FALSE
-
-/obj/item/kirbyplants/photosynthetic
-	name = "photosynthetic potted plant"
-	desc = "A bioluminescent plant."
-	icon_state = "plant-09"
-	light_color = COLOR_BRIGHT_BLUE
-	light_outer_range = 3
-
-/obj/item/kirbyplants/fullysynthetic
-	name = "plastic potted plant"
-	desc = "A fake, cheap looking, plastic tree. Perfect for people who kill every plant they touch."
-	icon_state = "plant-26"
-	custom_materials = (list(/datum/material/plastic = 8000))
 	trimmable = FALSE
 
 /obj/item/kirbyplants/fullysynthetic/Initialize(mapload)
@@ -438,6 +425,217 @@
 	desc = "An old botanical research sample collected on a long forgotten jungle planet."
 	icon_state = "fern"
 	trimmable = FALSE
+
+/obj/item/kirbyplants/pottedplant
+	name = "potted plant"
+	desc = "Really brings the room together."
+	icon = 'icons/obj/flora/plants.dmi'
+	icon_state = "plant-01"
+
+/obj/item/kirbyplants/pottedplant/fern
+	name = "potted fern"
+	desc = "This is an ordinary looking fern. It looks like it could do with some water."
+	icon_state = "plant-02"
+
+/obj/item/kirbyplants/pottedplant/overgrown
+	name = "overgrown potted plants"
+	desc = "This is an assortment of colourful plants. Some parts are overgrown."
+	icon_state = "plant-03"
+
+/obj/item/kirbyplants/pottedplant/bamboo
+	name = "potted bamboo"
+	desc = "These are bamboo shoots. The tops looks like they've been cut short."
+	icon_state = "plant-04"
+
+/obj/item/kirbyplants/pottedplant/largebush
+	name = "large potted bush"
+	desc = "This is a large bush. The leaves stick upwards in an odd fashion."
+	icon_state = "plant-05"
+
+/obj/item/kirbyplants/pottedplant/thinbush
+	name = "thin potted bush"
+	desc = "This is a thin bush. It appears to be flowering."
+	icon_state = "plant-06"
+
+/obj/item/kirbyplants/pottedplant/mysterious
+	name = "mysterious potted bulbs"
+	desc = "This is a mysterious looking plant. Touching the bulbs cause them to shrink."
+	icon_state = "plant-07"
+
+/obj/item/kirbyplants/pottedplant/smalltree
+	name = "small potted tree"
+	desc = "This is a small tree. It is rather pleasant."
+	icon_state = "plant-08"
+
+/obj/item/kirbyplants/photosynthetic
+	name = "photosynthetic potted plant"
+	desc = "A bioluminescent plant."
+	icon_state = "plant-09"
+	light_color = COLOR_BRIGHT_BLUE
+	light_outer_range = 3
+
+/obj/item/kirbyplants/pottedplant/unusual/Initialize()
+	. = ..()
+	set_light(0.4, 0.1, 2, 2, "#007fff")
+
+/obj/item/kirbyplants/pottedplant/orientaltree
+	name = "potted oriental tree"
+	desc = "This is a rather oriental style tree. It's flowers are bright pink."
+	icon_state = "plant-10"
+
+/obj/item/kirbyplants/pottedplant/smallcactus
+	name = "small potted cactus"
+	desc = "This is a small cactus. Its needles are sharp."
+	icon_state = "plant-11"
+
+/obj/item/kirbyplants/pottedplant/tall
+	name = "tall potted plant"
+	desc = "This is a tall plant. Tiny pores line its surface."
+	icon_state = "plant-12"
+
+/obj/item/kirbyplants/pottedplant/sticky
+	name = "sticky potted plant"
+	desc = "This is an odd plant. Its sticky leaves trap insects."
+	icon_state = "plant-13"
+
+/obj/item/kirbyplants/pottedplant/smelly
+	name = "smelly potted plant"
+	desc = "This is some kind of tropical plant. It reeks of rotten eggs."
+	icon_state = "plant-14"
+
+/obj/item/kirbyplants/pottedplant/small
+	name = "small potted plant"
+	desc = "This is a pot of assorted small flora. Some look familiar."
+	icon_state = "plant-15"
+
+/obj/item/kirbyplants/pottedplant/aquatic
+	name = "aquatic potted plant"
+	desc = "This is apparently an aquatic plant. It's probably fake."
+	icon_state = "plant-16"
+
+/obj/item/kirbyplants/pottedplant/shoot
+	name = "small potted shoot"
+	desc = "This is a small shoot. It still needs time to grow."
+	icon_state = "plant-17"
+
+/obj/item/kirbyplants/pottedplant/flower
+	name = "potted flower"
+	desc = "This is a slim plant. Sweet smelling flowers are supported by spindly stems."
+	icon_state = "plant-18"
+
+/obj/item/kirbyplants/pottedplant/crystal
+	name = "crystalline potted plant"
+	desc = "These are rather cubic plants. Odd crystal formations grow on the end."
+	icon_state = "plant-19"
+
+/obj/item/kirbyplants/pottedplant/subterranean
+	name = "subterranean potted plant"
+	desc = "This is a subterranean plant. It's bulbous ends glow faintly."
+	icon_state = "plant-20"
+
+/obj/item/kirbyplants/pottedplant/subterranean/Initialize()
+	. = ..()
+	set_light(0.4, 0.1, 2, 2, "#ff6633")
+
+/obj/item/kirbyplants/pottedplant/minitree
+	name = "potted tree"
+	desc = "This is a miniature tree. Apparently it was grown to 1/5 scale."
+	icon_state = "plant-21"
+
+/obj/item/kirbyplants/pottedplant/stoutbush
+	name = "stout potted bush"
+	desc = "This is a stout bush. Its leaves point up and outwards."
+	icon_state = "plant-22"
+
+/obj/item/kirbyplants/pottedplant/drooping
+	name = "drooping potted plant"
+	desc = "This is a small plant. The drooping leaves make it look like its wilted."
+	icon_state = "plant-23"
+
+/obj/item/kirbyplants/pottedplant/tropical
+	name = "tropical potted plant"
+	desc = "This is some kind of tropical plant. It hasn't begun to flower yet."
+	icon_state = "plant-24"
+
+/obj/item/kirbyplants/pottedplant/dead
+	name = "dead potted plant"
+	desc = "This is the dried up remains of a dead plant. Someone should replace it."
+	icon_state = "plant-25"
+
+/obj/item/kirbyplants/fullysynthetic
+	name = "plastic potted plant"
+	desc = "A fake, cheap looking, plastic tree. Perfect for people who kill every plant they touch."
+	icon_state = "plant-26"
+	custom_materials = (list(/datum/material/plastic = 8000))
+	trimmable = FALSE
+
+// Other Bay Plants ported - 6.3.25
+
+/obj/item/kirbyplants/pottedplant/evergreen
+	name = "small potted evergreen tree"
+	desc = "A small potted evergreen tree. It has a few branches and a lot of needles."
+	icon_state = "plant-27"
+
+/obj/item/kirbyplants/pottedplant/palmtree
+	name = "potted palm tree"
+	desc = "A potted palm tree. Reminds you of a tropical beach, only.. in a pot."
+	icon_state = "plant-28"
+
+/obj/item/kirbyplants/pottedplant/shrubbery
+	name = "small shrubbery"
+	desc = "A small shrubbery, bent into a pleasing sigmoid curve."
+	icon_state = "plant-29"
+
+/obj/item/kirbyplants/pottedplant/large
+	name = "large potted plant"
+	desc = "This is a large plant. Three branches support pairs of waxy leaves."
+	icon_state = "plant-30"
+
+// Fancy Ferns
+
+/obj/item/kirbyplants/pottedplant/deskfern
+	name = "fancy ferny potted plant"
+	desc = "This leafy desk fern could do with a trim."
+	icon_state = "plant-31"
+
+/obj/item/kirbyplants/pottedplant/floorleaf
+	name = "fancy leafy floor plant"
+	desc = "This plant has remarkably waxy leaves."
+	icon_state = "plant-32"
+
+/obj/item/kirbyplants/pottedplant/deskleaf
+	name = "fancy leafy potted desk plant"
+	desc = "A tiny waxy leafed plant specimen."
+	icon_state = "plant-33"
+
+/obj/item/kirbyplants/deskferntrim
+	name = "fancy trimmed ferny potted plant"
+	desc = "This leafy desk fern seems to have been trimmed too much."
+	icon_state = "plant-34"
+
+// Fancy Ferns ends
+
+/obj/item/kirbyplants/pottedplant/pooledfern
+	name = "potted floor fern"
+	desc = "An overgrown fern that is spilling out of its pot. "
+	icon_state = "plant-35"
+
+/obj/item/kirbyplants/pottedplant/luminescent_tree
+	name = "Luminescent Potted Tree"
+	desc = "A vibrant, leafy tree cultivated in a pot, featuring a distinctive luminescent base that emits a soft, blue glow. It's often used for both its aesthetic appeal and its subtle ambient lighting."
+	icon_state = "plant-36"
+
+/obj/item/kirbyplants/pottedplant/luminescent_shrub
+	name = "Luminescent Potted Shrub"
+	desc = "A compact, bushy plant housed in a pot, characterized by its glowing blue base. This shrub is a popular choice for adding a touch of natural luminescence to smaller spaces."
+	icon_state = "plant-37"
+
+/obj/item/kirbyplants/pottedplant/decorative
+	name = "decorative potted plant"
+	desc = "This is a decorative shrub. It's been trimmed into the shape of an apple."
+	icon_state = "applebush"
+
+//Direct plant paths end
 
 //a rock is flora according to where the icon file is
 //and now these defines

@@ -200,3 +200,124 @@
 	desc = "A sign informing you that you will not be able to re-enter this area without access."
 	icon_state = "exitonly"
 	is_editable = TRUE
+
+// Bay12 ported signs, could be sorted better.
+
+/obj/structure/sign/warning/lethal_turrets
+	name = "\improper LETHAL TURRETS"
+	icon_state = "turrets"
+
+/obj/structure/sign/warning/lethal_turrets/New()
+	..()
+	desc += " Enter at own risk!"
+
+/obj/structure/sign/warning/mail_delivery
+	name = "\improper MAIL DELIVERY"
+	icon_state = "mail"
+
+/obj/structure/sign/warning/moving_parts
+	name = "\improper MOVING PARTS"
+	icon_state = "movingparts"
+
+/obj/structure/sign/warning/radioactive
+	name = "\improper RADIOACTIVE AREA"
+	icon_state = "radiation"
+
+/obj/structure/sign/warning/secure_area
+	name = "\improper SECURE AREA"
+	icon_state = "securearea"
+
+/obj/structure/sign/warning/server_room
+	name = "\improper SERVER ROOM"
+	icon_state = "server"
+
+/obj/structure/sign/warning/server_room_old
+	name = "\improper SERVER ROOM"
+	icon_state = "server_old"
+
+/obj/structure/sign/warning/nosmoking_burned
+	name = "\improper NO SMOKING"
+	icon_state = "nosmoking2_b"
+
+/obj/structure/sign/warning/nosmoking_burned/Initialize()
+	. = ..()
+	desc += " It looks charred."
+
+/obj/structure/sign/oxidizer
+	icon_state = "oxidizer"
+	desc = "A warning sign which reads: CAUTION, FLAMMABLE SUBSTANCE HAZARD."
+
+/obj/structure/sign/memnetic
+	icon_state = "memnetic"
+	desc = "A warning sign which reads: CAUTION, MEMETIC HAZARD."
+
+/obj/structure/sign/biohazardous
+	icon_state = "biohazardous"
+	desc = "A warning sign which reads: CAUTION, BIOHAZARD."
+
+/obj/structure/sign/amnesiac
+	icon_state = "amnesiac"
+	desc = "A warning sign which reads: CAUTION, AMNESTIC HAZARD."
+
+/obj/structure/sign/containers
+	icon_state = "containers"
+	desc = "A warning sign which reads: CAUTION, PRESSURIZED GAS STORAGE."
+
+/obj/structure/sign/corrosive
+	icon_state = "corrosive"
+	desc = "A warning sign which reads: CAUTION, CORROSIVE HAZARD."
+
+/obj/structure/sign/explosive
+	icon_state = "explosive"
+	desc = "A warning sign which reads: CAUTION, EXPLOSIVE HAZARD."
+
+/obj/structure/sign/flamable
+	icon_state = "flamable"
+	desc = "A warning sign which reads: CAUTION, FLAMABLE HAZARD."
+
+/obj/structure/sign/lasers
+	icon_state = "lasers"
+	desc = "A warning sign which reads: CAUTION, LASER HAZARD."
+
+/obj/structure/sign/poisonous
+	icon_state = "poisonous"
+	desc = "A warning sign which reads: CAUTION, POISONOUS HAZARD."
+
+/obj/structure/sign/magnetic
+	icon_state = "magnetic"
+	desc = "A warning sign which reads: CAUTION, MAGNETICAL HAZARD. NO METAL OBJECTS BEYOND THIS SIGN."
+
+/obj/structure/sign/optics
+	icon_state = "optics"
+	desc = "A warning sign which reads: CAUTION, OPTICS HAZARD."
+
+/obj/structure/sign/look
+	icon_state = "look"
+	desc = "A warning sign which reads: CAUTION, LOOK AT ANOMALOUS OBJECT."
+
+/obj/structure/sign/dontlook
+	icon_state = "dontlook"
+	desc = "A warning sign which reads: CAUTION, DO NOT LOOK AT ANOMALOUS OBJECT."
+
+/obj/structure/sign/warning/fall
+	name = "\improper FALL HAZARD"
+	icon_state = "falling"
+
+/obj/structure/sign/warning/fire
+	name = "\improper DANGER: FIRE"
+	icon_state = "fire"
+
+/obj/structure/sign/warning/high_voltage
+	name = "\improper HIGH VOLTAGE"
+	icon_state = "shock"
+
+/obj/structure/sign/warning/hot_exhaust
+	name = "\improper HOT EXHAUST"
+	icon_state = "fire"
+
+/obj/structure/sign/warning/compressed_gas
+	name = "\improper COMPRESSED GAS"
+	icon_state = "hikpa"
+
+/obj/structure/sign/warning/vent_port
+	name = "\improper EJECTION/VENTING PORT"

@@ -861,6 +861,30 @@
 	buildstack = /obj/item/stack/sheet/plastitaniumglass
 	max_integrity = 300
 
+/obj/structure/table/steel
+	name = "steel table"
+	desc = "A sturdy table made of steel."
+	icon = 'icons/obj/smooth_structures/bay_table.dmi'
+	icon_state = "table-0"
+	base_icon_state = "table"
+	greyscale_colors = "#5c5454"
+	custom_materials = list(/datum/material/iron = 2000)
+	buildstack = /obj/item/stack/sheet/iron
+	max_integrity = 100
+	material_flags = MATERIAL_EFFECTS | MATERIAL_ADD_PREFIX | MATERIAL_GREYSCALE | MATERIAL_AFFECT_STATISTICS
+
+/obj/structure/table/steel/reinforced
+	name = "reinforced steel table"
+	desc = "A reinforced version of the steel table."
+	icon = 'icons/obj/smooth_structures/bay_table_reinforced.dmi'
+	icon_state = "reinforced_table-0"
+	base_icon_state = "reinforced_table"
+	buildstack = /obj/item/stack/sheet/plasteel
+	max_integrity = 200
+	integrity_failure = 0.25
+	armor = list(BLUNT = 10, PUNCTURE = 30, SLASH = 0, LASER = 30, ENERGY = 100, BOMB = 20, BIO = 0, FIRE = 80, ACID = 70)
+	flipped = -1 // Similar to existing reinforced table, cannot be flipped
+
 /*
  * Surgery Tables
  */

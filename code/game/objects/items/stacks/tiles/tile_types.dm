@@ -1167,3 +1167,206 @@
 
 /obj/item/stack/tile/rglass/sixty
 	amount = 60
+
+/obj/item/stack/tile/floor
+	name = "steel floor tile"
+	singular_name = "steel floor tile"
+	desc = "Those could work as a pretty decent throwing weapon." //why?
+	icon_state = "tile"
+	turf_type = /turf/open/floor/tiled
+	force = 6
+	mats_per_unit = list(/datum/material/iron=MINERAL_MATERIAL_AMOUNT * 0.125)
+	throwforce = 15
+
+/obj/item/stack/tile/mono
+	name = "steel mono tile"
+	singular_name = "steel mono tile"
+	icon_state = "tile"
+	turf_type = /turf/open/floor/tiled/monotile
+	mats_per_unit = list(/datum/material/iron=MINERAL_MATERIAL_AMOUNT * 0.125)
+	mats_per_unit = list(/datum/material/iron=MINERAL_MATERIAL_AMOUNT * 0.125)
+
+
+/obj/item/stack/tile/corner
+	name = "steel corner tiles"
+	singular_name = "steel corner tile"
+	icon_state = "tile"
+	turf_type = /turf/open/floor/tiled/corner
+	mats_per_unit = list(/datum/material/iron=MINERAL_MATERIAL_AMOUNT * 0.125)
+
+
+/obj/item/stack/tile/corner/white
+	name = "white corner tiles"
+	singular_name = "white corner tile"
+	icon_state = "tile_white"
+	turf_type = /turf/open/floor/tiled/white/corner
+	mats_per_unit = list(/datum/material/iron=MINERAL_MATERIAL_AMOUNT * 0.125)
+
+
+/obj/item/stack/tile/corner/dark
+	name = "dark corner tiles"
+	singular_name = "dark corner tile"
+	icon_state = "fr_tile"
+	turf_type = /turf/open/floor/tiled/dark/corner
+	mats_per_unit = list(/datum/material/iron=MINERAL_MATERIAL_AMOUNT * 0.125)
+
+
+/obj/item/stack/tile/horizontal
+	name = "steel horizontal tiles"
+	singular_name = "steel horizontal tile"
+	icon_state = "tile"
+	turf_type = /turf/open/floor/tiled/horizontal
+	mats_per_unit = list(/datum/material/iron=MINERAL_MATERIAL_AMOUNT * 0.125)
+
+
+/obj/item/stack/tile/vertical
+	name = "steel vertical tiles"
+	singular_name = "steel vertical tile"
+	icon_state = "tile"
+	turf_type = /turf/open/floor/tiled/vertical
+	mats_per_unit = list(/datum/material/iron=MINERAL_MATERIAL_AMOUNT * 0.125)
+
+
+/obj/item/stack/tile/horizontal/white
+	name = "white horizontal tiles"
+	singular_name = "white horizontal tile"
+	icon_state = "tile_white"
+	turf_type = /turf/open/floor/tiled/white/horizontal
+	mats_per_unit = list(/datum/material/iron=MINERAL_MATERIAL_AMOUNT * 0.125)
+
+
+/obj/item/stack/tile/vertical/white
+	name = "white vertical tiles"
+	singular_name = "white vertical tile"
+	icon_state = "tile_white"
+	turf_type = /turf/open/floor/tiled/white/vertical
+	mats_per_unit = list(/datum/material/iron=MINERAL_MATERIAL_AMOUNT * 0.125)
+
+
+/obj/item/stack/tile/horizontal/dark
+	name = "dark horizontal tiles"
+	singular_name = "dark horizontal tile"
+	icon_state = "fr_tile"
+	turf_type = /turf/open/floor/tiled/dark/horizontal
+	mats_per_unit = list(/datum/material/iron=MINERAL_MATERIAL_AMOUNT * 0.125)
+
+
+/obj/item/stack/tile/vertical/dark
+	name = "dark vertical tile"
+	singular_name = "dark vertical tile"
+	icon_state = "fr_tile"
+	turf_type = /turf/open/floor/tiled/dark/vertical
+	mats_per_unit = list(/datum/material/iron=MINERAL_MATERIAL_AMOUNT * 0.125)
+
+
+/obj/item/stack/tile/small
+	name = "steel small tiles"
+	singular_name = "steel small tile"
+	icon_state = "tile"
+	turf_type = /turf/open/floor/tiled/small
+	mats_per_unit = list(/datum/material/iron=MINERAL_MATERIAL_AMOUNT * 0.125)
+
+
+/obj/item/stack/tile/small/white
+	name = "white small tiles"
+	singular_name = "white small tile"
+	icon_state = "tile_white"
+	turf_type = /turf/open/floor/tiled/white/small
+	mats_per_unit = list(/datum/material/iron=MINERAL_MATERIAL_AMOUNT * 0.125)
+
+
+/obj/item/stack/tile/small/dark
+	name = "dark vertical tiles"
+	singular_name = "dark small tile"
+	icon_state = "fr_tile"
+	turf_type = /turf/open/floor/tiled/dark/small
+	mats_per_unit = list(/datum/material/iron=MINERAL_MATERIAL_AMOUNT * 0.125)
+
+
+/obj/item/stack/tile/mono/dark
+	name = "dark mono tile"
+	singular_name = "dark mono tile"
+	icon_state = "fr_tile"
+	turf_type = /turf/open/floor/tiled/dark/monotile
+	mats_per_unit = list(/datum/material/iron=MINERAL_MATERIAL_AMOUNT * 0.125)
+
+
+/obj/item/stack/tile/mono/white
+	name = "white mono tile"
+	singular_name = "white mono tile"
+	icon_state = "tile_white"
+	turf_type = /turf/open/floor/tiled/white/monotile
+	mats_per_unit = list(/datum/material/plastic=MINERAL_MATERIAL_AMOUNT * 0.125)
+
+
+/*
+/obj/item/stack/tile/mono/keter
+	name = "keter mono tile"
+	singular_name = "keter mono tile"
+	icon_state = "fr_tile"
+	mats_per_unit = list(/datum/material/iron=MINERAL_MATERIAL_AMOUNT * 0.125)
+
+/obj/item/stack/tile/mono/safe
+	name = "safe mono tile"
+	singular_name = "safe mono tile"
+	icon_state = "fr_tile"
+	mats_per_unit = list(/datum/material/iron=MINERAL_MATERIAL_AMOUNT * 0.125)
+
+/obj/item/stack/tile/mono/euclid
+	name = "euclid mono tile"
+	singular_name = "euclid mono tile"
+	icon_state = "fr_tile"
+	mats_per_unit = list(/datum/material/iron=MINERAL_MATERIAL_AMOUNT * 0.125)
+*/
+
+/obj/item/stack/tile/grid
+	name = "grey grid tile"
+	singular_name = "grey grid tile"
+	icon_state = "tile_grid"
+	turf_type = /turf/open/floor/tiled/steel_grid
+	mats_per_unit = list(/datum/material/iron=MINERAL_MATERIAL_AMOUNT * 0.125)
+
+
+/obj/item/stack/tile/ridge
+	name = "grey ridge tile"
+	singular_name = "grey ridge tile"
+	icon_state = "tile_ridged"
+	turf_type = /turf/open/floor/tiled/steel_ridged
+	mats_per_unit = list(/datum/material/iron=MINERAL_MATERIAL_AMOUNT * 0.125)
+
+/obj/item/stack/tile/floor_white
+	name = "white floor tile"
+	singular_name = "white floor tile"
+	icon_state = "tile_white"
+	turf_type = /turf/open/floor/tiled/white
+	mats_per_unit = list(/datum/material/plastic=MINERAL_MATERIAL_AMOUNT * 0.125)
+
+/obj/item/stack/tile/floor_white/fifty
+	amount = 50
+
+/obj/item/stack/tile/floor_dark
+	name = "dark floor tile"
+	singular_name = "dark floor tile"
+	icon_state = "fr_tile"
+	turf_type = /turf/open/floor/tiled/dark
+	mats_per_unit = list(/datum/material/iron=MINERAL_MATERIAL_AMOUNT * 0.125)
+
+
+/obj/item/stack/tile/floor_dark/fifty
+	amount = 50
+
+/obj/item/stack/tile/new_tile/kafel
+	name = "kafel tile"
+	singular_name = "kafel tile"
+	icon_state = "tile_kafel"
+	turf_type = /turf/open/floor/tiled/kafel_full
+	mats_per_unit = list(/datum/material/iron=MINERAL_MATERIAL_AMOUNT * 0.125)
+	merge_type = /obj/item/stack/tile/new_tile/kafel
+
+/obj/item/stack/tile/new_tile/techmaint
+	name = "tech maintenance tile"
+	singular_name = "tech maintenance tile"
+	icon_state = "techtile_maint"
+	turf_type = /turf/open/floor/tiled/techmaint
+	mats_per_unit = list(/datum/material/iron=MINERAL_MATERIAL_AMOUNT * 0.125)
+	merge_type = /obj/item/stack/tile/new_tile/techmaint

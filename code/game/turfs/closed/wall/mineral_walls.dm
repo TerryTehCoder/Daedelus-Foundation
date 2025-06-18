@@ -209,3 +209,13 @@
 	return ..()
 
 /turf/closed/wall/mineral/plastitanium/interior
+
+/turf/closed/wall/mineral/oldiron
+	name = "Iron Bulkhead"
+	desc = "A durable wall made from aged iron..it creaks and groans with time."
+	icon = 'icons/turf/walls/metal_wall.dmi'
+	smoothing_groups = SMOOTH_GROUP_WALLS
+	canSmoothWith = SMOOTH_GROUP_SHUTTERS_BLASTDOORS + SMOOTH_GROUP_AIRLOCK + SMOOTH_GROUP_LOW_WALL + SMOOTH_GROUP_WINDOW_FULLTILE + SMOOTH_GROUP_WALLS
+	plating_material = /datum/material/iron
+	color = "#5c5454" //To display in mapping softwares
+	wall_paint = "#5c5454"

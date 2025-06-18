@@ -1595,3 +1595,30 @@
 							  /obj/item/food/sustenance_bar/wonka = 1))
 		new randomFood(src)
 	new /obj/item/storage/box/gum/wake_up(src)
+
+/obj/item/storage/box/glowsticks
+	name = "box of glowsticks"
+	desc = "A box filled with various glowsticks."
+	w_class = WEIGHT_CLASS_SMALL // Handheld box
+
+	// All the colors of the Rainbow! Well.. not really, but close enough.
+/obj/item/storage/box/glowsticks/PopulateContents()
+	new /obj/item/flashlight/glowstick/red(src)
+	new /obj/item/flashlight/glowstick/blue(src)
+	new /obj/item/flashlight/glowstick/cyan(src)
+	new /obj/item/flashlight/glowstick/orange(src)
+	new /obj/item/flashlight/glowstick/yellow(src)
+	new /obj/item/flashlight/glowstick/pink(src)
+
+/obj/item/storage/box/water
+	name = "box of water bottles"
+	desc = "A box filled with water bottles."
+	w_class = WEIGHT_CLASS_SMALL
+
+/obj/item/storage/box/water/PopulateContents()
+	new /obj/item/reagent_containers/food/drinks/waterbottle
+	new /obj/item/reagent_containers/food/drinks/waterbottle
+	new /obj/item/reagent_containers/food/drinks/waterbottle
+	new /obj/item/reagent_containers/food/drinks/waterbottle
+	new /obj/item/reagent_containers/food/drinks/waterbottle
+	new /obj/item/reagent_containers/food/drinks/waterbottle

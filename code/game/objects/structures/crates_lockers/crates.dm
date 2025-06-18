@@ -272,3 +272,26 @@
 	. = ..()
 	for(var/i in 1 to 4)
 		new /obj/effect/spawner/random/decoration/generic(src)
+
+/obj/structure/closet/crate/woodencrate
+	name = "Wooden Crate"
+	desc = "A generic wooden crate, I wonder what's inside?"
+	icon = 'icons/obj/aquaticprops.dmi'
+	icon_state = "woodencrate"
+
+/obj/structure/closet/crate/utilitycart
+	name = "Utility Cart"
+	desc = "A heavy, metal utility cart with wheels."
+	icon_state = "trashcart" //Maybe at some point I will retexture this to make it visually distinct from Trash Carts, but for now it works fine.
+
+/obj/structure/closet/crate/utilitycart/prefilled //Already has three random tools inside
+	name = "Utility Cart"
+	desc = "A heavy, metal utility cart with wheels."
+	icon_state = "trashcart"
+
+/obj/structure/closet/crate/utilitycart/prefilled/PopulateContents()
+	. = ..()
+	new /obj/effect/spawner/random/engineering/tool(src)
+	new /obj/effect/spawner/random/engineering/tool(src)
+	new /obj/effect/spawner/random/engineering/tool(src)
+	new /obj/item/stack/cable_coil/random(src)
