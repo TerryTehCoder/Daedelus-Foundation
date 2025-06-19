@@ -29,6 +29,10 @@
 	icon_state = "bio"
 	is_editable = TRUE
 
+/obj/structure/sign/electrical
+	icon_state = "electrical"
+	desc = "A warning sign which reads: CAUTION, ELECTRICAL HAZARD."
+
 /obj/structure/sign/warning/electricshock
 	name = "\improper HIGH VOLTAGE sign"
 	sign_change_name = "Warning - High Voltage"
@@ -243,6 +247,10 @@
 	. = ..()
 	desc += " It looks charred."
 
+/obj/structure/sign/cryogenic
+	icon_state = "cryogenic"
+	desc = "A warning sign which reads: CAUTION, POTENTIAL CRYOGENIC HAZARD."
+
 /obj/structure/sign/oxidizer
 	icon_state = "oxidizer"
 	desc = "A warning sign which reads: CAUTION, FLAMMABLE SUBSTANCE HAZARD."
@@ -321,3 +329,28 @@
 
 /obj/structure/sign/warning/vent_port
 	name = "\improper EJECTION/VENTING PORT"
+
+/obj/structure/sign/warning/detailed
+	icon_state = "securearea2"
+
+/obj/structure/sign/warning/termination
+	name = "\improper TERMINATION LINE"
+	desc = "A sign that says. 'Any D-Class Personnel past the red striped line is to be apprehended/terminated for uncompliance unless given permission by tests, or security staff.'"
+	icon_state = "securearea2"
+
+/obj/structure/sign/warning/New()
+	..()
+	desc = "A warning sign which reads '[sanitize(name)]'."
+
+/obj/structure/sign/thera
+	icon_state = "thera"
+	name = "\improper THERA SAFE ROOM"
+	desc = "A detailed sign that reads 'Temporary Housing for Emergency, Radioactive, Atmospheric. This location is unsuitable for extended Habitation. Do not shelter here beyond immediate need.'"
+
+/obj/structure/sign/noidle
+	name = "\improper NO IDLING"
+	desc = "A warning sign which reads 'NO IDLING!'."
+	icon_state = "noidle"
+
+/obj/structure/sign/warning/engineering_access
+	name = "\improper ENGINEERING ACCESS"

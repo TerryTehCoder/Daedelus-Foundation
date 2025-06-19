@@ -988,6 +988,11 @@
 	pass_flags_self = LETPASSTHROW //You can throw objects over this, despite it's density.
 	max_integrity = 20
 
+/obj/structure/rack/dark
+	color = COLOR_DARK
+	material_flags = MATERIAL_GREYSCALE
+	base_icon_state = "rack"
+
 /obj/structure/rack/examine(mob/user)
 	. = ..()
 	. += span_notice("It's held together by a couple of <b>bolts</b>.")
