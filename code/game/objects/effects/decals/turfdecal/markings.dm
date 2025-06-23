@@ -62,15 +62,6 @@
 /obj/effect/turf_decal/stripes/red/full
 	icon_state = "warn_full_red"
 
-/obj/effect/turf_decal/delivery
-	icon_state = "delivery"
-
-/obj/effect/turf_decal/delivery/white
-	icon_state = "delivery_white"
-
-/obj/effect/turf_decal/delivery/red
-	icon_state = "delivery_red"
-
 /obj/effect/turf_decal/bot
 	icon_state = "bot"
 
@@ -421,14 +412,38 @@
 /obj/effect/turf_decal/siding/wideplating_new/dark/end
 	icon_state = "siding_wideplating_new_end"
 
-//Ported Markings
+//Ported Markings - Mostly from Baystation/Tegu, but who Really knows where they came from.
 
 /obj/effect/turf_decal/ported
 	icon = 'icons/turf/decals-ported.dmi'
 	icon_state = "outline"
 
+// Outlines
+
 /obj/effect/turf_decal/ported/outline
+	name = "white outline"
 	icon_state = "outline"
+	alpha = 229
+
+/obj/effect/turf_decal/ported/outline/blue
+	name = "blue outline"
+	color = "#00b8b2"
+
+/obj/effect/turf_decal/ported/outline/yellow
+	name = "yellow outline"
+	color = "#cfcf55"
+
+/obj/effect/turf_decal/ported/outline/grey
+	name = "grey outline"
+	color = "#808080"
+
+/obj/effect/turf_decal/ported/outline/red
+	name = "red outline"
+	color = COLOR_RED_GRAY
+
+/obj/effect/turf_decal/ported/outline/orange
+	name = "orange outline"
+	color = COLOR_DARK_ORANGE
 
 /obj/effect/turf_decal/ported/border
 	icon_state = "edge"
@@ -537,9 +552,6 @@
 
 /obj/effect/turf_decal/ported/misc/shutoff
 	icon_state = "shutoff"
-
-/obj/effect/turf_decal/ported/misc/delivery
-	icon_state = "delivery"
 
 /obj/effect/turf_decal/ported/misc/stone
 	icon_state = "stoneborder"
@@ -681,3 +693,152 @@
 
 /obj/effect/turf_decal/ported/steeldecals/central/seven
 	icon_state = "steel_decals_central7"
+
+// Splines
+
+/obj/effect/turf_decal/ported/spline/plain
+	name = "spline - plain"
+	icon = 'icons/turf/decals-ported.dmi'
+	icon_state = "spline_plain"
+	alpha = 229
+
+/obj/effect/turf_decal/ported/spline/plain/black
+	color = "#333333"
+
+/obj/effect/turf_decal/ported/spline/plain/blue
+	color = COLOR_BLUE_GRAY
+
+/obj/effect/turf_decal/ported/spline/plain/paleblue
+	color = COLOR_PALE_BLUE_GRAY
+
+/obj/effect/turf_decal/ported/spline/plain/green
+	color = COLOR_GREEN_GRAY
+
+/obj/effect/turf_decal/ported/spline/plain/lime
+	color = COLOR_PALE_GREEN_GRAY
+
+/obj/effect/turf_decal/ported/spline/plain/yellow
+	color = COLOR_BROWN
+
+/obj/effect/turf_decal/ported/spline/plain/beige
+	color = COLOR_BEIGE
+
+/obj/effect/turf_decal/ported/spline/plain/red
+	color = COLOR_RED_GRAY
+
+/obj/effect/turf_decal/ported/spline/plain/pink
+	color = COLOR_PALE_RED_GRAY
+
+/obj/effect/turf_decal/ported/spline/plain/purple
+	color = COLOR_PURPLE_GRAY
+
+/obj/effect/turf_decal/ported/spline/plain/mauve
+	color = COLOR_PALE_PURPLE_GRAY
+
+/obj/effect/turf_decal/ported/spline/plain/orange
+	color = COLOR_DARK_ORANGE
+
+/obj/effect/turf_decal/ported/spline/plain/brown
+	color = COLOR_DARK_BROWN
+
+/obj/effect/turf_decal/ported/spline/plain/white
+	color = COLOR_WHITE
+
+/obj/effect/turf_decal/ported/spline/plain/grey
+	color = "#8d8c8c"
+
+/obj/effect/turf_decal/ported/spline/fancy
+	name = "spline - fancy"
+	icon_state = "spline_fancy"
+
+/obj/effect/turf_decal/ported/spline/fancy/black
+	color = COLOR_GRAY
+
+/obj/effect/turf_decal/ported/spline/fancy/black/corner
+	icon_state = "spline_fancy_corner"
+
+/obj/effect/turf_decal/ported/spline/fancy/wood
+	name = "spline - wood"
+	color = "#cb9e04"
+
+/obj/effect/turf_decal/ported/spline/fancy/wood/corner
+	icon_state = "spline_fancy_corner"
+
+/obj/effect/turf_decal/ported/spline/fancy/wood/cee
+	icon_state = "spline_fancy_cee"
+
+/obj/effect/turf_decal/ported/spline/fancy/wood/three_quarters
+	icon_state = "spline_fancy_full"
+
+/obj/effect/turf_decal/corner
+	icon_state = "corner_white"
+	alpha = 229
+
+// Corner Decals
+
+/obj/effect/turf_decal/ported/corner
+	icon_state = "corner_white"
+	alpha = 229
+
+/obj/effect/turf_decal/ported/corner/grey
+	name = "grey corner"
+	color = "#8d8c8c"
+
+/obj/effect/turf_decal/ported/corner/grey/diagonal
+	icon_state = "corner_white_diagonal"
+
+/obj/effect/turf_decal/ported/corner/grey/three_quarters
+	icon_state = "corner_white_three_quarters"
+
+/obj/effect/turf_decal/ported/corner/grey/full
+	icon_state = "corner_white_full"
+
+/obj/effect/turf_decal/corner/white/border
+	icon_state = "bordercolor"
+
+/obj/effect/turf_decal/ported/corner/grey/half
+	icon_state = "bordercolorhalf"
+
+/obj/effect/turf_decal/ported/corner/grey/mono
+	icon_state = "bordercolormonofull"
+
+// Hatch Decals
+
+/obj/effect/floor_decal/ported/hatch
+	name = "hatched marking"
+	icon_state = "delivery"
+	alpha = 229
+
+/obj/effect/floor_decal/ported/hatch/yellow
+	color = "#cfcf55"
+
+/obj/effect/floor_decal/ported/hatch/red
+	color = COLOR_RED_GRAY
+
+/obj/effect/floor_decal/ported/hatch/orange
+	color = COLOR_DARK_ORANGE
+
+/obj/effect/floor_decal/ported/hatch/blue
+	color = COLOR_BLUE_GRAY
+
+// Floor Details
+
+/obj/effect/floor_decal/ported/floordetail
+	color = COLOR_GRAY
+	icon_state = "manydot"
+
+/obj/effect/floor_decal/ported/floordetail/New(newloc, newdir, newcolour)
+	color = null //color is here just for map preview, if left it applies both our and tile colors.
+	..()
+
+/obj/effect/floor_decal/ported/floordetail/tiled
+	icon_state = "manydot_tiled"
+
+/obj/effect/floor_decal/ported/floordetail/pryhole
+	icon_state = "pryhole"
+
+/obj/effect/floor_decal/ported/floordetail/edgedrain
+	icon_state = "edge"
+
+/obj/effect/floor_decal/ported/floordetail/traction
+	icon_state = "traction"
