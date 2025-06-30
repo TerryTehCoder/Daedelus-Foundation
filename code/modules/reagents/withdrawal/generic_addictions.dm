@@ -269,37 +269,37 @@
 
 /datum/addiction/amnestics/withdrawal_enters_stage_1(mob/living/carbon/victim, delta_time)
 	. = ..()
-	victim.adjust_hallucination(1, 1)
+	victim.hallucination += 1
 	if(prob(5) && nostalgia_cooldown >= world.time)
 		nostalgia_cooldown = world.time + 10 SECONDS
 		victim.visible_message(span_warning("[victim] looks confused for a moment."))
 		to_chat(victim, span_userdanger(pick("I forgot something important..?", "Did I just...", "Did I really do that..?", "Was that...")))
-		victim.playsound_local(get_turf(victim), 'sounds/effects/nostalgia1.ogg', 10, FALSE)
+		victim.playsound_local(get_turf(victim), 'sound/effects/nostalgia1.ogg', 10, FALSE)
 		flash_color(victim, flash_color="#FFBBBB", flash_time=5)
 		victim.adjust_confusion_up_to(5 SECONDS, 20 SECONDS)
 
 /datum/addiction/amnestics/withdrawal_enters_stage_2(mob/living/carbon/victim, delta_time)
 	. = ..()
-	victim.adjust_hallucination(2, 2)
+	victim.hallucination += 2
 	if(prob(7) && nostalgia_cooldown >= world.time)
 		nostalgia_cooldown = world.time + 10 SECONDS
 		victim.visible_message(span_warning("[victim] looks confused for a moment."))
 		to_chat(victim, span_userdanger(pick("My mind feels blank.", "The memories keep flooding in!", "My past is no more!", "My future is... no, that was yesterday..?")))
-		victim.playsound_local(get_turf(victim), pick('sounds/effects/nostalgia2.ogg', 'sounds/effects/nostalgia3.ogg'), 25, FALSE)
+		victim.playsound_local(get_turf(victim), pick('sound/effects/nostalgia2.ogg', 'sound/effects/nostalgia3.ogg'), 25, FALSE)
 		victim.adjust_confusion_up_to(10 SECONDS, 40 SECONDS)
 
 /datum/addiction/amnestics/withdrawal_enters_stage_3(mob/living/carbon/victim, delta_time)
 	. = ..()
-	victim.adjust_hallucination(3, 3)
+	victim.hallucination += 3
 	if(prob(9) && nostalgia_cooldown >= world.time)
 		nostalgia_cooldown = world.time + 10 SECONDS
 		victim.visible_message(span_warning("[victim] looks really confused for a moment."))
 		to_chat(victim, span_userdanger(pick("Future, past and present, all lie intertwined...", "The memories hold no meaning anymore.", "What did I do today? What will I do tomorrow?", "Nothing really matters anymore.")))
-		victim.playsound_local(get_turf(victim), pick('sounds/effects/nostalgia4.ogg', 'sounds/effects/nostalgia5.ogg'), 50, FALSE)
+		victim.playsound_local(get_turf(victim), pick('sound/effects/nostalgia4.ogg', 'sound/effects/nostalgia5.ogg'), 50, FALSE)
 		victim.adjust_confusion_up_to(15 SECONDS, 60 SECONDS)
 
 /datum/addiction/amnestics/end_withdrawal(mob/living/carbon/victim)
 	to_chat(victim, span_good("I can see it all clearly now..."))
-	victim.playsound_local(get_turf(victim), 'sounds/effects/nostalgia5B.ogg', 50, FALSE)
-	victim.adjust_hallucination(-100, -100)
+	victim.playsound_local(get_turf(victim), 'sound/effects/nostalgia5B.ogg', 50, FALSE)
+	victim.hallucination -= 100
 	return ..()

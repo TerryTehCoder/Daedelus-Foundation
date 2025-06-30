@@ -804,41 +804,41 @@
 
 // Hatch Decals
 
-/obj/effect/floor_decal/ported/hatch
+/obj/effect/turf_decal/ported/hatch
 	name = "hatched marking"
 	icon_state = "delivery"
 	alpha = 229
 
-/obj/effect/floor_decal/ported/hatch/yellow
+/obj/effect/turf_decal/ported/hatch/yellow
 	color = "#cfcf55"
 
-/obj/effect/floor_decal/ported/hatch/red
+/obj/effect/turf_decal/ported/hatch/red
 	color = COLOR_RED_GRAY
 
-/obj/effect/floor_decal/ported/hatch/orange
+/obj/effect/turf_decal/ported/hatch/orange
 	color = COLOR_DARK_ORANGE
 
-/obj/effect/floor_decal/ported/hatch/blue
+/obj/effect/turf_decal/ported/hatch/blue
 	color = COLOR_BLUE_GRAY
 
 // Floor Details
 
-/obj/effect/floor_decal/ported/floordetail
+/obj/effect/turf_decal/ported/floordetail
 	color = COLOR_GRAY
 	icon_state = "manydot"
 
-/obj/effect/floor_decal/ported/floordetail/New(newloc, newdir, newcolour)
+/obj/effect/turf_decal/ported/floordetail/New(newloc, newdir, newcolour)
 	color = null //color is here just for map preview, if left it applies both our and tile colors.
 	..()
 
-/obj/effect/floor_decal/ported/floordetail/tiled
+/obj/effect/turf_decal/ported/floordetail/tiled
 	icon_state = "manydot_tiled"
 
-/obj/effect/floor_decal/ported/floordetail/pryhole
+/obj/effect/turf_decal/ported/floordetail/pryhole
 	icon_state = "pryhole"
 
-/obj/effect/floor_decal/ported/floordetail/edgedrain
+/obj/effect/turf_decal/ported/floordetail/edgedrain
 	icon_state = "edge"
 
-/obj/effect/floor_decal/ported/floordetail/traction
+/obj/effect/turf_decal/ported/floordetail/traction
 	icon_state = "traction"
