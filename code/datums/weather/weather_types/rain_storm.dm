@@ -42,16 +42,6 @@
 		)
 	)
 
-/* Example of what you can do with the sound profiles.
-* Occasional thunder sound mixed in (global, but with falloff for positional feel)
-	list(
-		"sound" = 'sound/weather/thunder.ogg',
-		"volume" = 60,
-		"max_dist" = -1, // Global, but falloff will make it seem distant
-		"falloff" = 5 // Higher falloff for a more localized thunder effect
-	)
-*/
-
 /datum/weather/rain_storm/weather_act(mob/living/L)
 	..()
 
@@ -66,7 +56,8 @@
 		if(istype(L, /mob/living/carbon/human))
 			var/mob/living/carbon/human/H = L
 			if(H.age > 60)
-				to_chat(L, span_warning("You feel an ache in your knee...a storm is coming..</span>"))
-				//Probably not my most efficient use of iterating a list, but.. it IS funny.
+				if(prob(25))
+					to_chat(L, span_warning("You feel an ache in your knee...a storm is coming.."))
+					//Probably not my most efficient use of iterating a list, but.. it IS funny.
 			else if(is_captain_job(L.mind.assigned_role))
-				to_chat(L, span_warning("A storm is brewing out on the horizon..</span>"))
+				to_chat(L, span_warning("A storm is brewing out on the horizon.."))

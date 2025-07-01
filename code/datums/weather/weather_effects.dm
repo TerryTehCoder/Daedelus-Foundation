@@ -18,6 +18,7 @@
 #define WEATHER_WINDGUST /datum/weather/effect/wind_gust
 #define WEATHER_LIGHTNING_STRIKE /datum/weather/effect/lightning_strike
 #define WEATHER_FOG /datum/weather/effect/fog
+#define WEATHER_TORNADO /datum/weather/effect/tornado
 
 //Clothing Protection Types
 
@@ -36,23 +37,33 @@
 #define WIND_ALIGNMENT_TAILWIND 1
 #define WIND_ALIGNMENT_HEADWIND -1
 
-//Custom Signals
-
-// Chunking system Reference - now accessed via SSweather.weather_chunking
-
 // End of Defines - - -
 
 /datum/weather/effect
 	name = "Generic weather Effect"
-	var/duration = 100 //How long the effect lasts, where relevant.
-	var/cooldown = 100 //Time before the effect can be reapplied.
-	var/cooldown_max = 100 //Maximum cooldown time.
+	/// How long the effect lasts, where relevant.
+	var/duration = 100
+	/// Time before the effect can be reapplied, ticks in the subsystem.
+	var/cooldown = 100
+	/// Maximum cooldown time for an effect, used to reset the cooldown after it has expired.
+	var/cooldown_max = 100
+	/// How often an effect "ticks" in the weather subsystem (cooldown is only reduced when a effect ticks)
 	var/tick_interval = 30 //Deciseconds, we have our own tick in weather fire, so we're not storm dependent.
+
+	// At least one Dirty Flag (affects_areas/mobs/objects) must be TRUE or the subsystem will not run the effect.
+
+	/// Whether this effect affects areas.
 	var/affects_areas = FALSE
+	/// Whether this effect affects mobs.
 	var/affects_mobs = FALSE
+	/// Whether this effect affects objects.
 	var/affects_objects = FALSE
-	var/severity = 1 // This effect's current severity, initialized from the global weather profile.
-	var/needs_overlay_cleanup = FALSE // Set to TRUE if this effect manages its own visual overlays (I.E: Fog)
+	/// This effect's current severity, initialized from the global weather profile. Determines intensity of various effects. Local to effects but initialized from active weather profile.
+	var/severity = 1
+	/// Set to TRUE if this effect manages its own visual overlays (I.E: Fog)
+	var/needs_overlay_cleanup = FALSE
+	/// Set to TRUE if this effect manages its own looping sounds
+	var/needs_sound_cleanup = FALSE
 
 	var/global_effect_types = list(WEATHER_WINDGUST, WEATHER_LIGHTNING_STRIKE, WEATHER_FOG)
 
@@ -79,8 +90,12 @@
 
 /datum/weather/effect/proc/tick()
 	if(cooldown > 0)
-		cooldown = max(0, cooldown - tick_interval) //Reduce cooldown by the tick interval
-		return
+		cooldown = max(0, cooldown - tick_interval) // Reduce cooldown by the tick interval
+		return FALSE // Not ready to apply effects
+
+	// If cooldown is 0 or less, it's ready to apply effects
+	cooldown = cooldown_max // Reset cooldown
+	return TRUE // Ready to apply effects
 
 //--- Apply to procs ---// Handles any logic that needs to be executed before handing off to actual weather effects.
 
@@ -101,16 +116,13 @@
 /datum/weather/effect/wind_gust
 	name = "Wind Gusts"
 	cooldown_max = 70 //7 Seconds
+	var/turf/last_icon_spawn_turf // To track the last turf where a wind gust icon sequence was spawned
 
 /datum/weather/effect/wind_gust/New()
 	..()
 	addtimer(CALLBACK(src, PROC_REF(update_wind_direction)), rand(300, 600), TIMER_UNIQUE|TIMER_STOPPABLE) //Starting the wind direction timer
 
-//Applying the Wind Gust effect to mobs/in view objects (Thespic)
-
-
-//Applying the wind gust effect independent of players, mostly for objects.
-
+// Wind Gust - Push Players/Objects, create visual atmosphere, etc etc.
 /datum/weather/effect/wind_gust/apply_global_effect()
 	var/datum/weather/storm/current_storm
 	if(SSweather.processing.len)
@@ -118,13 +130,34 @@
 	if(!current_storm)
 		return
 
-	var/dir = pick(NORTH, SOUTH, EAST, WEST)
+	var/dir = pick(NORTH, SOUTH, EAST, WEST) // Define dir at the beginning of the function
 
-	var/list/outdoor_mobs = SSweather.weather_chunking.get_mobs_in_chunks_around_storm(current_storm)
-	var/list/outdoor_objects = SSweather.weather_chunking.get_objects_in_chunks_around_storm(current_storm)
+	if(prob(50 * severity)) // 50% chance per tick for the gust to occur, scaled by severity
+		var/list/outdoor_mobs = SSweather.weather_chunking.get_mobs_in_chunks_around_storm(current_storm)
+		var/list/outdoor_objects = SSweather.weather_chunking.get_objects_in_chunks_around_storm(current_storm)
 
-	process_wind_gust_mobs(outdoor_mobs, dir)
-	process_wind_gust_objects(outdoor_objects, dir)
+		process_wind_gust_mobs(outdoor_mobs, dir)
+		process_wind_gust_objects(outdoor_objects, dir)
+
+	// New visual effect spawning logic
+	var/wind_icon_spawn_prob = 70 * severity // Higher probability for visuals
+	if(prob(wind_icon_spawn_prob))
+		var/list/impacted_chunk_keys = SSweather.weather_chunking.get_impacted_chunk_keys(current_storm)
+		var/list/all_exposed_turfs = SSweather.weather_chunking.get_turfs_in_chunks(impacted_chunk_keys)
+		if(all_exposed_turfs.len)
+			var/turf/start_turf = pick(all_exposed_turfs)
+			// Check distance from last spawned sequence start
+			if(last_icon_spawn_turf && get_dist(start_turf, last_icon_spawn_turf) < 5) // Minimum 5 tiles distance
+				return // Too close, skip this spawn
+
+			last_icon_spawn_turf = start_turf // Update last spawned turf
+
+			var/current_turf = start_turf
+			for(var/i = 1, i <= rand(2, 3), i++) // Spawn 2-3 icons in sequence
+				if(!current_turf) break
+				var/obj/effect/temp_visual/wind_gust_icon_visual/V = new(current_turf)
+				V.dir = dir // Set the direction of the icon
+				current_turf = get_step(current_turf, dir) // Move to the next turf in direction
 
 //25% chance per weather_act to switch the wind direction.
 /datum/weather/effect/wind_gust/proc/update_wind_direction()
@@ -255,7 +288,8 @@
 		return
 
 	for(var/mob/living/L in mobs_to_affect)
-		apply_single_mob_lightning_effect(L, CLOTHING_LIGHTNINGPROOF)
+		if(prob(20 * severity)) // 20% chance per mob per tick to be struck, scaled by severity
+			apply_single_mob_lightning_effect(L, CLOTHING_LIGHTNINGPROOF)
 
 /datum/weather/effect/lightning_strike/proc/apply_single_mob_lightning_effect(mob/living/L, protection_flag)
 	if(!L)
@@ -286,22 +320,22 @@
 			short_machine(O)
 
 /datum/weather/effect/lightning_strike/apply_global_effect()
+	if(prob(40 * severity)) // 40% chance per tick for a global lightning strike, scaled by severity
+		var/list/strike_candidates = list()
+		var/list/all_exposed_turfs = SSweather.weather_chunking.get_turfs_in_chunks(SSweather.weather_chunking.get_all_turf_chunk_keys())
+		if(!all_exposed_turfs || all_exposed_turfs.len == 0)
+			return
 
-	var/list/strike_candidates = list()
-	var/list/all_exposed_turfs = SSweather.weather_chunking.get_turfs_in_chunks(SSweather.weather_chunking.get_all_turf_chunk_keys())
-	if(!all_exposed_turfs || all_exposed_turfs.len == 0)
-		return
+		// Collect all valid strike targets
+		for(var/turf/T in all_exposed_turfs)
+			if(is_valid_lightning_target(T))
+				strike_candidates += T
 
-	// Collect all valid strike targets
-	for(var/turf/T in all_exposed_turfs)
-		if(is_valid_lightning_target(T))
-			strike_candidates += T
+		if(strike_candidates.len == 0)
+			return
 
-	if(strike_candidates.len == 0)
-		return
-
-	var/turf/target = pick(strike_candidates)
-	strike_turf(target)
+		var/turf/target = pick(strike_candidates)
+		strike_turf(target)
 
 //Helpers shuttled into apply_global_effect to reduce code duplication.
 
@@ -459,9 +493,11 @@
 	lightning_visual.pixel_x = rand(-16, 16) // Random offset for visual variety
 	lightning_visual.pixel_y = rand(-16, 16)
 
-	// Brief light flash at the strike location
-	T.set_light(l_power = 100, l_color = "#ffffffe8", l_outer_range = 5, l_falloff_curve = 2, l_inner_range = 1) // Dynamic light for lightning flash
-	addtimer(CALLBACK(T, TYPE_PROC_REF(/atom, set_light), 0, null, null, null, FALSE), 6)
+	// Brief light flashes at the strike location (Two flashes, one after the other)
+	T.set_light(l_power = 100, l_color = COLOR_WHITE, l_outer_range = 5, l_falloff_curve = 2, l_inner_range = 1) // First flash
+	addtimer(CALLBACK(T, TYPE_PROC_REF(/atom, set_light), 0, null, null, null, FALSE), 3) // Turn off after 3 deciseconds
+	T.set_light(l_power = 100, l_color = COLOR_WHITE, l_outer_range = 5, l_falloff_curve = 2, l_inner_range = 1) // Start second flash after 3 deciseconds
+	addtimer(CALLBACK(T, TYPE_PROC_REF(/atom, set_light), 0, null, null, null, FALSE), 3) // Turn off after 3 deciseconds
 
 	// Add a scorch mark/burnt decal to the struck turf
 	new /obj/effect/mapping_helpers/burnt_floor(T)
@@ -610,7 +646,7 @@
 	if(!active_visual_overlays.len)
 		var/icon/fog_icon = 'icons/obj/watercloset.dmi'
 		var/icon_state_name = "mist"
-		var/overlay_color = "#A0A0A0" // Light grey
+		var/overlay_color = "//A0A0A0" // Light grey
 
 		for(var/z_level in current_storm.impacted_z_levels)
 			var/list/z_chunk_keys = SSweather.weather_chunking.get_all_turf_chunk_keys_on_z(z_level)
@@ -638,21 +674,22 @@
 		if(apply_effect(L, null, CLOTHING_FOGPROOF)) // Check for fog protection
 			continue
 
-		// Apply vision impairment based on severity
-		var/vision_trait_duration = 3 // Short duration, reapplied every tick_interval
-		switch(severity)
-			if(1) // Light fog
-				ADD_TRAIT(L, TRAIT_BLURRY_VISION, "weather_fog_light")
-				addtimer(CALLBACK(L, GLOBAL_PROC_REF(___TraitRemove), L, TRAIT_BLURRY_VISION, "weather_fog_light"), vision_trait_duration)
-				to_chat(L, span_notice("The fog makes it hard to see clearly."))
-			if(2) // Moderate fog
-				ADD_TRAIT(L, TRAIT_BLURRY_VISION, "weather_fog_moderate")
-				addtimer(CALLBACK(L, GLOBAL_PROC_REF(___TraitRemove), L, TRAIT_BLURRY_VISION, "weather_fog_moderate"), vision_trait_duration)
-				to_chat(L, span_warning("The dense fog significantly reduces your visibility."))
-			if(3) // Severe fog
-				ADD_TRAIT(L, TRAIT_BLURRY_VISION, "weather_fog_severe")
-				addtimer(CALLBACK(L, GLOBAL_PROC_REF(___TraitRemove), L, TRAIT_BLURRY_VISION, "weather_fog_severe"), vision_trait_duration)
-				to_chat(L, span_userdanger("You can barely see through the oppressive fog!"))
+		if(prob(50 * severity)) // 50% chance per mob per tick to apply vision impairment, scaled by severity
+			// Apply vision impairment based on severity
+			var/vision_trait_duration = 3 // Short duration, reapplied every tick_interval
+			switch(severity)
+				if(1) // Light fog
+					ADD_TRAIT(L, TRAIT_BLURRY_VISION, "weather_fog_light")
+					addtimer(CALLBACK(L, GLOBAL_PROC_REF(___TraitRemove), L, TRAIT_BLURRY_VISION, "weather_fog_light"), vision_trait_duration)
+					to_chat(L, span_notice("The fog makes it hard to see clearly."))
+				if(2) // Moderate fog
+					ADD_TRAIT(L, TRAIT_BLURRY_VISION, "weather_fog_moderate")
+					addtimer(CALLBACK(L, GLOBAL_PROC_REF(___TraitRemove), L, TRAIT_BLURRY_VISION, "weather_fog_moderate"), vision_trait_duration)
+					to_chat(L, span_warning("The dense fog significantly reduces your visibility."))
+				if(3) // Severe fog
+					ADD_TRAIT(L, TRAIT_BLURRY_VISION, "weather_fog_severe")
+					addtimer(CALLBACK(L, GLOBAL_PROC_REF(___TraitRemove), L, TRAIT_BLURRY_VISION, "weather_fog_severe"), vision_trait_duration)
+					to_chat(L, span_userdanger("You can barely see through the oppressive fog!"))
 
 /datum/weather/effect/fog/cleanup_visual_overlays()
 	// Get the current storm to access impacted_z_levels for cleanup
@@ -817,3 +854,199 @@
 		E.duration = rand(300, 600) // Lasts 30 to 60 seconds
 		E.severity = src.severity // Inherit severity from the lightning strike
 		E.start_effect()
+
+/datum/weather/effect/tornado
+	name = "Tornado"
+	desc = "A destructive swirling vortex of wind and debris."
+	duration = 600 // 60 seconds by default, can be overridden by storm profile
+	cooldown_max = 10 // Very short cooldown, effect applies frequently
+	tick_interval = 10 // Every 1 second
+	affects_mobs = TRUE
+	affects_objects = TRUE
+	affects_areas = TRUE // For visual overlays and turf effects
+	// Removed needs_overlay_cleanup = TRUE as it will use temporary visuals
+
+	var/list/lifted_mobs = list()
+	var/list/lifted_objects = list()
+	var/turf/tornado_center_turf // The current center of the tornado's destructive core
+	var/tornado_radius_tiles = 3 // Radius in tiles for direct impact around the center turf
+	var/tornado_movement_speed = 1 // How many tiles the tornado moves per tick (e.g., 1 tile per second)
+	var/tornado_damage_mob_blunt = 5
+	var/tornado_damage_obj_blunt = 10
+	var/tornado_visual_icon = 'icons/effects/weather_effects.dmi' // Icon for temporary wind gust visuals
+	var/tornado_visual_state = "wind_gust" // Icon state for temporary wind gust visuals
+
+
+/datum/weather/effect/tornado/New(list/impacted_z_levels, turf/center_turf)
+	..()
+	if(center_turf)
+		tornado_center_turf = center_turf
+	else if(impacted_z_levels && impacted_z_levels.len)
+		// Fallback if center_turf is not provided, pick a random turf on an impacted Z-level
+		var/list/all_exposed_turfs = SSweather.weather_chunking.get_turfs_in_chunks(SSweather.weather_chunking.get_all_turf_chunk_keys_on_z(pick(impacted_z_levels)))
+		if(all_exposed_turfs.len)
+			tornado_center_turf = pick(all_exposed_turfs)
+	src.severity = SSweather.current_profile.severity // Inherit severity from the current weather profile
+
+/datum/weather/effect/tornado/Del()
+	. = ..()
+
+/datum/weather/effect/tornado/apply_global_effect()
+	if(!tornado_center_turf)
+		return
+
+	var/datum/weather/storm/current_storm // Get the current storm to use for chunking
+	if(SSweather.processing.len)
+		current_storm = SSweather.processing[1]
+	if(!current_storm)
+		return
+
+	// 1. Tornado Movement
+	move_tornado_center()
+
+	// 2. Visual Effects (temporary wind gusts)
+	spawn_wind_gust_visuals()
+
+	// 3. Apply effects to mobs in range
+	var/list/outdoor_mobs = SSweather.weather_chunking.get_mobs_in_chunks_around_storm(current_storm)
+	for(var/mob/living/L in outdoor_mobs)
+		if(!L || !can_weather_act(L))
+			continue
+		if(get_dist(L, tornado_center_turf) <= tornado_radius_tiles)
+			process_mob_in_tornado(L)
+
+	// 5. Apply effects to objects in range
+	var/list/outdoor_objects = SSweather.weather_chunking.get_objects_in_chunks_around_storm(current_storm)
+	for(var/obj/O in outdoor_objects)
+		if(!O)
+			continue
+		if(get_dist(O, tornado_center_turf) <= tornado_radius_tiles)
+			process_object_in_tornado(O)
+
+// Removed apply_to_mobs and apply_to_objects overrides as per user feedback.
+// Their logic is now in process_mob_in_tornado and process_object_in_tornado, called from apply_global_effect.
+
+/datum/weather/effect/tornado/proc/process_mob_in_tornado(mob/living/L)
+	if(!L)
+		return
+
+	if(src.apply_effect(L, null, CLOTHING_WINDPROOF)) // Use windproof for now, could add TORNADOPROOF
+		return
+
+	// Damage from debris
+	L.take_damage(tornado_damage_mob_blunt * severity, BRUTE, 0, 0)
+	to_chat(L, span_userdanger("You are battered by the violent winds and flying debris of the tornado!"))
+
+	// Stun and Disorientation
+	L.Stun(rand(2, 5) * severity, TRUE)
+	ADD_TRAIT(L, TRAIT_BLURRY_VISION, "weather_tornado_disorient")
+	addtimer(CALLBACK(L, GLOBAL_PROC_REF(___TraitRemove), L, TRAIT_BLURRY_VISION, "weather_tornado_disorient"), rand(3, 6))
+
+	// Disarm
+	var/obj/item/left_hand_item = L.get_item_for_held_index(LEFT_HANDS)
+	if(prob(30 * severity) && left_hand_item)
+		L.dropItemToGround(left_hand_item)
+		to_chat(L, span_warning("The tornado rips something from your hand!"))
+	var/obj/item/right_hand_item = L.get_item_for_held_index(RIGHT_HANDS)
+	if(prob(30 * severity) && right_hand_item)
+		L.dropItemToGround(right_hand_item)
+		to_chat(L, span_warning("The tornado rips something from your hand!"))
+
+	// Lifting and Throwing
+	if(!(L in lifted_mobs))
+		lifted_mobs += L
+		to_chat(L, span_userdanger("You are lifted into the air by the tornado!"))
+		L.visible_message(span_userdanger("[L.name] is swept up by the tornado!"))
+	process_lifted_mob(L) // Continue processing lifted mob (movement, eventual throw)
+
+/datum/weather/effect/tornado/proc/process_object_in_tornado(obj/O)
+	if(!O)
+		return
+
+	if(O.anchored || HAS_TRAIT(O, TRAIT_NODROP))
+		return
+
+	// Damage and potential destruction
+	O.take_damage(tornado_damage_obj_blunt * severity, BRUTE, 0, 0)
+	O.visible_message(span_warning("The [O.name] is battered by the tornado!"))
+
+	// Lifting and Throwing
+	if(!(O in lifted_objects))
+		lifted_objects += O
+	process_lifted_object(O) // Continue processing lifted object (movement, eventual throw)
+
+/datum/weather/effect/tornado/proc/move_tornado_center()
+	if(!tornado_center_turf)
+		return
+
+	var/list/eligible_turfs = list()
+	var/list/all_exposed_turfs = SSweather.weather_chunking.get_turfs_in_chunks(SSweather.weather_chunking.get_all_turf_chunk_keys_on_z(tornado_center_turf.z))
+	for(var/turf/T in all_exposed_turfs)
+		if(T.z == tornado_center_turf.z && T != tornado_center_turf)
+			eligible_turfs += T
+
+	if(eligible_turfs.len)
+		var/turf/new_center = pick(eligible_turfs)
+		tornado_center_turf = new_center
+		message_admins(span_adminnotice("Tornado center moved to [tornado_center_turf]"))
+
+/datum/weather/effect/tornado/proc/spawn_wind_gust_visuals()
+	if(!tornado_center_turf)
+		return
+
+	var/list/affected_turfs = list()
+	for(var/turf/T in range(tornado_radius_tiles, tornado_center_turf))
+		if(T.z == tornado_center_turf.z) // Only apply on the same Z-level for now
+			affected_turfs += T
+
+	for(var/turf/T in affected_turfs)
+		if(prob(50 * severity)) // Chance to spawn a visual per turf
+			new /obj/effect/temp_visual/wind_gust_visual(T, tornado_visual_icon, tornado_visual_state)
+
+/datum/weather/effect/tornado/proc/process_lifted_mob(mob/living/L)
+	if(!L || !L.loc || !(L in lifted_mobs))
+		return
+
+	// Keep mob within a certain range of the tornado center, or throw them out
+	if(get_dist(L, tornado_center_turf) > tornado_radius_tiles * 2) // If too far, throw them out
+		L.throw_at(get_step_away(L, tornado_center_turf), force = rand(5, 10) * severity)
+		lifted_mobs -= L
+		to_chat(L, span_notice("You are flung out of the tornado!"))
+		L.visible_message(span_notice("[L.name] is flung out of the tornado!"))
+		// Apply fall damage if thrown from height
+		L.take_damage(rand(10, 30) * severity, BRUTE, 0, 0)
+	else // Keep them swirling
+		var/target_turf = get_step(L, pick(NORTH, SOUTH, EAST, WEST)) // Random swirl
+		L.forceMove(target_turf)
+		L.Stun(1, TRUE) // Brief stun to simulate being tossed around
+
+/datum/weather/effect/tornado/proc/process_lifted_object(obj/O)
+	if(!O || !O.loc || !(O in lifted_objects))
+		return
+
+	// Keep object within a certain range of the tornado center, or throw them out
+	if(get_dist(O, tornado_center_turf) > tornado_radius_tiles * 2) // If too far, throw them out
+		O.throw_at(get_step_away(O, tornado_center_turf), force = rand(5, 15) * severity)
+		lifted_objects -= O
+		O.visible_message(span_notice("The [O.name] is flung out of the tornado!"))
+	else // Keep them swirling
+		var/target_turf = get_step(O, pick(NORTH, SOUTH, EAST, WEST)) // Random swirl
+		O.forceMove(target_turf)
+
+
+// New temporary visual effect for wind gusts
+/obj/effect/temp_visual/wind_gust_visual
+	icon = 'icons/effects/weather_effects.dmi'
+	icon_state = "wind_gust" // Assuming this icon state exists or is appropriate
+	layer = ABOVE_LIGHTING_PLANE
+	plane = AREA_PLANE
+	duration = 10 // Lasts for 1 second (10 deciseconds)
+
+// New temporary visual effect for general wind gust icons
+/obj/effect/temp_visual/wind_gust_icon_visual
+	icon = 'icons/effects/weather_effects.dmi'
+	icon_state = "wind_triple"
+	layer = ABOVE_LIGHTING_PLANE
+	plane = AREA_PLANE
+	duration = 27
+	var/initial_dir // To store the direction of the wind gust

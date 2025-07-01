@@ -15,7 +15,7 @@
 	desc = "A profile to be randomly selected at the start of the round, which influences weather."
 
 
-	/// Default environmental conditions
+	// Default environmental conditions
 
 
 	/// Determines Main wind direction
@@ -132,10 +132,9 @@
 	pressure_type = LOW_PRESSURE
 	night_temp_reduction = 8.0
 	minimum_temperature = 268.15 // -5C
-	allowed_weather_effects = list(WEATHER_LIGHTNING_STRIKE = 10, WEATHER_WINDGUST = 10)
+	allowed_weather_effects = list(WEATHER_LIGHTNING_STRIKE = 10, WEATHER_WINDGUST = 10, WEATHER_TORNADO = 5)
 	allowed_storms = list(/datum/weather/weather_types/rain_storm, /datum/weather/weather_types/snow_storm)
 	weather_tag_whitelist = list("coastal", "stormy")
-
 	flavor_smells_short = list("salt air", "ocean spray", "seaweed", "briny wind", "stormy sea")
 	flavor_smells_long = list(
 		"The air smells faintly of salt and wet stone.",
@@ -160,7 +159,7 @@
 	night_temp_reduction = 3.0
 	minimum_temperature = 280.15 // 7C
 	allowed_weather_effects = list(WEATHER_LIGHTNING_STRIKE = 10, WEATHER_WINDGUST = 10, WEATHER_FOG = 10)
-	allowed_storms = list(/datum/weather/weather_types/rain_storm, /datum/weather/weather_types/snow_storm)
+	allowed_storms = list()
 	weather_tag_whitelist = list("coastal", "foggy")
 	flavor_smells_short = list("salt air", "oil fumes", "wet rust", "damp concrete", "wet grease")
 	flavor_smells_long = list(
@@ -180,7 +179,7 @@
 	pressure_type = LOW_PRESSURE
 	night_temp_reduction = 10.0
 	minimum_temperature = 261 //-12C
-	allowed_weather_effects = list(WEATHER_LIGHTNING_STRIKE = 10, WEATHER_WINDGUST = 10)
+	allowed_weather_effects = list(WEATHER_LIGHTNING_STRIKE = 10, WEATHER_WINDGUST = 10, WEATHER_TORNADO = 10)
 	allowed_storms = list(/datum/weather/weather_types/rain_storm, /datum/weather/weather_types/snow_storm)
 	weather_tag_whitelist = list("windy", "cold", "freezing")
 	flavor_smells_short = list("frostbitten steel", "cold ozone", "dry salt", "windburn", "crackling static")
@@ -198,7 +197,7 @@
 	desc = "Thick rain and industrial smells mix during this unusual low-pressure event."
 	base_temperature_type = TEMP_MEDIUM
 	pressure_type = LOW_PRESSURE
-	allowed_weather_effects = list(WEATHER_LIGHTNING_STRIKE = 10, WEATHER_WINDGUST = 10)
+	allowed_weather_effects = list(WEATHER_LIGHTNING_STRIKE = 10, WEATHER_WINDGUST = 10, WEATHER_TORNADO = 10)
 	allowed_storms = list(/datum/weather/weather_types/rain_storm, /datum/weather/weather_types/snow_storm)
 	weather_tag_whitelist = list("rain", "storm", "industrial")
 	flavor_smells_short = list("diesel", "ozone", "burnt plastic", "wet steel", "hot asphalt")
@@ -226,7 +225,7 @@
 	night_temp_reduction = 2.0
 	minimum_temperature = 290.15 //17C
 	allowed_weather_effects = list(WEATHER_LIGHTNING_STRIKE = 10, WEATHER_WINDGUST = 10)
-	allowed_storms = list(/datum/weather/weather_types/rain_storm, /datum/weather/weather_types/snow_storm) // Allow the generic weather type (targets ZTRAIT_STATION by default)
+	allowed_storms = list(/datum/weather/weather_types/rain_storm, /datum/weather/weather_types/snow_storm)
 	flavor_smells_short = list("dry earth", "hot air", "something burning")
 	flavor_smells_long = list(
 		"You catch the acrid scent of something distant.. maybe burning.",
@@ -243,13 +242,13 @@
 #define CLEAR_SKIES /datum/weather/profile/clearskies
 
 /datum/weather/profile/clearskies
-	name = "Clear Skies (Test Profile)"
-	desc = "A rare and pleasant weather pattern that brings clear skies and calm conditions. Modified for testing lightning."
+	name = "Clear Skies"
+	desc = "A rare and pleasant weather pattern that brings clear skies and calm conditions."
 	base_temperature_type = TEMP_MEDIUM
 	primary_wind_direction = SOUTHWEST
-	pressure_type = HIGH_PRESSURE
-	allowed_weather_effects = list(WEATHER_LIGHTNING_STRIKE = 10, WEATHER_WINDGUST = 10)
-	allowed_storms = list(/datum/weather/weather_types/rain_storm, /datum/weather/weather_types/snow_storm) // Allow the generic weather type (targets ZTRAIT_STATION by default)
+	pressure_type = MEDIUM_PRESSURE
+	allowed_weather_effects = list()
+	allowed_storms = list()
 	flavor_smells_short = list("fresh air", "sun-warmed air", "a gentle light scent")
 	flavor_smells_long = list(
 		"The air smells clear and crisp, like a spring morning.",
@@ -265,5 +264,12 @@
 	base_temperature_type = TEMP_HIGH
 	primary_wind_direction = SOUTH
 	pressure_type = LOW_PRESSURE
-	allowed_weather_effects = list(WEATHER_LIGHTNING_STRIKE = 10, WEATHER_WINDGUST = 10, WEATHER_FOG = 10)
+	allowed_weather_effects = list(WEATHER_LIGHTNING_STRIKE = 10, WEATHER_WINDGUST = 10, WEATHER_FOG = 10, WEATHER_TORNADO = 10)
 	allowed_storms = list(/datum/weather/weather_types/rain_storm, /datum/weather/weather_types/snow_storm)
+	flavor_smells_short = list("wet earth", "humid air", "tropical flora", "damp stone")
+	flavor_smells_long = list(
+		"The air is thick with the scent of wet earth and tropical flora.",
+		"A heavy, humid scent hangs in the air, like a greenhouse after a storm.",
+		"You catch the rich, damp smell of soil and growing things.",
+		"The air is heavy with the scent of rain and lush vegetation."
+	)

@@ -512,4 +512,15 @@ GLOBAL_VAR_INIT(next_weather_sound_channel, 10000) // Start at a high number to 
 				num_effects--
 				break
 
+	var/list/selected_effect_names = list()
+	for(var/effect_type in selected_effects)
+		var/datum/weather/effect/temp_effect = new effect_type()
+		selected_effect_names += temp_effect.name
+		qdel(temp_effect) // Clean up the temporary instance
+
+	if(selected_effect_names.len)
+		message_admins(span_adminnotice("Weather Datum: [name] selected effects for this storm: [selected_effect_names.Join(", ")]"))
+	else
+		message_admins(span_adminnotice("Weather Datum: [name] selected no effects for this storm."))
+
 	return selected_effects

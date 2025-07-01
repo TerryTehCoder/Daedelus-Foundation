@@ -14,7 +14,7 @@
 
 	end_duration = 10 SECONDS
 
-	target_trait = ZTRAIT_VOIDSTORM
+	target_trait = ZTRAIT_PLANETARY_ENVIRONMENT
 
 	immunity_type = TRAIT_VOIDSTORM_IMMUNE
 

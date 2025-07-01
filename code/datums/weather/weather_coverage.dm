@@ -150,13 +150,13 @@
 				set_exposed(current_turf, TRUE)
 				if(debug_verbose_coverage_messages)
 					message_admins(span_adminnotice("Weather Coverage: Exposed turf [current_turf.loc] because it's at the top or turf above does not block weather."))
-				// If this turf blocks weather, then everything below it is covered.
+				// If this turf blocks weather, and is on a relevant Z-level, then everything below it is covered.
 				// So we can break the loop for this column.
-				if (current_turf.blocks_weather)
+				if (current_turf.blocks_weather && (current_turf.z in initialized_relevant_z_levels))
 					if(debug_verbose_coverage_messages)
-						message_admins(span_adminnotice("Weather Coverage Debug: Breaking column scan for ([column_x],[column_y]) at [current_turf.loc] because it blocks weather."))
+						message_admins(span_adminnotice("Weather Coverage Debug: Breaking column scan for ([column_x],[column_y]) at [current_turf.loc] because it blocks weather and is on a relevant Z-level."))
 					break
-				// If this turf does NOT block weather, continue scanning downwards.
+				// If this turf does NOT block weather, or is not on a relevant Z-level, continue scanning downwards.
 				continue
 
 			// If we reach here, current_turf exists, and the turf above it exists and blocks weather.

@@ -23,7 +23,8 @@ SUBSYSTEM_DEF(weather)
 	var/next_flavor_smell_time = 0
 	var/flavor_smell_interval_min = 6000 // 10 minutes in deciseconds
 	var/flavor_smell_interval_max = 18000 // 30 minutes in deciseconds
-	var/initial_coverage_processing_complete = FALSE // Flag to track initial weather coverage calculation
+	/// Flag to track initial weather coverage calculation, we won't start processing until we have all the turf coverage info.
+	var/initial_coverage_processing_complete = FALSE
 
 /datum/controller/subsystem/weather/fire()
 
@@ -147,27 +148,27 @@ SUBSYSTEM_DEF(weather)
 		mob_batch_index += batch_size
 		obj_batch_index += batch_size
 
-		//Ticking weather effects to reduce cooldown.
-		//We handle evaluating if weather can act later so the subsystem is cleaner.
+		// Ticking weather effects and applying them if ready.
 		if(current_storm.weather_effects) // Ensure weather_effects list is not null
 			for(var/datum/weather/effect/E in current_storm.weather_effects)
 				if(!E) // Added null check for E
 					continue
 
 				if(world.time % E.tick_interval == 0)
-					E.tick()
+					var/effect_ready = E.tick() // Returns TRUE if cooldown is met and resets it, otherwise lowers cooldown.
 
-				//Global effects, once per weather effect.
-				if(E.type in E.global_effect_types)
-					E.apply_global_effect()
+					if(effect_ready)
+						// Global effects, once per weather effect.
+						if(E.type in E.global_effect_types)
+							E.apply_global_effect()
 
-				//Applying to Mobs
-				if(E.affects_mobs && mob_slice)
-					E.apply_to_mobs(mob_slice)
+						// Applying to Mobs
+						if(E.affects_mobs && mob_slice)
+							E.apply_to_mobs(mob_slice)
 
-				//Applying to Objects
-				if(E.affects_objects && obj_slice)
-					E.apply_to_objects(obj_slice)
+						// Applying to Objects
+						if(E.affects_objects && obj_slice)
+							E.apply_to_objects(obj_slice)
 
 
 	// Start random weather on relevant levels, grouping Z-levels by their weather traits and contiguity.
@@ -400,6 +401,9 @@ SUBSYSTEM_DEF(weather)
 	else if (!islist(actual_z_levels))
 		CRASH("run_weather called with invalid z_levels: [actual_z_levels || "null"]")
 
+	if(weather_coverage_handler.debug_verbose_coverage_messages)
+		message_admins(span_adminnotice("Weather Subsystem Debug: run_weather - Actual Z-levels for storm: [actual_z_levels.Join(", ")]"))
+
 	var/turf/storm_center_turf
 	if(actual_z_levels.len)
 		// Sort actual_z_levels in descending order to prioritize higher Z-levels
@@ -414,19 +418,41 @@ SUBSYSTEM_DEF(weather)
 			if(!inserted)
 				sorted_z_levels += z_level
 
+		if(weather_coverage_handler.debug_verbose_coverage_messages)
+			message_admins(span_adminnotice("Weather Subsystem Debug: run_weather - Sorted Z-levels for center turf selection: [sorted_z_levels.Join(", ")]"))
+
 		// Find a suitable center turf on the highest impacted z-level first.
 		for(var/z_level in sorted_z_levels)
 			var/list/candidate_turfs = list()
 			// Iterate all turfs to find suitable ones on the current z_level
 			var/list/z_chunk_keys = weather_chunking.get_all_turf_chunk_keys_on_z(z_level)
+			if(weather_coverage_handler.debug_verbose_coverage_messages)
+				message_admins(span_adminnotice("Weather Subsystem Debug: run_weather - Z-level [z_level]: Retrieved [z_chunk_keys.len] chunk keys."))
+
 			if(z_chunk_keys && z_chunk_keys.len)
 				candidate_turfs = weather_chunking.get_turfs_in_chunks(z_chunk_keys)
+				if(weather_coverage_handler.debug_verbose_coverage_messages)
+					message_admins(span_adminnotice("Weather Subsystem Debug: run_weather - Z-level [z_level]: Found [candidate_turfs.len] candidate turfs from chunks."))
+
 			if(candidate_turfs && candidate_turfs.len)
 				storm_center_turf = pick(candidate_turfs) // Pick a random suitable turf from the highest Z-level
+				if(weather_coverage_handler.debug_verbose_coverage_messages)
+					message_admins(span_adminnotice("Weather Subsystem Debug: run_weather - Selected storm_center_turf: [storm_center_turf.loc] on Z-level [z_level]."))
 				break // Found a center, no need to check lower z-levels
+			else if (weather_coverage_handler.debug_verbose_coverage_messages)
+				message_admins(span_adminnotice("Weather Subsystem Debug: run_weather - Z-level [z_level]: No candidate turfs found for storm center."))
+
+	if(weather_coverage_handler.debug_verbose_coverage_messages)
+		if(storm_center_turf)
+			message_admins(span_adminnotice("Weather Subsystem Debug: run_weather - Final storm_center_turf: [storm_center_turf.loc]"))
+		else
+			message_admins(span_adminnotice("Weather Subsystem Debug: run_weather - No storm_center_turf selected (it is null)."))
 
 	//A storm is Born!
 	var/datum/weather/W = new weather_datum_type(actual_z_levels, storm_center_turf)
+
+	if(weather_coverage_handler.debug_verbose_coverage_messages)
+		message_admins(span_adminnotice("Weather Subsystem Debug: New storm '[W.name]' created with radius_in_chunks: [W.radius_in_chunks]."))
 
 	W.telegraph(skip_telegraph)
 
