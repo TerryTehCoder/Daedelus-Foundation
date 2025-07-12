@@ -352,5 +352,10 @@
 	desc = "A warning sign which reads 'NO IDLING!'."
 	icon_state = "noidle"
 
+/obj/structure/sign/emergonly
+	name = "\improper EMERGENCY ONLY"
+	desc = "A warning sign which reads 'EMERGENCY ONLY!'."
+	icon_state = "emerg"
+
 /obj/structure/sign/warning/engineering_access
 	name = "\improper ENGINEERING ACCESS"

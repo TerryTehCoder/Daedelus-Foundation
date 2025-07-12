@@ -987,7 +987,7 @@
 	anchored = TRUE
 	pass_flags_self = LETPASSTHROW //You can throw objects over this, despite it's density.
 	max_integrity = 20
-
+	
 /obj/structure/rack/dark
 	color = COLOR_DARK
 	material_flags = MATERIAL_GREYSCALE

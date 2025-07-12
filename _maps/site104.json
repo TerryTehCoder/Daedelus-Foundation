@@ -1,0 +1,41 @@
+{
+	"version": 1,
+	"map_name": "Site 104",
+	"map_path": "map_files/Site-104",
+	"map_file": "site104.dmm",
+	"traits": [
+		{
+			"Up": 1,
+			"Linkage": "Cross"
+		},
+		{
+			"Up": 1,
+			"Down": -1,
+			"Baseturf": "/turf/open/space/openspace",
+			"Linkage": "Cross"
+		},
+		{
+			"Up": 1,
+			"Down": -1,
+			"Baseturf": "/turf/open/space/openspace",
+			"Linkage": "Cross"
+		},
+		{
+			"Up": 1,
+			"Down": -1,
+			"Baseturf": "/turf/open/space/openspace",
+			"Linkage": "Cross"
+		},
+		{
+			"Up": 1,
+			"Down": -1,
+			"Baseturf": "/turf/open/space/openspace",
+			"Linkage": "Cross"
+		},
+		{
+			"Up": 1,
+			"Baseturf": "/turf/open/water",
+			"Linkage": "Cross"
+		}
+	]
+}

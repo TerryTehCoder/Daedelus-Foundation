@@ -24,3 +24,8 @@ endmap
 
 map multiz_debug
 endmap
+
+map site104
+	default
+endmap
+
