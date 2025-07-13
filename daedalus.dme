@@ -1292,7 +1292,7 @@
 #include "code\game\area\areas\ruins\_ruins.dm"
 #include "code\game\area\areas\ruins\space.dm"
 #include "code\game\area\areas\ruins\templates.dm"
-#include "_maps\map_files\Site-104\site104areas.dm"
+#include "_maps\map_files\Site 104\site104areas.dm"
 #include "code\game\gamemodes\blood_plague_outbreak.dm"
 #include "code\game\gamemodes\bloodbrothers.dm"
 #include "code\game\gamemodes\bloodcult.dm"

@@ -867,11 +867,11 @@
 	icon = 'icons/obj/smooth_structures/bay_table.dmi'
 	icon_state = "table-0"
 	base_icon_state = "table"
-	greyscale_colors = "#5c5454"
+	color = "#5c5454"
 	custom_materials = list(/datum/material/iron = 2000)
 	buildstack = /obj/item/stack/sheet/iron
 	max_integrity = 100
-	material_flags = MATERIAL_EFFECTS | MATERIAL_ADD_PREFIX | MATERIAL_GREYSCALE | MATERIAL_AFFECT_STATISTICS
+	material_flags = MATERIAL_EFFECTS | MATERIAL_ADD_PREFIX | MATERIAL_AFFECT_STATISTICS
 
 /obj/structure/table/steel/reinforced
 	name = "reinforced steel table"
@@ -987,7 +987,7 @@
 	anchored = TRUE
 	pass_flags_self = LETPASSTHROW //You can throw objects over this, despite it's density.
 	max_integrity = 20
-	
+
 /obj/structure/rack/dark
 	color = COLOR_DARK
 	material_flags = MATERIAL_GREYSCALE

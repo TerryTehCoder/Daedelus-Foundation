@@ -24,7 +24,7 @@
 "aaD" = (
 /obj/structure/overfloor_catwalk/lightdarkiron,
 /obj/machinery/floodlight,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/surface/opendeck)
 "abe" = (
 /obj/structure/closet/crate,
@@ -102,7 +102,7 @@
 /obj/structure/railing{
 	dir = 1
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "adD" = (
 /obj/effect/turf_decal/stripes{
@@ -134,7 +134,7 @@
 	dir = 4
 	},
 /obj/structure/overfloor_catwalk/mesh,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "aee" = (
 /obj/structure/railing{
@@ -144,7 +144,7 @@
 	dir = 4
 	},
 /obj/structure/overfloor_catwalk/safe,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/surface/opendeck)
 "aes" = (
 /obj/item/flashlight/flare,
@@ -158,7 +158,7 @@
 "aeM" = (
 /obj/structure/overfloor_catwalk/mesh,
 /obj/structure/ladder,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "aeU" = (
 /obj/structure/overfloor_catwalk/lightdarkiron,
@@ -211,7 +211,7 @@
 /obj/effect/spawner/random/maintenance/six,
 /obj/effect/spawner/random/maintenance/six,
 /obj/effect/spawner/random/maintenance/six,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "afR" = (
 /obj/machinery/power/port_gen/pacman,
@@ -334,7 +334,7 @@
 /obj/structure/railing{
 	dir = 1
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "aiC" = (
 /obj/machinery/door/airlock/grunge{
@@ -485,7 +485,7 @@
 	dir = 8
 	},
 /obj/structure/closet/crate/utilitycart/prefilled,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "amW" = (
 /obj/machinery/door/airlock/external{
@@ -515,6 +515,13 @@
 /obj/structure/overfloor_catwalk/mesh,
 /turf/open/floor/plating,
 /area/space)
+"aoe" = (
+/obj/structure/overfloor_catwalk/mesh,
+/obj/structure/extinguisher_cabinet{
+	pixel_x = 32
+	},
+/turf/open/openspace,
+/area/space)
 "aof" = (
 /obj/machinery/modular_computer/console/preset/engineering{
 	dir = 3
@@ -535,7 +542,7 @@
 /obj/structure/railing{
 	pixel_y = -3
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "aos" = (
 /obj/machinery/power/terminal,
@@ -547,7 +554,7 @@
 	dir = 8
 	},
 /obj/effect/turf_decal/stripes,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "aoF" = (
 /obj/structure/frame/machine,
@@ -684,7 +691,7 @@
 /obj/structure/railing{
 	dir = 1
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "arv" = (
 /obj/structure/overfloor_catwalk/mesh,
@@ -796,7 +803,7 @@
 /obj/structure/railing{
 	dir = 4
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/surface/opendeck)
 "atN" = (
 /obj/machinery/vending/coffee{
@@ -873,7 +880,7 @@
 	dir = 4
 	},
 /obj/structure/overfloor_catwalk/mesh,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/surface/opendeck)
 "avT" = (
 /obj/structure/railing{
@@ -1003,7 +1010,7 @@
 	dir = 4
 	},
 /obj/structure/overfloor_catwalk/lightdarkiron,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "ayM" = (
 /obj/structure/table/steel,
@@ -1066,7 +1073,7 @@
 /obj/structure/railing{
 	dir = 8
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "azP" = (
 /obj/machinery/atmospherics/components/unary/thermomachine/freezer,
@@ -1089,7 +1096,7 @@
 	dir = 8
 	},
 /obj/item/storage/belt/utility,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "aAE" = (
 /obj/structure/railing{
@@ -1160,7 +1167,7 @@
 	dir = 4
 	},
 /obj/structure/overfloor_catwalk/iron_white,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "aCh" = (
 /obj/structure/sign/electrical{
@@ -1271,7 +1278,7 @@
 /obj/structure/railing{
 	dir = 8
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/surface/opendeck)
 "aFl" = (
 /obj/structure/table/steel,
@@ -1346,7 +1353,7 @@
 	dir = 8
 	},
 /obj/structure/pallet,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "aGN" = (
 /obj/structure/table/steel,
@@ -1470,7 +1477,7 @@
 /obj/structure/railing{
 	dir = 4
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "aKa" = (
 /obj/machinery/door/airlock/security,
@@ -1494,7 +1501,7 @@
 	dir = 1
 	},
 /obj/structure/overfloor_catwalk/mesh,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "aLc" = (
 /obj/machinery/status_display{
@@ -1708,7 +1715,7 @@
 /obj/structure/railing{
 	dir = 8
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "aQW" = (
 /obj/structure/closet/firecloset,
@@ -1946,7 +1953,7 @@
 /obj/structure/railing{
 	dir = 1
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/surface/opendeck)
 "aVX" = (
 /obj/effect/turf_decal/ported/outline,
@@ -2026,7 +2033,7 @@
 	name = "Reactor Vent";
 	id_tag = "ReactorVent"
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/engineering/reactor)
 "aXo" = (
 /obj/structure/railing,
@@ -2152,7 +2159,7 @@
 	dir = 8
 	},
 /obj/structure/overfloor_catwalk/iron,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "aZU" = (
 /obj/structure/table/steel,
@@ -2187,7 +2194,7 @@
 /obj/structure/overfloor_catwalk/mesh,
 /obj/structure/closet/crate,
 /obj/item/stack/sheet/plasteel/fifty,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "baB" = (
 /obj/machinery/door/airlock/engineering/glass{
@@ -2283,6 +2290,10 @@
 /obj/effect/turf_decal/stripes,
 /turf/open/floor/tiled/dark,
 /area/site104/utilities/marinecontrol)
+"bcE" = (
+/obj/structure/aquarium/prefilled,
+/turf/open/floor/iron/dark,
+/area/space)
 "bcP" = (
 /obj/effect/turf_decal/ported/techfloor/lefthole,
 /obj/effect/turf_decal/ported/techfloor/righthole,
@@ -2574,7 +2585,7 @@
 	name = "Support Pole";
 	desc = "A simple bar railing, this one is being used to hold structures together."
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "bmf" = (
 /obj/effect/turf_decal/ported/border/borderfloorblack/full,
@@ -2664,7 +2675,7 @@
 /area/site104/surface/opendeck)
 "bpw" = (
 /obj/effect/turf_decal/stripes,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "bpF" = (
 /obj/structure/overfloor_catwalk/lightdarkiron,
@@ -2785,7 +2796,7 @@
 /obj/structure/railing{
 	dir = 1
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "bsL" = (
 /obj/structure/closet/crate/solarpanel_small,
@@ -2915,7 +2926,7 @@
 /obj/effect/spawner/random/maintenance/six,
 /obj/effect/spawner/random/maintenance/six,
 /obj/structure/railing,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "bvy" = (
 /obj/item/kirbyplants/pottedplant/floorleaf,
@@ -2981,6 +2992,18 @@
 	pixel_y = -32;
 	name = "\improper WARNING: No Organic Disposal"
 	},
+/turf/open/floor/plating,
+/area/space)
+"bxc" = (
+/obj/structure/overfloor_catwalk/mesh,
+/obj/structure/railing{
+	dir = 8;
+	pixel_x = -3
+	},
+/obj/structure/railing{
+	pixel_y = -4
+	},
+/obj/effect/turf_decal/ported/rust,
 /turf/open/floor/plating,
 /area/space)
 "bxf" = (
@@ -3064,7 +3087,7 @@
 	},
 /obj/structure/railing,
 /obj/structure/overfloor_catwalk/iron,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "bzc" = (
 /obj/machinery/door/airlock/external{
@@ -3115,7 +3138,7 @@
 /obj/structure/fence{
 	pixel_x = 18
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "bBx" = (
 /obj/structure/closet/crate,
@@ -3290,7 +3313,7 @@
 "bFs" = (
 /obj/structure/overfloor_catwalk/lightdarkiron,
 /obj/machinery/light,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/aihousing/interiorsanctum)
 "bFx" = (
 /obj/item/mecha_parts/mecha_equipment/extinguisher,
@@ -3450,7 +3473,7 @@
 	},
 /obj/item/reagent_containers/barrel/generic,
 /obj/structure/pallet,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "bJI" = (
 /obj/item/circuitboard/machine/mech_recharger,
@@ -3530,6 +3553,11 @@
 	},
 /turf/open/floor/concrete,
 /area/site104/surface/opendeck)
+"bLE" = (
+/obj/structure/table/steel,
+/obj/item/storage/card_binder,
+/turf/open/floor/iron/dark/textured_half,
+/area/space)
 "bLF" = (
 /obj/structure/closet/crate/woodencrate,
 /obj/effect/spawner/random/trash,
@@ -3697,7 +3725,7 @@
 /turf/open/floor/concrete,
 /area/site104/surface/opendeck)
 "bPt" = (
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/maintenance/northrigaft)
 "bPx" = (
 /obj/structure/table/steel,
@@ -3720,7 +3748,7 @@
 	},
 /obj/machinery/light,
 /obj/structure/overfloor_catwalk/lightdarkiron,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "bQc" = (
 /obj/machinery/status_display{
@@ -3741,7 +3769,7 @@
 /turf/open/floor/iron/ported/techfloor_grid,
 /area/space)
 "bQJ" = (
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/surface/opendeck)
 "bQL" = (
 /obj/structure/table/steel,
@@ -3809,6 +3837,7 @@
 	dir = 8
 	},
 /obj/structure/window/reinforced,
+/obj/machinery/telephone,
 /turf/open/floor/tiled/dark/vertical,
 /area/space)
 "bSz" = (
@@ -3825,7 +3854,7 @@
 	dir = 8;
 	use_power = 1
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/aihousing/interiorsanctum)
 "bSQ" = (
 /obj/structure/fence/post{
@@ -3948,6 +3977,11 @@
 	},
 /turf/open/floor/tiled/techmaint,
 /area/space)
+"bWz" = (
+/obj/structure/overfloor_catwalk/mesh,
+/obj/effect/spawner/random/engineering/tool,
+/turf/open/floor/plating,
+/area/space)
 "bWC" = (
 /obj/structure/railing{
 	dir = 4
@@ -4060,7 +4094,7 @@
 /obj/machinery/atmospherics/pipe/smart/simple/dark/hidden/layer2{
 	dir = 4
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "bZT" = (
 /obj/machinery/light{
@@ -4087,6 +4121,11 @@
 	name = "Storage Box #3"
 	},
 /turf/open/floor/iron/ported/techfloor_grid,
+/area/space)
+"caw" = (
+/obj/structure/overfloor_catwalk/mesh,
+/obj/structure/closet/crate/mail,
+/turf/open/openspace,
 /area/space)
 "caz" = (
 /obj/structure/overfloor_catwalk/iron_white,
@@ -4132,7 +4171,7 @@
 	dir = 1
 	},
 /obj/structure/closet/emcloset,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "cbC" = (
 /obj/structure/table/steel,
@@ -4220,7 +4259,7 @@
 "ceb" = (
 /obj/structure/overfloor_catwalk/lightdarkiron,
 /obj/structure/railing,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "cec" = (
 /obj/structure/sign/warning/moving_parts{
@@ -4245,7 +4284,7 @@
 /obj/structure/chair/sofa/corp{
 	dir = 8
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "cfo" = (
 /obj/structure/overfloor_catwalk/lightdarkiron,
@@ -4253,7 +4292,7 @@
 	dir = 4;
 	id_tag = "MCLights"
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "cfy" = (
 /obj/structure/fence/door,
@@ -4272,7 +4311,7 @@
 /obj/structure/overfloor_catwalk/mesh,
 /obj/structure/table/rolling,
 /obj/item/toy/desk/dippingbird,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "cfS" = (
 /obj/structure/railing,
@@ -4413,10 +4452,10 @@
 	name = "Map Note";
 	desc = "Consider connecting points for this catwalk, one entrance is a bit gross, but more might present a security risk."
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "ciY" = (
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/aihousing/interiorsanctum)
 "cji" = (
 /obj/structure/railing,
@@ -4451,6 +4490,10 @@
 /obj/structure/overfloor_catwalk/mesh,
 /obj/structure/reagent_dispensers/watertank,
 /turf/open/floor/plating,
+/area/space)
+"cjM" = (
+/obj/structure/platform_stairs,
+/turf/open/floor/tiled/techmaint,
 /area/space)
 "cjP" = (
 /turf/open/floor/iron/ported/techfloor_grid{
@@ -4507,7 +4550,7 @@
 	dir = 1
 	},
 /obj/structure/overfloor_catwalk/safe,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/surface/opendeck)
 "clk" = (
 /obj/structure/overfloor_catwalk/mesh,
@@ -4569,11 +4612,27 @@
 	dir = 1
 	},
 /obj/structure/overfloor_catwalk/lightdarkiron,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "cnf" = (
 /obj/structure/table/wood/poker,
 /turf/open/floor/tiled/dark/monotile,
+/area/space)
+"cni" = (
+/obj/structure/railing{
+	dir = 8
+	},
+/obj/structure/railing{
+	dir = 1
+	},
+/obj/structure/railing,
+/obj/structure/railing{
+	dir = 4
+	},
+/obj/item/kirbyplants/pottedplant/minitree{
+	pixel_y = 12
+	},
+/turf/open/floor/iron/dark,
 /area/space)
 "cnv" = (
 /obj/machinery/modular_computer/console/preset/engineering{
@@ -4595,7 +4654,7 @@
 	name = "Support Pole";
 	desc = "A simple bar railing, this one is being used to hold structures together."
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "coQ" = (
 /obj/effect/turf_decal/loading_area{
@@ -4651,6 +4710,18 @@
 	temperature = 80
 	},
 /area/site104/utilities/marinecontrol/northserverfarm)
+"cqg" = (
+/obj/structure/platform_stairs{
+	dir = 4
+	},
+/obj/structure/railing{
+	dir = 1
+	},
+/obj/structure/railing{
+	pixel_y = -4
+	},
+/turf/open/floor/tiled/dark,
+/area/space)
 "cqp" = (
 /turf/closed/wall/mineral/oldiron,
 /area/site104/engineering/workshop)
@@ -4687,7 +4758,7 @@
 	},
 /obj/structure/railing,
 /obj/structure/overfloor_catwalk/mesh,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/surface/opendeck)
 "cqO" = (
 /obj/machinery/door/airlock/maintenance{
@@ -4796,7 +4867,7 @@
 	dir = 4
 	},
 /obj/machinery/space_heater,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "ctk" = (
 /turf/open/floor/plating,
@@ -5118,7 +5189,7 @@
 /obj/structure/overfloor_catwalk/mesh,
 /obj/effect/spawner/structure/window/hollow/reinforced,
 /obj/effect/spawner/structure/window/hollow/reinforced,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "cDG" = (
 /obj/structure/railing,
@@ -5183,11 +5254,11 @@
 	dir = 4
 	},
 /obj/structure/overfloor_catwalk/lightdarkiron,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "cEV" = (
 /obj/structure/overfloor_catwalk/lightdarkiron,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/maintenance/interior/deck2port)
 "cFf" = (
 /obj/structure/table/steel,
@@ -5272,7 +5343,7 @@
 /obj/structure/railing{
 	dir = 8
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/surface/opendeck)
 "cHZ" = (
 /obj/structure/railing,
@@ -5301,7 +5372,7 @@
 /obj/structure/railing{
 	dir = 1
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "cIV" = (
 /obj/effect/landmark{
@@ -5410,7 +5481,7 @@
 /obj/structure/railing{
 	dir = 8
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/northrig/stairwell)
 "cLH" = (
 /obj/structure/table/steel/reinforced,
@@ -5435,7 +5506,7 @@
 /obj/item/paper{
 	contents = "Hey, to whoever gets the next assignment on this piece of crap, sometimes the flare igniters act up. If you can't ignite it from Marine Control you'll have to manually light it with a welder or a flare, whatever you can find. Don't let the eject run for too long without burning or you run the risk of the entire Flare getting torn apart!"
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/surface/opendeck)
 "cMy" = (
 /obj/structure/sign/warning/detailed{
@@ -5704,7 +5775,7 @@
 	pixel_x = 0;
 	pixel_y = 0
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "cTb" = (
 /obj/machinery/shower,
@@ -5738,7 +5809,7 @@
 /obj/item/wrench,
 /obj/item/stack/sheet/iron,
 /obj/item/stack/sheet/iron,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "cTx" = (
 /obj/structure/rack/gunrack,
@@ -5765,7 +5836,7 @@
 "cUb" = (
 /obj/structure/overfloor_catwalk/lightdarkiron,
 /obj/item/stack/cable_coil/yellow,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "cUc" = (
 /obj/structure/railing{
@@ -5831,7 +5902,7 @@
 	pixel_x = -15;
 	desc = "A standard-measure shipping container for bulk transport of goods. This one has no logos, and could be carrying anything. Looks like it's being held up by the crane."
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "cVm" = (
 /obj/machinery/door/airlock/glass{
@@ -6066,7 +6137,7 @@
 /obj/structure/fence/door{
 	dir = 4
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/surface/opendeck)
 "dbP" = (
 /obj/structure/overfloor_catwalk/lightdarkiron,
@@ -6299,7 +6370,7 @@
 /obj/machinery/floodlight{
 	dir = 4
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "dil" = (
 /obj/structure/overfloor_catwalk/mesh,
@@ -6458,7 +6529,7 @@
 /obj/effect/spawner/random/engineering/tracking_beacon,
 /obj/effect/spawner/random/engineering/tool,
 /obj/effect/spawner/random/engineering/tool,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "dmV" = (
 /obj/machinery/atmospherics/components/unary/heat_exchanger{
@@ -6593,7 +6664,7 @@
 "dqW" = (
 /obj/structure/overfloor_catwalk/mesh,
 /obj/structure/lattice,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "drp" = (
 /obj/structure/pallet,
@@ -6632,7 +6703,7 @@
 /obj/structure/sign/warning/fall{
 	pixel_y = 32
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "dsy" = (
 /obj/machinery/door/window,
@@ -6647,7 +6718,7 @@
 /area/space)
 "dsE" = (
 /obj/structure/railing,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "dsT" = (
 /obj/structure/table/steel,
@@ -6669,7 +6740,7 @@
 	},
 /obj/structure/railing,
 /obj/item/clothing/head/cone,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "dtN" = (
 /obj/structure/railing{
@@ -6782,14 +6853,16 @@
 /turf/open/floor/tiled/dark/small,
 /area/space)
 "dwi" = (
-/obj/structure/table/steel,
-/obj/structure/railing,
-/obj/machinery/door/poddoor/shutters{
-	name = "LCZ Entrance Lockdown Toggle";
-	req_access = list("ACCESS_SECURITY_LEVEL1");
-	id_tag = "LCZEntLockdown"
+/obj/structure/overfloor_catwalk/mesh,
+/obj/structure/railing{
+	dir = 8;
+	pixel_x = -3
 	},
-/turf/open/floor/tiled/dark/monotile,
+/obj/structure/railing{
+	dir = 4;
+	pixel_x = 2
+	},
+/turf/open/floor/plating,
 /area/space)
 "dwj" = (
 /obj/structure/closet/emcloset,
@@ -6868,7 +6941,7 @@
 	dir = 1
 	},
 /obj/structure/overfloor_catwalk/safe,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/surface/opendeck)
 "dxk" = (
 /obj/structure/table/steel,
@@ -6920,7 +6993,7 @@
 /obj/structure/railing{
 	dir = 4
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "dzg" = (
 /obj/machinery/atmospherics/components/unary/thermomachine/freezer{
@@ -6949,7 +7022,7 @@
 /obj/structure/railing{
 	dir = 4
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "dAE" = (
 /obj/structure/flora/ausbushes/ywflowers,
@@ -7111,6 +7184,10 @@
 	},
 /turf/open/floor/tiled/dark/monotile,
 /area/site104/surface/opendeck)
+"dEs" = (
+/obj/effect/spawner/structure/window/hollow/reinforced,
+/turf/open/floor/iron/dark,
+/area/space)
 "dEA" = (
 /obj/structure/railing{
 	dir = 8;
@@ -7172,7 +7249,7 @@
 "dFh" = (
 /obj/structure/overfloor_catwalk/iron,
 /obj/structure/railing,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "dFj" = (
 /obj/effect/turf_decal/ported/outline,
@@ -7380,7 +7457,7 @@
 	pixel_x = -32;
 	desc = "Tension Leg! Engineering Access Only!"
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "dKG" = (
 /obj/structure/table/steel,
@@ -7389,6 +7466,11 @@
 	dir = 1
 	},
 /turf/open/floor/tiled/dark,
+/area/space)
+"dKL" = (
+/obj/structure/overfloor_catwalk/mesh,
+/obj/structure/closet/crate/utilitycart/prefilled,
+/turf/open/floor/plating,
 /area/space)
 "dKM" = (
 /obj/effect/spawner/structure/window/hollow/reinforced,
@@ -7406,7 +7488,7 @@
 	dir = 4
 	},
 /obj/item/stack/cable_coil,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "dLg" = (
 /obj/structure/overfloor_catwalk/lightdarkiron,
@@ -7437,7 +7519,7 @@
 /obj/effect/spawner/random/maintenance/six,
 /obj/effect/spawner/random/maintenance/six,
 /obj/structure/pallet,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "dLB" = (
 /obj/structure/fence/corner,
@@ -7519,7 +7601,7 @@
 "dMX" = (
 /obj/structure/overfloor_catwalk/lightdarkiron,
 /obj/machinery/floodlight,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "dMY" = (
 /obj/effect/turf_decal/ported/rust,
@@ -7531,7 +7613,7 @@
 "dNj" = (
 /obj/structure/overfloor_catwalk/safe,
 /obj/structure/chair/stool,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "dOd" = (
 /obj/machinery/door/airlock/research/glass{
@@ -7639,7 +7721,7 @@
 	dir = 4
 	},
 /obj/structure/railing,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "dQq" = (
 /obj/structure/closet/crate/bin,
@@ -7654,7 +7736,7 @@
 /obj/structure/fence/corner{
 	dir = 1
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/surface/opendeck)
 "dRf" = (
 /obj/structure/chair{
@@ -7721,12 +7803,12 @@
 	use_power = 1
 	},
 /obj/structure/overfloor_catwalk/mesh,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "dSR" = (
 /obj/structure/overfloor_catwalk/mesh,
 /obj/structure/railing,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/engineering/atmospherics)
 "dSS" = (
 /obj/structure/table/steel,
@@ -7822,14 +7904,14 @@
 	dir = 8;
 	pixel_x = -2
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "dVu" = (
 /obj/structure/railing{
 	dir = 1
 	},
 /obj/structure/overfloor_catwalk/lightdarkiron,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "dVy" = (
 /obj/structure/overfloor_catwalk/lightdarkiron,
@@ -7839,7 +7921,7 @@
 /obj/structure/railing{
 	dir = 8
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "dVz" = (
 /obj/machinery/computer{
@@ -7859,7 +7941,7 @@
 /obj/structure/window/reinforced{
 	dir = 8
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "dVI" = (
 /obj/effect/turf_decal/scp/arrow{
@@ -7975,7 +8057,7 @@
 /obj/structure/railing{
 	dir = 8
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "dYa" = (
 /obj/effect/turf_decal/ported/techfloor/lefthole{
@@ -8092,7 +8174,7 @@
 	dir = 4;
 	pixel_y = -1
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "dZV" = (
 /obj/effect/decal/cleanable/oil,
@@ -8130,7 +8212,7 @@
 	},
 /obj/structure/overfloor_catwalk/mesh,
 /obj/structure/closet/secure_closet/engineering_welding,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "eas" = (
 /obj/machinery/power/smes,
@@ -8258,12 +8340,12 @@
 	dir = 8
 	},
 /obj/structure/railing,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "edX" = (
 /obj/structure/overfloor_catwalk/lightdarkiron,
 /obj/structure/railing,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/aihousing/interiorsanctum)
 "eeb" = (
 /obj/structure/reagent_dispensers/water_cooler,
@@ -8289,7 +8371,7 @@
 	},
 /obj/structure/railing,
 /obj/structure/overfloor_catwalk/mesh,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "eeM" = (
 /obj/structure/table/steel,
@@ -8309,7 +8391,7 @@
 	},
 /obj/structure/pallet,
 /mob/living/silicon/robot/shell,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "efF" = (
 /obj/effect/turf_decal/ported/border/borderfloorblack{
@@ -8450,7 +8532,7 @@
 "eiM" = (
 /obj/structure/overfloor_catwalk/lightdarkiron,
 /obj/effect/decal/cleanable/oil,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "ejg" = (
 /obj/structure/overfloor_catwalk/mesh,
@@ -8488,6 +8570,11 @@
 /obj/structure/railing,
 /turf/open/floor/tiled/dark,
 /area/space)
+"ejJ" = (
+/obj/structure/table/steel/reinforced,
+/obj/machinery/fax_machine,
+/turf/open/floor/carpet/black,
+/area/space)
 "ejS" = (
 /obj/structure/table/steel,
 /obj/machinery/microwave,
@@ -8506,7 +8593,7 @@
 /area/site104/logistics/office)
 "ekW" = (
 /obj/structure/overfloor_catwalk/lightdarkiron,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "elq" = (
 /obj/structure/table/steel/reinforced,
@@ -8629,7 +8716,7 @@
 	name = "Support Pole";
 	desc = "A simple bar railing, this one is being used to hold structures together."
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "epr" = (
 /turf/open/floor/tiled/dark,
@@ -8682,14 +8769,14 @@
 	dir = 4
 	},
 /obj/structure/overfloor_catwalk/safe,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/surface/opendeck)
 "erq" = (
 /obj/structure/railing{
 	dir = 4
 	},
 /obj/structure/overfloor_catwalk/mesh,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/surface/opendeck)
 "eru" = (
 /obj/effect/turf_decal/ported/border/borderfloor/corner{
@@ -8765,7 +8852,7 @@
 /obj/machinery/atmospherics/components/binary/pump{
 	dir = 4
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/engineering/reactor)
 "etW" = (
 /obj/machinery/door/poddoor/preopen{
@@ -8797,7 +8884,7 @@
 	dir = 1
 	},
 /obj/structure/closet/emcloset,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "evb" = (
 /obj/structure/railing{
@@ -9009,7 +9096,7 @@
 /obj/item/flashlight/flare,
 /obj/item/flashlight/flare,
 /obj/item/flashlight/flare,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "eAF" = (
 /obj/effect/turf_decal/stripes{
@@ -9056,7 +9143,8 @@
 "eBC" = (
 /obj/effect/turf_decal/stripes,
 /obj/structure/noticeboard{
-	dir = 1
+	dir = 1;
+	pixel_y = -32
 	},
 /turf/open/floor/iron/ported/techfloor_grid,
 /area/space)
@@ -9114,7 +9202,7 @@
 /obj/structure/railing{
 	dir = 8
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/surface/opendeck)
 "eDO" = (
 /obj/structure/railing{
@@ -9133,7 +9221,7 @@
 /obj/structure/railing{
 	dir = 4
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/surface/opendeck)
 "eEs" = (
 /obj/machinery/atmospherics/components/binary/circulator/cold{
@@ -9150,7 +9238,7 @@
 	},
 /obj/structure/overfloor_catwalk/mesh,
 /obj/structure/closet/secure_closet/engineering_electrical,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "eEO" = (
 /obj/structure/overfloor_catwalk/iron_dark,
@@ -9158,7 +9246,7 @@
 	dir = 8
 	},
 /obj/structure/railing,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "eER" = (
 /obj/machinery/porta_turret{
@@ -9219,7 +9307,7 @@
 	dir = 1
 	},
 /obj/structure/overfloor_catwalk/mesh,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "eGh" = (
 /obj/structure/ladder,
@@ -9565,7 +9653,7 @@
 /obj/effect/turf_decal/stripes{
 	dir = 8
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "eNT" = (
 /turf/open/floor/plating,
@@ -9628,7 +9716,7 @@
 /obj/structure/railing{
 	dir = 1
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "ePs" = (
 /obj/structure/grille,
@@ -9649,7 +9737,7 @@
 /area/space)
 "ePC" = (
 /obj/structure/overfloor_catwalk/lightdarkiron,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/surface/opendeck)
 "eQj" = (
 /obj/machinery/door/airlock/maintenance_hatch{
@@ -9831,6 +9919,15 @@
 	dir = 8
 	},
 /area/space)
+"eUI" = (
+/obj/structure/overfloor_catwalk/mesh,
+/obj/effect/turf_decal/ported/rust,
+/obj/structure/chair/plastic{
+	dir = 8
+	},
+/obj/item/binoculars,
+/turf/open/floor/plating,
+/area/space)
 "eUP" = (
 /obj/structure/pallet,
 /obj/machinery/modular_computer/console/preset/civilian,
@@ -9915,7 +10012,7 @@
 	dir = 4
 	},
 /obj/effect/spawner/random/maintenance/six,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "eWZ" = (
 /obj/structure/closet/crate/woodencrate{
@@ -10022,7 +10119,7 @@
 	dir = 4;
 	pixel_x = 3
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "eZQ" = (
 /obj/effect/spawner/structure/window/hollow/reinforced,
@@ -10168,7 +10265,7 @@
 /obj/structure/railing{
 	dir = 4
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "fdF" = (
 /obj/structure/closet/crate,
@@ -10192,7 +10289,7 @@
 /obj/machinery/floodlight{
 	dir = 4
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/surface/opendeck)
 "fdX" = (
 /obj/structure/railing{
@@ -10268,7 +10365,7 @@
 "ffL" = (
 /obj/structure/railing,
 /obj/structure/overfloor_catwalk/iron,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "ffU" = (
 /obj/structure/railing{
@@ -10295,7 +10392,7 @@
 	dir = 8
 	},
 /obj/structure/overfloor_catwalk/euclid,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "fgC" = (
 /obj/machinery/door/airlock/maintenance/glass,
@@ -10326,7 +10423,7 @@
 /obj/structure/closet/crate/woodencrate,
 /obj/effect/spawner/random/engineering/toolbox,
 /obj/effect/spawner/random/engineering/tool,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "fhb" = (
 /obj/machinery/modular_computer/console,
@@ -10367,7 +10464,7 @@
 /obj/structure/railing{
 	dir = 4
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "fhH" = (
 /obj/effect/landmark{
@@ -10389,7 +10486,7 @@
 /obj/structure/railing{
 	dir = 4
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "fii" = (
 /obj/effect/turf_decal/ported/outline,
@@ -10532,7 +10629,7 @@
 	dir = 8
 	},
 /obj/structure/overfloor_catwalk/mesh,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "fng" = (
 /obj/structure/railing{
@@ -10585,7 +10682,7 @@
 /obj/structure/closet/crate/woodencrate,
 /obj/effect/spawner/random/maintenance/six,
 /obj/effect/spawner/random/maintenance/six,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "fon" = (
 /obj/effect/landmark{
@@ -10638,7 +10735,7 @@
 /obj/structure/railing{
 	dir = 4
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "fpX" = (
 /obj/structure/overfloor_catwalk/mesh,
@@ -10690,7 +10787,7 @@
 	dir = 4;
 	pixel_y = 32
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "frx" = (
 /obj/item/stack/rods/fifty,
@@ -10885,7 +10982,7 @@
 /obj/item/clothing/gloves/color/black,
 /obj/item/clothing/gloves/color/black,
 /obj/item/clothing/gloves/color/black,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "fvZ" = (
 /obj/machinery/portable_atmospherics/canister/chlorine,
@@ -10912,7 +11009,7 @@
 /obj/structure/window/reinforced{
 	dir = 8
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "fwh" = (
 /obj/structure/railing{
@@ -10938,7 +11035,7 @@
 	dir = 8
 	},
 /obj/structure/overfloor_catwalk/iron_white,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "fwJ" = (
 /obj/structure/railing,
@@ -10979,7 +11076,7 @@
 	dir = 4
 	},
 /obj/structure/railing,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "fxv" = (
 /obj/structure/rack/dark,
@@ -11118,7 +11215,7 @@
 /obj/structure/closet/crate/woodencrate,
 /obj/item/ammo_casing/caseless/harpoon,
 /obj/item/ammo_casing/caseless/harpoon,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "fAL" = (
 /obj/machinery/door/airlock/science/glass{
@@ -11355,7 +11452,7 @@
 "fId" = (
 /obj/structure/closet/crate,
 /obj/item/food/cakeslice/apple,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "fIy" = (
 /obj/structure/closet/crate/radiation,
@@ -11424,7 +11521,7 @@
 "fJG" = (
 /obj/structure/overfloor_catwalk/lightdarkiron,
 /obj/item/airlock_painter,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "fJN" = (
 /obj/structure/table/steel,
@@ -11457,7 +11554,7 @@
 /obj/structure/railing{
 	dir = 1
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "fKI" = (
 /obj/structure/railing{
@@ -11505,7 +11602,7 @@
 	dir = 8
 	},
 /obj/structure/railing,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "fLE" = (
 /obj/machinery/light{
@@ -11597,7 +11694,7 @@
 	dir = 8;
 	pixel_y = -1
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "fNS" = (
 /turf/open/floor/tiled/dark,
@@ -11859,7 +11956,7 @@
 /obj/structure/railing{
 	dir = 8
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/aihousing/interiorsanctum)
 "fVj" = (
 /obj/structure/table/steel,
@@ -11981,7 +12078,7 @@
 /obj/structure/sign/warning/engineering_access{
 	pixel_x = 32
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "fXP" = (
 /obj/machinery/telecomms/server/presets/engineering,
@@ -12006,7 +12103,7 @@
 "fYU" = (
 /obj/structure/overfloor_catwalk/iron,
 /obj/item/clothing/head/cone,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "fZe" = (
 /obj/structure/table/steel,
@@ -12148,7 +12245,7 @@
 "gem" = (
 /obj/structure/overfloor_catwalk/iron,
 /obj/structure/overfloor_catwalk/iron,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "gen" = (
 /obj/machinery/reagentgrinder,
@@ -12181,7 +12278,7 @@
 	dir = 4
 	},
 /obj/item/reagent_containers/barrel/generic,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "gfB" = (
 /obj/machinery/vending/dinnerware,
@@ -12197,7 +12294,7 @@
 /obj/structure/railing{
 	dir = 4
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/surface/opendeck)
 "ggq" = (
 /obj/machinery/door/airlock/glass{
@@ -12295,7 +12392,7 @@
 /obj/structure/closet,
 /obj/effect/spawner/random/trash,
 /obj/effect/spawner/random/trash,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "giF" = (
 /turf/open/floor/tiled/dark/monotile,
@@ -12396,7 +12493,7 @@
 	dir = 8
 	},
 /obj/structure/railing,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "glU" = (
 /obj/structure/overfloor_catwalk/safe,
@@ -12406,7 +12503,7 @@
 /obj/structure/railing{
 	dir = 1
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/surface/opendeck)
 "gmj" = (
 /obj/structure/ladder,
@@ -12424,10 +12521,24 @@
 	pixel_y = 0
 	},
 /area/site104/cryogenics)
+"gmr" = (
+/obj/structure/railing{
+	dir = 4;
+	pixel_x = 2
+	},
+/obj/structure/overfloor_catwalk/mesh{
+	pixel_x = 0;
+	pixel_y = 0
+	},
+/obj/machinery/floodlight{
+	dir = 8
+	},
+/turf/open/floor/plating,
+/area/space)
 "gmz" = (
 /obj/effect/spawner/structure/window/hollow/reinforced,
 /obj/effect/spawner/structure/window/hollow/reinforced,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/surface/opendeck)
 "gmB" = (
 /obj/effect/decal/cleanable/molten_object,
@@ -12477,6 +12588,10 @@
 	},
 /turf/open/floor/tiled/dark/small,
 /area/site104/surface/opendeck)
+"gnY" = (
+/obj/machinery/mineral/processing_unit,
+/turf/open/floor/iron/dark,
+/area/space)
 "gnZ" = (
 /obj/structure/fence/post{
 	pixel_x = -9
@@ -12568,7 +12683,7 @@
 /obj/structure/sign/directions/supply{
 	pixel_y = 32
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "gqK" = (
 /obj/structure/railing{
@@ -12583,7 +12698,7 @@
 /obj/structure/railing{
 	dir = 8
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/surface/opendeck)
 "gqO" = (
 /obj/effect/turf_decal/ported/border/borderfloorblack{
@@ -12643,6 +12758,15 @@
 "grv" = (
 /obj/structure/table/steel,
 /obj/item/storage/box/syringes,
+/turf/open/floor/tiled/dark,
+/area/space)
+"grQ" = (
+/obj/structure/platform_stairs{
+	dir = 8
+	},
+/obj/structure/railing{
+	dir = 1
+	},
 /turf/open/floor/tiled/dark,
 /area/space)
 "grT" = (
@@ -12773,7 +12897,7 @@
 	pixel_y = -32
 	},
 /obj/structure/overfloor_catwalk/lightdarkiron,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "gva" = (
 /obj/structure/railing{
@@ -12866,7 +12990,7 @@
 /obj/structure/railing{
 	dir = 4
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "gyk" = (
 /obj/structure/table/steel,
@@ -12909,7 +13033,7 @@
 /obj/structure/pallet,
 /obj/item/stack/rods/fifty,
 /obj/structure/overfloor_catwalk/safe,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/surface/opendeck)
 "gzk" = (
 /obj/effect/turf_decal/box/white,
@@ -13012,7 +13136,7 @@
 	desc = "Caution! AIC Housing Access! Authorized personnel only!";
 	name = "WARNING"
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "gCs" = (
 /obj/machinery/door/airlock/science/glass{
@@ -13142,7 +13266,7 @@
 	},
 /obj/structure/overfloor_catwalk/mesh,
 /obj/structure/railing,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/surface/opendeck)
 "gHc" = (
 /obj/structure/fence/corner{
@@ -13165,7 +13289,7 @@
 	dir = 1
 	},
 /obj/structure/overfloor_catwalk/euclid,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "gHn" = (
 /obj/item/storage/secure/safe{
@@ -13193,7 +13317,7 @@
 /obj/structure/railing{
 	dir = 4
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/aihousing/interiorsanctum)
 "gHT" = (
 /obj/item/radio/intercom{
@@ -13220,12 +13344,12 @@
 	dir = 1;
 	pixel_y = 32
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "gJd" = (
 /obj/structure/overfloor_catwalk/lightdarkiron,
 /obj/item/reagent_containers/barrel/generic,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "gJg" = (
 /obj/machinery/modular_computer/console/preset/research{
@@ -13367,7 +13491,7 @@
 /obj/structure/railing{
 	dir = 4
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/surface/opendeck)
 "gLX" = (
 /obj/effect/turf_decal/box/white,
@@ -13488,7 +13612,7 @@
 	dir = 8
 	},
 /obj/effect/spawner/random/engineering/canister,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "gOS" = (
 /obj/structure/table/steel,
@@ -13575,7 +13699,7 @@
 /obj/machinery/atmospherics/components/binary/pump{
 	dir = 8
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/engineering/reactor)
 "gRu" = (
 /obj/structure/closet/crate/bin{
@@ -13692,7 +13816,7 @@
 /obj/structure/railing{
 	dir = 4
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "gTt" = (
 /obj/machinery/door/airlock/command/glass,
@@ -13703,7 +13827,7 @@
 /obj/machinery/conveyor{
 	dir = 8
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "gTF" = (
 /obj/machinery/door/airlock/grunge{
@@ -13738,7 +13862,7 @@
 /area/space)
 "gUi" = (
 /obj/structure/overfloor_catwalk/safe,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "gUt" = (
 /obj/effect/turf_decal/stripes{
@@ -13773,7 +13897,7 @@
 /obj/item/crowbar/pocket,
 /obj/item/crowbar/pocket,
 /obj/item/flashlight/flare,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "gWg" = (
 /obj/structure/railing{
@@ -13791,7 +13915,7 @@
 	dir = 8
 	},
 /obj/structure/overfloor_catwalk/lightdarkiron,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/surface/opendeck)
 "gWD" = (
 /obj/item/radio/intercom{
@@ -13816,7 +13940,7 @@
 /obj/structure/sign/warning/fall{
 	pixel_y = -32
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "gWI" = (
 /obj/structure/table/steel,
@@ -13870,6 +13994,12 @@
 /obj/structure/fence/door,
 /turf/open/floor/concrete,
 /area/site104/surface/opendeck)
+"gYb" = (
+/turf/open/floor/carpet/black{
+	pixel_x = 0;
+	pixel_y = 0
+	},
+/area/space)
 "gYd" = (
 /obj/structure/table/steel/reinforced,
 /obj/structure/table/steel/reinforced,
@@ -14053,7 +14183,7 @@
 /obj/item/tank/internals/emergency_oxygen,
 /obj/item/tank/internals/emergency_oxygen/double,
 /obj/item/tank/internals/emergency_oxygen/double,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "hbq" = (
 /obj/structure/closet,
@@ -14070,7 +14200,7 @@
 	pixel_x = 0;
 	pixel_y = 0
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "hbz" = (
 /obj/structure/railing{
@@ -14120,7 +14250,7 @@
 	dir = 4
 	},
 /obj/structure/overfloor_catwalk/lightdarkiron,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/surface/opendeck)
 "hdC" = (
 /obj/structure/table/steel,
@@ -14240,7 +14370,7 @@
 /obj/structure/railing{
 	dir = 4
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "hfN" = (
 /obj/structure/shuttle/engine/heater{
@@ -14271,6 +14401,12 @@
 /obj/structure/table/steel,
 /obj/structure/railing,
 /turf/open/floor/tiled/dark/monotile,
+/area/space)
+"hgH" = (
+/obj/structure/chair{
+	dir = 8
+	},
+/turf/open/floor/carpet/black,
 /area/space)
 "hgI" = (
 /obj/machinery/door/poddoor{
@@ -14339,6 +14475,13 @@
 	},
 /turf/open/floor/concrete,
 /area/site104/surface/opendeck)
+"him" = (
+/obj/structure/overfloor_catwalk/mesh,
+/obj/structure/railing{
+	pixel_y = -4
+	},
+/turf/open/floor/plating,
+/area/space)
 "hio" = (
 /obj/effect/spawner/structure/window/hollow/reinforced,
 /obj/effect/spawner/structure/window/hollow/reinforced,
@@ -14350,7 +14493,7 @@
 /area/site104/aihousing/control1)
 "hiy" = (
 /obj/structure/stairs/east,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/surface/opendeck)
 "hiJ" = (
 /obj/structure/overfloor_catwalk/lightdarkiron,
@@ -14439,7 +14582,7 @@
 /area/space)
 "hmc" = (
 /obj/structure/railing/corner,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "hmo" = (
 /obj/structure/railing{
@@ -14586,7 +14729,7 @@
 	dir = 1
 	},
 /obj/structure/railing,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "hpQ" = (
 /obj/structure/overfloor_catwalk/lightdarkiron,
@@ -14666,7 +14809,7 @@
 	name = "Map Note";
 	desc = "Some shuttle control goes here to lift this platform up, to allow robotics to actually load things into the water safely."
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "hrz" = (
 /obj/structure/chair/office,
@@ -14803,7 +14946,7 @@
 "huw" = (
 /obj/structure/railing,
 /obj/structure/overfloor_catwalk/mesh,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "huM" = (
 /obj/structure/rack/dark,
@@ -14935,7 +15078,7 @@
 	dir = 4
 	},
 /obj/structure/overfloor_catwalk/iron,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "hxz" = (
 /obj/structure/pallet,
@@ -14968,7 +15111,7 @@
 	dir = 1
 	},
 /obj/structure/table/rolling,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "hxU" = (
 /obj/structure/table/steel,
@@ -14978,7 +15121,7 @@
 /obj/effect/spawner/structure/window/hollow/reinforced,
 /obj/effect/spawner/structure/window/hollow/reinforced,
 /obj/structure/lattice,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/surface/opendeck)
 "hye" = (
 /obj/structure/sign/look{
@@ -15040,7 +15183,7 @@
 	dir = 8
 	},
 /obj/effect/spawner/random/engineering/canister,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "hzz" = (
 /obj/effect/turf_decal/loading_area{
@@ -15048,6 +15191,17 @@
 	},
 /obj/structure/railing,
 /turf/open/floor/plating,
+/area/space)
+"hzQ" = (
+/obj/structure/railing{
+	dir = 8;
+	pixel_x = -3
+	},
+/obj/structure/railing{
+	pixel_y = -4
+	},
+/obj/machinery/floodlight,
+/turf/open/floor/tiled/dark,
 /area/space)
 "hzV" = (
 /turf/open/floor/iron/ported/techfloor_grid,
@@ -15238,7 +15392,7 @@
 /obj/structure/railing{
 	dir = 1
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "hFI" = (
 /obj/structure/closet/crate,
@@ -15293,7 +15447,7 @@
 	dir = 1
 	},
 /obj/item/clothing/head/cone,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "hGs" = (
 /obj/structure/railing,
@@ -15330,7 +15484,7 @@
 /obj/effect/spawner/random/engineering/tool,
 /obj/effect/spawner/random/engineering/tool,
 /obj/effect/spawner/random/engineering/tool,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "hGW" = (
 /obj/effect/turf_decal/ported/border/borderfloor{
@@ -15341,7 +15495,7 @@
 "hHi" = (
 /obj/structure/overfloor_catwalk/safe,
 /obj/item/binoculars,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "hHm" = (
 /obj/structure/closet/secure_closet/freezer/fridge,
@@ -15466,7 +15620,7 @@
 	dir = 4
 	},
 /obj/structure/closet/crate,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "hLS" = (
 /turf/open/floor/tiled/dark/small,
@@ -15549,7 +15703,7 @@
 "hND" = (
 /obj/structure/overfloor_catwalk/mesh,
 /obj/structure/railing,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/surface/opendeck)
 "hNN" = (
 /obj/effect/spawner/random/structure/crate_loot,
@@ -15916,7 +16070,7 @@
 	dir = 4
 	},
 /obj/structure/overfloor_catwalk/lightdarkiron,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "hWR" = (
 /obj/machinery/light{
@@ -15995,7 +16149,7 @@
 /obj/structure/railing{
 	dir = 8
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/surface/opendeck)
 "hYL" = (
 /obj/machinery/cryopod{
@@ -16008,7 +16162,7 @@
 /area/site104/cryogenics/bay/b3)
 "hYO" = (
 /obj/structure/overfloor_catwalk/lightdarkiron,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/maintenance/northrigstarboard)
 "hYQ" = (
 /obj/structure/rack/dark,
@@ -16068,6 +16222,13 @@
 	temperature = 80
 	},
 /area/site104/utilities/marinecontrol/southserverfarm)
+"iaL" = (
+/obj/structure/fence{
+	dir = 4;
+	pixel_y = -1
+	},
+/turf/open/floor/tiled/dark,
+/area/space)
 "iaN" = (
 /obj/machinery/atmospherics/components/unary/heat_exchanger,
 /turf/open/floor/plating,
@@ -16253,7 +16414,7 @@
 /obj/structure/overfloor_catwalk/mesh,
 /obj/structure/railing,
 /obj/structure/closet/crate,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "ifF" = (
 /obj/structure/overfloor_catwalk/lightdarkiron,
@@ -16330,7 +16491,7 @@
 /obj/structure/sign/directions/lcz{
 	pixel_y = -32
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/surface/opendeck)
 "iht" = (
 /obj/machinery/floodlight{
@@ -16419,7 +16580,7 @@
 /obj/structure/railing{
 	dir = 4
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/aihousing/aimaincore)
 "ijZ" = (
 /obj/structure/railing{
@@ -16430,7 +16591,7 @@
 /obj/effect/spawner/random/maintenance/six,
 /obj/effect/spawner/random/maintenance/six,
 /obj/structure/overfloor_catwalk/safe,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/surface/opendeck)
 "ikk" = (
 /obj/structure/rack/dark,
@@ -16509,7 +16670,7 @@
 /obj/structure/window/reinforced{
 	dir = 8
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "imx" = (
 /obj/structure/table/steel,
@@ -16582,7 +16743,7 @@
 /area/space)
 "ioo" = (
 /obj/structure/overfloor_catwalk/mesh,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/engineering/atmospherics)
 "iov" = (
 /obj/structure/railing{
@@ -16621,7 +16782,7 @@
 	dir = 1
 	},
 /obj/structure/overfloor_catwalk/lightdarkiron,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "ipx" = (
 /obj/machinery/griddle,
@@ -16739,7 +16900,7 @@
 	dir = 4;
 	id_tag = "MCLights"
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/engineering/reactor)
 "isw" = (
 /obj/effect/turf_decal/stripes{
@@ -16755,7 +16916,7 @@
 	dir = 1;
 	pixel_y = 32
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "isJ" = (
 /obj/effect/turf_decal/stripes{
@@ -16943,6 +17104,18 @@
 "iyB" = (
 /obj/effect/decal/cleanable/ash,
 /turf/open/floor/carpet/blue,
+/area/space)
+"iyQ" = (
+/obj/structure/stairs/platform_stairs{
+	dir = 4
+	},
+/obj/structure/railing{
+	pixel_y = -4
+	},
+/obj/structure/railing{
+	dir = 1
+	},
+/turf/open/floor/tiled/dark,
 /area/space)
 "iyV" = (
 /obj/machinery/door/poddoor/preopen{
@@ -17178,7 +17351,7 @@
 /obj/structure/window/reinforced{
 	dir = 1
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "iEu" = (
 /obj/item/stack/sheet/plasteel,
@@ -17255,7 +17428,7 @@
 	req_access = list("ACCESS_ENGINEERING_LEVEL2");
 	name = "Main Reactor"
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/maintenance/interior/deck2port)
 "iGp" = (
 /obj/machinery/door/window{
@@ -17470,7 +17643,7 @@
 "iKY" = (
 /obj/structure/overfloor_catwalk/mesh,
 /obj/structure/frame/machine,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "iLj" = (
 /obj/structure/punji_sticks/spikes,
@@ -17589,6 +17762,13 @@
 	},
 /turf/open/floor/plating,
 /area/space)
+"iNn" = (
+/obj/effect/landmark{
+	name = "Map Note";
+	desc = "Escape Hatch goes here."
+	},
+/turf/open/floor/plating,
+/area/space)
 "iNp" = (
 /obj/machinery/door/airlock/grunge{
 	name = "Recreational Lounge"
@@ -17629,6 +17809,13 @@
 "iOh" = (
 /turf/open/floor/tiled/dark,
 /area/site104/cryogenics/bay/b2)
+"iOo" = (
+/obj/structure/overfloor_catwalk/mesh,
+/obj/structure/noticeboard/directional/east{
+	dir = 8
+	},
+/turf/open/openspace,
+/area/space)
 "iOx" = (
 /turf/closed/wall/mineral/oldiron{
 	pixel_x = 0;
@@ -17765,7 +17952,7 @@
 	},
 /obj/structure/overfloor_catwalk/lightdarkiron,
 /obj/structure/railing,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "iQH" = (
 /obj/structure/table/steel,
@@ -17808,7 +17995,7 @@
 /obj/structure/ladder{
 	pixel_y = 19
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "iRx" = (
 /obj/structure/table/steel,
@@ -17823,7 +18010,7 @@
 /obj/structure/overfloor_catwalk/mesh,
 /obj/structure/closet/crate,
 /obj/effect/spawner/random/trash,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "iSb" = (
 /obj/structure/table/steel,
@@ -17934,7 +18121,7 @@
 	dir = 1
 	},
 /obj/structure/closet/crate/woodencrate,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "iUp" = (
 /obj/structure/noticeboard{
@@ -17979,7 +18166,7 @@
 	dir = 8;
 	pixel_x = 20
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/engineering/reactor)
 "iVq" = (
 /obj/effect/turf_decal/ported/rust,
@@ -18007,7 +18194,7 @@
 "iVH" = (
 /obj/structure/overfloor_catwalk/euclid,
 /obj/structure/railing,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "iVP" = (
 /obj/machinery/door/airlock/glass{
@@ -18056,7 +18243,7 @@
 /obj/item/candle,
 /obj/item/kitchen/fork,
 /obj/item/kitchen/fork,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/maintenance/northrigstarboard)
 "iXc" = (
 /obj/structure/pallet,
@@ -18102,7 +18289,7 @@
 /obj/structure/chair{
 	dir = 1
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/maintenance/northrigstarboard)
 "iYQ" = (
 /obj/structure/table/steel,
@@ -18153,7 +18340,7 @@
 /obj/structure/railing{
 	dir = 8
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "iZL" = (
 /obj/structure/overfloor_catwalk/mesh,
@@ -18169,7 +18356,7 @@
 /area/space)
 "iZV" = (
 /obj/effect/decal/fakelattice,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "jaa" = (
 /obj/structure/railing,
@@ -18254,7 +18441,7 @@
 /obj/structure/stairs/platform_stairs{
 	dir = 1
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "jca" = (
 /obj/effect/turf_decal/ported/rust,
@@ -18272,7 +18459,7 @@
 /area/space)
 "jcl" = (
 /obj/structure/overfloor_catwalk/iron_white,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "jcm" = (
 /obj/structure/flora/ausbushes/lavendergrass,
@@ -18304,8 +18491,13 @@
 /obj/effect/spawner/random/maintenance/six,
 /obj/effect/spawner/random/maintenance/six,
 /obj/structure/overfloor_catwalk/safe,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/surface/opendeck)
+"jcC" = (
+/obj/machinery/mineral/processing_unit,
+/obj/structure/overfloor_catwalk/mesh,
+/turf/open/floor/plating,
+/area/space)
 "jcJ" = (
 /obj/structure/closet/crate/trashcart{
 	name = "Utility Cart";
@@ -18336,7 +18528,7 @@
 	dir = 1
 	},
 /obj/structure/overfloor_catwalk/lightdarkiron,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "jdw" = (
 /obj/machinery/door/airlock/security{
@@ -18370,7 +18562,7 @@
 /obj/structure/railing{
 	dir = 8
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/aihousing/aimaincore)
 "jeh" = (
 /obj/machinery/space_heater,
@@ -18537,7 +18729,7 @@
 /obj/structure/overfloor_catwalk/lightdarkiron,
 /obj/structure/rack/dark,
 /obj/item/storage/toolbox/mechanical,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "jht" = (
 /obj/structure/chair/sofa/corp/right{
@@ -18666,6 +18858,14 @@
 /obj/effect/turf_decal/ported/border/borderfloorblack,
 /turf/open/floor/iron/ported/techfloor,
 /area/space)
+"jkQ" = (
+/obj/structure/overfloor_catwalk/mesh,
+/obj/structure/railing{
+	dir = 8;
+	pixel_x = -3
+	},
+/turf/open/openspace,
+/area/space)
 "jlk" = (
 /obj/structure/table/steel,
 /obj/item/storage/bag/trash,
@@ -18686,7 +18886,7 @@
 /obj/effect/spawner/random/maintenance/six,
 /obj/effect/spawner/random/maintenance/six,
 /obj/structure/overfloor_catwalk/safe,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/surface/opendeck)
 "jlF" = (
 /obj/structure/overfloor_catwalk/mesh,
@@ -18743,7 +18943,7 @@
 	dir = 4
 	},
 /obj/structure/overfloor_catwalk/safe,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/surface/opendeck)
 "jnz" = (
 /obj/structure/barricade,
@@ -18882,7 +19082,7 @@
 /area/site104/utilities/marinecontrol/breakroom)
 "jrA" = (
 /obj/structure/overfloor_catwalk/lightdarkiron,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/aihousing/aimaincore)
 "jrC" = (
 /obj/machinery/door/airlock/mining/glass{
@@ -18954,7 +19154,7 @@
 /obj/effect/spawner/random/engineering/tool,
 /obj/effect/spawner/random/engineering/tool,
 /obj/effect/spawner/random/engineering/toolbox,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "jtN" = (
 /obj/structure/chair/comfy/black{
@@ -19195,7 +19395,7 @@
 /turf/open/floor/tiled/dark,
 /area/space)
 "jxT" = (
-/turf/open/openspace{
+/turf/open/openspace/airless/planetary{
 	pixel_x = 0;
 	pixel_y = 0
 	},
@@ -19212,7 +19412,7 @@
 /obj/structure/railing{
 	dir = 1
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "jyw" = (
 /obj/structure/closet/crate/secure/loot,
@@ -19247,7 +19447,7 @@
 "jzh" = (
 /obj/structure/overfloor_catwalk/mesh,
 /obj/structure/life_preserver,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "jzr" = (
 /obj/item/radio/intercom{
@@ -19282,7 +19482,7 @@
 /obj/structure/overfloor_catwalk/lightdarkiron,
 /obj/structure/railing,
 /obj/structure/table/rolling,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "jAz" = (
 /obj/structure/sign/warning/radiation{
@@ -19302,7 +19502,7 @@
 /obj/machinery/door/airlock/hatch{
 	name = "Weather Barrier Tunnel"
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "jAZ" = (
 /obj/structure/overfloor_catwalk/mesh,
@@ -19312,7 +19512,7 @@
 	dir = 1;
 	use_power = 1
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "jBp" = (
 /obj/structure/railing{
@@ -19467,7 +19667,7 @@
 	dir = 8
 	},
 /obj/effect/spawner/random/maintenance/six,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "jFi" = (
 /obj/effect/turf_decal/box/white,
@@ -19537,7 +19737,7 @@
 /obj/structure/closet/crate,
 /obj/effect/spawner/random/maintenance/six,
 /obj/effect/spawner/random/maintenance/six,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "jHb" = (
 /obj/structure/table/steel,
@@ -19637,6 +19837,18 @@
 /obj/structure/rack/dark,
 /turf/open/floor/concrete,
 /area/site104/logistics/warehouse)
+"jKj" = (
+/obj/structure/stairs/platform_stairs{
+	dir = 4
+	},
+/obj/structure/railing{
+	dir = 1
+	},
+/obj/structure/railing{
+	pixel_y = -4
+	},
+/turf/open/floor/tiled/dark,
+/area/space)
 "jKu" = (
 /obj/effect/turf_decal/stripes{
 	dir = 4
@@ -19682,7 +19894,7 @@
 "jKZ" = (
 /obj/structure/overfloor_catwalk/mesh,
 /obj/structure/table/rolling,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "jLc" = (
 /obj/structure/railing{
@@ -19729,7 +19941,7 @@
 /area/space)
 "jMA" = (
 /obj/structure/overfloor_catwalk/lightdarkiron,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/aihousing/entrancehall)
 "jMC" = (
 /obj/structure/sign/warning/engineering_access{
@@ -19790,7 +20002,7 @@
 /obj/structure/railing{
 	dir = 8
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "jNS" = (
 /obj/structure/chair{
@@ -19863,7 +20075,7 @@
 	dir = 8
 	},
 /obj/structure/overfloor_catwalk/iron,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "jPJ" = (
 /obj/effect/decal/cleanable/dirt,
@@ -19902,7 +20114,7 @@
 	pixel_y = -32;
 	name = "\improper NORTH SERVER ROOM"
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/maintenance/northrigstarboard)
 "jRn" = (
 /obj/structure/table/steel,
@@ -19978,7 +20190,7 @@
 	dir = 1
 	},
 /obj/effect/spawner/random/engineering/canister,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "jSm" = (
 /obj/machinery/status_display/ai{
@@ -20082,7 +20294,7 @@
 "jVp" = (
 /obj/structure/overfloor_catwalk/mesh,
 /obj/effect/decal/cleanable/cobweb/cobweb2,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "jVy" = (
 /obj/machinery/vending/tool{
@@ -20134,7 +20346,7 @@
 /obj/structure/chair/sofa/corp/right{
 	dir = 8
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "jXW" = (
 /obj/effect/turf_decal/stripes{
@@ -20367,7 +20579,7 @@
 /turf/open/floor/tiled/dark,
 /area/space)
 "kds" = (
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/engineering/reactor)
 "kdy" = (
 /obj/structure/closet/crate/trashcart,
@@ -20377,7 +20589,7 @@
 /obj/effect/turf_decal/stripes{
 	dir = 1
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "keb" = (
 /obj/structure/table/steel,
@@ -20474,7 +20686,7 @@
 	},
 /obj/structure/railing,
 /obj/structure/overfloor_catwalk/euclid,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "khe" = (
 /obj/structure/railing{
@@ -20551,7 +20763,7 @@
 /obj/structure/fence{
 	pixel_x = -18
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "khN" = (
 /obj/structure/ladder{
@@ -20562,6 +20774,13 @@
 "khO" = (
 /turf/open/floor/tiled/dark/monotile,
 /area/site104/cryogenics)
+"kih" = (
+/obj/structure/displaycase/trophy,
+/obj/item/reagent_containers/food/drinks/trophy/gold_cup{
+	desc = "1979 international swimming champion! Did one of the old directors leave this behind?"
+	},
+/turf/open/floor/iron/dark/textured_half,
+/area/space)
 "kij" = (
 /obj/effect/turf_decal/loading_area{
 	dir = 4
@@ -20578,7 +20797,7 @@
 	dir = 8
 	},
 /obj/structure/overfloor_catwalk/mesh,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "kiP" = (
 /obj/structure/table/steel,
@@ -20652,7 +20871,7 @@
 	dir = 1
 	},
 /obj/structure/overfloor_catwalk/safe,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/surface/opendeck)
 "kkk" = (
 /obj/structure/filingcabinet,
@@ -20753,7 +20972,7 @@
 	dir = 1;
 	pixel_y = 3
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/surface/opendeck)
 "kmr" = (
 /obj/structure/pallet,
@@ -20775,7 +20994,7 @@
 	dir = 8
 	},
 /obj/structure/overfloor_catwalk/euclid,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "kmB" = (
 /obj/structure/ladder,
@@ -20783,7 +21002,7 @@
 /obj/structure/railing{
 	dir = 1
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/engineering/reactor)
 "kmQ" = (
 /obj/effect/turf_decal/stripes/asteroid/line{
@@ -20829,7 +21048,7 @@
 	dir = 4
 	},
 /obj/structure/overfloor_catwalk/iron,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "kov" = (
 /obj/structure/table/steel,
@@ -20880,7 +21099,7 @@
 "kpR" = (
 /obj/structure/overfloor_catwalk/lightdarkiron,
 /obj/structure/closet/secure_closet/engineering_welding,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "kqd" = (
 /obj/structure/pallet,
@@ -20907,13 +21126,22 @@
 /obj/item/toy/desk/newtoncradle,
 /turf/open/floor/tiled/dark/small,
 /area/space)
+"kqJ" = (
+/obj/structure/table/steel/reinforced,
+/obj/structure/safe/floor,
+/obj/item/paper_bin,
+/obj/item/pen/fountain/captain{
+	name = "Directors fountain pen"
+	},
+/turf/open/floor/iron/dark/textured_half,
+/area/space)
 "kqW" = (
 /obj/structure/railing{
 	dir = 1
 	},
 /obj/structure/railing,
 /obj/structure/overfloor_catwalk/mesh,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/surface/opendeck)
 "kre" = (
 /obj/machinery/door/airlock/security{
@@ -21083,8 +21311,17 @@
 /turf/open/floor/tiled/dark,
 /area/space)
 "kuq" = (
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/engineering/atmospherics)
+"kuy" = (
+/obj/structure/overfloor_catwalk/mesh,
+/obj/structure/railing,
+/obj/structure/railing{
+	dir = 4;
+	pixel_x = 2
+	},
+/turf/open/floor/plating,
+/area/space)
 "kuS" = (
 /obj/structure/table/steel,
 /obj/item/multitool,
@@ -21250,14 +21487,14 @@
 /obj/structure/overfloor_catwalk/lightdarkiron,
 /obj/structure/rack/dark,
 /obj/item/storage/toolbox/electrical,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "kyN" = (
 /obj/structure/railing{
 	dir = 1
 	},
 /obj/structure/overfloor_catwalk/euclid,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "kze" = (
 /obj/machinery/portable_atmospherics/canister/nitrous_oxide,
@@ -21292,7 +21529,7 @@
 	pixel_y = -32;
 	desc = "A sign describing how this external area is restricted to authorized LCZ security and maintenance personnel only."
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/surface/opendeck)
 "kAW" = (
 /obj/structure/sign/directions/hcz{
@@ -21522,7 +21759,7 @@
 /obj/structure/railing{
 	dir = 4
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "kGQ" = (
 /obj/structure/railing{
@@ -21625,7 +21862,7 @@
 /obj/structure/railing{
 	dir = 8
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/surface/opendeck)
 "kJg" = (
 /obj/machinery/atmospherics/pipe/smart/simple/dark/hidden,
@@ -21822,7 +22059,7 @@
 /obj/structure/railing{
 	dir = 4
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "kNp" = (
 /obj/structure/railing{
@@ -21864,7 +22101,7 @@
 /obj/machinery/floodlight{
 	dir = 8
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/surface/opendeck)
 "kOb" = (
 /obj/structure/table/steel,
@@ -21897,7 +22134,7 @@
 	dir = 4
 	},
 /obj/structure/overfloor_catwalk/mesh,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "kOR" = (
 /obj/structure/sign/directions/hcz{
@@ -21909,7 +22146,7 @@
 	pixel_y = 36
 	},
 /obj/structure/overfloor_catwalk/lightdarkiron,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/surface/opendeck)
 "kPb" = (
 /obj/structure/railing{
@@ -21921,7 +22158,7 @@
 /obj/structure/railing{
 	dir = 8
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "kPg" = (
 /obj/structure/noticeboard{
@@ -21946,7 +22183,7 @@
 "kPw" = (
 /obj/structure/overfloor_catwalk/lightdarkiron,
 /obj/machinery/light,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "kPB" = (
 /obj/machinery/portable_atmospherics/canister/nitrogen,
@@ -21959,7 +22196,7 @@
 	},
 /obj/structure/railing,
 /obj/structure/overfloor_catwalk/lightdarkiron,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/surface/opendeck)
 "kQc" = (
 /obj/structure/table/steel,
@@ -22447,7 +22684,7 @@
 "lcQ" = (
 /obj/structure/overfloor_catwalk/mesh,
 /obj/item/clothing/head/cone,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "ldo" = (
 /obj/structure/railing{
@@ -22499,7 +22736,7 @@
 	dir = 8
 	},
 /obj/structure/closet/firecloset,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "lex" = (
 /obj/effect/spawner/random/engineering/tool,
@@ -22511,7 +22748,7 @@
 /obj/structure/railing{
 	dir = 4
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "leW" = (
 /turf/open/floor/tiled/techmaint{
@@ -22571,7 +22808,7 @@
 /area/space)
 "lgp" = (
 /obj/structure/window/reinforced,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "lgr" = (
 /obj/effect/turf_decal/ported/border/borderfloorblack{
@@ -22673,7 +22910,7 @@
 /area/space)
 "lip" = (
 /obj/structure/overfloor_catwalk/lightdarkiron,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/aihousing/interiorsanctum)
 "liE" = (
 /turf/open/floor/tiled/dark/monotile,
@@ -22710,7 +22947,7 @@
 /obj/effect/turf_decal/stripes{
 	dir = 4
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "liZ" = (
 /obj/machinery/vending/coffee,
@@ -22779,7 +23016,7 @@
 /obj/structure/railing{
 	dir = 8
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/surface/opendeck)
 "lkC" = (
 /obj/structure/closet/crate/woodencrate,
@@ -22827,7 +23064,7 @@
 /obj/structure/railing{
 	dir = 8
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "llZ" = (
 /obj/structure/table/steel,
@@ -22946,7 +23183,7 @@
 /obj/structure/railing,
 /obj/structure/overfloor_catwalk/mesh,
 /obj/structure/closet/crate,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "lpG" = (
 /obj/machinery/door/airlock/grunge{
@@ -23079,7 +23316,7 @@
 	dir = 4
 	},
 /obj/structure/table/steel,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "lrZ" = (
 /turf/open/floor/plating{
@@ -23093,7 +23330,7 @@
 	dir = 1
 	},
 /obj/structure/pallet,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "lsv" = (
 /obj/structure/fence/door{
@@ -23191,7 +23428,7 @@
 	dir = 4;
 	pixel_x = 3
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "ltV" = (
 /obj/structure/chair/sofa/bench/left,
@@ -23229,7 +23466,7 @@
 	dir = 4
 	},
 /obj/structure/railing,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/surface/opendeck)
 "luF" = (
 /obj/structure/fence/end{
@@ -23301,7 +23538,7 @@
 	desc = "Caution! Seek alternative route!";
 	name = "Caution Sign"
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "lwy" = (
 /obj/effect/turf_decal/ported/border/borderfloor{
@@ -23379,7 +23616,7 @@
 	dir = 8
 	},
 /obj/structure/railing,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "lzZ" = (
 /obj/effect/turf_decal/ported/border/borderfloor{
@@ -23422,7 +23659,7 @@
 /obj/structure/railing{
 	dir = 8
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/engineering/atmospherics)
 "lBF" = (
 /obj/machinery/door/airlock/engineering{
@@ -23473,7 +23710,7 @@
 	dir = 8;
 	pixel_y = -3
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "lDd" = (
 /obj/effect/spawner/structure/window/hollow/reinforced,
@@ -23532,7 +23769,7 @@
 	name = "Map Note";
 	desc = "As suggested by Derp I could make McCleary a random spawn and have little hint notes written in riddle form about where he's hiding on a given shift."
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "lEu" = (
 /obj/structure/railing{
@@ -23602,7 +23839,7 @@
 	name = "west bump";
 	pixel_x = -24
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/aihousing/interiorsanctum)
 "lFY" = (
 /obj/machinery/door/airlock/external/glass{
@@ -23650,7 +23887,7 @@
 	},
 /obj/structure/overfloor_catwalk/lightdarkiron,
 /obj/machinery/floodlight,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/surface/opendeck)
 "lHC" = (
 /obj/machinery/light/small{
@@ -23708,7 +23945,7 @@
 /obj/machinery/floodlight{
 	dir = 8
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "lIt" = (
 /obj/structure/closet/secure_closet/freezer/fridge,
@@ -23768,6 +24005,16 @@
 /obj/effect/decal/cleanable/dirt,
 /turf/open/floor/tiled/dark,
 /area/space)
+"lKd" = (
+/obj/structure/table/steel,
+/obj/item/folder/red,
+/obj/item/folder/red,
+/obj/item/folder/white,
+/obj/item/folder/white,
+/obj/item/folder/blue,
+/obj/item/folder/blue,
+/turf/open/floor/iron/dark,
+/area/space)
 "lKf" = (
 /obj/structure/railing,
 /obj/machinery/modular_computer/console/preset/civilian{
@@ -23815,6 +24062,12 @@
 	dir = 8
 	},
 /turf/open/floor/tiled/dark/monotile,
+/area/space)
+"lLf" = (
+/obj/structure/chair{
+	dir = 4
+	},
+/turf/open/floor/carpet/black,
 /area/space)
 "lLp" = (
 /obj/structure/closet/secure_closet/engineering_electrical{
@@ -24065,7 +24318,7 @@
 /obj/structure/sign/warning/fall{
 	pixel_y = -32
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "lUf" = (
 /obj/structure/pallet,
@@ -24104,7 +24357,7 @@
 	dir = 8;
 	id_tag = "MCLights"
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "lVl" = (
 /obj/machinery/computer{
@@ -24135,7 +24388,7 @@
 /obj/structure/overfloor_catwalk/lightdarkiron,
 /obj/structure/rack/dark,
 /obj/item/stack/cable_coil/random,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "lVF" = (
 /obj/machinery/cryopod{
@@ -24151,6 +24404,9 @@
 /obj/structure/flora/ausbushes/ppflowers,
 /turf/open/misc/dirt/dark,
 /area/site104/aihousing/entrancehall)
+"lVL" = (
+/turf/open/floor/carpet/black,
+/area/space)
 "lVO" = (
 /obj/structure/railing{
 	dir = 4
@@ -24208,7 +24464,7 @@
 	name = "Support Pole";
 	desc = "A simple bar railing, this one is being used to hold structures together."
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "lXy" = (
 /obj/structure/railing{
@@ -24328,7 +24584,7 @@
 	dir = 4
 	},
 /obj/structure/overfloor_catwalk/safe,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/surface/opendeck)
 "lZt" = (
 /obj/structure/fence,
@@ -24481,7 +24737,7 @@
 	dir = 4
 	},
 /obj/effect/turf_decal/stripes,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "mcP" = (
 /obj/structure/railing{
@@ -24527,7 +24783,7 @@
 	},
 /obj/structure/railing,
 /obj/structure/table/steel,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "mec" = (
 /obj/structure/sink/kitchen{
@@ -24671,6 +24927,18 @@
 /obj/structure/table/steel,
 /obj/item/reagent_containers/food/drinks/bottle/vodka/badminka,
 /turf/open/floor/tiled/techmaint,
+/area/space)
+"mhd" = (
+/obj/structure/platform_stairs,
+/obj/structure/railing{
+	dir = 8;
+	pixel_x = -3
+	},
+/obj/structure/railing{
+	dir = 4;
+	pixel_x = 2
+	},
+/turf/open/floor/tiled/dark,
 /area/space)
 "mhP" = (
 /obj/structure/railing{
@@ -24882,7 +25150,7 @@
 	dir = 4
 	},
 /obj/structure/overfloor_catwalk/safe,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/surface/opendeck)
 "mmc" = (
 /obj/structure/pallet,
@@ -25045,7 +25313,7 @@
 /area/space)
 "mqs" = (
 /obj/structure/lattice,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/engineering/atmospherics)
 "mqu" = (
 /obj/structure/flora/ausbushes/grassybush,
@@ -25078,7 +25346,7 @@
 	dir = 1
 	},
 /obj/structure/railing,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "mqT" = (
 /obj/structure/table/steel,
@@ -25097,7 +25365,7 @@
 	desc = "We're simulating a few tiles of open space around the Flare to allow actual gases here, how cool is that?!"
 	},
 /obj/structure/overfloor_catwalk/mesh,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/surface/opendeck)
 "mrQ" = (
 /obj/effect/turf_decal/ported/border/borderfloor/corner{
@@ -25122,7 +25390,7 @@
 /obj/structure/closet/crate/woodencrate,
 /obj/effect/spawner/random/maintenance/six,
 /obj/effect/spawner/random/maintenance/six,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "msf" = (
 /obj/machinery/disposal,
@@ -25288,7 +25556,7 @@
 "mva" = (
 /obj/structure/overfloor_catwalk/mesh,
 /obj/structure/table/steel,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "mve" = (
 /turf/closed/wall/mineral/oldiron,
@@ -25310,20 +25578,32 @@
 	dir = 1
 	},
 /obj/item/reagent_containers/watertank/barrel,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "mvS" = (
 /obj/machinery/door/airlock/engineering{
 	name = "Flare"
 	},
 /obj/structure/overfloor_catwalk/lightdarkiron,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/surface/opendeck)
 "mvV" = (
 /obj/structure/chair{
 	dir = 4
 	},
 /turf/open/floor/plating,
+/area/space)
+"mwm" = (
+/obj/structure/platform_stairs{
+	dir = 4
+	},
+/obj/structure/railing{
+	pixel_y = -4
+	},
+/obj/structure/railing{
+	dir = 1
+	},
+/turf/open/floor/tiled/dark,
 /area/space)
 "mwv" = (
 /obj/structure/pallet,
@@ -25360,6 +25640,10 @@
 /obj/item/clothing/gloves/color/latex,
 /obj/item/clothing/gloves/color/latex,
 /turf/open/floor/tiled/dark/small,
+/area/space)
+"mwR" = (
+/obj/structure/filingcabinet/employment,
+/turf/open/floor/iron/dark/textured_half,
 /area/space)
 "mxc" = (
 /obj/machinery/door/airlock/maintenance{
@@ -25553,7 +25837,7 @@
 	dir = 8
 	},
 /obj/effect/decal/cleanable/cobweb,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "mDU" = (
 /obj/structure/sign/warning/moving_parts{
@@ -25588,7 +25872,7 @@
 	dir = 4
 	},
 /obj/structure/overfloor_catwalk/safe,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/surface/opendeck)
 "mEr" = (
 /obj/effect/turf_decal/stripes,
@@ -25629,7 +25913,7 @@
 	dir = 4
 	},
 /obj/structure/overfloor_catwalk/lightdarkiron,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "mFm" = (
 /obj/structure/overfloor_catwalk/lightdarkiron,
@@ -25645,6 +25929,12 @@
 /obj/structure/pallet,
 /turf/open/floor/concrete,
 /area/site104/surface/opendeck)
+"mFx" = (
+/obj/structure/platform_stairs{
+	dir = 4
+	},
+/turf/open/floor/tiled/techmaint,
+/area/space)
 "mFD" = (
 /obj/machinery/atmospherics/components/tank/oxygen,
 /turf/open/floor/tiled/dark/small,
@@ -25856,7 +26146,7 @@
 	dir = 4;
 	pixel_x = 2
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "mLG" = (
 /obj/structure/railing,
@@ -25864,7 +26154,7 @@
 /obj/structure/railing{
 	dir = 8
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "mLT" = (
 /obj/structure/overfloor_catwalk/lightdarkiron,
@@ -25876,7 +26166,7 @@
 /obj/effect/spawner/random/engineering/flashlight,
 /obj/effect/spawner/random/engineering/flashlight,
 /obj/effect/spawner/random/engineering/material,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "mMT" = (
 /obj/structure/railing,
@@ -25910,7 +26200,7 @@
 	dir = 1;
 	use_power = 1
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "mNc" = (
 /obj/machinery/door/airlock/engineering{
@@ -25940,7 +26230,7 @@
 /obj/structure/railing{
 	dir = 1
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/surface/opendeck)
 "mNL" = (
 /obj/item/kirbyplants/pottedplant/floorleaf,
@@ -25989,7 +26279,7 @@
 	desc = "A heavy, metal utility cart with wheels."
 	},
 /obj/item/light/tube,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "mOq" = (
 /obj/structure/chair/sofa/corp/left{
@@ -26278,7 +26568,7 @@
 /obj/structure/railing{
 	dir = 8
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/engineering/reactor)
 "mXK" = (
 /obj/structure/overfloor_catwalk/mesh,
@@ -26436,6 +26726,7 @@
 	pixel_x = 32;
 	dir = 8
 	},
+/obj/machinery/telephone,
 /turf/open/floor/tiled/dark/monotile,
 /area/space)
 "nbT" = (
@@ -26468,7 +26759,7 @@
 /obj/machinery/light{
 	dir = 4
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/aihousing/interiorsanctum)
 "ncO" = (
 /obj/structure/railing{
@@ -26485,7 +26776,7 @@
 	dir = 8
 	},
 /obj/structure/window/reinforced,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "ndv" = (
 /obj/structure/pallet,
@@ -26555,7 +26846,7 @@
 	dir = 8
 	},
 /obj/structure/overfloor_catwalk/safe,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/surface/opendeck)
 "nfE" = (
 /obj/structure/railing,
@@ -26606,7 +26897,7 @@
 /obj/structure/extinguisher_cabinet{
 	pixel_y = 32
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "ngD" = (
 /obj/structure/fence{
@@ -26636,6 +26927,9 @@
 	},
 /turf/open/floor/tiled/dark,
 /area/site104/utilities/marinecontrol/northserverfarm)
+"ngR" = (
+/turf/open/floor/iron/dark/textured_half,
+/area/space)
 "ngS" = (
 /obj/structure/pallet,
 /obj/machinery/floodlight,
@@ -26668,13 +26962,13 @@
 	pixel_x = -3
 	},
 /obj/structure/overfloor_catwalk/iron_dark,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "nhB" = (
 /obj/structure/window/reinforced{
 	dir = 1
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "nhE" = (
 /obj/structure/overfloor_catwalk/lightdarkiron,
@@ -26691,7 +26985,11 @@
 /obj/item/robot_suit/prebuilt,
 /obj/item/bodypart/head/robot,
 /obj/item/bodypart/chest/robot,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
+/area/space)
+"nhI" = (
+/obj/machinery/mineral/processing_unit_console,
+/turf/open/floor/iron/dark,
 /area/space)
 "nit" = (
 /obj/structure/pallet,
@@ -26731,7 +27029,7 @@
 /obj/structure/overfloor_catwalk/mesh,
 /obj/structure/table/steel,
 /obj/item/wrench,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "njJ" = (
 /obj/machinery/door/airlock/engineering{
@@ -26838,7 +27136,7 @@
 /obj/structure/railing{
 	dir = 1
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "nnA" = (
 /obj/structure/table/steel,
@@ -26994,7 +27292,7 @@
 /area/space)
 "nqN" = (
 /obj/structure/overfloor_catwalk/iron,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "nqO" = (
 /obj/structure/railing{
@@ -27422,7 +27720,7 @@
 /area/site104/logistics/looffice)
 "nET" = (
 /obj/machinery/light/red,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "nFd" = (
 /obj/structure/overfloor_catwalk/mesh,
@@ -27440,7 +27738,7 @@
 /obj/structure/railing{
 	dir = 8
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "nFl" = (
 /obj/structure/table/steel,
@@ -27494,7 +27792,7 @@
 	dir = 4
 	},
 /obj/item/clothing/head/cone,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "nFQ" = (
 /obj/structure/pallet,
@@ -27505,7 +27803,7 @@
 /obj/structure/railing,
 /obj/structure/overfloor_catwalk/iron,
 /obj/item/clothing/head/cone,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "nGt" = (
 /obj/structure/closet,
@@ -27635,7 +27933,7 @@
 /obj/item/food/burger/fish{
 	desc = "Burger?"
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "nKs" = (
 /obj/structure/rack/shelf,
@@ -27663,7 +27961,7 @@
 /area/space)
 "nLF" = (
 /obj/structure/overfloor_catwalk/mesh,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/surface/opendeck)
 "nLO" = (
 /obj/structure/overfloor_catwalk/lightdarkiron,
@@ -27732,7 +28030,7 @@
 	pixel_y = -32;
 	desc = "Security Checkpoint Ahead!"
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/surface/opendeck)
 "nPe" = (
 /obj/structure/table/steel,
@@ -27776,7 +28074,7 @@
 	dir = 8
 	},
 /obj/structure/railing,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "nQb" = (
 /obj/effect/turf_decal/ported/outline,
@@ -27803,7 +28101,7 @@
 	dir = 8
 	},
 /obj/structure/closet/toolcloset,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "nRj" = (
 /obj/structure/railing{
@@ -28023,7 +28321,7 @@
 	dir = 4
 	},
 /obj/structure/overfloor_catwalk/safe,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/surface/opendeck)
 "nVS" = (
 /obj/structure/table/steel/reinforced,
@@ -28099,7 +28397,7 @@
 /obj/structure/rack/dark,
 /obj/effect/spawner/random/powercell/low_tier,
 /obj/effect/spawner/random/powercell/low_tier,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "nYn" = (
 /obj/structure/bed/roller,
@@ -28320,7 +28618,7 @@
 	dir = 8
 	},
 /obj/structure/closet/crate,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "odO" = (
 /obj/structure/railing{
@@ -28526,7 +28824,7 @@
 	dir = 1
 	},
 /obj/structure/overfloor_catwalk/mesh,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/surface/opendeck)
 "ohK" = (
 /obj/machinery/modular_computer/console/preset/civilian,
@@ -28715,7 +29013,7 @@
 	name = "Map Note";
 	desc = "Maybe make this a keyless variant so D-class have to find a key?"
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "omm" = (
 /obj/structure/sign/directions/medical{
@@ -28791,7 +29089,7 @@
 /obj/structure/railing{
 	dir = 4
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "oot" = (
 /obj/item/kirbyplants/pottedplant/minitree,
@@ -28844,7 +29142,7 @@
 /obj/machinery/floodlight{
 	dir = 1
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "ops" = (
 /obj/structure/table/steel/reinforced,
@@ -28922,7 +29220,7 @@
 	pixel_x = -18
 	},
 /obj/machinery/light/small/red/directional/east,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "orE" = (
 /obj/effect/turf_decal/stripes{
@@ -29034,6 +29332,11 @@
 	},
 /turf/open/floor/plating,
 /area/space)
+"otX" = (
+/obj/structure/table/steel,
+/obj/machinery/photocopier,
+/turf/open/floor/iron/dark,
+/area/space)
 "oui" = (
 /obj/structure/closet/crate/secure,
 /obj/effect/spawner/random/contraband,
@@ -29064,7 +29367,7 @@
 "ouB" = (
 /obj/structure/railing,
 /obj/structure/overfloor_catwalk/lightdarkiron,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/surface/opendeck)
 "ouC" = (
 /obj/item/clothing/suit/hooded/wintercoat,
@@ -29180,7 +29483,7 @@
 	},
 /area/space)
 "oxa" = (
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/maintenance/interior/deck2port)
 "oxc" = (
 /obj/effect/turf_decal/stripes{
@@ -29212,7 +29515,7 @@
 /area/site104/engineering/atmospherics)
 "oxK" = (
 /obj/structure/lattice,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "oyd" = (
 /obj/effect/turf_decal/stripes/corner,
@@ -29327,6 +29630,18 @@
 /obj/structure/table/steel,
 /turf/open/floor/tiled/dark/monotile,
 /area/space)
+"oAL" = (
+/obj/structure/overfloor_catwalk/mesh,
+/obj/structure/railing{
+	dir = 4;
+	pixel_x = 2
+	},
+/obj/structure/railing{
+	dir = 8;
+	pixel_x = -3
+	},
+/turf/open/floor/plating,
+/area/space)
 "oAN" = (
 /obj/structure/overfloor_catwalk/lightdarkiron,
 /obj/structure/railing{
@@ -29339,7 +29654,7 @@
 /obj/structure/railing{
 	dir = 1
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "oAQ" = (
 /obj/effect/turf_decal/stripes/corner,
@@ -29683,7 +29998,7 @@
 /obj/structure/railing/corner{
 	dir = 4
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "oOJ" = (
 /obj/structure/overfloor_catwalk/lightdarkiron,
@@ -29718,7 +30033,7 @@
 	dir = 1
 	},
 /obj/structure/overfloor_catwalk/mesh,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/surface/opendeck)
 "oQP" = (
 /obj/structure/table/steel,
@@ -29801,7 +30116,7 @@
 "oSJ" = (
 /obj/item/clothing/head/cone,
 /obj/structure/overfloor_catwalk/lightdarkiron,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "oSS" = (
 /obj/structure/table/steel/reinforced,
@@ -29877,7 +30192,7 @@
 	dir = 1
 	},
 /obj/effect/decal/cleanable/oil,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "oUm" = (
 /turf/open/floor/plating,
@@ -29887,7 +30202,7 @@
 /obj/structure/sign/warning/fall{
 	pixel_y = -32
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/aihousing/interiorsanctum)
 "oUP" = (
 /obj/structure/grille,
@@ -29991,6 +30306,12 @@
 /obj/structure/fence/door,
 /turf/open/floor/plating,
 /area/space)
+"oZg" = (
+/obj/machinery/door/airlock/command{
+	name = "Directors Office"
+	},
+/turf/open/floor/iron/dark,
+/area/space)
 "oZi" = (
 /obj/structure/railing{
 	dir = 4
@@ -30073,6 +30394,22 @@
 /obj/structure/railing,
 /turf/open/floor/tiled/dark/monotile,
 /area/space)
+"paA" = (
+/obj/structure/railing{
+	dir = 8
+	},
+/obj/structure/railing{
+	dir = 1
+	},
+/obj/structure/railing,
+/obj/structure/railing{
+	dir = 4
+	},
+/obj/item/kirbyplants/pottedplant/evergreen{
+	pixel_y = 12
+	},
+/turf/open/floor/iron/dark,
+/area/space)
 "paE" = (
 /obj/structure/pallet,
 /obj/item/reagent_containers/fueltank/barrel,
@@ -30089,7 +30426,7 @@
 /obj/structure/railing{
 	pixel_y = -3
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/surface/opendeck)
 "paP" = (
 /obj/structure/table/steel,
@@ -30104,7 +30441,7 @@
 	dir = 4
 	},
 /obj/machinery/space_heater,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "pba" = (
 /obj/structure/table/steel,
@@ -30214,7 +30551,7 @@
 	dir = 4
 	},
 /obj/structure/railing,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "pdP" = (
 /obj/machinery/floodlight/wallmounted{
@@ -30226,7 +30563,7 @@
 /obj/effect/spawner/structure/window/hollow/reinforced,
 /obj/effect/spawner/structure/window/hollow/reinforced,
 /obj/structure/overfloor_catwalk/lightdarkiron,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/surface/opendeck)
 "pdX" = (
 /obj/structure/overfloor_catwalk/mesh,
@@ -30254,7 +30591,7 @@
 	name = "WARNING";
 	pixel_x = -32
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "pee" = (
 /obj/machinery/power/smes/engineering,
@@ -30365,7 +30702,7 @@
 	desc = "Caution! Looks like ongoing maintenance work...";
 	name = "Floor sign"
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "pjb" = (
 /obj/structure/pallet,
@@ -30660,7 +30997,7 @@
 	name = "\improper WEATHER HOOD ACCESS";
 	desc = "Weather Hood Access; Shelter Here"
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "prl" = (
 /obj/machinery/door/airlock/security{
@@ -30881,12 +31218,12 @@
 /obj/effect/spawner/random/maintenance/six,
 /obj/effect/spawner/random/maintenance/six,
 /obj/structure/overfloor_catwalk/safe,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/surface/opendeck)
 "pxv" = (
 /obj/item/reagent_containers/fueltank/barrel,
 /obj/structure/overfloor_catwalk/safe,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/surface/opendeck)
 "pxD" = (
 /obj/structure/table/steel,
@@ -31069,7 +31406,7 @@
 /obj/machinery/atmospherics/pipe/smart/simple/dark/hidden/layer2{
 	dir = 4
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "pzU" = (
 /obj/machinery/floodlight,
@@ -31182,7 +31519,7 @@
 "pBw" = (
 /obj/effect/spawner/structure/window/hollow/reinforced,
 /obj/structure/overfloor_catwalk/lightdarkiron,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "pBQ" = (
 /obj/machinery/space_heater,
@@ -31303,7 +31640,7 @@
 /obj/structure/railing{
 	dir = 4
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/surface/opendeck)
 "pEr" = (
 /obj/machinery/power/terminal,
@@ -31439,7 +31776,7 @@
 	dir = 4;
 	id_tag = "MCLights"
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/engineering/reactor)
 "pHf" = (
 /obj/structure/table/steel,
@@ -31512,7 +31849,7 @@
 /obj/structure/chair{
 	dir = 4
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/maintenance/northrigstarboard)
 "pIz" = (
 /obj/machinery/power/solar,
@@ -31539,7 +31876,7 @@
 "pIN" = (
 /obj/structure/overfloor_catwalk/lightdarkiron,
 /obj/item/reagent_containers/fueltank/barrel,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "pJa" = (
 /obj/structure/fence,
@@ -31719,7 +32056,7 @@
 "pNc" = (
 /obj/structure/overfloor_catwalk/mesh,
 /obj/machinery/light,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/engineering/reactor)
 "pNf" = (
 /obj/effect/turf_decal/stripes{
@@ -31812,7 +32149,7 @@
 	dir = 1
 	},
 /obj/structure/overfloor_catwalk/lightdarkiron,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "pQN" = (
 /obj/item/stack/sheet/plasteel/fifty,
@@ -31837,7 +32174,7 @@
 /obj/structure/railing{
 	dir = 1
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "pRa" = (
 /obj/structure/railing{
@@ -32041,7 +32378,7 @@
 /turf/open/floor/tiled/dark,
 /area/space)
 "pUK" = (
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "pUM" = (
 /obj/structure/closet/crate/woodencrate{
@@ -32103,7 +32440,7 @@
 /obj/effect/spawner/random/maintenance/six,
 /obj/effect/spawner/random/maintenance/six,
 /obj/structure/overfloor_catwalk/safe,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/surface/opendeck)
 "pWo" = (
 /obj/structure/railing{
@@ -32146,12 +32483,12 @@
 /area/space)
 "pWL" = (
 /obj/structure/overfloor_catwalk/mesh,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/engineering/reactor)
 "pWV" = (
 /obj/structure/overfloor_catwalk/safe,
 /obj/structure/railing,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "pWX" = (
 /obj/machinery/light{
@@ -32183,7 +32520,7 @@
 /obj/structure/chair/sofa/corp/left{
 	dir = 8
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "pXw" = (
 /obj/machinery/door/airlock/maintenance_hatch,
@@ -32212,7 +32549,7 @@
 /obj/structure/overfloor_catwalk/lightdarkiron,
 /obj/structure/railing,
 /obj/effect/decal/cleanable/oil,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "pXZ" = (
 /obj/structure/table/steel,
@@ -32225,12 +32562,17 @@
 "pYw" = (
 /turf/closed/wall/mineral/oldiron,
 /area/site104/engineering/powerbay)
+"pYJ" = (
+/obj/structure/table/steel/reinforced,
+/obj/machinery/camera,
+/turf/open/floor/iron/dark/textured_half,
+/area/space)
 "pYN" = (
 /obj/structure/overfloor_catwalk/mesh,
 /obj/structure/railing{
 	dir = 4
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/engineering/reactor)
 "pYP" = (
 /obj/structure/rack/dark,
@@ -32326,6 +32668,13 @@
 /obj/structure/table/steel,
 /turf/open/floor/tiled/dark/monotile,
 /area/space)
+"qaQ" = (
+/obj/structure/overfloor_catwalk/mesh,
+/obj/structure/railing{
+	dir = 1
+	},
+/turf/closed/wall/mineral/oldiron,
+/area/space)
 "qbe" = (
 /turf/open/floor/tiled/dark/small,
 /area/site104/aihousing/control1)
@@ -32352,6 +32701,15 @@
 	icon_state = "warning"
 	},
 /turf/open/floor/tiled/dark/monotile,
+/area/space)
+"qbr" = (
+/obj/structure/overfloor_catwalk/mesh,
+/obj/structure/railing{
+	dir = 8;
+	pixel_x = -3
+	},
+/obj/structure/railing,
+/turf/open/floor/plating,
 /area/space)
 "qbF" = (
 /obj/structure/railing{
@@ -32394,7 +32752,7 @@
 /obj/structure/overfloor_catwalk/mesh,
 /obj/item/reagent_containers/barrel/generic,
 /obj/structure/pallet,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "qcv" = (
 /obj/structure/pallet,
@@ -32652,13 +33010,23 @@
 	},
 /turf/open/floor/plating,
 /area/space)
+"qih" = (
+/obj/structure/overfloor_catwalk/mesh,
+/obj/structure/railing{
+	pixel_y = -4
+	},
+/obj/structure/railing{
+	dir = 1
+	},
+/turf/open/floor/plating,
+/area/space)
 "qim" = (
 /obj/structure/overfloor_catwalk/lightdarkiron,
 /obj/structure/railing{
 	dir = 4
 	},
 /obj/structure/railing,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "qip" = (
 /obj/machinery/conveyor/auto{
@@ -32696,7 +33064,7 @@
 /area/space)
 "qiZ" = (
 /obj/structure/overfloor_catwalk/mesh,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "qjP" = (
 /obj/item/radio/intercom{
@@ -32782,6 +33150,17 @@
 	},
 /turf/open/floor/tiled/dark/small,
 /area/site104/aihousing/control1)
+"qlJ" = (
+/obj/structure/railing{
+	dir = 4;
+	pixel_x = 2
+	},
+/obj/structure/railing{
+	pixel_y = -4
+	},
+/obj/machinery/floodlight,
+/turf/open/floor/tiled/dark,
+/area/space)
 "qlW" = (
 /obj/structure/rack/dark,
 /obj/effect/spawner/random/engineering/tool,
@@ -32866,7 +33245,7 @@
 /obj/structure/railing{
 	dir = 1
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "qoo" = (
 /obj/structure/railing{
@@ -33071,7 +33450,7 @@
 /obj/structure/railing{
 	dir = 1
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/surface/opendeck)
 "qso" = (
 /obj/structure/toilet{
@@ -33104,7 +33483,7 @@
 	dir = 8
 	},
 /obj/structure/railing,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/surface/opendeck)
 "qsP" = (
 /obj/structure/filingcabinet/chestdrawer,
@@ -33322,7 +33701,7 @@
 "qzo" = (
 /obj/structure/overfloor_catwalk/mesh,
 /obj/structure/railing,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "qzQ" = (
 /obj/structure/table/steel/reinforced,
@@ -33494,7 +33873,7 @@
 /obj/effect/spawner/random/glowstick,
 /obj/effect/spawner/random/glowstick,
 /obj/effect/spawner/random/glowstick,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "qCu" = (
 /obj/structure/rack/dark,
@@ -33541,7 +33920,7 @@
 "qDo" = (
 /obj/structure/overfloor_catwalk/iron_dark,
 /obj/machinery/conveyor,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "qDu" = (
 /obj/structure/railing,
@@ -33558,7 +33937,7 @@
 	dir = 8
 	},
 /obj/structure/chair/stool,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "qEo" = (
 /obj/machinery/atmospherics/pipe/smart/simple/dark/hidden/layer2{
@@ -33631,7 +34010,7 @@
 /obj/structure/railing{
 	dir = 4
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/surface/opendeck)
 "qGU" = (
 /turf/open/floor/plating,
@@ -33872,7 +34251,7 @@
 /obj/structure/railing{
 	dir = 8
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "qMx" = (
 /obj/structure/fence/cut/medium{
@@ -33931,7 +34310,7 @@
 	dir = 8
 	},
 /obj/item/clothing/head/cone,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "qOC" = (
 /obj/structure/railing{
@@ -34133,7 +34512,7 @@
 	dir = 4
 	},
 /obj/item/reagent_containers/barrel/generic,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "qUb" = (
 /obj/effect/spawner/structure/window/hollow/reinforced,
@@ -34177,7 +34556,7 @@
 	dir = 1;
 	id_tag = "MCLights"
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "qVk" = (
 /obj/machinery/vending/engivend{
@@ -34203,7 +34582,7 @@
 /obj/structure/railing{
 	dir = 1
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/aihousing/interiorsanctum)
 "qWP" = (
 /obj/structure/overfloor_catwalk/lightdarkiron,
@@ -34293,7 +34672,7 @@
 	dir = 8
 	},
 /obj/machinery/floodlight,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "qZI" = (
 /obj/structure/overfloor_catwalk/iron_dark,
@@ -34301,7 +34680,7 @@
 	dir = 10
 	},
 /obj/structure/railing,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "qZM" = (
 /obj/structure/grille{
@@ -34427,7 +34806,7 @@
 "rbD" = (
 /obj/structure/railing,
 /obj/structure/overfloor_catwalk/euclid,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "rbG" = (
 /obj/structure/fence{
@@ -34471,7 +34850,7 @@
 "rcj" = (
 /obj/structure/closet/crate,
 /obj/structure/overfloor_catwalk/lightdarkiron,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/maintenance/interior/deck2port)
 "rcD" = (
 /obj/machinery/door/airlock/engineering{
@@ -34606,6 +34985,12 @@
 	},
 /turf/open/floor/tiled/dark,
 /area/site104/surface/opendeck)
+"rgs" = (
+/obj/machinery/door/airlock/command{
+	name = "Directors Office"
+	},
+/turf/open/openspace/airless/planetary,
+/area/space)
 "rgB" = (
 /obj/item/flashlight/flare,
 /obj/item/flashlight/flare,
@@ -34624,6 +35009,10 @@
 /obj/structure/filingcabinet,
 /turf/open/floor/tiled/dark/small,
 /area/site104/surface/opendeck)
+"rhi" = (
+/obj/structure/overfloor_catwalk/mesh,
+/turf/open/openspace,
+/area/space)
 "rhl" = (
 /obj/structure/pallet,
 /obj/item/reagent_containers/barrel/generic,
@@ -34689,7 +35078,7 @@
 /obj/structure/railing{
 	dir = 4
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "rjf" = (
 /obj/effect/turf_decal/stripes/end{
@@ -34765,7 +35154,7 @@
 /obj/structure/railing{
 	dir = 8
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "rkF" = (
 /obj/structure/ladder,
@@ -34833,14 +35222,14 @@
 /obj/structure/railing{
 	dir = 8
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "rnl" = (
 /obj/structure/table/steel,
 /obj/item/toy/mecha/deathripley,
 /obj/item/toy/figure/ian,
 /obj/structure/overfloor_catwalk/lightdarkiron,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "rnu" = (
 /obj/machinery/photocopier,
@@ -34959,7 +35348,7 @@
 	anchored = 1;
 	dir = 4
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "rpF" = (
 /obj/structure/railing,
@@ -35050,7 +35439,7 @@
 "rqS" = (
 /obj/structure/overfloor_catwalk/safe,
 /obj/structure/fence,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/surface/opendeck)
 "rqT" = (
 /obj/effect/turf_decal/ported/border/borderfloorblack{
@@ -35082,7 +35471,7 @@
 	dir = 1;
 	id_tag = "MCLights"
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/aihousing/interiorsanctum)
 "rrB" = (
 /obj/machinery/door/airlock/security{
@@ -35098,7 +35487,7 @@
 /obj/structure/railing{
 	dir = 1
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "rrP" = (
 /obj/structure/disposalpipe/broken{
@@ -35155,7 +35544,7 @@
 "rsw" = (
 /obj/item/reagent_containers/watertank/barrel,
 /obj/structure/overfloor_catwalk/safe,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/surface/opendeck)
 "rsA" = (
 /obj/structure/table/steel,
@@ -35411,7 +35800,7 @@
 /obj/structure/railing{
 	dir = 8
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "ryq" = (
 /obj/structure/overfloor_catwalk/lightdarkiron,
@@ -35572,7 +35961,7 @@
 "rCo" = (
 /obj/machinery/door/airlock/engineering,
 /obj/structure/overfloor_catwalk/mesh,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/surface/opendeck)
 "rCp" = (
 /obj/structure/reagent_dispensers/water_cooler,
@@ -35602,6 +35991,12 @@
 	pixel_y = 12
 	},
 /turf/open/floor/plating,
+/area/space)
+"rDl" = (
+/obj/structure/sign/painting/large{
+	pixel_y = 25
+	},
+/turf/open/floor/iron/dark/textured_half,
 /area/space)
 "rDv" = (
 /obj/structure/fence{
@@ -35712,7 +36107,7 @@
 /obj/structure/railing{
 	dir = 1
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "rGY" = (
 /obj/structure/table/steel,
@@ -35761,7 +36156,7 @@
 	dir = 1
 	},
 /obj/structure/overfloor_catwalk/lightdarkiron,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "rHJ" = (
 /obj/machinery/rnd/production/circuit_imprinter,
@@ -35861,7 +36256,7 @@
 /obj/machinery/floodlight{
 	dir = 8
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "rLn" = (
 /obj/structure/overfloor_catwalk/mesh,
@@ -35872,7 +36267,12 @@
 	dir = 1
 	},
 /obj/structure/closet/emcloset,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
+/area/space)
+"rLy" = (
+/obj/structure/table/steel/reinforced,
+/obj/machinery/telephone,
+/turf/open/floor/carpet/black,
 /area/space)
 "rLE" = (
 /obj/structure/chair,
@@ -35901,7 +36301,7 @@
 /obj/effect/spawner/random/engineering/tool,
 /obj/effect/spawner/random/engineering/tool,
 /obj/effect/spawner/random/engineering/tool,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "rLZ" = (
 /obj/machinery/floodlight,
@@ -35928,7 +36328,7 @@
 /obj/structure/overfloor_catwalk/lightdarkiron,
 /obj/effect/spawner/structure/window/hollow/reinforced,
 /obj/effect/spawner/structure/window/hollow/reinforced,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/surface/opendeck)
 "rMK" = (
 /obj/structure/chair/stool,
@@ -35954,7 +36354,7 @@
 "rNp" = (
 /obj/structure/mopbucket,
 /obj/structure/overfloor_catwalk/safe,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/surface/opendeck)
 "rNw" = (
 /obj/machinery/vending/robotics{
@@ -36072,7 +36472,7 @@
 /obj/structure/railing{
 	dir = 1
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "rRc" = (
 /obj/machinery/cryopod,
@@ -36207,7 +36607,7 @@
 	dir = 8
 	},
 /obj/machinery/floodlight,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "rUE" = (
 /obj/structure/railing{
@@ -36367,6 +36767,10 @@
 /obj/item/seeds/grass,
 /turf/open/floor/tiled/dark,
 /area/space)
+"rYk" = (
+/obj/structure/filingcabinet/medical,
+/turf/open/floor/iron/dark/textured_half,
+/area/space)
 "rYs" = (
 /obj/structure/fence/door,
 /obj/structure/overfloor_catwalk/safe,
@@ -36433,7 +36837,7 @@
 /obj/structure/railing{
 	dir = 8
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "say" = (
 /obj/item/clothing/under/rank/medical/scrubs/blue,
@@ -36472,7 +36876,7 @@
 /obj/structure/railing{
 	dir = 8
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/surface/opendeck)
 "sbN" = (
 /obj/structure/fence/post,
@@ -36585,7 +36989,7 @@
 	dir = 8
 	},
 /obj/machinery/floodlight,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/surface/opendeck)
 "sgn" = (
 /obj/machinery/portable_atmospherics/canister/nitrogen,
@@ -36609,7 +37013,7 @@
 /obj/structure/railing{
 	dir = 8
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "sgN" = (
 /obj/machinery/status_display/supply{
@@ -36640,7 +37044,7 @@
 	dir = 8;
 	pixel_y = -3
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "shv" = (
 /obj/machinery/door/airlock/maintenance_hatch,
@@ -36703,7 +37107,7 @@
 "sir" = (
 /obj/effect/spawner/structure/window/hollow/reinforced,
 /obj/effect/spawner/structure/window/hollow/reinforced,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "six" = (
 /obj/structure/table/steel,
@@ -36740,7 +37144,7 @@
 	dir = 8
 	},
 /obj/structure/railing,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "sjg" = (
 /obj/structure/railing,
@@ -36833,7 +37237,7 @@
 	dir = 1;
 	id_tag = "MCLights"
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/engineering/reactor)
 "slK" = (
 /obj/structure/railing{
@@ -36962,7 +37366,7 @@
 /obj/structure/fence{
 	dir = 4
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/surface/opendeck)
 "soe" = (
 /obj/structure/overfloor_catwalk/lightdarkiron,
@@ -37215,6 +37619,11 @@
 /obj/effect/spawner/structure/window/hollow/reinforced/plasma,
 /turf/open/floor/plating,
 /area/space)
+"stO" = (
+/obj/machinery/mineral/stacking_machine,
+/obj/structure/overfloor_catwalk/mesh,
+/turf/open/floor/plating,
+/area/space)
 "stP" = (
 /obj/effect/turf_decal/stripes{
 	dir = 1
@@ -37279,7 +37688,7 @@
 /obj/machinery/floodlight{
 	dir = 8
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/aihousing/interiorsanctum)
 "svv" = (
 /obj/machinery/rnd/production/fabricator,
@@ -37390,7 +37799,7 @@
 	},
 /obj/structure/railing,
 /obj/structure/overfloor_catwalk/lightdarkiron,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "syR" = (
 /obj/structure/platform_stairs,
@@ -37501,7 +37910,7 @@
 /obj/structure/pallet,
 /obj/item/stack/rods/fifty,
 /obj/structure/overfloor_catwalk/safe,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/surface/opendeck)
 "sCg" = (
 /obj/structure/overfloor_catwalk/iron{
@@ -37512,7 +37921,7 @@
 	dir = 8
 	},
 /obj/structure/railing,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "sCD" = (
 /obj/structure/chair/sofa/corp/right{
@@ -37667,7 +38076,7 @@
 /obj/item/flashlight/flare,
 /obj/structure/closet,
 /obj/item/flashlight/flare,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/surface/opendeck)
 "sHm" = (
 /obj/effect/landmark{
@@ -37681,7 +38090,7 @@
 /obj/machinery/light{
 	id_tag = "MCLights"
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "sHy" = (
 /obj/structure/overfloor_catwalk/lightdarkiron,
@@ -37717,7 +38126,7 @@
 	name = "Support Pole";
 	desc = "A simple bar railing, this one is being used to hold structures together."
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "sIw" = (
 /obj/structure/flora/ausbushes/ppflowers,
@@ -37774,7 +38183,7 @@
 	dir = 1
 	},
 /obj/structure/overfloor_catwalk/safe,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/surface/opendeck)
 "sKr" = (
 /obj/structure/closet/secure_closet/personal/cabinet,
@@ -37808,7 +38217,7 @@
 	dir = 1;
 	use_power = 1
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "sLh" = (
 /obj/structure/rack{
@@ -37925,7 +38334,7 @@
 "sMU" = (
 /obj/structure/overfloor_catwalk/mesh,
 /obj/structure/chair/stool,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "sNa" = (
 /obj/structure/railing{
@@ -38042,7 +38451,7 @@
 /obj/effect/turf_decal/stripes{
 	dir = 4
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "sPI" = (
 /obj/structure/railing{
@@ -38298,6 +38707,10 @@
 /obj/structure/table,
 /turf/open/floor/tiled/techmaint,
 /area/space)
+"sVp" = (
+/obj/structure/rack/shelf,
+/turf/open/floor/iron/dark/textured_half,
+/area/space)
 "sVq" = (
 /obj/item/reagent_containers/watertank/barrel,
 /obj/structure/fence{
@@ -38337,7 +38750,7 @@
 /obj/effect/turf_decal/stripes{
 	dir = 8
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "sWN" = (
 /turf/open/floor/tiled/dark/corner,
@@ -38484,7 +38897,7 @@
 "sZB" = (
 /obj/item/toy/beach_ball/holoball,
 /obj/structure/overfloor_catwalk/iron_white,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "sZD" = (
 /obj/structure/closet/crate/woodencrate{
@@ -38512,7 +38925,7 @@
 	name = "Support Pole";
 	desc = "A simple bar railing, this one is being used to hold structures together."
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "sZT" = (
 /obj/machinery/light/small,
@@ -38642,7 +39055,7 @@
 /obj/structure/closet/crate/woodencrate,
 /obj/effect/spawner/random/engineering/toolbox,
 /obj/effect/spawner/random/engineering/tool,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "tdb" = (
 /obj/structure/pallet,
@@ -38841,7 +39254,7 @@
 	dir = 8
 	},
 /obj/structure/overfloor_catwalk/mesh,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "tgu" = (
 /obj/effect/decal/cleanable/cobweb/cobweb2,
@@ -38918,7 +39331,7 @@
 "tjE" = (
 /obj/structure/overfloor_catwalk/lightdarkiron,
 /obj/item/clothing/head/cone,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "tjL" = (
 /obj/effect/landmark{
@@ -38975,7 +39388,7 @@
 /obj/effect/spawner/random/engineering/tool,
 /obj/effect/spawner/random/engineering/tool,
 /obj/item/toy/plushie/nymph,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "tkD" = (
 /obj/structure/overfloor_catwalk/mesh,
@@ -39211,7 +39624,7 @@
 	dir = 4
 	},
 /obj/structure/overfloor_catwalk/iron,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "tqs" = (
 /turf/closed/wall/mineral/oldiron,
@@ -39242,7 +39655,7 @@
 	},
 /obj/structure/overfloor_catwalk/mesh,
 /obj/structure/closet/secure_closet/engineering_welding,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "tqZ" = (
 /obj/structure/fence/corner{
@@ -39412,7 +39825,7 @@
 /obj/structure/fence{
 	dir = 4
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "tvG" = (
 /obj/structure/table/steel,
@@ -39431,7 +39844,7 @@
 "twy" = (
 /obj/structure/overfloor_catwalk/lightdarkiron,
 /obj/structure/overfloor_catwalk/lightdarkiron,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "twF" = (
 /obj/structure/table/steel,
@@ -39512,7 +39925,7 @@
 /obj/structure/pallet,
 /obj/structure/tank_holder/oxygen,
 /obj/structure/overfloor_catwalk/safe,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/surface/opendeck)
 "tyj" = (
 /obj/structure/table/steel,
@@ -39535,7 +39948,7 @@
 /obj/structure/railing{
 	dir = 1
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "tyv" = (
 /obj/structure/railing{
@@ -39545,7 +39958,7 @@
 /obj/structure/railing{
 	dir = 4
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "tyy" = (
 /obj/machinery/door/poddoor/shutters{
@@ -39567,7 +39980,7 @@
 	dir = 1
 	},
 /obj/structure/railing,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "tzh" = (
 /obj/effect/turf_decal/ported/border/borderfloorblack,
@@ -39782,7 +40195,7 @@
 /obj/structure/closet/crate,
 /obj/effect/spawner/random/maintenance,
 /obj/structure/overfloor_catwalk/lightdarkiron,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/maintenance/interior/deck2port)
 "tDG" = (
 /obj/structure/table/steel,
@@ -39806,7 +40219,7 @@
 	dir = 4
 	},
 /obj/structure/table/rolling,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "tEg" = (
 /obj/machinery/portable_atmospherics/canister/air,
@@ -39822,7 +40235,7 @@
 "tEt" = (
 /obj/machinery/floodlight,
 /obj/structure/overfloor_catwalk/mesh,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "tEz" = (
 /obj/effect/turf_decal/stripes{
@@ -39843,7 +40256,7 @@
 /obj/structure/closet/crate/woodencrate,
 /obj/effect/spawner/random/maintenance/six,
 /obj/effect/spawner/random/maintenance/six,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "tEL" = (
 /obj/structure/chair/office,
@@ -39893,6 +40306,11 @@
 "tFr" = (
 /obj/effect/spawner/random/vending/colavend,
 /obj/effect/turf_decal/ported/rust,
+/turf/open/floor/plating,
+/area/space)
+"tFy" = (
+/obj/machinery/mineral/unloading_machine,
+/obj/structure/overfloor_catwalk/mesh,
 /turf/open/floor/plating,
 /area/space)
 "tFK" = (
@@ -40077,7 +40495,7 @@
 	dir = 8
 	},
 /obj/structure/overfloor_catwalk/safe,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/surface/opendeck)
 "tKx" = (
 /obj/structure/fence/door/opened{
@@ -40113,7 +40531,7 @@
 /obj/structure/sign/electrical{
 	pixel_x = -32
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "tLJ" = (
 /obj/machinery/light/small,
@@ -40181,13 +40599,17 @@
 /obj/structure/closet/crate/woodencrate,
 /obj/effect/spawner/random/maintenance/six,
 /obj/effect/spawner/random/maintenance/six,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "tNj" = (
 /turf/open/floor/tiled/dark/monotile{
 	pixel_x = 0;
 	pixel_y = 0
 	},
+/area/space)
+"tNk" = (
+/obj/structure/filingcabinet,
+/turf/open/floor/iron/dark/textured_half,
 /area/space)
 "tNN" = (
 /obj/structure/tank_holder,
@@ -40218,18 +40640,7 @@
 /area/site104/aihousing/entrancehall)
 "tOd" = (
 /obj/structure/table/steel,
-/obj/machinery/door/poddoor/shutters{
-	id_tag = "LCZEntGateNorth";
-	name = "LCZ Entrance Checkpoint Central North Gate";
-	req_access = list("ACCESS_SECURITY_LEVEL1");
-	pixel_y = 6
-	},
-/obj/machinery/door/poddoor/shutters{
-	id_tag = "LCZEntGateSouth";
-	name = "LCZ Entrance Checkpoint Central South Gate";
-	req_access = list("ACCESS_SECURITY_LEVEL1");
-	pixel_y = -4
-	},
+/obj/machinery/telephone,
 /turf/open/floor/carpet/blue,
 /area/space)
 "tOg" = (
@@ -40406,7 +40817,7 @@
 /obj/effect/spawner/random/trash,
 /obj/effect/spawner/random/trash,
 /obj/structure/overfloor_catwalk/lightdarkiron,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/maintenance/interior/deck2port)
 "tSJ" = (
 /obj/structure/table/steel,
@@ -40484,7 +40895,7 @@
 	dir = 4
 	},
 /obj/structure/overfloor_catwalk/lightdarkiron,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/surface/opendeck)
 "tUa" = (
 /obj/structure/closet/crate/woodencrate,
@@ -40609,7 +41020,7 @@
 /obj/structure/railing{
 	dir = 4
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "tWU" = (
 /obj/machinery/chem_master,
@@ -40773,7 +41184,7 @@
 	dir = 8
 	},
 /obj/structure/overfloor_catwalk/mesh,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/engineering/reactor)
 "ubX" = (
 /obj/structure/overfloor_catwalk/lightdarkiron,
@@ -40782,7 +41193,7 @@
 	dir = 4
 	},
 /obj/machinery/power/port_gen/pacman,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "ucf" = (
 /obj/structure/table/steel,
@@ -40872,7 +41283,7 @@
 "udK" = (
 /obj/structure/railing,
 /obj/structure/overfloor_catwalk/lightdarkiron,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "udP" = (
 /obj/structure/table/steel,
@@ -40949,7 +41360,7 @@
 /obj/structure/window/reinforced{
 	dir = 4
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "ufT" = (
 /obj/effect/spawner/random/vending/colavend{
@@ -41065,7 +41476,7 @@
 /obj/item/clothing/suit/hooded/wintercoat,
 /obj/item/clothing/suit/hooded/wintercoat/engineering,
 /obj/item/clothing/suit/hooded/wintercoat/engineering,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "uiB" = (
 /obj/structure/railing{
@@ -41094,7 +41505,7 @@
 	dir = 8
 	},
 /obj/structure/overfloor_catwalk/lightdarkiron,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "uiW" = (
 /obj/structure/extinguisher_cabinet{
@@ -41146,7 +41557,7 @@
 	},
 /obj/structure/railing,
 /obj/structure/table/rolling,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "ukh" = (
 /obj/structure/overfloor_catwalk/mesh,
@@ -41163,7 +41574,7 @@
 	},
 /obj/structure/overfloor_catwalk/mesh,
 /obj/structure/closet/crate/internals,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "ukq" = (
 /obj/structure/sign/warning/detailed{
@@ -41185,11 +41596,21 @@
 	},
 /turf/open/floor/plating,
 /area/space)
+"ukI" = (
+/obj/structure/table/steel/reinforced,
+/obj/item/modular_computer/laptop,
+/turf/open/floor/carpet/black,
+/area/space)
+"ulh" = (
+/obj/structure/closet/crate,
+/obj/item/binoculars,
+/turf/open/floor/iron/dark,
+/area/space)
 "ulp" = (
 /obj/structure/sign/warning/fall{
 	pixel_x = 32
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "ulB" = (
 /obj/structure/table/steel,
@@ -41213,7 +41634,7 @@
 /area/site104/surface/opendeck)
 "umG" = (
 /obj/structure/overfloor_catwalk/euclid,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "umI" = (
 /obj/structure/table/steel,
@@ -41233,7 +41654,7 @@
 	pixel_x = 27
 	},
 /obj/structure/overfloor_catwalk/mesh,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/surface/opendeck)
 "unf" = (
 /obj/structure/overfloor_catwalk/lightdarkiron,
@@ -41273,7 +41694,7 @@
 /obj/structure/railing{
 	dir = 1
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "uop" = (
 /obj/structure/safe,
@@ -41348,7 +41769,7 @@
 /obj/structure/railing{
 	dir = 4
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "upU" = (
 /obj/effect/turf_decal/ported/rust,
@@ -41378,7 +41799,7 @@
 /obj/structure/railing{
 	dir = 1
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "uqA" = (
 /obj/structure/railing,
@@ -41452,7 +41873,7 @@
 /obj/structure/railing{
 	dir = 8
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/surface/opendeck)
 "urN" = (
 /obj/effect/turf_decal/ported/outline,
@@ -41489,7 +41910,7 @@
 /obj/structure/railing{
 	dir = 8
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "usE" = (
 /obj/structure/table/steel,
@@ -41634,7 +42055,7 @@
 /obj/structure/railing{
 	dir = 1
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/engineering/atmospherics)
 "uxg" = (
 /obj/structure/fence/corner{
@@ -41692,7 +42113,7 @@
 "uxW" = (
 /obj/structure/table/steel,
 /obj/structure/overfloor_catwalk/lightdarkiron,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "uyc" = (
 /obj/structure/railing{
@@ -41717,7 +42138,7 @@
 "uyO" = (
 /obj/structure/railing,
 /obj/structure/overfloor_catwalk/safe,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "uyU" = (
 /obj/machinery/door/airlock/highsecurity{
@@ -41820,7 +42241,7 @@
 /obj/item/reagent_containers/glass/bucket,
 /obj/item/reagent_containers/glass/bucket,
 /obj/structure/overfloor_catwalk/safe,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/surface/opendeck)
 "uBy" = (
 /obj/structure/table/steel,
@@ -41834,7 +42255,7 @@
 	dir = 4
 	},
 /obj/structure/overfloor_catwalk/mesh,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "uBC" = (
 /obj/structure/overfloor_catwalk/mesh,
@@ -41878,6 +42299,18 @@
 /obj/item/mecha_parts/mecha_equipment/drill,
 /obj/item/mecha_parts/mecha_equipment/drill,
 /turf/open/floor/iron/dark,
+/area/space)
+"uCS" = (
+/obj/structure/overfloor_catwalk/mesh,
+/obj/structure/railing{
+	dir = 8;
+	pixel_x = -3
+	},
+/obj/structure/railing{
+	dir = 1
+	},
+/obj/effect/turf_decal/ported/rust,
+/turf/open/floor/plating,
 /area/space)
 "uDd" = (
 /obj/structure/table/steel/reinforced,
@@ -42270,7 +42703,7 @@
 "uMk" = (
 /obj/structure/overfloor_catwalk/mesh,
 /obj/item/reagent_containers/barrel/generic,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "uMp" = (
 /obj/structure/overfloor_catwalk/lightdarkiron,
@@ -42327,6 +42760,16 @@
 	},
 /turf/open/floor/tiled/dark/small,
 /area/space)
+"uOP" = (
+/obj/machinery/conveyor{
+	dir = 4;
+	id_tag = "CDCWorkshopConv"
+	},
+/obj/structure/railing{
+	dir = 1
+	},
+/turf/open/floor/iron/dark,
+/area/space)
 "uOY" = (
 /obj/structure/overfloor_catwalk/lightdarkiron,
 /obj/structure/railing{
@@ -42351,7 +42794,7 @@
 	dir = 1
 	},
 /obj/structure/overfloor_catwalk/iron,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "uPI" = (
 /obj/machinery/door/poddoor/shutters,
@@ -42378,7 +42821,7 @@
 /obj/structure/railing{
 	dir = 1
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "uQx" = (
 /obj/structure/table/steel,
@@ -42455,7 +42898,7 @@
 	dir = 1;
 	pixel_y = 3
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/surface/opendeck)
 "uSs" = (
 /obj/effect/turf_decal/ported/border/borderfloorblack{
@@ -42500,7 +42943,7 @@
 /area/space)
 "uTe" = (
 /obj/structure/fence,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/surface/opendeck)
 "uTj" = (
 /obj/machinery/computer/station_alert,
@@ -42593,7 +43036,7 @@
 /obj/structure/railing{
 	dir = 8
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "uVM" = (
 /obj/structure/closet/secure_closet/engineering_welding{
@@ -42665,7 +43108,7 @@
 /obj/structure/railing{
 	dir = 4
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "uYo" = (
 /obj/structure/extinguisher_cabinet{
@@ -42737,7 +43180,7 @@
 	pixel_y = -32;
 	dir = 8
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/surface/opendeck)
 "uZH" = (
 /obj/structure/shipping_container/generic/yellow,
@@ -42760,7 +43203,7 @@
 /obj/structure/window/reinforced{
 	dir = 4
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "var" = (
 /obj/structure/pallet,
@@ -42791,7 +43234,7 @@
 	dir = 8
 	},
 /obj/structure/overfloor_catwalk/euclid,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "vaW" = (
 /obj/structure/pallet,
@@ -42814,6 +43257,11 @@
 /obj/item/clothing/head/cone,
 /turf/open/floor/plating,
 /area/space)
+"vbD" = (
+/obj/structure/table/steel/reinforced,
+/obj/item/flashlight/lamp/green,
+/turf/open/floor/carpet/black,
+/area/space)
 "vbJ" = (
 /turf/open/floor/tiled/techmaint,
 /area/site104/cryogenics/monitoring)
@@ -42826,7 +43274,7 @@
 	dir = 4;
 	pixel_x = 3
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "vcq" = (
 /obj/structure/overfloor_catwalk/lightdarkiron,
@@ -42847,7 +43295,7 @@
 /obj/structure/table/rolling,
 /obj/effect/spawner/random/trash,
 /obj/effect/spawner/random/trash,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "vcy" = (
 /obj/structure/railing{
@@ -42879,6 +43327,9 @@
 /obj/machinery/telecomms/server/presets/command,
 /turf/open/floor/circuit/green,
 /area/site104/utilities/marinecontrol/northserverfarm)
+"vcX" = (
+/turf/open/openspace,
+/area/space)
 "vcY" = (
 /obj/machinery/atmospherics/pipe/smart/manifold/purple/hidden/layer2,
 /turf/open/floor/plating,
@@ -42899,7 +43350,7 @@
 	},
 /obj/structure/railing,
 /obj/structure/overfloor_catwalk/iron,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "vdM" = (
 /obj/structure/railing{
@@ -42968,7 +43419,7 @@
 	dir = 1;
 	pixel_y = 32
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "vff" = (
 /obj/machinery/sparker{
@@ -42981,7 +43432,7 @@
 	dir = 4
 	},
 /obj/structure/overfloor_catwalk/mesh,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/surface/opendeck)
 "vfh" = (
 /obj/structure/overfloor_catwalk/lightdarkiron,
@@ -43039,12 +43490,23 @@
 /obj/item/stack/sheet/mineral/wood,
 /turf/open/floor/tiled/dark,
 /area/space)
+"vgl" = (
+/obj/structure/overfloor_catwalk/mesh,
+/obj/structure/railing{
+	dir = 1
+	},
+/obj/structure/railing{
+	dir = 8;
+	pixel_x = -3
+	},
+/turf/open/floor/plating,
+/area/space)
 "vhe" = (
 /obj/structure/overfloor_catwalk/mesh,
 /obj/structure/railing{
 	dir = 8
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/surface/opendeck)
 "vhi" = (
 /obj/machinery/status_display{
@@ -43098,7 +43560,7 @@
 /obj/structure/overfloor_catwalk/mesh,
 /obj/item/reagent_containers/barrel/generic,
 /obj/structure/pallet,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "vhT" = (
 /obj/machinery/light/dim{
@@ -43222,7 +43684,7 @@
 "vkO" = (
 /obj/structure/overfloor_catwalk/mesh,
 /obj/structure/railing,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/engineering/reactor)
 "vkP" = (
 /obj/effect/spawner/structure/window/hollow/reinforced,
@@ -43283,7 +43745,7 @@
 /obj/structure/railing{
 	dir = 8
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/surface/opendeck)
 "vlJ" = (
 /obj/structure/rack/dark,
@@ -43343,7 +43805,7 @@
 /obj/structure/railing{
 	dir = 8
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "vmU" = (
 /obj/structure/overfloor_catwalk/lightdarkiron,
@@ -43558,7 +44020,7 @@
 /obj/machinery/light/red{
 	dir = 4
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "voY" = (
 /obj/machinery/door/window/brigdoor{
@@ -43625,6 +44087,10 @@
 /obj/structure/railing,
 /turf/open/floor/circuit/green,
 /area/site104/utilities/marinecontrol/southserverfarm)
+"vqR" = (
+/obj/structure/filingcabinet/security,
+/turf/open/floor/iron/dark/textured_half,
+/area/space)
 "vrg" = (
 /obj/structure/overfloor_catwalk/safe,
 /obj/item/radio/intercom{
@@ -43633,7 +44099,7 @@
 	dir = 8;
 	pixel_x = 32
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "vrl" = (
 /obj/structure/railing{
@@ -43705,7 +44171,7 @@
 	dir = 8;
 	req_access = list(list("ACCESS_ENGINEERING_LEVEL1","ACCESS_SECURITY_LEVEL2"))
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "vtL" = (
 /obj/effect/spawner/structure/window/hollow/reinforced,
@@ -43777,6 +44243,10 @@
 	},
 /turf/open/floor/tiled/dark,
 /area/site104/surface/opendeck)
+"vuX" = (
+/obj/structure/closet/crate/trashcart,
+/turf/open/floor/tiled/dark,
+/area/space)
 "vvh" = (
 /obj/structure/overfloor_catwalk/lightdarkiron,
 /turf/open/floor/iron/ported/techfloor_grid{
@@ -43826,6 +44296,13 @@
 /obj/structure/railing{
 	dir = 4;
 	pixel_y = 15
+	},
+/turf/open/openspace/airless/planetary,
+/area/space)
+"vwN" = (
+/obj/structure/overfloor_catwalk/mesh,
+/obj/machinery/camera{
+	dir = 6
 	},
 /turf/open/openspace,
 /area/space)
@@ -44297,7 +44774,7 @@
 	dir = 4;
 	pixel_x = 3
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "vIb" = (
 /obj/structure/railing{
@@ -44347,12 +44824,16 @@
 	},
 /turf/open/floor/tiled/techmaint,
 /area/space)
+"vJC" = (
+/obj/machinery/mineral/stacking_unit_console,
+/turf/open/floor/iron/dark,
+/area/space)
 "vJK" = (
 /obj/structure/sign/warning/detailed{
 	pixel_x = -30;
 	desc = "(Warning! Roof access restricted to authorized personnel only!). Well it's a good thing you're authorized, right?"
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "vJU" = (
 /obj/machinery/suit_storage_unit/engine,
@@ -44485,14 +44966,10 @@
 /turf/open/floor/concrete,
 /area/site104/surface/opendeck)
 "vMn" = (
-/obj/structure/table/steel,
-/obj/machinery/door/poddoor/shutters{
-	id_tag = "LCZSECOFFICEWINDOW";
-	name = "LCZ Entrance Checkpoint Central Windows Control";
-	req_access = list("ACCESS_SECURITY_LEVEL1");
-	pixel_y = -3
+/obj/machinery/door/airlock/command{
+	name = "Directors Office"
 	},
-/turf/open/floor/carpet/blue,
+/turf/open/floor/tiled/dark,
 /area/space)
 "vMx" = (
 /obj/effect/turf_decal/stripes/end{
@@ -44647,7 +45124,7 @@
 /area/space)
 "vQC" = (
 /obj/structure/overfloor_catwalk/safe,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/surface/opendeck)
 "vRu" = (
 /obj/structure/railing{
@@ -44662,7 +45139,7 @@
 	dir = 8
 	},
 /obj/structure/overfloor_catwalk/lightdarkiron,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "vSn" = (
 /obj/structure/rack/dark,
@@ -44769,7 +45246,7 @@
 /obj/structure/railing{
 	dir = 1
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/surface/opendeck)
 "vVk" = (
 /obj/structure/overfloor_catwalk/mesh,
@@ -44808,7 +45285,7 @@
 /obj/structure/railing{
 	dir = 1
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/engineering/reactor)
 "vYa" = (
 /obj/effect/turf_decal/stripes{
@@ -44880,14 +45357,14 @@
 "wba" = (
 /obj/structure/overfloor_catwalk/lightdarkiron,
 /obj/structure/fence/door,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "wbd" = (
 /obj/machinery/door/airlock/hatch{
 	name = "Weather Barrier Tunnel"
 	},
 /obj/structure/overfloor_catwalk/lightdarkiron,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "wbg" = (
 /obj/structure/railing,
@@ -44979,7 +45456,7 @@
 /obj/structure/overfloor_catwalk/lightdarkiron,
 /obj/item/clothing/head/cone,
 /obj/effect/decal/cleanable/oil,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "wdB" = (
 /obj/structure/table/steel/reinforced,
@@ -45107,7 +45584,7 @@
 	pixel_x = 32;
 	dir = 8
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "whm" = (
 /obj/effect/turf_decal/stripes{
@@ -45210,7 +45687,7 @@
 /obj/structure/railing{
 	dir = 1
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/surface/opendeck)
 "wjB" = (
 /obj/structure/closet/crate/large,
@@ -45227,7 +45704,7 @@
 /obj/item/screwdriver,
 /obj/item/multitool,
 /obj/effect/spawner/random/engineering/tool,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "wjM" = (
 /obj/structure/railing{
@@ -45322,7 +45799,7 @@
 /obj/structure/overfloor_catwalk/mesh,
 /obj/structure/closet/crate,
 /obj/effect/spawner/random/trash,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "wmH" = (
 /obj/structure/railing{
@@ -45334,7 +45811,7 @@
 "wmM" = (
 /obj/effect/turf_decal/stripes,
 /obj/structure/railing,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/surface/opendeck)
 "wmU" = (
 /obj/machinery/power/terminal{
@@ -45419,7 +45896,7 @@
 /obj/structure/railing{
 	dir = 1
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "woI" = (
 /obj/effect/spawner/structure/window/hollow/reinforced,
@@ -45595,7 +46072,7 @@
 /obj/structure/railing{
 	dir = 8
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "wtb" = (
 /obj/structure/railing{
@@ -45714,7 +46191,7 @@
 "wvZ" = (
 /obj/structure/overfloor_catwalk/safe,
 /obj/item/clothing/head/cone,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/surface/opendeck)
 "wwd" = (
 /obj/structure/overfloor_catwalk/mesh{
@@ -45724,7 +46201,7 @@
 /obj/structure/table/rolling,
 /obj/item/clothing/gloves/color/black,
 /obj/item/book/manual/wiki/engineering_construction,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "www" = (
 /obj/structure/railing{
@@ -45820,7 +46297,7 @@
 /obj/structure/closet,
 /obj/item/flashlight/glowstick,
 /obj/item/flashlight/flare,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "wyo" = (
 /obj/structure/closet,
@@ -45866,6 +46343,10 @@
 	dir = 8
 	},
 /turf/open/floor/plating,
+/area/space)
+"wyM" = (
+/obj/structure/falsewall/oldiron,
+/turf/open/openspace,
 /area/space)
 "wyN" = (
 /obj/structure/fence/door{
@@ -45934,7 +46415,7 @@
 	name = "Utility Cart";
 	desc = "A heavy, metal utility cart with wheels."
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "wBp" = (
 /obj/structure/overfloor_catwalk/mesh,
@@ -45942,7 +46423,7 @@
 	name = "Support Pole";
 	desc = "A simple bar railing, this one is being used to hold structures together."
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "wBH" = (
 /obj/structure/railing{
@@ -45951,6 +46432,10 @@
 /obj/structure/overfloor_catwalk/mesh,
 /turf/open/floor/plating,
 /area/site104/maintenance/northrigaft)
+"wBL" = (
+/obj/structure/table/steel/reinforced,
+/turf/open/floor/carpet/black,
+/area/space)
 "wCD" = (
 /obj/structure/overfloor_catwalk/mesh,
 /obj/structure/table/steel,
@@ -45997,7 +46482,7 @@
 	dir = 4
 	},
 /obj/structure/overfloor_catwalk/mesh,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "wDS" = (
 /obj/structure/sign/electrical{
@@ -46016,7 +46501,7 @@
 /obj/machinery/light/red{
 	dir = 1
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "wEm" = (
 /obj/structure/table/steel,
@@ -46069,7 +46554,7 @@
 /obj/structure/railing{
 	dir = 4
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/surface/opendeck)
 "wEZ" = (
 /obj/structure/noticeboard{
@@ -46121,7 +46606,7 @@
 "wGy" = (
 /obj/structure/overfloor_catwalk/mesh,
 /obj/item/reagent_containers/fueltank/barrel,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "wGE" = (
 /mob/living/simple_animal/crab,
@@ -46596,7 +47081,7 @@
 /obj/machinery/light{
 	dir = 8
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/aihousing/interiorsanctum)
 "wRL" = (
 /obj/structure/overfloor_catwalk/mesh,
@@ -46631,7 +47116,7 @@
 	},
 /obj/structure/overfloor_catwalk/mesh,
 /obj/structure/closet/crate/internals,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "wSJ" = (
 /obj/structure/closet/crate,
@@ -46763,7 +47248,7 @@
 /obj/structure/closet/crate,
 /obj/effect/spawner/random/maintenance/six,
 /obj/effect/spawner/random/maintenance/six,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "wWy" = (
 /obj/structure/railing,
@@ -46791,7 +47276,7 @@
 /obj/structure/railing{
 	dir = 8
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "wXp" = (
 /obj/effect/turf_decal/stripes/corner,
@@ -46826,7 +47311,7 @@
 /obj/structure/window/reinforced{
 	dir = 4
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "wXM" = (
 /obj/structure/railing{
@@ -46997,7 +47482,7 @@
 "xcs" = (
 /obj/structure/overfloor_catwalk/mesh,
 /obj/machinery/space_heater,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "xcx" = (
 /obj/machinery/holopad,
@@ -47038,7 +47523,7 @@
 /obj/structure/railing{
 	dir = 1
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "xdq" = (
 /obj/effect/turf_decal/stripes{
@@ -47053,7 +47538,7 @@
 /obj/structure/railing{
 	dir = 4
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/surface/opendeck)
 "xdt" = (
 /obj/machinery/vending/cola{
@@ -47255,7 +47740,7 @@
 	dir = 4;
 	pixel_x = 3
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "xiZ" = (
 /obj/machinery/door/poddoor/preopen{
@@ -47308,7 +47793,7 @@
 /obj/structure/closet/crate,
 /obj/effect/spawner/random/trash,
 /obj/effect/spawner/random/maintenance,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "xjZ" = (
 /obj/structure/railing{
@@ -47375,7 +47860,7 @@
 /obj/effect/spawner/random/maintenance/six,
 /obj/effect/spawner/random/maintenance/six,
 /obj/structure/railing,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "xmo" = (
 /obj/structure/closet/crate,
@@ -47400,7 +47885,7 @@
 /area/site104/maintenance/interior/deck1starboard)
 "xmN" = (
 /obj/structure/lattice/catwalk,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "xne" = (
 /obj/machinery/atmospherics/pipe/smart/manifold/purple/hidden/layer2,
@@ -47413,7 +47898,7 @@
 	},
 /obj/structure/overfloor_catwalk/mesh,
 /obj/item/clothing/head/cone,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "xnR" = (
 /obj/structure/table/steel,
@@ -47471,7 +47956,7 @@
 /area/site104/aihousing/entrancehall)
 "xov" = (
 /obj/structure/lattice,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/aihousing/interiorsanctum)
 "xoG" = (
 /obj/item/stack/cable_coil/red,
@@ -47512,7 +47997,7 @@
 	name = "Drone Winch";
 	desc = "A winch used to retract and detract submersible drones for exploration efforts, this one's seen better days..."
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "xpu" = (
 /obj/structure/railing,
@@ -47541,7 +48026,7 @@
 	name = "Support Pole";
 	desc = "A simple bar railing, this one is being used to hold structures together."
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "xqo" = (
 /obj/structure/closet/crate,
@@ -47565,7 +48050,7 @@
 /obj/item/stack/sheet/rglass{
 	amount = 50
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "xrx" = (
 /obj/structure/chair{
@@ -47591,7 +48076,7 @@
 	dir = 1
 	},
 /obj/structure/fence,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/surface/opendeck)
 "xsd" = (
 /obj/structure/overfloor_catwalk/mesh,
@@ -47599,7 +48084,7 @@
 /obj/effect/spawner/random/maintenance/six,
 /obj/effect/spawner/random/trash,
 /obj/effect/spawner/random/trash,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "xsn" = (
 /obj/structure/overfloor_catwalk/mesh,
@@ -47672,7 +48157,7 @@
 /turf/open/floor/plating,
 /area/site104/maintenance/northrigaft)
 "xum" = (
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/northrig/stairwell)
 "xuK" = (
 /obj/structure/overfloor_catwalk/mesh,
@@ -47691,7 +48176,7 @@
 /obj/structure/fence/corner{
 	dir = 8
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/surface/opendeck)
 "xvp" = (
 /obj/machinery/door/airlock/maintenance_hatch{
@@ -47748,7 +48233,7 @@
 /obj/structure/overfloor_catwalk/mesh,
 /obj/item/reagent_containers/fueltank/barrel,
 /obj/structure/pallet,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "xwP" = (
 /obj/effect/turf_decal/ported/border/borderfloorblack{
@@ -47788,7 +48273,7 @@
 /obj/effect/spawner/random/engineering/tool,
 /obj/effect/spawner/random/engineering/tool,
 /obj/effect/spawner/random/engineering/tool,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "xxz" = (
 /obj/item/reagent_containers/barrel,
@@ -47889,7 +48374,7 @@
 /obj/item/flashlight/glowstick/yellow,
 /obj/item/flashlight/glowstick/yellow,
 /obj/item/flashlight/glowstick/yellow,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "xBA" = (
 /obj/machinery/door/airlock/maintenance_hatch{
@@ -48025,7 +48510,7 @@
 /obj/effect/spawner/random/trash,
 /obj/effect/spawner/random/trash,
 /obj/effect/decal/cleanable/cobweb/cobweb2,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "xGx" = (
 /obj/structure/overfloor_catwalk/lightdarkiron,
@@ -48034,7 +48519,7 @@
 	dir = 4;
 	use_power = 1
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/aihousing/interiorsanctum)
 "xGF" = (
 /obj/machinery/door/airlock/grunge{
@@ -48361,7 +48846,7 @@
 "xNC" = (
 /obj/structure/overfloor_catwalk/lightdarkiron,
 /obj/structure/railing,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/surface/opendeck)
 "xNO" = (
 /obj/structure/noticeboard{
@@ -48647,7 +49132,7 @@
 /obj/structure/railing{
 	dir = 4
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/surface/opendeck)
 "xUh" = (
 /obj/structure/railing,
@@ -48911,7 +49396,7 @@
 	dir = 4
 	},
 /obj/structure/overfloor_catwalk/safe,
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/site104/surface/opendeck)
 "xZX" = (
 /obj/structure/pallet,
@@ -49024,7 +49509,7 @@
 /obj/structure/railing{
 	dir = 1
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "ycw" = (
 /obj/structure/table/steel,
@@ -49204,6 +49689,17 @@
 	dir = 4
 	},
 /turf/open/floor/carpet/blue,
+/area/space)
+"yii" = (
+/obj/structure/overfloor_catwalk/mesh,
+/obj/structure/railing{
+	dir = 1
+	},
+/obj/structure/railing{
+	dir = 4;
+	pixel_x = 2
+	},
+/turf/open/floor/plating,
 /area/space)
 "yiv" = (
 /obj/structure/fence/corner{
@@ -49418,14 +49914,14 @@
 	dir = 8;
 	icon_state = "warning"
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "ylG" = (
 /obj/structure/overfloor_catwalk/mesh,
 /obj/structure/railing{
 	pixel_y = -2
 	},
-/turf/open/openspace,
+/turf/open/openspace/airless/planetary,
 /area/space)
 "ylK" = (
 /obj/structure/railing{
@@ -100940,7 +101436,7 @@ dYE
 sPA
 sPA
 sPA
-sPA
+arv
 sPA
 sPA
 sPA
@@ -101344,7 +101840,7 @@ dYE
 sPA
 sPA
 sPA
-sPA
+arv
 uqR
 xuK
 xuK
@@ -103558,10 +104054,10 @@ pUK
 pUK
 oNK
 oNK
+jQC
 oNK
-oNK
-oNK
-oNK
+jQC
+jQC
 oNK
 oNK
 oNK
@@ -103759,13 +104255,13 @@ pUK
 pUK
 pUK
 oNK
-jQC
-jQC
-jQC
-jQC
-jQC
-jQC
-jQC
+sPA
+sPA
+sPA
+sPA
+sPA
+sPA
+sPA
 oNK
 xbv
 oNK
@@ -103961,13 +104457,13 @@ pUK
 pUK
 pUK
 oNK
+tFy
 jQC
 jQC
 jQC
 jQC
 jQC
-jQC
-jQC
+sPA
 oNK
 oNK
 oNK
@@ -104163,13 +104659,13 @@ pUK
 pUK
 pUK
 oNK
+jcC
+nhI
 jQC
 jQC
 jQC
 jQC
-jQC
-jQC
-jQC
+sPA
 iFo
 qDo
 qDo
@@ -104365,13 +104861,13 @@ pUK
 pUK
 pUK
 oNK
+stO
+vJC
+cQp
 jQC
+uOP
 jQC
-jQC
-jQC
-jQC
-jQC
-jQC
+sPA
 oNK
 oNK
 oNK
@@ -104567,13 +105063,13 @@ pUK
 pUK
 pUK
 oNK
-oNK
-oNK
-oNK
-oNK
-oNK
-oNK
-oNK
+sPA
+jQC
+cQp
+gnY
+uOP
+jQC
+sPA
 oNK
 pUK
 pUK
@@ -104768,15 +105264,15 @@ pUK
 pUK
 pUK
 pUK
-pUK
-pUK
-pUK
-pUK
-pUK
-pUK
-pUK
-pUK
-pUK
+oNK
+sPA
+jQC
+cQp
+jQC
+uOP
+jQC
+sPA
+oNK
 pUK
 pUK
 pUK
@@ -104970,15 +105466,15 @@ pUK
 pUK
 pUK
 pUK
-pUK
-pUK
-pUK
-pUK
-pUK
-pUK
-pUK
-pUK
-pUK
+oNK
+sPA
+jQC
+jQC
+jQC
+jQC
+jQC
+sPA
+oNK
 pUK
 pUK
 pUK
@@ -105172,15 +105668,15 @@ pUK
 pUK
 pUK
 pUK
-pUK
-pUK
-pUK
-pUK
-pUK
-pUK
-pUK
-pUK
-pUK
+oNK
+sPA
+jQC
+jQC
+jQC
+jQC
+jQC
+sPA
+oNK
 pUK
 pUK
 pUK
@@ -105374,15 +105870,15 @@ pUK
 pUK
 pUK
 pUK
-pUK
-pUK
-pUK
-pUK
-pUK
-pUK
-pUK
-pUK
-pUK
+oNK
+sPA
+sPA
+sPA
+sPA
+sPA
+sPA
+sPA
+oNK
 pUK
 pUK
 pUK
@@ -105576,15 +106072,15 @@ pUK
 pUK
 pUK
 pUK
-pUK
-pUK
-pUK
-pUK
-pUK
-pUK
-pUK
-pUK
-pUK
+oNK
+oNK
+oNK
+oNK
+oNK
+oNK
+oNK
+oNK
+oNK
 pUK
 pUK
 pUK
@@ -180096,7 +180592,7 @@ oNK
 pLM
 bbb
 ron
-vMn
+cQY
 rew
 rQa
 oNK
@@ -188390,7 +188886,7 @@ aCU
 beH
 beH
 beH
-dwi
+hgc
 oNK
 xRe
 beH
@@ -217268,7 +217764,7 @@ eWq
 eWq
 eWq
 jaa
-eWq
+mFx
 qPi
 eWq
 ita
@@ -218073,7 +218569,7 @@ vAg
 vAg
 fWU
 eWq
-eWq
+cjM
 mHc
 mHc
 eWq
@@ -230404,7 +230900,7 @@ arv
 sRb
 jlo
 jlo
-tYX
+jlo
 jlo
 jlo
 jlo
@@ -231008,7 +231504,7 @@ aOM
 jlo
 jlo
 aiK
-jlo
+tYX
 jlo
 jlo
 jlo
@@ -231625,18 +232121,18 @@ jlo
 jlo
 jlo
 jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
+vgl
+dwi
+dwi
+dwi
+oAL
+dwi
+dwi
+dwi
+dwi
+dwi
+gwT
+qbr
 jlo
 jlo
 jlo
@@ -231827,18 +232323,18 @@ jlo
 jlo
 jlo
 jlo
+qih
 jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
+oNK
+oNK
+oNK
+oNK
+oNK
+oNK
+oNK
+oNK
+sPA
+arv
 jlo
 jlo
 jlo
@@ -232029,30 +232525,30 @@ jlo
 jlo
 jlo
 jlo
+qih
+jlo
+oNK
 jlo
 jlo
 jlo
 jlo
 jlo
 jlo
+oNK
+bWz
+arv
 jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
+nRz
+miT
+miT
+miT
+miT
+miT
+miT
+miT
+miT
+miT
+oNK
 pUK
 pUK
 pUK
@@ -232231,20 +232727,20 @@ jlo
 jlo
 jlo
 jlo
+qih
+jlo
+oNK
 jlo
 jlo
 jlo
 jlo
 jlo
 jlo
+oNK
+dKL
+arv
 jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
+rLJ
 jlo
 jlo
 jlo
@@ -232433,20 +232929,20 @@ jlo
 jlo
 jlo
 jlo
+qih
+jlo
+oNK
 jlo
 jlo
 jlo
 jlo
 jlo
 jlo
+oNK
+sPA
+arv
 jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
+rLJ
 jlo
 jlo
 jlo
@@ -232635,28 +233131,28 @@ jlo
 jlo
 jlo
 jlo
+qih
+jlo
+oNK
 jlo
 jlo
 jlo
 jlo
 jlo
 jlo
+oNK
+rbV
+kuy
+jlo
+rLJ
 jlo
 jlo
 jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
+eIZ
+gRy
+gRy
+gRy
+wkJ
 jlo
 jlo
 jlo
@@ -232837,29 +233333,29 @@ jlo
 jlo
 jlo
 jlo
+qih
+jlo
+oNK
 jlo
 jlo
 jlo
 jlo
 jlo
 jlo
+oNK
 jlo
 jlo
 jlo
+rLJ
 jlo
 jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
+eIZ
+sPA
+sPA
+sPA
+sPA
+sPA
+kMl
 jlo
 jlo
 pUK
@@ -233039,30 +233535,30 @@ jlo
 jlo
 jlo
 jlo
+qih
+jlo
+oNK
 jlo
 jlo
 jlo
 jlo
 jlo
 jlo
+oNK
 jlo
 jlo
 jlo
+rLJ
 jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
+eIZ
+sPA
+sPA
+sPA
+sPA
+sPA
+sPA
+sPA
+wkJ
 jlo
 jlo
 pUK
@@ -233241,30 +233737,30 @@ jlo
 jlo
 jlo
 jlo
+qih
+jlo
+oNK
+oNK
+oNK
+vMn
+oNK
+oNK
+oNK
+oNK
 jlo
 jlo
 jlo
+rLJ
 jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
+aDB
+sPA
+sPA
+eWq
+eWq
+eWq
+sPA
+sPA
+arv
 jlo
 jlo
 pUK
@@ -233443,30 +233939,30 @@ jlo
 jlo
 jlo
 jlo
+yii
+dwi
+dwi
+dwi
+sPA
+sPA
+him
 jlo
 jlo
 jlo
 jlo
 jlo
 jlo
+rLJ
 jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
+aDB
+sPA
+sPA
+sPA
+eWq
+sPA
+sPA
+sPA
+arv
 jlo
 jlo
 pUK
@@ -233649,26 +234145,26 @@ jlo
 jlo
 jlo
 jlo
+aDB
+sPA
+him
 jlo
 jlo
 jlo
 jlo
 jlo
 jlo
+rLJ
 jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
+aDB
+sPA
+sPA
+eWq
+eWq
+eWq
+sPA
+sPA
+arv
 jlo
 jlo
 pUK
@@ -233846,31 +234342,31 @@ oNK
 oNK
 oNK
 oNK
+hzQ
+jlo
+jlo
+jlo
+jlo
+aDB
+sPA
+him
 jlo
 jlo
 jlo
 jlo
 jlo
 jlo
+rLJ
 jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
+htQ
+sPA
+sPA
+sPA
+sPA
+sPA
+sPA
+sPA
+tqA
 jlo
 jlo
 pUK
@@ -234049,29 +234545,29 @@ xvd
 jlo
 eMB
 jlo
+mhd
+gwT
+gwT
+gwT
+sPA
+sPA
+sPA
+gwT
+gwT
+gwT
 jlo
 jlo
 jlo
+rLJ
 jlo
 jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
+htQ
+sPA
+sPA
+sPA
+sPA
+sPA
+aWr
 jlo
 jlo
 pUK
@@ -234252,28 +234748,28 @@ beH
 oNK
 jlo
 jlo
+aDB
+sPA
+sPA
+sPA
+sPA
+sPA
+sPA
+sPA
+sPA
 jlo
 jlo
 jlo
+sTa
 jlo
 jlo
 jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
+htQ
+sPA
+sPA
+sPA
+aWr
+iAG
 jlo
 jlo
 pUK
@@ -234453,27 +234949,27 @@ xvd
 jlo
 eMB
 jlo
+mhd
+rbV
+rbV
+rbV
+sPA
+sPA
+sPA
+rbV
+rbV
+rbV
+jlo
+jlo
+jlo
+rLJ
 jlo
 jlo
 jlo
 jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
+grQ
+odr
+tmJ
 jlo
 jlo
 jlo
@@ -234654,6 +235150,21 @@ oNK
 oNK
 oNK
 oNK
+qlJ
+jlo
+jlo
+jlo
+jlo
+aDB
+sPA
+him
+jlo
+jlo
+jlo
+jlo
+jlo
+jlo
+rLJ
 jlo
 jlo
 jlo
@@ -234664,21 +235175,6 @@ jlo
 jlo
 jlo
 jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-pUK
 pUK
 pUK
 pUK
@@ -234855,31 +235351,31 @@ oNK
 jlo
 jlo
 jlo
+vuX
+jlo
+jlo
+jlo
+jlo
+jlo
+aDB
+sPA
+him
 jlo
 jlo
 jlo
 jlo
 jlo
 jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
+jxN
+miT
+miT
+miT
+miT
+miT
+miT
+miT
+miT
+oNK
 pUK
 pUK
 pUK
@@ -235063,9 +235559,9 @@ jlo
 jlo
 jlo
 jlo
-jlo
-jlo
-jlo
+aDB
+sPA
+him
 jlo
 jlo
 jlo
@@ -235256,18 +235752,18 @@ jlo
 gay
 ngH
 oNK
+oNK
+oNK
+oNK
+oNK
 jlo
 jlo
 jlo
 jlo
 jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
+aDB
+sPA
+him
 jlo
 jlo
 jlo
@@ -235458,18 +235954,18 @@ jlo
 keb
 ngH
 oNK
+xbv
+xbv
+xbv
+oNK
 jlo
 jlo
 jlo
 jlo
 jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
+aDB
+sPA
+him
 jlo
 jlo
 jlo
@@ -235660,18 +236156,18 @@ jlo
 keb
 ngH
 oNK
+xbv
+xbv
+xbv
+oYw
 jlo
 jlo
 jlo
 jlo
 jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
+aDB
+sPA
+him
 jlo
 jlo
 jlo
@@ -235862,18 +236358,18 @@ jlo
 miU
 cGt
 oNK
+xbv
+xbv
+xbv
+oNK
 jlo
 jlo
 jlo
 jlo
 jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
+qaQ
+sPA
+him
 jlo
 jlo
 jlo
@@ -236064,18 +236560,18 @@ beH
 beH
 cNL
 oNK
+xbv
+xbv
+xbv
+oNK
 jlo
 jlo
 jlo
 jlo
 jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
+aDB
+sPA
+him
 jlo
 jlo
 jlo
@@ -236266,18 +236762,18 @@ beH
 beH
 oNK
 oNK
+xbv
+xbv
+xbv
+oNK
 jlo
 jlo
 jlo
 jlo
 jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
+aDB
+sPA
+him
 jlo
 jlo
 jlo
@@ -236468,18 +236964,18 @@ jlo
 jlo
 jlo
 oNK
+xbv
+xbv
+xbv
+oNK
 jlo
 jlo
 jlo
 jlo
 jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
+fkk
+sPA
+him
 jlo
 jlo
 jlo
@@ -236670,18 +237166,18 @@ jlo
 jlo
 jlo
 oNK
+oNK
+oNK
+oNK
+oNK
 jlo
 jlo
 jlo
 jlo
 jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
+fkk
+sPA
+him
 jlo
 jlo
 jlo
@@ -236881,9 +237377,9 @@ jlo
 jlo
 jlo
 jlo
-jlo
-jlo
-jlo
+cqg
+gmr
+mwm
 jlo
 jlo
 jlo
@@ -237083,9 +237579,9 @@ jlo
 jlo
 jlo
 jlo
+cqg
 jlo
-jlo
-jlo
+mwm
 jlo
 jlo
 jlo
@@ -237285,9 +237781,9 @@ jlo
 jlo
 jlo
 jlo
+jKj
 jlo
-jlo
-jlo
+iyQ
 jlo
 jlo
 jlo
@@ -237686,15 +238182,15 @@ jlo
 jlo
 jlo
 jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
+oNK
+miT
+miT
+miT
+miT
+miT
+miT
+miT
+oNK
 jlo
 jlo
 jlo
@@ -237888,6 +238384,7 @@ jlo
 jlo
 jlo
 jlo
+oNK
 jlo
 jlo
 jlo
@@ -237895,8 +238392,7 @@ jlo
 jlo
 jlo
 jlo
-jlo
-jlo
+iaL
 jlo
 jlo
 jlo
@@ -238090,6 +238586,7 @@ jlo
 jlo
 jlo
 jlo
+oNK
 jlo
 jlo
 jlo
@@ -238097,8 +238594,7 @@ jlo
 jlo
 jlo
 jlo
-jlo
-jlo
+iaL
 jlo
 jlo
 jlo
@@ -238292,6 +238788,7 @@ jlo
 jlo
 jlo
 jlo
+oNK
 jlo
 jlo
 jlo
@@ -238299,8 +238796,7 @@ jlo
 jlo
 jlo
 jlo
-jlo
-jlo
+iaL
 jlo
 jlo
 jlo
@@ -238494,6 +238990,7 @@ jlo
 jlo
 jlo
 jlo
+oNK
 jlo
 jlo
 jlo
@@ -238501,8 +238998,7 @@ jlo
 jlo
 jlo
 jlo
-jlo
-jlo
+iaL
 jlo
 jlo
 jlo
@@ -238693,6 +239189,10 @@ jlo
 jlo
 jlo
 jlo
+oNK
+oNK
+oNK
+oNK
 jlo
 jlo
 jlo
@@ -238700,11 +239200,7 @@ jlo
 jlo
 jlo
 jlo
-jlo
-jlo
-jlo
-jlo
-jlo
+oNK
 jlo
 jlo
 jlo
@@ -238895,6 +239391,7 @@ jlo
 jlo
 jlo
 jlo
+iaL
 jlo
 jlo
 jlo
@@ -238905,8 +239402,7 @@ jlo
 jlo
 jlo
 jlo
-jlo
-jlo
+iaL
 jlo
 jlo
 jlo
@@ -239097,6 +239593,7 @@ jlo
 jlo
 jlo
 jlo
+iaL
 jlo
 jlo
 jlo
@@ -239107,8 +239604,7 @@ jlo
 jlo
 jlo
 jlo
-jlo
-jlo
+iaL
 jlo
 jlo
 jlo
@@ -239299,6 +239795,7 @@ jlo
 jlo
 jlo
 jlo
+iaL
 jlo
 jlo
 jlo
@@ -239309,8 +239806,7 @@ jlo
 jlo
 jlo
 jlo
-jlo
-jlo
+iaL
 jlo
 jlo
 jlo
@@ -239501,6 +239997,7 @@ jlo
 jlo
 jlo
 jlo
+iaL
 jlo
 jlo
 jlo
@@ -239511,8 +240008,7 @@ jlo
 jlo
 jlo
 jlo
-jlo
-jlo
+iaL
 jlo
 jlo
 jlo
@@ -239703,18 +240199,18 @@ jlo
 jlo
 jlo
 jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
-jlo
+oNK
+miT
+miT
+oNK
+miT
+miT
+miT
+miT
+miT
+miT
+miT
+oNK
 jlo
 jlo
 jlo
@@ -273647,7 +274143,7 @@ pUK
 pUK
 pUK
 pUK
-pUK
+rgs
 pUK
 pUK
 pUK
@@ -277682,16 +278178,16 @@ pUK
 pUK
 pUK
 pUK
-pUK
-pUK
-pUK
-pUK
-pUK
-pUK
-pUK
-pUK
-pUK
-pUK
+vcX
+vcX
+vcX
+vcX
+vcX
+vcX
+vcX
+vcX
+vcX
+vcX
 pUK
 pUK
 pUK
@@ -277884,16 +278380,16 @@ pUK
 pUK
 pUK
 pUK
-pUK
-pUK
-pUK
-pUK
-pUK
-pUK
-pUK
-pUK
-pUK
-pUK
+vcX
+uCS
+jkQ
+jkQ
+rhi
+jkQ
+rhi
+jkQ
+jkQ
+bxc
 pUK
 pUK
 pUK
@@ -278086,16 +278582,16 @@ pUK
 pUK
 pUK
 pUK
-pUK
-pUK
-pUK
-pUK
-pUK
-pUK
-pUK
-pUK
-pUK
-pUK
+vcX
+mlc
+eUI
+caw
+vwN
+rhi
+iOo
+aoe
+sPA
+him
 pUK
 pUK
 pUK
@@ -278288,16 +278784,16 @@ pUK
 pUK
 pUK
 pUK
-pUK
-pUK
-pUK
-pUK
-pUK
-pUK
-pUK
-pUK
-pUK
-pUK
+vcX
+oNK
+oNK
+oNK
+oNK
+oZg
+oNK
+oNK
+oNK
+oNK
 pUK
 pUK
 pUK
@@ -278490,16 +278986,16 @@ pUK
 pUK
 pUK
 pUK
-pUK
-pUK
-pUK
-pUK
-pUK
-pUK
-pUK
-pUK
-pUK
-pUK
+vcX
+oNK
+cni
+otX
+lKd
+jQC
+jQC
+bcE
+paA
+oNK
 pUK
 pUK
 pUK
@@ -278692,16 +279188,16 @@ pUK
 pUK
 pUK
 pUK
-pUK
-pUK
-pUK
-pUK
-pUK
-pUK
-pUK
-pUK
-pUK
-pUK
+vcX
+oNK
+bLE
+jQC
+jQC
+jQC
+dKp
+jQC
+rYk
+oNK
 pUK
 pUK
 pUK
@@ -278894,16 +279390,16 @@ pUK
 pUK
 pUK
 pUK
-pUK
-pUK
-pUK
-pUK
-pUK
-pUK
-pUK
-pUK
-pUK
-pUK
+vcX
+oNK
+mwR
+jQC
+gYb
+gYb
+lVL
+lVL
+vqR
+oNK
 pUK
 pUK
 pUK
@@ -279094,18 +279590,18 @@ pUK
 pUK
 pUK
 pUK
-pUK
-pUK
-pUK
-pUK
-pUK
-pUK
-pUK
-pUK
-pUK
-pUK
-pUK
-pUK
+oNK
+oNK
+oNK
+oNK
+tNk
+jQC
+lVL
+lLf
+lLf
+lVL
+kih
+oNK
 pUK
 pUK
 pUK
@@ -279296,18 +279792,18 @@ pUK
 pUK
 pUK
 pUK
-pUK
-pUK
-pUK
-pUK
-pUK
-pUK
-pUK
-pUK
-pUK
-pUK
-pUK
-pUK
+oNK
+iNn
+xbv
+oNK
+sVp
+jQC
+vbD
+wBL
+rLy
+ejJ
+pYJ
+oNK
 pUK
 pUK
 pUK
@@ -279498,18 +279994,18 @@ pUK
 pUK
 pUK
 pUK
-pUK
-pUK
-pUK
-pUK
-pUK
-pUK
-pUK
-pUK
-pUK
-pUK
-pUK
-pUK
+oNK
+xbv
+xbv
+oNK
+sVp
+dKp
+ukI
+hgH
+lVL
+lVL
+kqJ
+oNK
 pUK
 pUK
 pUK
@@ -279700,18 +280196,18 @@ pUK
 pUK
 pUK
 pUK
-pUK
-pUK
-pUK
-pUK
-pUK
-pUK
-pUK
-pUK
-pUK
-pUK
-pUK
-pUK
+oNK
+xbv
+xbv
+wyM
+rDl
+jQC
+lVL
+lVL
+lVL
+lVL
+ngR
+oNK
 pUK
 pUK
 pUK
@@ -279902,18 +280398,18 @@ pUK
 pUK
 pUK
 pUK
-pUK
-pUK
-pUK
-pUK
-pUK
-pUK
-pUK
-pUK
-pUK
-pUK
-pUK
-pUK
+oNK
+xbv
+xbv
+oNK
+txi
+jQC
+jQC
+jQC
+jQC
+dDO
+ulh
+oNK
 pUK
 pUK
 pUK
@@ -280104,18 +280600,18 @@ pUK
 pUK
 pUK
 pUK
-pUK
-pUK
-pUK
-pUK
-pUK
-pUK
-pUK
-pUK
-pUK
-pUK
-pUK
-pUK
+oNK
+oNK
+oNK
+oNK
+oNK
+oNK
+dEs
+dEs
+dEs
+oNK
+oNK
+oNK
 pUK
 pUK
 pUK
