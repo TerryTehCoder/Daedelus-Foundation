@@ -1,41 +1,60 @@
 {
 	"version": 1,
 	"map_name": "Site 104",
-	"map_path": "map_files/Site-104",
+	"map_path": "map_files/Site 104",
 	"map_file": "site104.dmm",
+	"weather": {
+		"/datum/weather/snow_storm": {
+			"telegraph_message": "<span class='warning'>Snow begins to fall lightly...</span>",
+			"probability": 1000,
+			"weather_message": "<span class='userdanger'>A fierce snowstorm begins! Seek shelter!</span>",
+			"weather_duration_lower": 800,
+			"weather_duration_upper": 1200,
+			"end_message": "<span class='boldannounce'>The snowstorm subsides, leaving a calm silence.</span>"
+		},
+
+		"/datum/weather/rain_storm": {
+			"telegraph_message": "<span class='warning'>Rain begins to fall lightly...</span>",
+			"probability": 1000,
+			"weather_message": "<span class='userdanger'>A fierce rainstorm begins! Seek shelter!</span>",
+			"weather_duration_lower": 800,
+			"weather_duration_upper": 1200,
+			"end_message": "<span class='boldannounce'>The rainstorm subsides, leaving a calm silence.</span>"
+		}
+
+	},
 	"traits": [
 		{
-			"Up": 1,
-			"Linkage": "Cross"
+			"Down": -1,
+			"Linkage": "Cross",
+			"Planetary_Environment": true
 		},
 		{
 			"Up": 1,
 			"Down": -1,
 			"Baseturf": "/turf/open/space/openspace",
-			"Linkage": "Cross"
+			"Linkage": "Cross",
+			"Planetary_Environment": true
 		},
 		{
 			"Up": 1,
 			"Down": -1,
 			"Baseturf": "/turf/open/space/openspace",
-			"Linkage": "Cross"
+			"Linkage": "Cross",
+			"Planetary_Environment": true
 		},
 		{
 			"Up": 1,
 			"Down": -1,
 			"Baseturf": "/turf/open/space/openspace",
-			"Linkage": "Cross"
-		},
-		{
-			"Up": 1,
-			"Down": -1,
-			"Baseturf": "/turf/open/space/openspace",
-			"Linkage": "Cross"
+			"Linkage": "Cross",
+			"Planetary_Environment": true
 		},
 		{
 			"Up": 1,
 			"Baseturf": "/turf/open/water",
-			"Linkage": "Cross"
+			"Linkage": "Cross",
+			"Planetary_Environment": true
 		}
 	]
 }
