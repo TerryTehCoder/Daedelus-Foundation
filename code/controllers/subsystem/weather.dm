@@ -25,6 +25,21 @@ SUBSYSTEM_DEF(weather)
 	var/flavor_smell_interval_max = 18000 // 30 minutes in deciseconds
 	/// Flag to track initial weather coverage calculation, we won't start processing until we have all the turf coverage info.
 	var/initial_coverage_processing_complete = FALSE
+	/// Flag to indicate that the subsystem is currently baking a new weather cache.
+	var/is_baking = FALSE
+
+	/// Dynamic batch size for initial turf coverage processing.
+	var/dynamic_turf_batch_size = 1500
+	var/batch_processing_target_tick_usage = 5 // Target tick usage in deciseconds
+	var/min_batch_size = 1500     //10
+	var/max_batch_size = 5000
+	// PID controller variables - We're essentially doing calculus to optimize the batch size based on tick changes...
+	// Basically.. if you have a higher quality oven, you can cook more turf columns at once.. so, not my computer.
+	var/pid_proportional_gain = 0.1
+	var/pid_integral_gain = 0.01
+	var/pid_derivative_gain = 0.05
+	var/pid_previous_error = 0
+	var/pid_integral = 0
 
 /datum/controller/subsystem/weather/fire()
 
@@ -33,16 +48,34 @@ SUBSYSTEM_DEF(weather)
 	var/static/obj_batch_index = 1
 	/// Batch size for mob/obj processing
 	var/batch_size = 10
-	/// Batch size for initial turf coverage processing.
-	// Sub 60 seconds on my machine (a bit dated) with little lag, but could probably be raised higher on a better system.
-	var/turf_batch_size = 1500
 
 	// Process initial weather coverage in batches
-	if(!initial_coverage_processing_complete)
-		if(!weather_coverage_handler.process_next_turf_batch(turf_batch_size))
-			initial_coverage_processing_complete = TRUE
-			weather_coverage_handler.finalize_exposed_turf_registration()
-		return // Do not proceed with other weather processing until initial coverage is complete
+	if(is_baking || !initial_coverage_processing_complete)
+		if(!weather_coverage_handler.process_next_turf_batch(dynamic_turf_batch_size))
+			if(is_baking)
+				FinishBaking()
+			else
+				initial_coverage_processing_complete = TRUE
+				weather_coverage_handler.finalize_exposed_turf_registration()
+				return
+
+		// Adjust batch size based on world's tick usage using our PID controller, unless a custom batch size is being used for a manual bake.
+		if(!is_baking || (is_baking && !initial_coverage_processing_complete))
+			var/error = batch_processing_target_tick_usage - world.tick_usage
+			pid_integral += error
+			var/derivative = error - pid_previous_error
+			var/output = pid_proportional_gain * error + pid_integral_gain * pid_integral + pid_derivative_gain * derivative
+			pid_previous_error = error
+
+			dynamic_turf_batch_size = clamp(dynamic_turf_batch_size + output, min_batch_size, max_batch_size)
+
+			if(SSweather.weather_coverage_handler.debug_verbose_coverage_messages)
+				message_admins(span_adminnotice("Weather Subsystem Debug: Tick usage ([world.tick_usage]), Error ([error]), PID Output ([output]), New Batch Size ([dynamic_turf_batch_size])"))
+
+		if(!is_baking)
+			return // Do not proceed with other weather processing until initial coverage is complete
+		else
+			return // Also return if we are baking
 
 	// Play flavor smells occasionally
 	if(world.time >= next_flavor_smell_time && current_profile)
@@ -90,11 +123,8 @@ SUBSYSTEM_DEF(weather)
 		var/list/objects_to_affect = list()
 
 		// Mobs that entered the storm's area
-		// We're just gonna iterate the playerlist here because chunking is kind of overkill for this.
-		for(var/mob/M in GLOB.player_list)
-			if(!M) // No mob attached to client
-				continue
-			if(!(M.z in current_storm.impacted_z_levels)) // Mob not on an impacted Z-level
+		for(var/mob/M in mob_canidates)
+			if(!M.client)
 				continue
 			// The check_mob_ambient_sound proc will handle adding the mob to mobs_with_ambient_sound and playing the sound.
 			RegisterSignal(M, COMSIG_MOVABLE_MOVED, TYPE_PROC_REF(/datum/weather, handle_mob_moved))
@@ -329,12 +359,86 @@ SUBSYSTEM_DEF(weather)
 				SSweather.relevant_z_levels_for_coverage += text2num(z_level)
 			}
 
-	weather_coverage_handler.Initialize(start_timeofday, relevant_z_levels_for_coverage)
+	// Attempt to load from cache
+	var/cache_loaded = TryLoadWeatherCache()
+	if(cache_loaded)
+		initial_coverage_processing_complete = TRUE
+		weather_coverage_handler.finalize_exposed_turf_registration()
+	else
+		// If cache loading fails, proceed with normal initialization
+		weather_coverage_handler.Initialize(start_timeofday, relevant_z_levels_for_coverage)
+		// Auto-bake a new cache in the background for the next round
+		spawn(0)
+			BakeWeatherCoverage()
 
 	//Wrapped in a same obj function call because weather_coverage_handler. was throwing errors. *Shrug*
 	RegisterSignal(/turf, COMSIG_TURF_CREATED, PROC_REF(.handle_turf_created))
 	RegisterSignal(/turf, COMSIG_TURF_DESTROYED, PROC_REF(.handle_turf_destroyed))
 	return ..()
+
+/datum/controller/subsystem/weather/proc/TryLoadWeatherCache()
+	var/datum/map_config/current_map_config = SSmapping.config
+	if(!current_map_config || !current_map_config.map_name || !current_map_config.map_file)
+		return FALSE
+
+	var/cache_dir = "data/weather_cache/[current_map_config.map_name]"
+	var/cache_file_path = "[cache_dir]/weather.json"
+	if(!fexists(cache_file_path))
+		message_admins(span_adminnotice("Weather Subsystem: No weather cache found for map '[current_map_config.map_name]'."))
+		return FALSE
+
+	var/map_file_path = "_maps/map_files/[current_map_config.map_name]/[current_map_config.map_file]"
+	if(!fexists(map_file_path))
+		message_admins(span_adminnotice("Weather Subsystem: Could not find map file '[map_file_path]' to validate cache."))
+		return FALSE
+
+	var/current_map_hash = md5filepath(map_file_path)
+	if(!current_map_hash)
+		message_admins(span_adminnotice("Weather Subsystem: Could not calculate hash for current map file."))
+		return FALSE
+
+	var/json_data = file2text(cache_file_path)
+	if(!json_data)
+		message_admins(span_adminnotice("Weather Subsystem: Could not read cache file '[cache_file_path]'."))
+		return FALSE
+
+	var/list/cache_data = json_decode(json_data)
+	if(!cache_data || !cache_data["map_hash"] || !cache_data["exposed_turfs"])
+		message_admins(span_adminnotice("Weather Subsystem: Cache file '[cache_file_path]' is corrupted or invalid."))
+		return FALSE
+
+	if(cache_data["map_hash"] != current_map_hash)
+		message_admins(span_adminnotice("Weather Subsystem: Weather cache for map '[current_map_config.map_name]' is stale. Hash mismatch."))
+		return FALSE
+
+	message_admins(span_adminnotice("Weather Subsystem: Loading weather coverage from cache for map '[current_map_config.map_name]'."))
+	var/list/exposed_turfs_data = cache_data["exposed_turfs"]
+
+	if(!exposed_turfs_data || !exposed_turfs_data.len)
+		return TRUE // Nothing to load
+
+	// Check if the data is in the new (list of lists) or old (flat list) format.
+	if(islist(exposed_turfs_data[1]))
+		// New format: list of lists
+		for(var/list/coords in exposed_turfs_data)
+			var/turf/T = locate(coords[1], coords[2], coords[3])
+			if(T)
+				T.cover_cache = FALSE
+				SSweather.weather_chunking.register_exposed_turf(T)
+				T.needs_weather_update = TRUE
+	else
+		// Old format: flat list
+		for(var/i = 1, i <= exposed_turfs_data.len, i += 3)
+			if(i + 2 > exposed_turfs_data.len) break // Avoid out of bounds
+			var/x = exposed_turfs_data[i]
+			var/y = exposed_turfs_data[i+1]
+			var/z = exposed_turfs_data[i+2]
+			var/turf/T = locate(x, y, z)
+			if(T)
+				T.cover_cache = FALSE
+				SSweather.weather_chunking.register_exposed_turf(T)
+				T.needs_weather_update = TRUE
+	return TRUE
 
 /datum/controller/subsystem/weather/proc/update_z_level(datum/space_level/level)
 	var/z = level.z_value
@@ -475,6 +579,69 @@ SUBSYSTEM_DEF(weather)
 /datum/controller/subsystem/weather/proc/handle_turf_destroyed(turf/T)
 	weather_coverage_handler.on_turf_destroyed(T)
 
+///Bakes the weather coverage info for the current map into a cached file at data/weather_cache/[map_name]/weather.json
+/datum/controller/subsystem/weather/proc/BakeWeatherCoverage(custom_batch_size)
+	if(is_baking)
+		message_admins(span_adminnotice("Weather Subsystem: Already baking weather coverage."))
+		return FALSE
+
+	if(custom_batch_size)
+		dynamic_turf_batch_size = custom_batch_size
+		message_admins(span_adminnotice("Weather Subsystem: Starting weather coverage baking with custom batch size: [custom_batch_size]..."))
+	else
+		message_admins(span_adminnotice("Weather Subsystem: Starting weather coverage baking with dynamic batch sizing..."))
+
+	is_baking = TRUE
+	return TRUE
+
+/datum/controller/subsystem/weather/proc/FinishBaking()
+	message_admins(span_adminnotice("Weather Subsystem: Finishing weather coverage baking..."))
+	is_baking = FALSE
+
+	var/datum/map_config/current_map_config = SSmapping.config
+	if(!current_map_config || !current_map_config.map_file)
+		message_admins(span_adminnotice("Weather Subsystem: Baking failed. Map file not specified in map config."))
+		return FALSE
+
+	var/map_file_path = "_maps/map_files/[current_map_config.map_name]/[current_map_config.map_file]"
+	if(!fexists(map_file_path))
+		message_admins(span_adminnotice("Weather Subsystem: Baking failed. Map file not found at '[map_file_path]'."))
+		is_baking = FALSE
+		return FALSE
+
+	var/map_hash = md5filepath(map_file_path)
+	if(!map_hash)
+		message_admins(span_adminnotice("Weather Subsystem: Baking failed. Could not calculate MD5 hash of map file."))
+		is_baking = FALSE
+		return FALSE
+
+	var/list/exposed_turfs_coords = list()
+	var/list/exposed_turfs = weather_chunking.get_turfs_in_chunks(weather_chunking.get_all_turf_chunk_keys())
+	for(var/turf/T in exposed_turfs)
+		exposed_turfs_coords.Add(list(T.x, T.y, T.z))
+
+	var/list/cache_data = list("map_hash" = map_hash, "exposed_turfs" = exposed_turfs_coords)
+	var/json_data = json_encode(cache_data)
+
+	var/cache_dir = "data/weather_cache/[current_map_config.map_name]"
+	if(!fexists(cache_dir))
+		fcopy("[]", "[cache_dir]/dummy.json")
+		fdel("[cache_dir]/dummy.json")
+
+	var/cache_file_path = "[cache_dir]/weather.json"
+	if(fexists(cache_file_path) && !fdel(cache_file_path))
+		message_admins(span_adminnotice("Weather Subsystem: Could not delete existing cache file at '[cache_file_path]'."))
+		is_baking = FALSE
+		return FALSE
+
+	if(!text2file(json_data, cache_file_path))
+		message_admins(span_adminnotice("Weather Subsystem: Baking failed. Could not write to cache file at '[cache_file_path]'."))
+		is_baking = FALSE
+		return FALSE
+
+	message_admins(span_adminnotice("Weather Subsystem: Baking complete. Saved cache for map '[current_map_config.map_name]' with hash [map_hash]."))
+	is_baking = FALSE
+	return TRUE
 
 /// Debug Utilities
 

@@ -1245,6 +1245,7 @@
 #include "code\datums\weather\weather_profiles.dm"
 #include "code\datums\weather\weather_chunking.dm"
 #include "code\datums\weather\weather_coverage.dm"
+#include "code\controllers\subsystem\weather_baking.dm"
 #include "code\datums\weather\weather_types\floor_is_lava.dm"
 #include "code\datums\weather\weather_types\radiation_storm.dm"
 #include "code\datums\weather\weather_types\snow_storm.dm"

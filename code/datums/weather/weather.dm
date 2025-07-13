@@ -351,22 +351,28 @@ GLOBAL_VAR_INIT(next_weather_sound_channel, 10000) // Start at a high number to 
 					current_dampen_multiplier = profile_map["dampen_volume_multiplier"]
 					break // Found the appropriate profile, stop searching
 
-	// Find the closest exposed turf to the mob within the storm's impacted Z-levels
+	// Find the closest exposed turf to the mob by checking its current chunk and neighbors
 	var/turf/closest_exposed_turf = null
 	var/min_dist = INFINITY
 
-	// Iterate through all turfs in the storm's impacted Z-levels
-	for(var/z_level in impacted_z_levels)
-		var/list/z_chunk_keys = SSweather.weather_chunking.get_all_turf_chunk_keys_on_z(z_level)
-		if(z_chunk_keys && z_chunk_keys.len)
-			var/list/exposed_turfs_on_z = SSweather.weather_chunking.get_turfs_in_chunks(z_chunk_keys)
-			for(var/turf/T in exposed_turfs_on_z)
-				if(T.z != mob_turf.z) // Only consider turfs on the same Z-level for direct distance calculation
-					continue
-				var/dist = get_dist(mob_turf, T)
-				if(dist < min_dist)
-					min_dist = dist
-					closest_exposed_turf = T
+	var/list/mob_chunk_coords = SSweather.weather_chunking.get_turf_chunk_coords(mob_turf)
+	var/list/nearby_chunk_keys = list()
+
+	// Get keys for 3x3 grid of chunks around the mob
+	for(var/dx = -1 to 1)
+		for(var/dy = -1 to 1)
+			var/x = mob_chunk_coords[1] + dx
+			var/y = mob_chunk_coords[2] + dy
+			var/z = mob_chunk_coords[3]
+			nearby_chunk_keys += "[x]_[y]_[z]"
+
+	var/list/nearby_exposed_turfs = SSweather.weather_chunking.get_turfs_in_chunks(nearby_chunk_keys)
+
+	for(var/turf/T in nearby_exposed_turfs)
+		var/dist = get_dist(mob_turf, T)
+		if(dist < min_dist)
+			min_dist = dist
+			closest_exposed_turf = T
 
 	if(closest_exposed_turf)
 		for(var/profile_map in ambient_sound_profiles)
@@ -419,7 +425,7 @@ GLOBAL_VAR_INIT(next_weather_sound_channel, 10000) // Start at a high number to 
 /datum/weather/proc/update_turf_overlays()
 	var/list/new_overlay_cache = generate_overlay_cache()
 
-	var/list/chunk_keys = SSweather.weather_chunking.get_all_turf_chunk_keys()
+	var/list/chunk_keys = SSweather.weather_chunking.get_impacted_chunk_keys(src)
 
 	for(var/key in chunk_keys)
 		var/list/turfs = SSweather.weather_chunking.get_turfs_in_chunks(list(key))
