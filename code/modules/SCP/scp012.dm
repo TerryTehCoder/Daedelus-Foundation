@@ -49,6 +49,7 @@
 	proximity.reward_rp = 20
 	proximity.reward_lp = 5
 	proximity.check_completion = /obj/item/paper/scp012/proc/check_proximity_test
+	//Could not get PROC_REF to work, fix?
 
 	var/datum/scp_test/sound_damp = new()
 	sound_damp.name = "Sound Dampening"
@@ -58,7 +59,7 @@
 	sound_damp.check_completion = /obj/item/paper/scp012/proc/check_sound_damp_test
 
 	def.tests = list(proximity, sound_damp)
-	SSresearch.scp_definitions.Add(def)
+	SSresearch.add_scp_definition(def)
 
 	SCP.memeticFlags = MVISUAL|MAUDIBLE|MSYNCED //Memetic flags determine required factors for a human to be affected
 	SCP.memetic_proc = TYPE_PROC_REF(/obj/item/paper/scp012, memetic_effect) //proc to be called for the effect an affected individual should recieve
@@ -123,14 +124,15 @@
 
 /obj/item/paper/scp012/proc/check_proximity_test()
 	for(var/mob/living/carbon/human/H in view(1, src))
-		if(H.stat == CONSCIOUS && isshackled(H))
+		if(H.stat == CONSCIOUS && H.handcuffed)
 			return TRUE
 	return FALSE
 
 /obj/item/paper/scp012/proc/check_sound_damp_test()
 	for(var/mob/living/carbon/human/H in view(1, src))
-		if(H.stat == CONSCIOUS && H.is_wearing_ear_protection())
-			return TRUE
+		if(H.stat == CONSCIOUS)
+			if(H.head && (H.head.body_parts_covered & HEAD)) //We don't Really care if it WORKED (Well, they might), just that it was Attempted. Mwahaha.
+				return TRUE
 	return FALSE
 
 // Overrides

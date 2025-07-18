@@ -1,23 +1,31 @@
 //This file contains the core data structures for the SCP research system.
 
-//The global handler for all SCP research activities.
-/datum/controller/subsystem/research
+SUBSYSTEM_DEF(research)
 	name = "Research"
-	init_order = SS_INIT_RESEARCH
+	init_order = INIT_ORDER_RESEARCH
 	var/list/scp_definitions = list()
 	var/list/unlocked_scps = list()
-	var/list/compoetedptdstests = list()
+	var/list/all_projects = list()
 	var/research_points = 0
 	var/logistics_points = 0
 
 /datum/controller/subsystem/research/Initialize()
 	..()
-	SSresearch = src
 	//TODO: Load SCP definitions from a config file or hardcoded list.
-	log_debug("SCP Research Subsystem Initialized.")
+	log_world("SCP Research Subsystem Initialized.")
 	START_PROCESSING(SSobj, src)
 
-/datum/controller/subsystem/research/proc/purchase_scp(scp_id, mob/user)
+/datum/controller/subsystem/research/proc/add_scp_definition(datum/scp_definition/def)
+	if(!istype(def))
+		return
+
+	for(var/datum/scp_definition/d in scp_definitions)
+		if(d.id_tag == def.id_tag)
+			return
+
+	scp_definitions.Add(def)
+
+/datum/controller/subsystem/research/proc/requisition_scp(scp_id, mob/user)
 	var/datum/scp_definition/def
 	for(var/datum/scp_definition/d in scp_definitions)
 		if(d.id_tag == scp_id)
@@ -50,64 +58,76 @@
 	SSblackbox.record_feedback("nested tally", "scp_purchased", 1, list(def.id_tag))
 	message_admins("[key_name(user)] has purchased SCP-[def.id_tag].")
 
-/datum/controller/subsystem/research/proc/submit_report(scp_id, test_name, manual_report, mob/user)
-	var/datum/scp_definition/def
-	for(var/datum/scp_definition/d in scp_definitions)
-		if(d.id_tag == scp_id)
-			def = d
+/datum/controller/subsystem/research/proc/submit_report(project_id, manual_report, mob/user)
+	var/datum/research_project/project
+	for(var/datum/research_project/p in all_projects)
+		if(p.id == project_id)
+			project = p
 			break
-	if(!def)
-		to_chat(user, span_warning("Invalid SCP ID."))
-		return
-
-	var/datum/scp_test/test
-	for(var/datum/scp_test/t in def.tests)
-		if(t.name == test_name)
-			test = t
-			break
-	if(!test)
-		to_chat(user, span_warning("Invalid test name."))
+	if(!project)
+		to_chat(user, span_warning("Invalid project ID."))
 		return
 
 	var/datum/scp_test_report/report = new()
-	report.test = test
-	report.scp_id = scp_id
+	report.project = project
 	report.submitter = user.ckey
 	report.manual_report = manual_report
 	report.timestamp = world.time
 
-	completed_tests.Add(report)
+	project.report = report
+	project.status = "REPORT_SUBMITTED"
 
-	research_points += test.reward_rp
-	logistics_points += test.reward_lp
+	research_points += project.test.reward_rp
+	logistics_points += project.test.reward_lp
 	if(manual_report)
 		research_points += 5
 
 	to_chat(user, span_notice("You have successfully submitted the test report."))
-	SSblackbox.record_feedback("nested tally", "scp_report_submitted", 1, list(def.id_tag, test.name))
-	message_admins("[key_name(user)] has submitted a test report for SCP-[def.id_tag]: [test.name].")
+	SSblackbox.record_feedback("nested tally", "scp_report_submitted", 1, list(project.scp_id, project.project_name))
+	message_admins("[key_name(user)] has submitted a test report for SCP-[project.scp_id]: [project.project_name].")
 
 /datum/controller/subsystem/research/process()
 	if(prob(10)) // 10% chance every tick to audit a report
-		var/list/unaudited_reports = list()
-		for(var/datum/scp_test_report/r in completed_tests)
-			if(!r.audited)
-				unaudited_reports.Add(r)
+		var/list/unaudited_projects = list()
+		for(var/datum/research_project/p in all_projects)
+			if(p.status == "REPORT_SUBMITTED" && !p.report.audited)
+				unaudited_projects.Add(p)
 
-		if(unaudited_reports.len)
-			var/datum/scp_test_report/report_to_audit = pick(unaudited_reports)
-			report_to_audit.audited = TRUE
+		if(unaudited_projects.len)
+			var/datum/research_project/project_to_audit = pick(unaudited_projects)
+			project_to_audit.report.audited = TRUE
 
-			var/test_proc = report_to_audit.test.check_completion
-			var/result = call(test_proc)()
+			if(!project_to_audit.test) // Custom tests are not auditable for now
+				project_to_audit.status = "COMPLETED"
+				return
+
+			var/atom/movable/scp_object
+			for(var/datum/scp/scp_instance in world)
+				if(scp_instance.designation == project_to_audit.scp_id)
+					scp_object = scp_instance.parent
+					break
+
+			if(!scp_object)
+				message_admins("AUDIT SKIPPED: Could not find SCP-[project_to_audit.scp_id] object for audit. Report passed by default.")
+				project_to_audit.status = "COMPLETED"
+				return
+
+			var/test_proc = project_to_audit.test.check_completion
+			if(!test_proc)
+				project_to_audit.status = "COMPLETED"
+				return
+
+			var/result = call(scp_object, test_proc)()
 
 			if(!result)
-				research_points -= report_to_audit.test.reward_rp * 2
-				logistics_points -= report_to_audit.test.reward_lp * 2
-				message_admins("AUDIT FAILED: [report_to_audit.submitter] submitted a fraudulent report for SCP-[report_to_audit.scp_id]: [report_to_audit.test.name].")
+				research_points -= project_to_audit.test.reward_rp * 2
+				logistics_points -= project_to_audit.test.reward_lp * 2
+				message_admins("AUDIT FAILED: [project_to_audit.report.submitter] submitted a fraudulent report for SCP-[project_to_audit.scp_id]: [project_to_audit.project_name].")
+				project_to_audit.status = "AUDIT_FAILED"
 				// TODO: Send a fax
 			else
-				message_admins("AUDIT PASSED: [report_to_audit.submitter]'s report for SCP-[report_to_audit.scp_id]: [report_to_audit.test.name] was verified.")
+				message_admins("AUDIT PASSED: [project_to_audit.report.submitter]'s report for SCP-[project_to_audit.scp_id]: [project_to_audit.project_name] was verified.")
+				project_to_audit.status = "COMPLETED"
 
 
 //Datum that defines a single SCP's properties for the research system.
@@ -124,12 +144,27 @@
 	name = "SCP Containment Unit"
 	cost = 0
 	contains = list()
-	amount = 1
 	group = "SCPs"
 
-/datum/scp_test_report
-	var/datum/scp_test/test
+/datum/research_project
+	var/id
+	var/project_name
 	var/scp_id
+	var/proposer_ckey
+	var/description
+	var/status = "PROPOSED"
+	var/authorizer_ckey
+	var/digital_signature
+	var/is_custom = FALSE
+	var/datum/scp_test/test
+	var/datum/scp_test_report/report
+
+/datum/research_project/New()
+	..()
+	id = md5("[world.time][rand(1, 1000)]")
+
+/datum/scp_test_report
+	var/datum/research_project/project
 	var/submitter
 	var/manual_report
 	var/timestamp
@@ -141,5 +176,4 @@
 	var/reward_rp = 10
 	var/reward_lp = 5
 	var/repeatable = FALSE
-	var/proc/check_completion()
-		return FALSE
+	var/check_completion // Holds a proc path

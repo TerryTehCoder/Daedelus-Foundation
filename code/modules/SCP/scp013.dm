@@ -33,13 +33,6 @@
 	def.danger_tier = SCP_SAFE
 	def.cost = 0 // Unlocked by default
 
-	var/datum/scp_test/ingestion = new()
-	ingestion.name = "Subject Ingestion"
-	ingestion.description = "Document the full cycle of psychological effects on a subject who has smoked one of the cigarettes."
-	ingestion.reward_rp = 10
-	ingestion.reward_lp = 5
-	ingestion.check_completion = /obj/item/clothing/mask/cigarette/scp013/proc/check_ingestion_test
-
 	var/datum/scp_test/analysis = new()
 	analysis.name = "Chemical Analysis"
 	analysis.description = "Analyze the chemical composition of an unlit SCP-013 cigarette."
@@ -47,8 +40,8 @@
 	analysis.reward_lp = 5
 	analysis.check_completion = /obj/item/clothing/mask/cigarette/scp013/proc/check_analysis_test
 
-	def.tests = list(ingestion, analysis)
-	SSresearch.scp_definitions.Add(def)
+	def.tests = list(analysis)
+	SSresearch.add_scp_definition(def)
 	SSresearch.unlocked_scps.Add(def.id_tag)
 
 	LAZYINITLIST(affected_weakref)
@@ -152,13 +145,6 @@
 	if(prob(15))
 		to_chat(src, span_boldnotice(pick(blmessages)))
 	addtimer(CALLBACK(src, PROC_REF(bluelady_message), blmessages), 45 SECONDS)
-
-/obj/item/clothing/mask/cigarette/scp013/proc/check_ingestion_test()
-	for(var/W in affected_weakref)
-		var/mob/living/carbon/human/H = W.resolve()
-		if(H && H.humanStageHandler.getStage("BlueLady") >= 7)
-			return TRUE
-	return FALSE
 
 /obj/item/clothing/mask/cigarette/scp013/proc/check_analysis_test()
 	if(istype(loc, /obj/machinery/chem_master))
