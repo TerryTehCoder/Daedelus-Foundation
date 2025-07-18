@@ -11,7 +11,7 @@ SUBSYSTEM_DEF(research)
 
 /datum/controller/subsystem/research/Initialize()
 	..()
-	//TODO: Load SCP definitions from a config file or hardcoded list.
+	load_scp_definitions()
 	log_world("SCP Research Subsystem Initialized.")
 	START_PROCESSING(SSobj, src)
 
@@ -24,6 +24,14 @@ SUBSYSTEM_DEF(research)
 			return
 
 	scp_definitions.Add(def)
+
+	for(var/datum/scp_test/test in def.tests)
+		var/datum/research_project/p = new()
+		p.project_name = test.name
+		p.scp_id = def.id_tag
+		p.description = test.description
+		p.test = test
+		all_projects.Add(p)
 
 /datum/controller/subsystem/research/proc/requisition_scp(scp_id, mob/user)
 	var/datum/scp_definition/def
@@ -155,6 +163,8 @@ SUBSYSTEM_DEF(research)
 	var/status = "PROPOSED"
 	var/authorizer_ckey
 	var/digital_signature
+	var/authorization_notes
+	var/attachment_uid
 	var/is_custom = FALSE
 	var/datum/scp_test/test
 	var/datum/scp_test_report/report
@@ -173,6 +183,10 @@ SUBSYSTEM_DEF(research)
 /datum/scp_test
 	var/name = "Unnamed Test"
 	var/description = "No description."
+	var/hypothesis = "No hypothesis."
+	var/procedure = "No procedure."
+	var/risks = "No risks."
+	var/required_equipment = "None."
 	var/reward_rp = 10
 	var/reward_lp = 5
 	var/repeatable = FALSE

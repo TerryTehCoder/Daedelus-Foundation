@@ -132,6 +132,21 @@
 			return F
 	return null
 
+/obj/item/computer_hardware/hard_drive/proc/find_file_by_uid(uid)
+	if(!check_functionality())
+		return null
+
+	if(!uid)
+		return null
+
+	if(!stored_files)
+		return null
+
+	for(var/datum/computer_file/F in stored_files)
+		if(F.uid == uid)
+			return F
+	return null
+
 /obj/item/computer_hardware/hard_drive/Destroy()
 	QDEL_LIST(stored_files)
 	return ..()

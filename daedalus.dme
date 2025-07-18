@@ -4846,6 +4846,7 @@
 #include "code\modules\SCP\containment_crates.dm"
 #include "code\modules\SCP\research_program.dm"
 #include "code\modules\SCP\research.dm"
+#include "code\modules\SCP\scp_definitions.dm"
 #include "interface\interface.dm"
 #include "interface\menu.dm"
 #include "interface\stylesheet.dm"

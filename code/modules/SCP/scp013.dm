@@ -27,23 +27,6 @@
 		"013", //Numerical Designation
 	)
 
-	var/datum/scp_definition/def = new()
-	def.id_tag = "013"
-	def.name = "'Blue Lady' cigarette"
-	def.danger_tier = SCP_SAFE
-	def.cost = 0 // Unlocked by default
-
-	var/datum/scp_test/analysis = new()
-	analysis.name = "Chemical Analysis"
-	analysis.description = "Analyze the chemical composition of an unlit SCP-013 cigarette."
-	analysis.reward_rp = 20
-	analysis.reward_lp = 5
-	analysis.check_completion = /obj/item/clothing/mask/cigarette/scp013/proc/check_analysis_test
-
-	def.tests = list(analysis)
-	SSresearch.add_scp_definition(def)
-	SSresearch.unlocked_scps.Add(def.id_tag)
-
 	LAZYINITLIST(affected_weakref)
 
 /obj/item/clothing/mask/cigarette/scp013/Destroy()
