@@ -121,6 +121,14 @@ GLOBAL_LIST_INIT(blacklisted_cargo_types, typecacheof(list(
 	for(var/datum/supply_order/spawning_order in SSshuttle.shopping_list)
 		if(!empty_turfs.len)
 			break
+
+		if(istype(spawning_order.pack, /datum/supply_pack/scp_containment))
+			spawning_order.generate(pick_n_take(empty_turfs))
+			SSshuttle.shopping_list -= spawning_order
+			SSshuttle.order_history += spawning_order
+			investigate_log("SCP Containment Unit ([spawning_order.pack.name]) has shipped.", INVESTIGATE_CARGO)
+			continue
+
 		var/price = spawning_order.pack.get_cost()
 		if(spawning_order.applied_coupon)
 			price *= (1 - spawning_order.applied_coupon.discount_pct_off)

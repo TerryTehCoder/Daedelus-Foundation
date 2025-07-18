@@ -37,6 +37,29 @@
 		SCP_MEMETIC //Meta Flags, refer to code/_defines/SCP.dm
 	)
 
+	var/datum/scp_definition/def = new()
+	def.id_tag = "012"
+	def.name = "On Mount Golgotha"
+	def.danger_tier = SCP_EUCLID
+	def.cost = 100
+
+	var/datum/scp_test/proximity = new()
+	proximity.name = "Proximity Exposure"
+	proximity.description = "Observe a subject's reaction to being in close proximity to SCP-012 for an extended period."
+	proximity.reward_rp = 20
+	proximity.reward_lp = 5
+	proximity.check_completion = /obj/item/paper/scp012/proc/check_proximity_test
+
+	var/datum/scp_test/sound_damp = new()
+	sound_damp.name = "Sound Dampening"
+	sound_damp.description = "Test the effectiveness of sound-dampening equipment on SCP-012's audible memetic properties."
+	sound_damp.reward_rp = 50
+	sound_damp.reward_lp = 10
+	sound_damp.check_completion = /obj/item/paper/scp012/proc/check_sound_damp_test
+
+	def.tests = list(proximity, sound_damp)
+	SSresearch.scp_definitions.Add(def)
+
 	SCP.memeticFlags = MVISUAL|MAUDIBLE|MSYNCED //Memetic flags determine required factors for a human to be affected
 	SCP.memetic_proc = TYPE_PROC_REF(/obj/item/paper/scp012, memetic_effect) //proc to be called for the effect an affected individual should recieve
 	SCP.memetic_sounds = list('sound/scp/scp012/012start.ogg','sound/scp/scp012/012mid1.ogg','sound/scp/scp012/012mid2.ogg','sound/scp/scp012/012mid3.ogg','sound/scp/scp012/012mid4.ogg','sound/scp/scp012/012mid5.ogg','sound/scp/scp012/012mid6.ogg','sound/scp/scp012/012mid7.ogg','sound/scp/scp012/012mid8.ogg','sound/scp/scp012/012mid9.ogg') //not including the end file since if its playing that we can assume the person is being relieve of the effect
@@ -97,6 +120,18 @@
 					H.visible_message(span_notice("[H] looks at \"[name]\" and cries."), span_warning(pick(dmessages)))
 					playsound(H, "sound/voice/human/emote/[H.gender]_cry[pick(list("1","2"))].ogg", 100)
 		effect_cooldown_counter = world.time
+
+/obj/item/paper/scp012/proc/check_proximity_test()
+	for(var/mob/living/carbon/human/H in view(1, src))
+		if(H.stat == CONSCIOUS && isshackled(H))
+			return TRUE
+	return FALSE
+
+/obj/item/paper/scp012/proc/check_sound_damp_test()
+	for(var/mob/living/carbon/human/H in view(1, src))
+		if(H.stat == CONSCIOUS && H.is_wearing_ear_protection())
+			return TRUE
+	return FALSE
 
 // Overrides
 
