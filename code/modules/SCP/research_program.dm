@@ -12,11 +12,6 @@
 
 /datum/computer_file/program/scp_research/ui_static_data(mob/user)
 	var/list/data = list()
-	data["dangerLevels"] = list(
-		list("key" = SCP_SAFE, "label" = "Safe"),
-		list("key" = SCP_EUCLID, "label" = "Euclid"),
-		list("key" = SCP_KETER, "label" = "Keter")
-	)
 	return data
 
 /datum/computer_file/program/scp_research/ui_data(mob/user)
@@ -74,7 +69,6 @@
 		scps.Add(list(list(
 			"id" = scp.id_tag,
 			"name" = scp.name,
-			"dangerTier" = scp.danger_tier,
 			"cost" = scp.cost,
 			"unlocked" = (scp.id_tag in SSresearch.unlocked_scps)
 		)))
@@ -185,9 +179,6 @@
 				if(drive)
 					var/datum/computer_file/file = drive.find_file_by_uid(p.attachment_uid)
 					if(file)
-						// This will need a new TGUI window to display the file content.
-						// For now, we'll just send the content back to the client to be displayed in a modal.
-						// This is not ideal, but it's a start.
 						var/datum/computer_file/data/text/textFile = file
 						if(istype(textFile))
 							return list("content" = textFile.stored_text)
@@ -205,13 +196,13 @@
 					var/datum/computer_file/file = drive.find_file_by_uid(p.attachment_uid)
 					if(file)
 						var/mob/user_mob = ui.user
-						var/obj/item/modular_computer/tablet/pda/pda = user_mob.get_active_hand() // Assuming user holds PDA
+						var/obj/item/modular_computer/tablet/pda/pda = user_mob.get_active_hand()
 						if(istype(pda))
 							var/obj/item/computer_hardware/hard_drive/user_drive = pda.all_components[MC_HDD]
 							if(user_drive)
 								var/datum/computer_file/new_file = file.clone(TRUE)
 								user_drive.store_file(new_file)
-								to_chat(user_mob, span_notice("File '[new_file.filename]' downloaded to your PDA."))
+								computer.alert_call(src, "File '[new_file.filename]' downloaded to your PDA.")
 								return TRUE
 			return FALSE
 		if("unauthorize_test")
@@ -224,18 +215,8 @@
 					p.authorization_notes = null
 					var/mob/proposer_mob = get_mob_by_ckey(p.proposer_ckey)
 					if(proposer_mob)
-						to_chat(proposer_mob, span_warning("Your research proposal '[p.project_name]' has been unauthorized by [ui.user.real_name]."))
+						computer.alert_call(src, "Your research proposal '[p.project_name]' has been unauthorized by [ui.user.real_name].")
 					break
 			return TRUE
-		if("remove_proposal")
-			var/project_id = params["project_id"]
-			for(var/datum/research_project/p in SSresearch.all_projects)
-				if(p.id == project_id)
-					computer.alert_call(src, "Research proposal '[p.project_name]' has been removed by [ui.user.real_name].")
-					SSresearch.all_projects.Remove(p)
-					qdel(p)
-					break
-			return TRUE
-
 
 	return FALSE

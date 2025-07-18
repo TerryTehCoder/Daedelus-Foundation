@@ -45,12 +45,6 @@ const ProjectCard = (props, context) => {
   const [attachmentContent, setAttachmentContent] = useState('');
 
   const canAuthorize = userAccess?.includes(2) || userAccess?.includes(4); // 2 = RD, 4 = Captain
-  const dangerTierColor =
-    project.dangerTier === 'Safe'
-      ? 'green'
-      : project.dangerTier === 'Euclid'
-        ? 'orange'
-        : 'red';
 
   const handleInput = (e, val, setter) => {
     e.stopPropagation();
@@ -69,24 +63,11 @@ const ProjectCard = (props, context) => {
         />
       }
     >
-      <Box style={{ 'border-left': `2px solid ${dangerTierColor}` }}>
-        {project.status === 'ACTIVE' && (
-          <Box color="good" style={{ 'font-weight': 'bold' }}>
-            Active
-          </Box>
-        )}
-      </Box>
       {isExpanded && (
         <>
           <Box>
             <p>Proposed by: {project.proposer}</p>
             <p>Description: {project.description}</p>
-            <p>
-              Danger Tier:{' '}
-              <span style={{ color: dangerTierColor }}>
-                {project.dangerTier}
-              </span>
-            </p>
             {project.test && (
               <Box>
                 <p>
@@ -156,8 +137,22 @@ const ProjectCard = (props, context) => {
             )}
           </Box>
           {project.status === 'PROPOSED' && canAuthorize && (
-            <Grid>
-              <Grid.Column>
+            <Flex>
+              <Flex.Item>
+                <Input
+                  placeholder="Digital Signature"
+                  value={signature}
+                  onInput={(e, val) => handleInput(e, val, setSignature)}
+                />
+              </Flex.Item>
+              <Flex.Item>
+                <Input
+                  placeholder="Authorization Notes (Optional)"
+                  value={authNotes}
+                  onInput={(e, val) => handleInput(e, val, setAuthNotes)}
+                />
+              </Flex.Item>
+              <Flex.Item>
                 <Button
                   content="Authorize"
                   onClick={() =>
@@ -168,8 +163,15 @@ const ProjectCard = (props, context) => {
                     })
                   }
                 />
-              </Grid.Column>
-              <Grid.Column>
+              </Flex.Item>
+              <Flex.Item>
+                <Input
+                  placeholder="Denial Reason (Optional)"
+                  value={denialReason}
+                  onInput={(e, val) => handleInput(e, val, setDenialReason)}
+                />
+              </Flex.Item>
+              <Flex.Item>
                 <Button
                   content="Deny"
                   color="red"
@@ -180,35 +182,8 @@ const ProjectCard = (props, context) => {
                     })
                   }
                 />
-              </Grid.Column>
-              <Grid.Row>
-                <Grid.Column>
-                  <Input
-                    placeholder="Authorization Notes (Optional)"
-                    value={authNotes}
-                    onInput={(e, val) => handleInput(e, val, setAuthNotes)}
-                  />
-                </Grid.Column>
-              </Grid.Row>
-              <Grid.Row>
-                <Grid.Column>
-                  <Input
-                    placeholder="Denial Reason (Optional)"
-                    value={denialReason}
-                    onInput={(e, val) => handleInput(e, val, setDenialReason)}
-                  />
-                </Grid.Column>
-              </Grid.Row>
-              <Grid.Row>
-                <Grid.Column>
-                  <Input
-                    placeholder="Digital Signature"
-                    value={signature}
-                    onInput={(e, val) => handleInput(e, val, setSignature)}
-                  />
-                </Grid.Column>
-              </Grid.Row>
-            </Grid>
+              </Flex.Item>
+            </Flex>
           )}
           {project.status === 'PROPOSED' && canAuthorize && (
             <Button
@@ -272,7 +247,6 @@ const ResearchBoard = (props, context) => {
   const completed = projects.filter(
     (p) => p.status === 'COMPLETED' || p.status === 'AUDIT_FAILED',
   );
-  const denied = projects.filter((p) => p.status === 'DENIED');
 
   return (
     <Grid>
@@ -304,15 +278,6 @@ const ResearchBoard = (props, context) => {
           ))}
         </Section>
       </Grid.Column>
-      {denied.length > 0 && (
-        <Grid.Column>
-          <Section title="Archived" level={3}>
-            {denied.map((p) => (
-              <ProjectCard key={p.id} project={p} userAccess={user_access} />
-            ))}
-          </Section>
-        </Grid.Column>
-      )}
     </Grid>
   );
 };
@@ -368,112 +333,67 @@ const ProposeTest = (props, context) => {
 
   return (
     <Section title="Propose Custom Test">
-      <Flex direction="column" style={{ gap: '10px' }}>
-        <Flex align="center">
-          <Flex.Item grow={1}>
-            <label>SCP:</label>
-          </Flex.Item>
-          <Flex.Item grow={3}>
-            <select
-              value={scpId}
-              onChange={(e) => setScpId(e.target.value)}
-              style={{ width: '100%' }}
-            >
-              <option value="">Select an SCP</option>
-              {scps.map((scp) => (
-                <option key={scp.id} value={scp.id}>
-                  SCP-{scp.id}: {scp.name}
-                </option>
-              ))}
-              <option value="custom">Custom SCP</option>
-            </select>
-          </Flex.Item>
-        </Flex>
-
+      <Flex direction="column">
+        <Flex.Item>
+          <label>SCP:</label>
+          <select value={scpId} onChange={(e) => setScpId(e.target.value)}>
+            <option value="">Select an SCP</option>
+            {scps.map((scp) => (
+              <option key={scp.id} value={scp.id}>
+                SCP-{scp.id}: {scp.name}
+              </option>
+            ))}
+            <option value="custom">Custom SCP</option>
+          </select>
+        </Flex.Item>
         {scpId === 'custom' && (
-          <Flex align="center">
-            <Flex.Item grow={1}>
-              <label>Custom SCP Designation:</label>
-            </Flex.Item>
-            <Flex.Item grow={3}>
-              <Input
-                value={customScpId}
-                onInput={handleCustomScpInput}
-                width="100%"
-              />
-              {suggestion && (
-                <Box color="good" mt={1}>
-                  Suggestion: SCP-{suggestion.id}: {suggestion.name}
-                </Box>
-              )}
-            </Flex.Item>
-          </Flex>
+          <Flex.Item>
+            <label>Custom SCP Designation:</label>
+            <Input value={customScpId} onInput={handleCustomScpInput} />
+            {suggestion && (
+              <Box color="good">
+                Suggestion: SCP-{suggestion.id}: {suggestion.name}
+              </Box>
+            )}
+          </Flex.Item>
         )}
-
-        <Flex align="center">
-          <Flex.Item grow={1}>
-            <label>Project Name:</label>
-          </Flex.Item>
-          <Flex.Item grow={3}>
-            <Input
-              value={projectName}
-              onInput={(e, val) => setProjectName(val)}
-              width="100%"
-            />
-          </Flex.Item>
-        </Flex>
-
-        <Divider />
-
-        <Flex direction="column">
-          <label>Description/Hypothesis:</label>
+        <Flex.Item>
+          <label>Project Name:</label>
+          <Input
+            value={projectName}
+            onInput={(e, val) => setProjectName(val)}
+          />
+        </Flex.Item>
+        <Flex.Item>
+          <label>Description:</label>
           <TextArea
             value={description}
             onInput={(e, val) => setDescription(val)}
-            height="60px"
-            style={{ 'white-space': 'pre-wrap' }}
           />
-        </Flex>
-
-        <Divider />
-
-        <Flex direction="column">
+        </Flex.Item>
+        <Flex.Item>
+          <label>Hypothesis:</label>
+          <TextArea
+            value={hypothesis}
+            onInput={(e, val) => setHypothesis(val)}
+          />
+        </Flex.Item>
+        <Flex.Item>
           <label>Procedure:</label>
-          <TextArea
-            value={procedure}
-            onInput={(e, val) => setProcedure(val)}
-            height="80px"
-            style={{ 'white-space': 'pre-wrap' }}
-          />
-        </Flex>
-
-        <Divider />
-
-        <Flex direction="column">
+          <TextArea value={procedure} onInput={(e, val) => setProcedure(val)} />
+        </Flex.Item>
+        <Flex.Item>
           <label>Risks:</label>
-          <TextArea
-            value={risks}
-            onInput={(e, val) => setRisks(val)}
-            height="60px"
-            style={{ 'white-space': 'pre-wrap' }}
-          />
-        </Flex>
-
-        <Divider />
-
-        <Flex direction="column">
+          <TextArea value={risks} onInput={(e, val) => setRisks(val)} />
+        </Flex.Item>
+        <Flex.Item>
           <label>Required Equipment:</label>
           <TextArea
             value={requiredEquipment}
             onInput={(e, val) => setRequiredEquipment(val)}
-            height="60px"
-            style={{ 'white-space': 'pre-wrap' }}
           />
-        </Flex>
-
-        <Divider />
-
-        <Flex justify="space-between" align="center">
+        </Flex.Item>
+        <Flex.Item>
           <Button
             content={
               attachment ? `Attached: ${attachment.name}` : 'Attach Form'
@@ -484,37 +404,32 @@ const ProposeTest = (props, context) => {
                 return;
               }
               const files = await act('get_computer_files');
-              setComputerFiles(files || []);
+              setComputerFiles(files);
               setShowFileBrowser(true);
             }}
           />
+        </Flex.Item>
+        {showFileBrowser && (
+          <Section title="Attach File">
+            {computerFiles.map((file) => (
+              <Button
+                key={file.uid}
+                content={file.name}
+                onClick={() => {
+                  setAttachment(file);
+                  setShowFileBrowser(false);
+                }}
+              />
+            ))}
+          </Section>
+        )}
+        <Flex.Item>
           <Button
             content="Propose"
             disabled={!isScpSelected || !projectName || !description}
             onClick={handlePropose}
-            icon="paper-plane"
-            ml="auto"
           />
-        </Flex>
-
-        {showFileBrowser && (
-          <Section title="Attach File" mt={2}>
-            <Grid>
-              {computerFiles.map((file) => (
-                <Grid.Column key={file.uid}>
-                  <Button
-                    content={file.name}
-                    onClick={() => {
-                      setAttachment(file);
-                      setShowFileBrowser(false);
-                    }}
-                    fluid
-                  />
-                </Grid.Column>
-              ))}
-            </Grid>
-          </Section>
-        )}
+        </Flex.Item>
       </Flex>
     </Section>
   );
@@ -568,39 +483,32 @@ export const SCPResearchConsole = (props, context) => {
         </Tabs>
         {view === 'board' && <ResearchBoard />}
         {view === 'catalogue' && (
-          <Section title="SCP Catalogue" style={{ 'border-width': '0' }}>
-            <Flex direction="column" style={{ gap: '10px' }}>
-              <Flex justify="center" style={{ gap: '10px' }}>
+          <Section title="SCP Catalogue">
+            <Flex>
+              <Flex.Item>
                 <Button
                   content="All"
                   selected={filter === 'All'}
                   onClick={() => setFilter('All')}
-                  color="white"
                 />
-                {dangerLevels.map((level) => (
+              </Flex.Item>
+              {dangerLevels.map((level) => (
+                <Flex.Item key={level.key}>
                   <Button
-                    key={level.key}
                     content={level.label}
                     selected={filter === level.key}
                     onClick={() => setFilter(level.key)}
-                    color={
-                      level.key === 'Safe'
-                        ? 'green'
-                        : level.key === 'Euclid'
-                          ? 'orange'
-                          : 'red'
-                    }
                   />
-                ))}
-              </Flex>
-              <Grid>
-                {filteredScps.map((scp) => (
-                  <Grid.Column key={scp.id} size={0.5}>
-                    <SCPCard scp={scp} />
-                  </Grid.Column>
-                ))}
-              </Grid>
+                </Flex.Item>
+              ))}
             </Flex>
+            <Grid>
+              {filteredScps.map((scp) => (
+                <Grid.Column key={scp.id}>
+                  <SCPCard scp={scp} />
+                </Grid.Column>
+              ))}
+            </Grid>
           </Section>
         )}
         {view === 'propose' && <ProposeTest />}

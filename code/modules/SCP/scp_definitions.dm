@@ -4,7 +4,6 @@
 	var/datum/scp_definition/def_012 = new()
 	def_012.id_tag = "012"
 	def_012.name = "On Mount Golgotha"
-	def_012.danger_tier = SCP_EUCLID
 	def_012.cost = 100
 	var/datum/scp_test/proximity = new()
 	proximity.name = "Proximity Exposure"
@@ -32,7 +31,6 @@
 	var/datum/scp_definition/def_013 = new()
 	def_013.id_tag = "013"
 	def_013.name = "'Blue Lady' cigarette"
-	def_013.danger_tier = SCP_SAFE
 	def_013.cost = 0 // Unlocked by default
 	var/datum/scp_test/analysis = new()
 	analysis.name = "Chemical Analysis"

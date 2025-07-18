@@ -142,7 +142,6 @@ SUBSYSTEM_DEF(research)
 /datum/scp_definition
 	var/id_tag = "000"
 	var/name = "UNKNOWN"
-	var/danger_tier = SCP_SAFE
 	var/cost = 0 //Research points to unlock
 	var/list/tests = list()
 	var/list/traits = list()
