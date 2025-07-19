@@ -4,6 +4,7 @@
 #define SCP_EUCLID		"Euclid"
 #define SCP_KETER 		"Keter"
 #define SCP_THAUMIEL	"Thaumiel"
+#define SCP_APOLLYON 	"Apollyon"
 #define SCP_NEUTRALIZED "Neutralized"
 
 //Meta bitflags

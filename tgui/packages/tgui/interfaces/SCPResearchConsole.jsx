@@ -6,30 +6,42 @@ import {
   Button,
   Flex,
   Grid,
+  Icon,
   Input,
   Section,
+  Stack,
+  Table,
   Tabs,
   TextArea,
 } from '../components';
 import { Window } from '../layouts';
 
-const SCPCard = (props, context) => {
+const SCPTableRow = (props, context) => {
   const { scp } = props;
   const { act } = useBackend(context);
 
   return (
-    <Section title={`SCP-${scp.id}: ${scp.name}`} level={2}>
-      <Box>
-        <p>Danger Tier: {scp.dangerTier}</p>
-        <p>Status: {scp.unlocked ? 'Unlocked' : 'Locked'}</p>
+    <Table.Row key={scp.id} className="candystripe">
+      <Table.Cell collapsing color="label">
+        SCP-{scp.id}
+      </Table.Cell>
+      <Table.Cell>{scp.name}</Table.Cell>
+      <Table.Cell collapsing textAlign="right">
+        {scp.dangerTier}
+      </Table.Cell>
+      <Table.Cell collapsing textAlign="right">
+        {scp.unlocked ? 'Unlocked' : 'Locked'}
+      </Table.Cell>
+      <Table.Cell collapsing textAlign="right">
         {!scp.unlocked && (
           <Button
+            fluid
             content={`Requisition (${scp.cost} RP)`}
             onClick={() => act('purchase_scp', { scp_id: scp.id })}
           />
         )}
-      </Box>
-    </Section>
+      </Table.Cell>
+    </Table.Row>
   );
 };
 
@@ -436,9 +448,27 @@ export const SCPResearchConsole = (props, context) => {
   } = data;
   const [view, setView] = useSharedState(context, 'view', 'board');
   const [filter, setFilter] = useState('All');
+  const [searchText, setSearchText] = useState('');
+
+  const searchForScps = (scpList, search) => {
+    search = search.toLowerCase();
+    return flow([
+      filter(
+        (scp) =>
+          scp.name?.toLowerCase().includes(search) ||
+          scp.id?.toLowerCase().includes(search) ||
+          scp.dangerTier?.toLowerCase().includes(search),
+      ),
+      sortBy((scp) => scp.id),
+    ])(scpList);
+  };
 
   const filteredScps =
-    filter === 'All' ? scps : scps.filter((scp) => scp.dangerTier === filter);
+    filter === 'search_results'
+      ? searchForScps(scps, searchText)
+      : filter === 'All'
+        ? scps
+        : scps.filter((scp) => scp.obj_class_enum === filter);
 
   return (
     <Window theme="scp">
@@ -481,30 +511,72 @@ export const SCPResearchConsole = (props, context) => {
         {view === 'catalogue' && (
           <Section title="SCP Catalogue">
             <Flex>
-              <Flex.Item>
-                <Button
-                  content="All"
-                  selected={filter === 'All'}
-                  onClick={() => setFilter('All')}
-                />
-              </Flex.Item>
-              {dangerLevels.map((level) => (
-                <Flex.Item key={level.key}>
-                  <Button
-                    content={level.label}
-                    selected={filter === level.key}
-                    onClick={() => setFilter(level.key)}
+              <Flex.Item minWidth="30%" ml={-1} mr={1}>
+                <Tabs vertical>
+                  <Tabs.Tab
+                    key="search_results"
+                    selected={filter === 'search_results'}
+                  >
+                    <Stack align="baseline">
+                      <Stack.Item>
+                        <Icon name="search" />
+                      </Stack.Item>
+                      <Stack.Item grow>
+                        <Input
+                          fluid
+                          placeholder="Search..."
+                          value={searchText}
+                          onInput={(e, value) => {
+                            if (value === searchText) {
+                              return;
+                            }
+                            if (value.length) {
+                              setFilter('search_results');
+                            } else if (filter === 'search_results') {
+                              setFilter('All');
+                            }
+                            setSearchText(value);
+                          }}
+                          onChange={(e, value) => {
+                            const onInput = e.target?.props?.onInput;
+                            if (onInput) {
+                              onInput(e, value);
+                            }
+                          }}
+                        />
+                      </Stack.Item>
+                    </Stack>
+                  </Tabs.Tab>
+                  <Tabs.Tab
+                    key="All"
+                    label="All"
+                    selected={filter === 'All'}
+                    onClick={() => {
+                      setFilter('All');
+                      setSearchText('');
+                    }}
                   />
-                </Flex.Item>
-              ))}
+                  {dangerLevels.map((level) => (
+                    <Tabs.Tab
+                      key={level.key}
+                      label={level.label}
+                      selected={filter === level.key}
+                      onClick={() => {
+                        setFilter(level.key);
+                        setSearchText('');
+                      }}
+                    />
+                  ))}
+                </Tabs>
+              </Flex.Item>
+              <Flex.Item grow={1} basis={0}>
+                <Table>
+                  {filteredScps.map((scp) => (
+                    <SCPTableRow key={scp.id} scp={scp} />
+                  ))}
+                </Table>
+              </Flex.Item>
             </Flex>
-            <Grid>
-              {filteredScps.map((scp) => (
-                <Grid.Column key={scp.id}>
-                  <SCPCard scp={scp} />
-                </Grid.Column>
-              ))}
-            </Grid>
           </Section>
         )}
         {view === 'propose' && <ProposeTest />}

@@ -143,6 +143,7 @@ SUBSYSTEM_DEF(research)
 	var/id_tag = "000"
 	var/name = "UNKNOWN"
 	var/cost = 0 //Research points to unlock
+	var/obj_class_label // Stores the SCP classification as a string (e.g., "Euclid")
 	var/list/tests = list()
 	var/list/traits = list()
 

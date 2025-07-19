@@ -70,15 +70,16 @@
 			"id" = scp.id_tag,
 			"name" = scp.name,
 			"cost" = scp.cost,
-			"unlocked" = (scp.id_tag in SSresearch.unlocked_scps)
+			"unlocked" = (scp.id_tag in SSresearch.unlocked_scps),
+			"dangerTier" = scp.obj_class_label
 		)))
 	data["scps"] = scps
 	data["dangerLevels"] = list(
-		list("key" = "SAFE", "label" = "Safe"),
-		list("key" = "EUCLID", "label" = "Euclid"),
-		list("key" = "KETER", "label" = "Keter"),
-		list("key" = "THAUMIEL", "label" = "Thaumiel"),
-		list("key" = "APOLLYON", "label" = "Apollyon")
+		list("key" = "Safe", "label" = "Safe"),
+		list("key" = "Euclid", "label" = "Euclid"),
+		list("key" = "Keter", "label" = "Keter"),
+		list("key" = "Thaumiel", "label" = "Thaumiel"),
+		list("key" = "Apollyon", "label" = "Apollyon")
 	)
 
 	return data

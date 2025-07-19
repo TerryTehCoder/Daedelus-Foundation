@@ -5,6 +5,7 @@
 	def_012.id_tag = "012"
 	def_012.name = "On Mount Golgotha"
 	def_012.cost = 100
+	def_012.obj_class_label = SCP_EUCLID
 	var/datum/scp_test/proximity = new()
 	proximity.name = "Proximity Exposure"
 	proximity.description = "Observe a subject's reaction to being in close proximity to SCP-012 for an extended period."
@@ -32,6 +33,7 @@
 	def_013.id_tag = "013"
 	def_013.name = "'Blue Lady' cigarette"
 	def_013.cost = 0 // Unlocked by default
+	def_013.obj_class_label = SCP_SAFE
 	var/datum/scp_test/analysis = new()
 	analysis.name = "Chemical Analysis"
 	analysis.description = "Analyze the chemical composition of an unlit SCP-013 cigarette."
