@@ -459,7 +459,7 @@ export const SCPResearchConsole = (props, context) => {
         list.filter(
           (scp) =>
             scp.name?.toLowerCase().includes(search) ||
-            scp.id?.toLowerCase().includes(search) ||
+            `SCP-${scp.id}`.toLowerCase().includes(search) ||
             scp.dangerTier?.toLowerCase().includes(search),
         ),
       sortBy((scp) => scp.id),
@@ -471,7 +471,7 @@ export const SCPResearchConsole = (props, context) => {
       ? searchForScps(scps, searchText)
       : filter === 'All'
         ? scps
-        : scps.filter((scp) => scp.obj_class_enum === filter);
+        : scps.filter((scp) => scp.dangerTier === filter);
 
   return (
     <Window theme="scp">
@@ -546,23 +546,25 @@ export const SCPResearchConsole = (props, context) => {
                   </Tabs.Tab>
                   <Tabs.Tab
                     key="All"
-                    label="All"
                     selected={filter === 'All'}
                     onClick={() => {
                       setFilter('All');
                       setSearchText('');
                     }}
-                  />
+                  >
+                    All
+                  </Tabs.Tab>
                   {dangerLevels.map((level) => (
                     <Tabs.Tab
                       key={level.key}
-                      label={level.label}
                       selected={filter === level.key}
                       onClick={() => {
                         setFilter(level.key);
                         setSearchText('');
                       }}
-                    />
+                    >
+                      {level.label}
+                    </Tabs.Tab>
                   ))}
                 </Tabs>
               </Flex.Item>
