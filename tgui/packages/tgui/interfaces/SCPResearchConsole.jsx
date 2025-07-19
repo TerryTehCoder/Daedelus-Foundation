@@ -437,7 +437,12 @@ const ProposeTest = (props, context) => {
 
 export const SCPResearchConsole = (props, context) => {
   const { act, data } = useBackend(context);
-  const { researchPoints, logisticsPoints, scps = [], dangerLevels } = data;
+  const {
+    researchPoints,
+    logisticsPoints,
+    scps = [],
+    dangerLevels = [],
+  } = data;
   const [view, setView] = useSharedState(context, 'view', 'board');
   const [filter, setFilter] = useState('All');
 

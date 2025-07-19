@@ -1,12 +1,12 @@
 /datum/computer_file/program/scp_research
 	filename = "SCPResearch"
-	filedesc = "SCP-OS Research Suite"
+	filedesc = "SCP:OS Research Suite"
 	extended_desc = "A comprehensive suite of tools for managing and tracking SCP research projects."
 	category = PROGRAM_CATEGORY_SCI
 	program_icon = "book"
 	requires_ntnet = TRUE
 	tgui_id = "SCPResearchConsole"
-	required_access = list(ACCESS_RESEARCH, ACCESS_RD, ACCESS_CAPTAIN)
+	required_access = list(ACCESS_RESEARCH)
 	available_on_ntnet = TRUE
 	alert_able = TRUE
 
@@ -73,6 +73,13 @@
 			"unlocked" = (scp.id_tag in SSresearch.unlocked_scps)
 		)))
 	data["scps"] = scps
+	data["dangerLevels"] = list(
+		list("key" = "SAFE", "label" = "Safe"),
+		list("key" = "EUCLID", "label" = "Euclid"),
+		list("key" = "KETER", "label" = "Keter"),
+		list("key" = "THAUMIEL", "label" = "Thaumiel"),
+		list("key" = "APOLLYON", "label" = "Apollyon")
+	)
 
 	return data
 
