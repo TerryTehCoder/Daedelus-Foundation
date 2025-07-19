@@ -14,7 +14,6 @@ import {
   Stack,
   Table,
   Tabs,
-  TextArea,
 } from '../components';
 import { Window } from '../layouts';
 
@@ -371,29 +370,26 @@ const ProposeTest = (props, context) => {
         </Flex.Item>
         <Flex.Item>
           <label>Description:</label>
-          <TextArea
+          <Input
             value={description}
             onInput={(e, val) => setDescription(val)}
           />
         </Flex.Item>
         <Flex.Item>
           <label>Hypothesis:</label>
-          <TextArea
-            value={hypothesis}
-            onInput={(e, val) => setHypothesis(val)}
-          />
+          <Input value={hypothesis} onInput={(e, val) => setHypothesis(val)} />
         </Flex.Item>
         <Flex.Item>
           <label>Procedure:</label>
-          <TextArea value={procedure} onInput={(e, val) => setProcedure(val)} />
+          <Input value={procedure} onInput={(e, val) => setProcedure(val)} />
         </Flex.Item>
         <Flex.Item>
           <label>Risks:</label>
-          <TextArea value={risks} onInput={(e, val) => setRisks(val)} />
+          <Input value={risks} onInput={(e, val) => setRisks(val)} />
         </Flex.Item>
         <Flex.Item>
           <label>Required Equipment:</label>
-          <TextArea
+          <Input
             value={requiredEquipment}
             onInput={(e, val) => setRequiredEquipment(val)}
           />
@@ -512,8 +508,8 @@ export const SCPResearchConsole = (props, context) => {
         </Tabs>
         {view === 'board' && <ResearchBoard />}
         {view === 'catalogue' && (
-          <Section title="SCP Catalogue">
-            <Flex>
+          <Section title="SCP Catalogue" flexGrow={1}>
+            <Flex height="100%">
               <Flex.Item minWidth="30%" mr={1}>
                 <Tabs vertical>
                   <Tabs.Tab
@@ -568,7 +564,13 @@ export const SCPResearchConsole = (props, context) => {
                   ))}
                 </Tabs>
               </Flex.Item>
-              <Flex.Item grow={1} basis={0}>
+              <Flex.Item
+                grow={1}
+                basis={0}
+                flexShrink={1}
+                minWidth={0}
+                overflowY="auto"
+              >
                 <Table>
                   {filteredScps.map((scp) => (
                     <SCPTableRow key={scp.id} scp={scp} />
