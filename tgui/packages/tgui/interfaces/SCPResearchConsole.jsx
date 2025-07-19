@@ -68,6 +68,17 @@ const ProjectCard = (props, context) => {
           <Box>
             <p>Proposed by: {project.proposer}</p>
             <p>Description: {project.description}</p>
+            {project.authorizer && (
+              <Box>
+                <p>Authorized by: {project.authorizer}</p>
+                {project.signature && (
+                  <p>Digital Signature: {project.signature}</p>
+                )}
+                {project.authorization_notes && (
+                  <p>Authorization Notes: {project.authorization_notes}</p>
+                )}
+              </Box>
+            )}
             {project.test && (
               <Box>
                 <p>
@@ -119,19 +130,6 @@ const ProjectCard = (props, context) => {
                 </Flex.Item>
               </Flex>
             )}
-            {viewAttachment && (
-              <Section title="Attachment">
-                <Box>{attachmentContent}</Box>
-              </Section>
-            )}
-            {project.status === 'AUTHORIZED' && (
-              <p>
-                Authorized by: {project.authorizer} (<i>{project.signature}</i>)
-              </p>
-            )}
-            {project.authorization_notes && (
-              <p>Notes: {project.authorization_notes}</p>
-            )}
             {project.status === 'AUDIT_FAILED' && (
               <p style={{ color: 'red' }}>Audit Failed</p>
             )}
@@ -173,10 +171,10 @@ const ProjectCard = (props, context) => {
               </Flex.Item>
               <Flex.Item>
                 <Button
-                  content="Deny"
+                  content="Deny Proposal"
                   color="red"
                   onClick={() =>
-                    act('deny_test', {
+                    act('deny_proposal', {
                       project_id: project.id,
                       reason: denialReason,
                     })
@@ -184,13 +182,6 @@ const ProjectCard = (props, context) => {
                 />
               </Flex.Item>
             </Flex>
-          )}
-          {project.status === 'PROPOSED' && canAuthorize && (
-            <Button
-              content="Remove Proposal"
-              color="red"
-              onClick={() => act('remove_proposal', { project_id: project.id })}
-            />
           )}
           {project.status === 'AUTHORIZED' && (
             <Button

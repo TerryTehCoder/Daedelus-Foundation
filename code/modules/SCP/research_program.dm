@@ -129,7 +129,7 @@
 			SSresearch.all_projects.Add(p)
 			computer.alert_call(src, "New custom test proposal submitted for SCP-[p.scp_id].")
 			return TRUE
-		if("deny_test")
+		if("deny_proposal")
 			var/project_id = params["project_id"]
 			var/reason = params["reason"]
 			for(var/datum/research_project/p in SSresearch.all_projects)
@@ -149,6 +149,7 @@
 					p.authorizer_ckey = ui.user.ckey
 					p.digital_signature = signature
 					p.authorization_notes = notes
+					computer.alert_call(src, "Research proposal '[p.project_name]' has been authorized by [ui.user.real_name].")
 					break
 			return TRUE
 		if("begin_test")
