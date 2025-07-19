@@ -234,6 +234,21 @@ $dark-fg: darken($color-fg, 30);
     }
   }
 
+  .Tabs--vertical {
+    .Tab {
+      .Tab__left,
+      .Tab__text {
+        color: base.$color-fg; // Ensure text and icon are visible
+      }
+    }
+    .Tab--selected {
+      .Tab__left,
+      .Tab__text {
+        color: base.$color-bg; // Ensure text and icon are visible when selected
+      }
+    }
+  }
+
   .Table {
     border: 1px solid base.$color-fg;
   }

@@ -1,3 +1,5 @@
+import { sortBy } from 'common/collections';
+import { flow } from 'common/fp';
 import { useState } from 'react';
 
 import { useBackend, useSharedState } from '../backend';
@@ -453,12 +455,13 @@ export const SCPResearchConsole = (props, context) => {
   const searchForScps = (scpList, search) => {
     search = search.toLowerCase();
     return flow([
-      filter(
-        (scp) =>
-          scp.name?.toLowerCase().includes(search) ||
-          scp.id?.toLowerCase().includes(search) ||
-          scp.dangerTier?.toLowerCase().includes(search),
-      ),
+      (list) =>
+        list.filter(
+          (scp) =>
+            scp.name?.toLowerCase().includes(search) ||
+            scp.id?.toLowerCase().includes(search) ||
+            scp.dangerTier?.toLowerCase().includes(search),
+        ),
       sortBy((scp) => scp.id),
     ])(scpList);
   };
@@ -536,12 +539,6 @@ export const SCPResearchConsole = (props, context) => {
                               setFilter('All');
                             }
                             setSearchText(value);
-                          }}
-                          onChange={(e, value) => {
-                            const onInput = e.target?.props?.onInput;
-                            if (onInput) {
-                              onInput(e, value);
-                            }
                           }}
                         />
                       </Stack.Item>
