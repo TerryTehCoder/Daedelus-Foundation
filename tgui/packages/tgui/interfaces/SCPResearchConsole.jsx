@@ -514,7 +514,7 @@ export const SCPResearchConsole = (props, context) => {
         {view === 'catalogue' && (
           <Section title="SCP Catalogue">
             <Flex>
-              <Flex.Item minWidth="30%" ml={-1} mr={1}>
+              <Flex.Item minWidth="30%" mr={1}>
                 <Tabs vertical>
                   <Tabs.Tab
                     key="search_results"
