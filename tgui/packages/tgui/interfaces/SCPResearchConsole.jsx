@@ -395,7 +395,7 @@ const ProposeTest = (props, context) => {
                 return;
               }
               const files = await act('get_computer_files');
-              setComputerFiles(files);
+              setComputerFiles(files || []); // Ensure files is an array
               setShowFileBrowser(true);
             }}
           />

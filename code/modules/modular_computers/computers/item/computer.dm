@@ -459,10 +459,12 @@ GLOBAL_LIST_EMPTY(TabletMessengers) // a list of all active messengers, similar 
 	if(!calling_program || !calling_program.alert_able || calling_program.alert_silenced || !alerttext) //Yeah, we're checking alert_able. No, you don't get to make alerts that the user can't silence.
 		return
 	playsound(src, sound, 50, TRUE)
-	visible_message(span_notice("The [src] displays a [calling_program.filedesc] notification: [alerttext]"))
 	var/mob/living/holder = loc
 	if(istype(holder))
+		visible_message(span_notice("The [src] displays a [calling_program.filedesc] notification: [alerttext]"), ignored_mobs = list(holder))
 		to_chat(holder, "[icon2html(src, loc)] [span_notice("The [src] displays a [calling_program.filedesc] notification: [alerttext]")]")
+	else //If a mob is holding the PDA, we don't want to show them the message twice.
+		visible_message(span_notice("The [src] displays a [calling_program.filedesc] notification: [alerttext]"))
 
 /obj/item/modular_computer/proc/ring(ringtone) // bring bring
 	if(HAS_TRAIT(SSstation, STATION_TRAIT_PDA_GLITCHED))
