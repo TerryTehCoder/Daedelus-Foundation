@@ -1,3 +1,9 @@
+// AI States for SCP-017
+#define IDLE 0
+#define HUNTING 1
+#define STALKING 2
+#define VINDICTIVE 3
+
 /mob/living/simple_animal/hostile/scp017
 	name = "shambling void"
 	desc = "A weird shambling void. You can see nothing inside."
@@ -46,6 +52,17 @@
 	var/light_suppression_chance = 10 // 10% chance per tick
 	var/light_suppression_duration = 50 // 5 seconds
 
+	var/list/last_escaped_targets = list() // stores mob/living references and a timestamp
+	var/times_spotted_by_light = 0
+	var/times_driven_off_by_light = 0
+	var/current_ai_state = IDLE // define constants for states
+	var/vindictive_threshold_spotted = 5
+	var/vindictive_threshold_driven_off = 3
+	var/vindictive_duration = 600 // 60 seconds
+	var/last_vindictive_time = 0
+
+	var/list/target_priority_list = list() // Stores mobs with associated priority scores
+
 /mob/living/simple_animal/hostile/scp017/Initialize()
 	. = ..()
 	SCP = new /datum/scp(
@@ -65,8 +82,236 @@
 	ApplyShadowSickness()
 	HandleLightSuppression() // Call the new light suppression proc
 
+	UpdateTargetPriorities()
+	DecideAction()
+	HandleMovement()
+
 	if(prob(5) && world.time >= last_shadow_veil_time + shadow_veil_cooldown) // Small chance to activate Shadow Veil if off cooldown
 		ShadowVeil()
+
+	// Check for VINDICTIVE state transition
+	if(current_ai_state != VINDICTIVE && world.time >= last_vindictive_time + vindictive_duration)
+		if(times_spotted_by_light >= vindictive_threshold_spotted || times_driven_off_by_light >= vindictive_threshold_driven_off)
+			EnterVindictiveState()
+
+/mob/living/simple_animal/hostile/scp017/proc/DecideAction()
+	// Default to IDLE
+	current_ai_state = IDLE
+
+	// Check for high-priority targets
+	var/mob/living/highest_priority_target
+	var/highest_priority_score = 0
+
+	for(var/mob/living/M in target_priority_list)
+		var/priority = target_priority_list[M]
+		if(priority > highest_priority_score)
+			highest_priority_score = priority
+			highest_priority_target = M
+
+	if(highest_priority_target)
+		current_ai_state = HUNTING
+		// Further logic to transition to STALKING or VINDICTIVE based on target and counters
+		if(times_spotted_by_light > 0 || times_driven_off_by_light > 0)
+			current_ai_state = STALKING // Or VINDICTIVE if thresholds are met, handled in Life()
+		if(current_ai_state == STALKING && get_dist(src, highest_priority_target) > 2) // Example stalking condition
+			// Consider pausing or moving slower
+			turns_per_move = 2 // Slower movement
+		else
+			turns_per_move = initial(turns_per_move) // Reset to normal
+
+	if(current_ai_state == VINDICTIVE && world.time >= last_vindictive_time + vindictive_duration)
+		ExitVindictiveState()
+		return
+
+	// If no high-priority targets, check for general light avoidance
+	var/turf/Tturf = get_turf(src)
+	if(Tturf.get_lumcount() > shadow_threshold)
+		// If in light, prioritize moving to shadow
+		current_ai_state = HUNTING // Treat seeking shadow as a hunting behavior
+
+	// Check for VINDICTIVE state transition
+	if(current_ai_state != VINDICTIVE && world.time >= last_vindictive_time + vindictive_duration)
+		if(times_spotted_by_light >= vindictive_threshold_spotted || times_driven_off_by_light >= vindictive_threshold_driven_off)
+			EnterVindictiveState()
+
+/mob/living/simple_animal/hostile/scp017/proc/HandleMovement()
+	var/turf/Tturf = get_turf(src)
+	if(!Tturf)
+		return
+
+	var/list/light_sources_in_range = list()
+
+	// Find light sources in range
+	for(var/obj/machinery/light/L in range(light_suppression_range, src))
+		if(L.on)
+			light_sources_in_range += L
+	for(var/mob/living/M in range(light_suppression_range, src))
+		if(mob_has_strong_light_source(M))
+			light_sources_in_range += M
+
+	// Movement based on AI state
+	switch(current_ai_state)
+		if(IDLE)
+			// Stay still or wander slowly in shadows
+			if(Tturf.get_lumcount() > shadow_threshold)
+				// If in light, try to find a shadow
+				var/turf/target_turf = find_darkest_adjacent_turf()
+				if(target_turf)
+					step_to(src, target_turf)
+			else
+				// Wander slowly
+				if(prob(10)) // Small chance to wander
+					step(src, pick(NORTH, SOUTH, EAST, WEST))
+
+		if(HUNTING)
+			var/mob/living/target_mob = get_highest_priority_target()
+			if(target_mob)
+				if(light_sources_in_range.len > 0)
+					// Fleeing light sources
+					var/turf/flee_turf = find_flee_turf(light_sources_in_range)
+					if(flee_turf)
+						step_to(src, flee_turf)
+					else
+						// If no clear flee path, try to find darkest adjacent
+						var/turf/dark_turf = find_darkest_adjacent_turf()
+						if(dark_turf)
+							step_to(src, dark_turf)
+				else
+					// Move towards target, prioritizing shadows
+					var/turf/target_turf = get_turf(target_mob)
+					if(target_turf)
+						Goto(target_turf)
+
+		if(STALKING)
+			var/mob/living/target_mob = get_highest_priority_target()
+			if(target_mob)
+				// Move slower and deliberately, prioritize shadows
+				turns_per_move = 2 // Slower movement
+				var/turf/target_turf = get_turf(target_mob)
+				if(target_turf)
+					Goto(target_turf)
+			else
+				turns_per_move = initial(turns_per_move) // Reset to normal
+				current_ai_state = IDLE // No target, go back to idle
+
+		if(VINDICTIVE)
+			// Prioritize breaking lights or attacking specific targets
+			var/obj/machinery/light/light_to_break
+			for(var/obj/machinery/light/L in range(light_suppression_range, src))
+				if(L.on)
+					light_to_break = L
+					break
+			if(light_to_break)
+				step_to(src, light_to_break)
+				if(get_dist(src, light_to_break) <= 1)
+					UnarmedAttack(light_to_break) // Directly attack the light
+			else
+				var/mob/living/target_mob = get_highest_priority_target()
+				if(target_mob)
+					step_to(src, target_mob)
+
+/mob/living/simple_animal/hostile/scp017/proc/find_darkest_adjacent_turf()
+	var/turf/darkest_turf
+	var/min_lumcount = INFINITY
+	for(var/dir in GLOB.alldirs) // Check all 8 directions: cardinals and diagonals - Substitute for .Adjacent() not working here.
+
+		var/turf/T = get_step(get_turf(src), dir)
+		var/area/A = get_area(T)
+
+		if(A.area_lighting == AREA_LIGHTING_DYNAMIC)
+			var/lum = T.get_lumcount()
+			if(lum < min_lumcount)
+				min_lumcount = lum
+				darkest_turf = T
+	if(darkest_turf && darkest_turf.get_lumcount() <= shadow_threshold)
+		return darkest_turf
+	return null
+
+/mob/living/simple_animal/hostile/scp017/proc/find_flee_turf(list/light_sources)
+	var/turf/current_turf = get_turf(src)
+	var/turf/flee_turf
+	var/max_distance_from_lights = -1
+
+	for(var/turf/T in current_turf.Adjacent())
+		var/area/A = get_area(T)
+		if(A.area_lighting == AREA_LIGHTING_DYNAMIC && T.get_lumcount() <= shadow_threshold)
+			var/min_dist_to_light = INFINITY
+			for(var/atom/L in light_sources)
+				min_dist_to_light = min(min_dist_to_light, get_dist(T, L))
+			if(min_dist_to_light > max_distance_from_lights)
+				max_distance_from_lights = min_dist_to_light
+				flee_turf = T
+	return flee_turf
+
+/mob/living/simple_animal/hostile/scp017/proc/UpdateTargetPriorities()
+	target_priority_list.Cut() // Clear old priorities
+
+	// Add mobs in range to consideration
+	for(var/mob/living/M in view(src)) // Consider mobs in view range
+		if(M == src || M.stat == DEAD || M.status_flags & GODMODE)
+			continue
+
+		var/priority_score = 0
+		var/turf/M_turf = get_turf(M)
+		if(!M_turf)
+			continue
+
+		// Base priority for being a living mob
+		priority_score += 10
+
+		// Prioritizing targets that are in a dark area and are not incapacitated.
+		if((M_turf.get_lumcount() <= shadow_threshold) && (M.stat == CONSCIOUS))
+			priority_score += 50
+
+		// High Priority (Light Sources on Body)
+		if(mob_has_strong_light_source(M))
+			priority_score += 100
+
+		// Remembered Escaped Targets
+		for(var/list/escaped_data in last_escaped_targets)
+			var/mob/living/escaped_mob = escaped_data["mob"]
+			var/timestamp = escaped_data["time"]
+			if(escaped_mob == M && (world.time - timestamp < 1200)) // Within 2 minutes of escape
+				priority_score += 75 // Higher base priority
+
+		if(priority_score > 0)
+			target_priority_list[M] = priority_score
+
+	// Sort targets by priority (highest first)
+	// I... forgot how to do an associated list sort ):
+	var/list/sorted_targets = list()
+	while(target_priority_list.len)
+		var/highest_score = -INFINITY
+		var/mob/living/highest_target
+		for(var/mob/living/M in target_priority_list)
+			if(target_priority_list[M] > highest_score)
+				highest_score = target_priority_list[M]
+				highest_target = M
+		if(highest_target)
+			sorted_targets += highest_target
+			target_priority_list.Remove(highest_target)
+	target_priority_list = sorted_targets
+
+/mob/living/simple_animal/hostile/scp017/proc/get_highest_priority_target()
+	if(target_priority_list.len > 0)
+		return target_priority_list[1] // First element after sorting is highest priority
+	return null
+
+/mob/living/simple_animal/hostile/scp017/proc/EnterVindictiveState()
+	current_ai_state = VINDICTIVE
+	last_vindictive_time = world.time
+	visible_message(span_danger("[src] lets out an enraged shriek, its form flickering violently!"))
+	// Temporarily ignore shadow_threshold for pursuit
+	shadow_threshold = 1.0 // Effectively ignore shadows for a duration
+	light_suppression_chance = 100 // Always suppress lights
+
+/mob/living/simple_animal/hostile/scp017/proc/ExitVindictiveState()
+	current_ai_state = IDLE
+	times_spotted_by_light = 0
+	times_driven_off_by_light = 0
+	shadow_threshold = initial(shadow_threshold) // Reset threshold
+	light_suppression_chance = initial(light_suppression_chance) // Reset chance
+	visible_message(span_notice("[src] calms, its form settling back into the shadows."))
 
 /mob/living/simple_animal/hostile/scp017/proc/HandleLightSuppression()
 	if(prob(light_suppression_chance))
@@ -138,6 +383,16 @@
 	var/area/Tarea = get_area(the_target)
 	if(!Tturf || !Tarea)
 		return FALSE
+
+	// In VINDICTIVE state, SCP-017 might ignore shadow_threshold for a short duration
+	if(current_ai_state == VINDICTIVE)
+		var/mob/living/target_mob = get_highest_priority_target()
+		if(target_mob == the_target) // If it's the high priority target in vindictive state
+			return TRUE // Attack regardless of light
+		// Also prioritize breaking lights
+		if(istype(the_target, /obj/machinery/light) && (the_target:on))
+			return TRUE
+
 	if((Tturf.get_lumcount() > shadow_threshold) || (!Tarea.area_lighting == AREA_LIGHTING_DYNAMIC))
 		return FALSE
 	return TRUE
@@ -201,6 +456,24 @@
 		var/obj/item/flashlight/F = A
 		if(F.on && F.light_power > 0)
 			return TRUE
+	return FALSE
+
+/mob/living/simple_animal/hostile/scp017/proc/mob_has_strong_light_source(mob/living/M)
+	if(!M)
+		return FALSE
+	// Check if the mob itself is a light source (e.g., a glowing creature)
+	if(IsStrongLightSource(M))
+		return TRUE
+	// Check mob's held items
+	if(M.held_items)
+		for(var/obj/item/I in M.held_items)
+			if(IsStrongLightSource(I))
+				return TRUE
+	// Check mob's inventory
+	if(M.contents)
+		for(var/obj/item/I in M.contents)
+			if(IsStrongLightSource(I))
+				return TRUE
 	return FALSE
 
 /mob/living/simple_animal/hostile/scp017/bullet_act(obj/projectile/Proj)
@@ -323,6 +596,7 @@
 		StopEnveloping(FALSE)
 		LightSourceDebuff()
 		visible_message(span_notice("[src] recoils from the intense light, releasing [enveloping_target]!"))
+		times_driven_off_by_light++ // Increment counter
 		return TRUE
 	if(IsPortableLightSource(O))
 		LightSourceDebuff()
