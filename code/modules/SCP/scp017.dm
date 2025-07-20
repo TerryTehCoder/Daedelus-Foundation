@@ -37,6 +37,15 @@
 	var/last_shadow_veil_time = 0
 	var/list/shadow_sickness_targets = list()
 
+	// Enveloping Shadow and Light Suppression
+	var/enveloping_duration = 30 // 3 seconds for enveloping
+	var/datum/callback/enveloping_progress_timer_id // Timer for the enveloping progress
+	var/mob/living/enveloping_target // The mob currently being enveloped
+
+	var/light_suppression_range = 2
+	var/light_suppression_chance = 10 // 10% chance per tick
+	var/light_suppression_duration = 50 // 5 seconds
+
 /mob/living/simple_animal/hostile/scp017/Initialize()
 	. = ..()
 	SCP = new /datum/scp(
@@ -54,8 +63,20 @@
 
 	CheckLightExposure()
 	ApplyShadowSickness()
+	HandleLightSuppression() // Call the new light suppression proc
 
-/mob/living/simple_animal/hostile/scp017/CheckLightExposure()
+	if(prob(5) && world.time >= last_shadow_veil_time + shadow_veil_cooldown) // Small chance to activate Shadow Veil if off cooldown
+		ShadowVeil()
+
+/mob/living/simple_animal/hostile/scp017/proc/HandleLightSuppression()
+	if(prob(light_suppression_chance))
+		for(var/obj/machinery/light/L in range(light_suppression_range, src))
+			if(L.on)
+				L.on = FALSE
+				addtimer(CALLBACK(L, "set_on", TRUE), light_suppression_duration)
+				visible_message(span_warning("Lights flicker as [src] passes by!"))
+
+/mob/living/simple_animal/hostile/scp017/proc/CheckLightExposure()
 	var/turf/Tturf = get_turf(src)
 	var/area/Tarea = get_area(src)
 
@@ -72,12 +93,12 @@
 		// SCP-017 is in a shadow, remove stun if present
 		RemoveLightStun()
 
-/mob/living/simple_animal/hostile/scp017/RemoveLightStun()
-	if(HAS_TRAIT(src, TRAIT_IMMOBILIZED, "SCP017_LIGHT_STUN"))
+/mob/living/simple_animal/hostile/scp017/proc/RemoveLightStun()
+	if(HAS_TRAIT(src, TRAIT_IMMOBILIZED))
 		REMOVE_TRAIT(src, TRAIT_IMMOBILIZED, "SCP017_LIGHT_STUN")
 		visible_message(span_notice("[src] regains its composure in the shadows."))
 
-/mob/living/simple_animal/hostile/scp017/ApplyShadowSickness()
+/mob/living/simple_animal/hostile/scp017/proc/ApplyShadowSickness()
 	var/list/current_sickness_targets = list()
 	for(var/mob/living/carbon/human/M in range(shadow_sickness_range, src))
 		if(M == src || M.stat == DEAD || M.status_flags & GODMODE)
@@ -90,12 +111,12 @@
 			continue
 
 		// Only apply sickness if SCP-017 is in shadow or has created a shadow veil
-		if((Tturf.get_lumcount() <= shadow_threshold) && (M_area.area_lighting == AREA_LIGHTING_DYNAMIC))
+		if((M_turf.get_lumcount() <= shadow_threshold) && (M_area.area_lighting == AREA_LIGHTING_DYNAMIC))
 			if(!(M in shadow_sickness_targets))
 				// Apply debuffs
-				M.adjust_see_in_dark(-5) // Example: Reduce vision
-				M.adjustStaminaLoss(1) // Example: Stamina drain
-				M.flick_overlay(image('icons/effects/effects.dmi', icon_state = "shadow_sickness_overlay"), 10) // Example: Visual distortion
+				M.see_in_dark = max(0, M.see_in_dark - 5) // Reduce vision
+				M.adjust_blurriness(0.2)
+				M.stamina.adjust(-7) // Stamina drain
 				to_chat(M, span_warning("You feel a chilling presence..."))
 				shadow_sickness_targets += M
 			current_sickness_targets += M
@@ -104,7 +125,7 @@
 	for(var/mob/living/carbon/human/M in shadow_sickness_targets)
 		if(!(M in current_sickness_targets))
 			// Remove debuffs
-			M.adjust_see_in_dark(5) // Restore vision
+			M.see_in_dark = initial(M.see_in_dark) // Restore vision
 			to_chat(M, span_notice("The chilling presence recedes."))
 			shadow_sickness_targets -= M
 
@@ -158,8 +179,7 @@
 		if(isturf(T))
 			var/area/A = get_area(T)
 			if(A.area_lighting == AREA_LIGHTING_DYNAMIC) // Only affect dynamic lighting areas
-				var/obj/effect/temp_visual/darkness_overlay/D = new /obj/effect/temp_visual/darkness_overlay(T)
-				D.set_duration(shadow_veil_duration)
+				T.set_light(0, 0, 0)
 				affected_turfs += T
 
 	ADD_TRAIT(src, TRAIT_IMMOBILIZED, "SCP017_SHADOW_VEIL_IMMUNITY")
@@ -168,25 +188,41 @@
 	return TRUE
 
 /mob/living/simple_animal/hostile/scp017/proc/RemoveShadowVeilImmunity()
-	if(HAS_TRAIT(src, TRAIT_IMMOBILIZED, "SCP017_SHADOW_VEIL_IMMUNITY"))
+	if(HAS_TRAIT(src, TRAIT_IMMOBILIZED))
 		REMOVE_TRAIT(src, TRAIT_IMMOBILIZED, "SCP017_SHADOW_VEIL_IMMUNITY")
 		visible_message(span_notice("The shadows around [src] recede."))
 
+/mob/living/simple_animal/hostile/scp017/proc/IsStrongLightSource(atom/A)
+	if(istype(A, /obj/machinery/light))
+		var/obj/machinery/light/L = A
+		if(L.on && L.light_power > 0)
+			return TRUE
+	if(istype(A, /obj/item/flashlight))
+		var/obj/item/flashlight/F = A
+		if(F.on && F.light_power > 0)
+			return TRUE
+	return FALSE
+
 /mob/living/simple_animal/hostile/scp017/bullet_act(obj/projectile/Proj)
+	if(enveloping_target && IsStrongLightSource(Proj))
+		StopEnveloping(FALSE)
+		LightSourceDebuff() // Apply debuff for being hit by strong light
+		visible_message(span_notice("[src] recoils from the intense light, releasing [enveloping_target]!"))
+		return TRUE // Consume the projectile
 	if(Proj.damage_type == BRUTE)
 		visible_message(span_warning("The [Proj] seems to pass right through it!"))
 		return TRUE
 	return ..()
 
-/mob/living/simple_animal/hostile/scp017/LightSourceDebuff()
-	if(!HAS_TRAIT(src, TRAIT_IMMOBILIZED, "SCP017_LIGHT_DEBUFF"))
+/mob/living/simple_animal/hostile/scp017/proc/LightSourceDebuff()
+	if(!HAS_TRAIT(src, TRAIT_IMMOBILIZED))
 		ADD_TRAIT(src, TRAIT_IMMOBILIZED, "SCP017_LIGHT_DEBUFF")
 		shadow_threshold -= 0.15 // Decrease threshold, making it vulnerable in slightly brighter areas
 		visible_message(span_warning("[src] shimmers erratically as it absorbs the light!"))
 		addtimer(CALLBACK(src, PROC_REF(RemoveLightSourceDebuff)), light_source_debuff_duration)
 
-/mob/living/simple_animal/hostile/scp017/RemoveLightSourceDebuff()
-	if(HAS_TRAIT(src, TRAIT_IMMOBILIZED, "SCP017_LIGHT_DEBUFF"))
+/mob/living/simple_animal/hostile/scp017/proc/RemoveLightSourceDebuff()
+	if(HAS_TRAIT(src, TRAIT_IMMOBILIZED))
 		REMOVE_TRAIT(src, TRAIT_IMMOBILIZED, "SCP017_LIGHT_DEBUFF")
 		shadow_threshold = initial(shadow_threshold) // Reset threshold
 		visible_message(span_notice("[src] stabilizes as the light's influence fades."))
@@ -210,13 +246,66 @@
 	visible_message(span_danger(death_message))
 
 	if(ismob(A))
-		var/mob/target = A
-		target.ghostize()
-		qdel(target)
+		var/mob/living/target_mob = A
+		StartEnveloping(target_mob)
 	else
 		qdel(A)
 
 //General Interactions
+/mob/living/simple_animal/hostile/scp017/proc/StartEnveloping(mob/living/target_mob)
+	if(enveloping_target) // Already enveloping someone
+		return FALSE
+
+	enveloping_target = target_mob
+	visible_message(span_danger("[enveloping_target] is being enveloped by [src]!"))
+
+	// Apply initial vision reduction and blurriness
+	if(enveloping_target.client)
+		enveloping_target.client.eye = src // Force eye to SCP-017 for effect
+		enveloping_target.see_in_dark = max(0, enveloping_target.see_in_dark - 5) // Initial vision reduction
+		enveloping_target.adjust_blurriness(0.2) // Initial blurriness
+
+	enveloping_progress_timer_id = addtimer(CALLBACK(src, PROC_REF(UpdateEnveloping)), 10, enveloping_duration / 10) // Call every 1 second for duration
+
+	return TRUE
+
+/mob/living/simple_animal/hostile/scp017/proc/UpdateEnveloping()
+	if(!enveloping_target || QDELETED(enveloping_target))
+		StopEnveloping()
+		return
+
+	if(enveloping_target.client)
+		enveloping_target.see_in_dark = max(0, enveloping_target.see_in_dark - 5) // Progressively reduce vision
+		enveloping_target.adjust_blurriness(0.2) // Progressively increase blurriness
+
+		// Check if vision is fully obscured or timer runs out
+		if(enveloping_target.see_in_dark <= 0 || QDELETED(enveloping_progress_timer_id))
+			StopEnveloping(TRUE) // Fully enveloped, kill
+			return
+
+	// Add visual effects on SCP-017 or target
+	do_smoke(amount = 1, location = enveloping_target.loc)
+
+/mob/living/simple_animal/hostile/scp017/proc/StopEnveloping(force_death = FALSE)
+	if(enveloping_progress_timer_id)
+		deltimer(enveloping_progress_timer_id)
+		enveloping_progress_timer_id = null
+
+	if(enveloping_target && !QDELETED(enveloping_target))
+		if(enveloping_target.client)
+			enveloping_target.client.eye = enveloping_target // Reset eye
+			enveloping_target.see_in_dark = initial(enveloping_target.see_in_dark) // Restore vision
+			enveloping_target.set_blurriness(0) // Remove blurriness
+
+		if(force_death)
+			visible_message(span_danger("[enveloping_target] is fully absorbed by [src]!"))
+			enveloping_target.ghostize()
+			qdel(enveloping_target)
+		else
+			visible_message(span_notice("[enveloping_target] escapes from [src]'s grasp!"))
+
+	enveloping_target = null
+
 /mob/living/simple_animal/hostile/scp017/attack_hand(mob/living/carbon/human/M)
 	. = ..()
 	if(!M.combat_mode)
@@ -227,9 +316,14 @@
 			UnarmedAttack(M)
 
 /mob/living/simple_animal/hostile/scp017/proc/IsPortableLightSource(atom/A)
-	return istype(A, /obj/item/flashlight) || istype(A, /obj/item/light_tube)
+	return istype(A, /obj/item/flashlight) // Removed light_tube due to unresolved path
 
 /mob/living/simple_animal/hostile/scp017/attackby(obj/item/O, mob/user)
+	if(enveloping_target && IsStrongLightSource(O))
+		StopEnveloping(FALSE)
+		LightSourceDebuff()
+		visible_message(span_notice("[src] recoils from the intense light, releasing [enveloping_target]!"))
+		return TRUE
 	if(IsPortableLightSource(O))
 		LightSourceDebuff()
 		visible_message(span_warning("[O] is absorbed by the shadowy veil!"))
@@ -239,6 +333,11 @@
 	UnarmedAttack(O)
 
 /mob/living/simple_animal/hostile/scp017/hitby(atom/movable/AM, skipcatch, hitpush = TRUE, blocked = FALSE, datum/thrownthing/throwingdatum)
+	if(enveloping_target && IsStrongLightSource(AM))
+		StopEnveloping(FALSE)
+		LightSourceDebuff()
+		visible_message(span_notice("[src] recoils from the intense light, releasing [enveloping_target]!"))
+		return TRUE
 	if(IsPortableLightSource(AM))
 		LightSourceDebuff()
 		visible_message(span_warning("[AM] vanished within the shadowy shroud!"))
