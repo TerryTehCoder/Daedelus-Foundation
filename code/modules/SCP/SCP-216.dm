@@ -1,5 +1,3 @@
-#include "../../world.dm" // For SSticker.round_id
-
 /obj/structure/scp216
 	name = "safe"
 	desc = "A metalic safe with multiple-dial combination lock."
@@ -17,8 +15,6 @@
 	var/generate_chance = 75
 	///Max amount of items that can be generated for a code
 	var/max_items_generated = 9
-	///Number of rounds items persist in the safe
-	var/rounds_to_persist = 5
 
 	//Mechanics
 
@@ -27,7 +23,7 @@
 	///Our currrent code.
 	var/current_code = 0
 	/// Assoc list of codes in use and items stored in them.
-	var/list/all_codes = list() // list(code = list(datum/scp216_stored_item))
+	var/list/all_codes = list()
 
 	/* Note: If editing, please keep the descending order by groups. More common items should be at the top. */
 	// Unsorted
@@ -141,10 +137,6 @@
 		/mob/living/simple_animal/hostile/asteroid/polarbear
 		)
 
-/datum/scp216_stored_item
-	var/atom/movable/item
-	var/db_id
-
 /obj/structure/scp216/Initialize()
 	. = ..()
 	SCP = new /datum/scp(
@@ -153,25 +145,6 @@
 		SCP_SAFE, //Obj Class
 		"216", //Numerical Designation
 	)
-
-	// Load items from the database
-	var/DBQuery/query = SSsql.NewQuery("SELECT id, code, item_path FROM scp216_items WHERE rounds_remaining > 0")
-	if(query.Execute())
-		while(query.NextRow())
-			var/db_id = query.GetRowAssoc()["id"]
-			var/code = query.GetRowAssoc()["code"]
-			var/item_path = text2path(query.GetRowAssoc()["item_path"])
-			if(item_path)
-				var/atom/movable/A = new item_path(src)
-				if(A)
-					var/datum/scp216_stored_item/stored_item = new
-					stored_item.item = A
-					stored_item.db_id = db_id
-					if(!(code in all_codes))
-						all_codes[code] = list()
-					all_codes[code] += stored_item
-	else
-		message_admins(span_warning("Failed to load SCP-216 items from database: [query.Error()]"))
 
 /obj/structure/scp216/Destroy()
 	LAZYCLEARLIST(all_codes) // Forever gone
@@ -199,9 +172,9 @@
 	dat += "Current code: <a href='?src=\ref[src];change_code=1'>[text_code]</a><br>"
 	if(open && (num2text(current_code, 7) in all_codes))
 		dat += "<table>"
-		for(var/datum/scp216_stored_item/stored_item in all_codes[num2text(current_code, 7)])
-			if(!ismob(stored_item.item)) // Don't add mobs to the UI list
-				dat += "<tr><td><a href='?src=\ref[src];retrieve=\ref[stored_item.item]'>[stored_item.item.name]</a></td></tr>"
+		for(var/atom/movable/A in all_codes[num2text(current_code, 7)])
+			if(!ismob(A)) // Don't add mobs to the UI list
+				dat += "<tr><td><a href='?src=\ref[src];retrieve=\ref[A]'>[A.name]</a></td></tr>"
 		dat += "</table></center>"
 	var/datum/browser/popup = new(user, "safe", "Safe", 350, 300)
 	popup.set_content(dat)
@@ -245,20 +218,15 @@
 		return
 
 	if(href_list["retrieve"])
-		var/atom/movable/A = locate(href_list["retrieve"])
-		var/datum/scp216_stored_item/found_stored_item
-		for(var/datum/scp216_stored_item/stored_item in all_codes[num2text(current_code, 7)])
-			if(stored_item.item == A)
-				found_stored_item = stored_item
-				break
-		if(!found_stored_item)
+		var/atom/movable/A = locate(href_list["retrieve"]) in all_codes[num2text(current_code, 7)]
+		if(!A)
 			to_chat(user, span_warning("Couldn't find the item."))
 			return
 		if(!open)
 			return
 		if(!in_range(src, user))
 			return
-		RetrieveItem(user, found_stored_item, current_code)
+		RetrieveItem(user, A, current_code)
 
 /obj/structure/scp216/proc/GenerateRandomItemsAt(code)
 	if(!(num2text(code, 7) in all_codes) || !islist(all_codes[num2text(code, 7)]))
@@ -277,39 +245,15 @@
 		return
 	if(!user.transferItemToLoc(A, src))
 		return
-
-	// Insert into database
-	var/DBQuery/query = SSsql.NewQuery("INSERT INTO scp216_items (code, item_path, round_id, rounds_remaining, timestamp) VALUES (:code, :item_path, :round_id, :rounds_remaining, NOW())")
-	query.AddParameter("code", num2text(code_loc, 7))
-	query.AddParameter("item_path", A.type)
-	query.AddParameter("round_id", SSticker.round_id)
-	query.AddParameter("rounds_remaining", rounds_to_persist)
-	if(!query.Execute())
-		CRASH("Failed to insert SCP-216 item into database: [query.Error()]")
-	else
-		var/datum/scp216_stored_item/stored_item = new
-		stored_item.item = A
-		stored_item.db_id = query.GetLastInsertId() // Get the new database ID
-		all_codes[num2text(code_loc, 7)] += stored_item
-
+	all_codes[num2text(code_loc, 7)] += A
 	attack_hand(user)
 
-/obj/structure/scp216/proc/RetrieveItem(mob/living/carbon/human/user, datum/scp216_stored_item/stored_item, code_loc = 0)
-	if(!stored_item || !stored_item.item || !(stored_item in all_codes[num2text(code_loc, 7)]))
+/obj/structure/scp216/proc/RetrieveItem(mob/living/carbon/human/user, atom/movable/A, code_loc = 0)
+	if(!locate(A) in all_codes[num2text(code_loc, 7)])
 		return
-	all_codes[num2text(code_loc, 7)] -= stored_item
-
-	// Delete from database
-	if(stored_item.db_id)
-		var/DBQuery/query = SSsql.NewQuery("DELETE FROM scp216_items WHERE id = :id")
-		query.AddParameter("id", stored_item.db_id)
-		if(!query.Execute())
-			CRASH("Failed to delete SCP-216 item from database: [query.Error()]")
-		stored_item.db_id = null // Clear the database ID
-
-	if(isitem(stored_item.item))
-		user.put_in_hands(stored_item.item)
+	all_codes[num2text(code_loc, 7)] -= A
+	if(isitem(A))
+		user.put_in_hands(A)
 	else // In case we want to get funky and put mobs into it
-		stored_item.item.forceMove(get_turf(src))
-	qdel(stored_item) // Delete the datum
+		A.forceMove(get_turf(src))
 	attack_hand(user)
