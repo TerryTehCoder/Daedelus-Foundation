@@ -4346,6 +4346,7 @@
 #include "code\modules\research\xenobiology\crossbreeding\stabilized.dm"
 #include "code\modules\SCP\scp012.dm"
 #include "code\modules\SCP\scp013.dm"
+#include "code\modules\SCP\SCP-216.dm"
 #include "code\modules\screen_alerts\_screen_alerts.dm"
 #include "code\modules\screen_alerts\atom_hud_text.dm"
 #include "code\modules\screen_alerts\location_blurb.dm"
