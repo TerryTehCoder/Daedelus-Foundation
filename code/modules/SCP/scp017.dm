@@ -16,6 +16,7 @@
 
 	pass_flags = PASSTABLE
 	density = FALSE
+	combat_mode = TRUE //Incase we want to have non-hostile interactions later.
 
 	maxHealth = 100
 	health = 100
@@ -62,6 +63,11 @@
 	var/last_vindictive_time = 0
 
 	var/list/target_priority_list = list() // Stores mobs with associated priority scores
+
+	var/last_message_time = 0
+	var/message_cooldown = 30 // 3 second cooldown for messages.
+	var/last_stun_time = 0
+	var/stun_cooldown = 50 // 5 second cooldown for re-applying stun
 
 /mob/living/simple_animal/hostile/scp017/Initialize()
 	. = ..()
@@ -138,6 +144,8 @@
 	var/turf/Tturf = get_turf(src)
 	if(!Tturf)
 		return
+	if(HAS_TRAIT(src, TRAIT_IMMOBILIZED)) // Prevent movement if stunned
+		return
 
 	var/list/light_sources_in_range = list()
 
@@ -170,12 +178,12 @@
 					// Fleeing light sources
 					var/turf/flee_turf = find_flee_turf(light_sources_in_range)
 					if(flee_turf)
-						step_to(src, flee_turf)
+						Move(flee_turf, ignore_light_check = TRUE)
 					else
 						// If no clear flee path, try to find darkest adjacent
 						var/turf/dark_turf = find_darkest_adjacent_turf()
 						if(dark_turf)
-							step_to(src, dark_turf)
+							step_to(src, dark_turf) // This step is still to a dark turf, so no ignore_light_check needed
 				else
 					// Move towards target, prioritizing shadows
 					var/turf/target_turf = get_turf(target_mob)
@@ -300,7 +308,7 @@
 /mob/living/simple_animal/hostile/scp017/proc/EnterVindictiveState()
 	current_ai_state = VINDICTIVE
 	last_vindictive_time = world.time
-	visible_message(span_danger("[src] lets out an enraged shriek, its form flickering violently!"))
+	SafeVisibleMessage(span_danger("[src] lets out an enraged shriek, its form flickering violently!"))
 	// Temporarily ignore shadow_threshold for pursuit
 	shadow_threshold = 1.0 // Effectively ignore shadows for a duration
 	light_suppression_chance = 100 // Always suppress lights
@@ -311,15 +319,17 @@
 	times_driven_off_by_light = 0
 	shadow_threshold = initial(shadow_threshold) // Reset threshold
 	light_suppression_chance = initial(light_suppression_chance) // Reset chance
-	visible_message(span_notice("[src] calms, its form settling back into the shadows."))
+	SafeVisibleMessage(span_notice("[src] calms, its form settling back into the shadows."))
 
 /mob/living/simple_animal/hostile/scp017/proc/HandleLightSuppression()
 	if(prob(light_suppression_chance))
 		for(var/obj/machinery/light/L in range(light_suppression_range, src))
 			if(L.on)
 				L.on = FALSE
+				L.update_icon() // Force visual update
 				addtimer(CALLBACK(L, "set_on", TRUE), light_suppression_duration)
-				visible_message(span_warning("Lights flicker as [src] passes by!"))
+				addtimer(CALLBACK(L, "update_icon"), light_suppression_duration) // Force visual update when light turns back on
+				SafeVisibleMessage(span_warning("Lights flicker as [src] passes by!"))
 
 /mob/living/simple_animal/hostile/scp017/proc/CheckLightExposure()
 	var/turf/Tturf = get_turf(src)
@@ -330,10 +340,11 @@
 
 	if((Tturf.get_lumcount() > shadow_threshold) || (!Tarea.area_lighting == AREA_LIGHTING_DYNAMIC))
 		// SCP-017 is in light, apply stun/slow
-		if(!HAS_TRAIT(src, TRAIT_IMMOBILIZED)) // Check if already stunned
+		if(!HAS_TRAIT(src, TRAIT_IMMOBILIZED) && world.time >= last_stun_time + stun_cooldown) // Check if already stunned and stun cooldown
 			ADD_TRAIT(src, TRAIT_IMMOBILIZED, "SCP017_LIGHT_STUN")
-			visible_message(span_warning("[src] recoils from the light!"))
+			SafeVisibleMessage(span_warning("[src] recoils from the light!"))
 			addtimer(CALLBACK(src, PROC_REF(RemoveLightStun)), stun_duration_light)
+			last_stun_time = world.time
 	else
 		// SCP-017 is in a shadow, remove stun if present
 		RemoveLightStun()
@@ -341,7 +352,7 @@
 /mob/living/simple_animal/hostile/scp017/proc/RemoveLightStun()
 	if(HAS_TRAIT(src, TRAIT_IMMOBILIZED))
 		REMOVE_TRAIT(src, TRAIT_IMMOBILIZED, "SCP017_LIGHT_STUN")
-		visible_message(span_notice("[src] regains its composure in the shadows."))
+		SafeVisibleMessage(span_notice("[src] regains its composure in the shadows."))
 
 /mob/living/simple_animal/hostile/scp017/proc/ApplyShadowSickness()
 	var/list/current_sickness_targets = list()
@@ -397,10 +408,10 @@
 		return FALSE
 	return TRUE
 
-/mob/living/simple_animal/hostile/scp017/Move(turf/newloc, safety = TRUE)
+/mob/living/simple_animal/hostile/scp017/Move(turf/newloc, safety = TRUE, ignore_light_check = FALSE)
 	var/turf/Tturf = newloc //Cleanliness
 	var/area/Tarea = get_area(newloc)
-	if((Tturf.get_lumcount() > shadow_threshold) || (!Tarea.area_lighting == AREA_LIGHTING_DYNAMIC))
+	if(!ignore_light_check && ((Tturf.get_lumcount() > shadow_threshold) || (!Tarea.area_lighting == AREA_LIGHTING_DYNAMIC)))
 		return FALSE
 	return ..()
 
@@ -417,7 +428,7 @@
 	. = ..()
 	var/turf/T = get_turf(src)
 
-	do_smoke(amount = 3, location = T)
+	do_smoke(amount = 1, location = T)
 
 	ghostize()
 	qdel(src)
@@ -427,7 +438,7 @@
 		return FALSE
 
 	last_shadow_veil_time = world.time
-	visible_message(span_danger("[src] expands, casting a deep shadow around itself!"))
+	SafeVisibleMessage(span_danger("[src] expands, casting a deep shadow around itself!"))
 
 	var/list/affected_turfs = list()
 	for(var/turf/T in range(3, src)) // 3x3 radius for now
@@ -445,7 +456,7 @@
 /mob/living/simple_animal/hostile/scp017/proc/RemoveShadowVeilImmunity()
 	if(HAS_TRAIT(src, TRAIT_IMMOBILIZED))
 		REMOVE_TRAIT(src, TRAIT_IMMOBILIZED, "SCP017_SHADOW_VEIL_IMMUNITY")
-		visible_message(span_notice("The shadows around [src] recede."))
+		SafeVisibleMessage(span_notice("The shadows around [src] recede."))
 
 /mob/living/simple_animal/hostile/scp017/proc/IsStrongLightSource(atom/A)
 	if(istype(A, /obj/machinery/light))
@@ -476,14 +487,17 @@
 				return TRUE
 	return FALSE
 
+/mob/living/simple_animal/hostile/scp017/AttackingTarget(atom/attacked_target)
+	. = UnarmedAttack(target)
+
 /mob/living/simple_animal/hostile/scp017/bullet_act(obj/projectile/Proj)
 	if(enveloping_target && IsStrongLightSource(Proj))
 		StopEnveloping(FALSE)
 		LightSourceDebuff() // Apply debuff for being hit by strong light
-		visible_message(span_notice("[src] recoils from the intense light, releasing [enveloping_target]!"))
+		SafeVisibleMessage(span_notice("[src] recoils from the intense light, releasing [enveloping_target]!"))
 		return TRUE // Consume the projectile
 	if(Proj.damage_type == BRUTE)
-		visible_message(span_warning("The [Proj] seems to pass right through it!"))
+		SafeVisibleMessage(span_warning("The [Proj] seems to pass right through it!"))
 		return TRUE
 	return ..()
 
@@ -491,32 +505,34 @@
 	if(!HAS_TRAIT(src, TRAIT_IMMOBILIZED))
 		ADD_TRAIT(src, TRAIT_IMMOBILIZED, "SCP017_LIGHT_DEBUFF")
 		shadow_threshold -= 0.15 // Decrease threshold, making it vulnerable in slightly brighter areas
-		visible_message(span_warning("[src] shimmers erratically as it absorbs the light!"))
+		SafeVisibleMessage(span_warning("[src] shimmers erratically as it absorbs the light!"))
 		addtimer(CALLBACK(src, PROC_REF(RemoveLightSourceDebuff)), light_source_debuff_duration)
 
 /mob/living/simple_animal/hostile/scp017/proc/RemoveLightSourceDebuff()
 	if(HAS_TRAIT(src, TRAIT_IMMOBILIZED))
 		REMOVE_TRAIT(src, TRAIT_IMMOBILIZED, "SCP017_LIGHT_DEBUFF")
 		shadow_threshold = initial(shadow_threshold) // Reset threshold
-		visible_message(span_notice("[src] stabilizes as the light's influence fades."))
+		SafeVisibleMessage(span_notice("[src] stabilizes as the light's influence fades."))
+
+/mob/living/simple_animal/hostile/scp017/proc/SafeVisibleMessage(message_text, message_type)
+	if(world.time >= last_message_time + message_cooldown)
+		visible_message(message_text)
+		last_message_time = world.time
 
 //Attack
 
 /mob/living/simple_animal/hostile/scp017/UnarmedAttack(atom/A)
+	if(!CanAttack(A))
+		return FALSE
+
 	var/turf/Tturf = get_turf(A)
-	var/area/Tarea = get_area(A)
-
-	if(!ismovable(A) || A.SCP)
-		return FALSE
-	if(!Tturf || !Tarea)
-		return FALSE
-	if((Tturf.get_lumcount() > shadow_threshold) || (!Tarea.area_lighting == AREA_LIGHTING_DYNAMIC))
+	if(!Tturf)
 		return FALSE
 
-	do_smoke(amount = 3, location = Tturf)
+	do_smoke(amount = 1, location = Tturf)
 
 	var/death_message = pick("[A] disappears into [src]!", "[A] is enveloped by [src]!", "[A] is absorbed by [src]!")
-	visible_message(span_danger(death_message))
+	SafeVisibleMessage(span_danger(death_message))
 
 	if(ismob(A))
 		var/mob/living/target_mob = A
@@ -530,7 +546,7 @@
 		return FALSE
 
 	enveloping_target = target_mob
-	visible_message(span_danger("[enveloping_target] is being enveloped by [src]!"))
+	SafeVisibleMessage(span_danger("[enveloping_target] is being enveloped by [src]!"))
 
 	// Apply initial vision reduction and blurriness
 	if(enveloping_target.client)
@@ -571,11 +587,11 @@
 			enveloping_target.set_blurriness(0) // Remove blurriness
 
 		if(force_death)
-			visible_message(span_danger("[enveloping_target] is fully absorbed by [src]!"))
+			SafeVisibleMessage(span_danger("[enveloping_target] is fully absorbed by [src]!"))
 			enveloping_target.ghostize()
 			qdel(enveloping_target)
 		else
-			visible_message(span_notice("[enveloping_target] escapes from [src]'s grasp!"))
+			SafeVisibleMessage(span_notice("[enveloping_target] escapes from [src]'s grasp!"))
 
 	enveloping_target = null
 
@@ -595,12 +611,12 @@
 	if(enveloping_target && IsStrongLightSource(O))
 		StopEnveloping(FALSE)
 		LightSourceDebuff()
-		visible_message(span_notice("[src] recoils from the intense light, releasing [enveloping_target]!"))
+		SafeVisibleMessage(span_notice("[src] recoils from the intense light, releasing [enveloping_target]!"))
 		times_driven_off_by_light++ // Increment counter
 		return TRUE
 	if(IsPortableLightSource(O))
 		LightSourceDebuff()
-		visible_message(span_warning("[O] is absorbed by the shadowy veil!"))
+		SafeVisibleMessage(span_warning("[O] is absorbed by the shadowy veil!"))
 		qdel(O)
 		return TRUE
 	. = ..()
@@ -610,11 +626,11 @@
 	if(enveloping_target && IsStrongLightSource(AM))
 		StopEnveloping(FALSE)
 		LightSourceDebuff()
-		visible_message(span_notice("[src] recoils from the intense light, releasing [enveloping_target]!"))
+		SafeVisibleMessage(span_notice("[src] recoils from the intense light, releasing [enveloping_target]!"))
 		return TRUE
 	if(IsPortableLightSource(AM))
 		LightSourceDebuff()
-		visible_message(span_warning("[AM] vanished within the shadowy shroud!"))
+		SafeVisibleMessage(span_warning("[AM] vanished within the shadowy shroud!"))
 		qdel(AM)
 		return TRUE
 	. = ..()
