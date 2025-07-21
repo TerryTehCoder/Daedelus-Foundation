@@ -97,5 +97,10 @@
 	if(job)
 		examine_list += span_obviousnotice("You know this is SCP-[designation]!")
 
+/datum/scp/process()
+	// This proc is meant to be overridden by specific SCP datums that require continuous processing.
+	// The SCP subsystem will call this proc on active SCP datums.
+	return
+
 /datum/scp/proc/has_minimum_players()
 	return length(GLOB.clients) >= min_playercount
