@@ -166,6 +166,9 @@
 	if(!user.stat == CONSCIOUS)
 		to_chat(user, span_warning("You cannot use the safe while unconscious!"))
 		return
+	if(!in_range(src, user))
+		to_chat(user, span_warning("You need to be next to the safe to use it!"))
+		return
 	var/text_code = add_leading(num2text(current_code, 7), 7, "0")
 	var/dat = "<center>"
 	dat += "<a href='?src=\ref[src];open=1'>[open ? "Close" : "Open"] [src]</a><br>"
@@ -181,9 +184,16 @@
 	popup.open()
 
 /obj/structure/scp216/Topic(href, href_list)
+	..()
+	if(!usr.canUseTopic(src, USE_CLOSE|USE_NEED_HANDS|USE_IGNORE_TK|USE_DEXTERITY))
+		return
 	if(!ishuman(usr))
 		return
 	var/mob/living/carbon/human/user = usr
+
+	if(!in_range(src, user))
+		to_chat(user, span_warning("You need to be next to the safe to use it!"))
+		return
 
 	if(href_list["open"])
 		to_chat(user, span_notice("You [open ? "close" : "open"] [src]."))
@@ -253,7 +263,8 @@
 		return
 	all_codes[num2text(code_loc, 7)] -= A
 	if(isitem(A))
-		user.put_in_hands(A)
+		if(!user.put_in_hands(A))
+			A.forceMove(user)
 	else // In case we want to get funky and put mobs into it
 		A.forceMove(get_turf(src))
 	attack_hand(user)
