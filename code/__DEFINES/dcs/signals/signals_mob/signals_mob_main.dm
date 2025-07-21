@@ -91,7 +91,7 @@
 #define COMSIG_MOB_UPDATE_SIGHT "mob_update_sight"
 ////from /mob/living/say(): ()
 #define COMSIG_MOB_SAY "mob_say"
-	#define COMPONENT_UPPERCASE_SPEECH (1<<0)
+	#define COMPONENT_UPPERCASE_SPEECH (1<<1) // Changed from (1<<0) to avoid conflict with TRUE (1)
 	// used to access COMSIG_MOB_SAY argslist
 	#define SPEECH_MESSAGE 1
 	#define SPEECH_BUBBLE_TYPE 2

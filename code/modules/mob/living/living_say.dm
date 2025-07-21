@@ -229,7 +229,11 @@ GLOBAL_LIST_INIT(message_modes_stat_limits, list(
 	#endif
 
 	// Leaving this here so that anything that handles speech this way will be able to have spans affecting it and all that.
+	message_admins(span_warning("Before SEND_SIGNAL(COMSIG_MOB_SAY) for [src.key]. Message: '[message]'"))
 	var/sigreturn = SEND_SIGNAL(src, COMSIG_MOB_SAY, args)
+	message_admins(span_warning("After SEND_SIGNAL(COMSIG_MOB_SAY) for [src.key]. Sigreturn: [sigreturn]. Message (after signal): '[args[SPEECH_MESSAGE]]'"))
+	if (sigreturn) // Check if any signal handler modified the message or returned a truthy value
+		message = args[SPEECH_MESSAGE] // Update message with potentially modified value from signal
 	if (sigreturn & COMPONENT_UPPERCASE_SPEECH)
 		message = uppertext(message)
 
