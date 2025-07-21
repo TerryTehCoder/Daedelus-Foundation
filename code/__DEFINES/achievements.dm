@@ -57,3 +57,39 @@
 
 #define CHEF_TOURISTS_SERVED "Tourists Served As Chef"
 #define BARTENDER_TOURISTS_SERVED "Tourists Served As Bartender"
+
+// SCP Achievements
+#define SCP_OBJECTIVELY_SAFE "Objectively Safe"
+#define SCP_KETER_WRANGLER "Keter Wrangler"
+#define SCP_COGNITIVE_DISSONANCE "Cognitive Dissonance"
+#define SCP_CLASSIFIED_DENIED "Classified Means Classified"
+#define SCP_PEER_REVIEWED "Peer Reviewed"
+
+#define SCP_DISPOSABLE_HERO "Disposable Hero"
+#define SCP_MY_TURN_DOC "My Turn, Doc"
+#define SCP_PROBABLY_FINE "That's Probably Fine"
+#define SCP_UNEXPECTED_DEATH "Well That Was Unexpected"
+#define SCP_BREACH_BABY "Breach Baby"
+
+#define SCP_COGS_MACHINE "Cogs in the Machine"
+#define SCP_AUTHORIZATION_GRANTED "Authorization Granted"
+#define SCP_YES_DIRECTOR "Yes, Director"
+#define SCP_BUREAUCRATIC_EXCELLENCE "Bureaucratic Excellence"
+
+#define SCP_ETHICS_PENDING "Ethics Advisory Pending"
+#define SCP_ALL_BREACHES "Oops, All Breaches"
+#define SCP_INTERNAL_AFFAIRS "Internal Affairs, Actually"
+#define SCP_WHOOPS "Whoops!"
+#define SCP_MISTAKEN_ENTITY "Am I the SCP?"
+
+#define SCP_REWOUND_UNBOUND "Rewound & Unbound"
+#define SCP_RECORDING_POSTERITY "Recording for Posterity"
+#define SCP_FORBIDDEN_TAPE "This Isn't From Our Archive..."
+#define SCP_STATIC_SCREAMER "Static Screamer"
+#define SCP_FIELD_BROADCAST "Field Broadcast"
+
+#define SCP_UNKNOWN_UNLOCKED "SCP-████ Unlocked"
+#define SCP_ADMIN_WATCHES "The Administrator Watches"
+#define SCP_NOT_SUPPOSED_TO_SEE "You Weren't Supposed to See That"
+#define SCP_CURSED_METADATA "Cursed Metadata"
+#define SCP_META_CONTAINMENT "Meta-Containment"
