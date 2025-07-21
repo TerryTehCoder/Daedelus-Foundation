@@ -5,40 +5,17 @@
 	name = "Traitor"
 
 	weight = GAMEMODE_WEIGHT_COMMON
-	restricted_jobs = list(JOB_CYBORG, JOB_AI)
-	protected_jobs = list(
-		JOB_SITE_DIRECTOR,
-		JOB_HUMAN_RESOURCES_DIRECTOR,
-		JOB_SECURITY_DIRECTOR,
-		JOB_ENGINEERING_DIRECTOR,
-		JOB_MEDICAL_DIRECTOR,
-		JOB_EZ_COMMANDER,
-		JOB_SENIOR_EZ_GUARD,
-		JOB_EZ_GUARD,
-		JOB_JUNIOR_EZ_GUARD,
-		JOB_RAISA_AGENT,
-		JOB_LCZ_COMMANDER,
-		JOB_SENIOR_LCZ_GUARD,
-		JOB_LCZ_GUARD,
-		JOB_JUNIOR_LCZ_GUARD,
-		JOB_HCZ_COMMANDER,
-		JOB_SENIOR_HCZ_GUARD,
-		JOB_HCZ_GUARD,
-		JOB_JUNIOR_HCZ_GUARD
-	)
-
-	antag_datum = /datum/antagonist/traitor
-	antag_flag = ROLE_TRAITOR
+	///The antagonist selector for this gamemode.
+	var/datum/antagonist_selector/traitor/antag_selector
 
 /datum/game_mode/traitor/pre_setup()
 	. = ..()
 
-	var/num_traitors = 1
+	var/num_traitors = max(1, round(length(SSticker.ready_players) * TRAITOR_SCALING_COEFF))
 
-	num_traitors = max(1, round(length(SSticker.ready_players) * TRAITOR_SCALING_COEFF))
+	antag_selector = new /datum/antagonist_selector/traitor()
+	antag_selector.setup(num_traitors, possible_antags)
 
-	for (var/i in 1 to num_traitors)
-		if(possible_antags.len <= 0)
-			break
-		var/mob/M = pick_n_take(possible_antags)
-		select_antagonist(M.mind)
+/datum/game_mode/traitor/post_setup()
+	. = ..()
+	antag_selector.give_antag_datums(src)

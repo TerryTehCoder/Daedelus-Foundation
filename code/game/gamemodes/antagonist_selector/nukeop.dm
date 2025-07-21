@@ -1,8 +1,8 @@
 /datum/antagonist_selector/nukeop
 	restricted_jobs = list(
-		JOB_CAPTAIN,
-		JOB_SECURITY_MARSHAL,
-	)// Just to be sure that a nukie getting picked won't ever imply a Captain or HoS not getting drafted
+		JOB_SITE_DIRECTOR,
+		JOB_SECURITY_DIRECTOR,
+	)// Just to be sure that a nukie getting picked won't ever imply a Site or Security director not getting drafted
 
 	antag_datum = /datum/antagonist/nukeop
 	antag_flag = ROLE_OPERATIVE
@@ -10,7 +10,7 @@
 	var/datum/antagonist/antag_leader_datum = /datum/antagonist/nukeop/leader
 
 /datum/antagonist_selector/nukeop/give_antag_datums(datum/game_mode/gamemode)
-	var/datum/game_mode/one_antag/nuclear_emergency/nukie_gamemode = gamemode
+	var/datum/game_mode/nuclear_emergency/nukie_gamemode = gamemode
 
 	var/chosen_leader = FALSE
 	for(var/datum/mind/M as anything in shuffle(selected_antagonists))

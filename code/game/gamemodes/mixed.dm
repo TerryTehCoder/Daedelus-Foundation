@@ -9,29 +9,13 @@
 /datum/game_mode/mixed
 	name = "Mixed"
 	weight = GAMEMODE_WEIGHT_COMMON
-	restricted_jobs = list(JOB_CYBORG, JOB_AI)
-	protected_jobs = list(
-		JOB_SITE_DIRECTOR,
-		JOB_HUMAN_RESOURCES_DIRECTOR,
-		JOB_SECURITY_DIRECTOR,
-		JOB_ENGINEERING_DIRECTOR,
-		JOB_MEDICAL_DIRECTOR,
-		JOB_EZ_COMMANDER,
-		JOB_SENIOR_EZ_GUARD,
-		JOB_EZ_GUARD,
-		JOB_JUNIOR_EZ_GUARD,
-		JOB_RAISA_AGENT,
-		JOB_LCZ_COMMANDER,
-		JOB_SENIOR_LCZ_GUARD,
-		JOB_LCZ_GUARD,
-		JOB_JUNIOR_LCZ_GUARD,
-		JOB_HCZ_COMMANDER,
-		JOB_SENIOR_HCZ_GUARD,
-		JOB_HCZ_GUARD,
-		JOB_JUNIOR_HCZ_GUARD
-	)
-
 	force_pre_setup_check = TRUE
+
+	///The antagonist selectors for this gamemode.
+	var/datum/antagonist_selector/traitor/traitor_selector
+	var/datum/antagonist_selector/changeling/changeling_selector
+	var/datum/antagonist_selector/heretic/heretic_selector
+	var/datum/antagonist_selector/wizard/wizard_selector
 
 	var/list/antag_weight_map = list(
 		ROLE_TRAITOR = MIXED_WEIGHT_TRAITOR,
@@ -44,7 +28,6 @@
 	. = ..()
 
 	var/list/antag_pool = list()
-
 	var/number_of_antags = max(1, round(length(SSticker.ready_players) * MIXED_ANTAG_COEFF))
 
 	//Setup a list of antags to try to spawn
@@ -52,50 +35,29 @@
 		antag_pool[pick_weight(antag_weight_map)] += 1
 		number_of_antags--
 
-	var/list/role_to_players_map = list(
-		ROLE_TRAITOR = list(),
-		ROLE_HERETIC = list(),
-		ROLE_CHANGELING = list(),
-		ROLE_WIZARD = list()
-	)
-
-	//Filter out our possible_antags list into a mixed-specific map of role : elligible players
-	for(var/mob/dead/new_player/candidate_player in possible_antags)
-		var/client/candidate_client = GET_CLIENT(candidate_player)
-
-		for(var/role in antag_pool)
-			if (is_banned_from(candidate_player.ckey, list(role, ROLE_SYNDICATE)))
-				continue
-
-			var/list/antag_prefs = candidate_client.prefs.read_preference(/datum/preference/blob/antagonists)
-			if(antag_prefs[role])
-				role_to_players_map[role] += candidate_player
-				continue
-
 	if(antag_pool[ROLE_TRAITOR])
-		for(var/i in 1 to antag_pool[ROLE_TRAITOR])
-			if(!length(role_to_players_map[ROLE_TRAITOR]))
-				break
-			var/mob/M = pick_n_take(role_to_players_map[ROLE_TRAITOR])
-			select_antagonist(M.mind, /datum/antagonist/traitor)
+		traitor_selector = new /datum/antagonist_selector/traitor()
+		traitor_selector.setup(antag_pool[ROLE_TRAITOR], possible_antags)
 
 	if(antag_pool[ROLE_CHANGELING])
-		for(var/i in 1 to antag_pool[ROLE_CHANGELING])
-			if(!length(role_to_players_map[ROLE_CHANGELING]))
-				break
-			var/mob/M = pick_n_take(role_to_players_map[ROLE_CHANGELING])
-			select_antagonist(M.mind, /datum/antagonist/changeling)
+		changeling_selector = new /datum/antagonist_selector/changeling()
+		changeling_selector.setup(antag_pool[ROLE_CHANGELING], possible_antags)
 
 	if(antag_pool[ROLE_HERETIC])
-		for(var/i in 1 to antag_pool[ROLE_HERETIC])
-			if(!length(role_to_players_map[ROLE_HERETIC]))
-				break
-			var/mob/M = pick_n_take(role_to_players_map[ROLE_HERETIC])
-			select_antagonist(M.mind, /datum/antagonist/heretic)
+		heretic_selector = new /datum/antagonist_selector/heretic()
+		heretic_selector.setup(antag_pool[ROLE_HERETIC], possible_antags)
 
 	if(length(GLOB.wizardstart) && antag_pool[ROLE_WIZARD])
-		for(var/i in 1 to antag_pool[ROLE_WIZARD])
-			if(!length(role_to_players_map[ROLE_WIZARD]))
-				break
-			var/mob/M = pick_n_take(role_to_players_map[ROLE_WIZARD])
-			select_antagonist(M.mind, /datum/antagonist/wizard)
+		wizard_selector = new /datum/antagonist_selector/wizard()
+		wizard_selector.setup(antag_pool[ROLE_WIZARD], possible_antags)
+
+/datum/game_mode/mixed/post_setup()
+	. = ..()
+	if(traitor_selector)
+		traitor_selector.give_antag_datums(src)
+	if(changeling_selector)
+		changeling_selector.give_antag_datums(src)
+	if(heretic_selector)
+		heretic_selector.give_antag_datums(src)
+	if(wizard_selector)
+		wizard_selector.give_antag_datums(src)

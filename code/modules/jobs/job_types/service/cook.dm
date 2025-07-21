@@ -19,25 +19,15 @@
 	outfits = list(
 		"Default" = list(
 			SPECIES_HUMAN = /datum/outfit/job/cook,
-			SPECIES_TESHARI = /datum/outfit/job/cook,
-			SPECIES_VOX = /datum/outfit/job/cook,
-			SPECIES_PLASMAMAN = /datum/outfit/job/cook/plasmaman,
 		),
 		"Chef" = list(
 			SPECIES_HUMAN = /datum/outfit/job/cook/chef,
-			SPECIES_TESHARI = /datum/outfit/job/cook/chef,
-			SPECIES_VOX = /datum/outfit/job/cook/chef,
-			SPECIES_PLASMAMAN = /datum/outfit/job/cook/chef/plasmaman,
 		),
 		"Culinary Artist" = list(
 			SPECIES_HUMAN = /datum/outfit/job/cook/chef,
-			SPECIES_TESHARI = /datum/outfit/job/cook/chef,
-			SPECIES_VOX = /datum/outfit/job/cook/chef,
-			SPECIES_PLASMAMAN = /datum/outfit/job/cook/chef/plasmaman,
 		),
 		"Bartender" = list(
 			SPECIES_HUMAN = /datum/outfit/job/bartender,
-			SPECIES_PLASMAMAN = /datum/outfit/job/bartender/plasmaman,
 		),
 	)
 
@@ -122,15 +112,6 @@
 
 	skillchips = list(/obj/item/skillchip/job/chef)
 
-/datum/outfit/job/cook/plasmaman
-	name = "Cook (Plasmaman)"
-
-	uniform = /obj/item/clothing/under/plasmaman/chef
-	gloves = /obj/item/clothing/gloves/color/plasmaman/white
-	head = /obj/item/clothing/head/helmet/space/plasmaman/white
-	mask = /obj/item/clothing/mask/breath
-	r_hand = /obj/item/tank/internals/plasmaman/belt/full
-
 /* Commenting this out for now, since it overrides alternate job title outfits
 /datum/outfit/job/cook/pre_equip(mob/living/carbon/human/H, visualsOnly = FALSE)
 	..()
@@ -153,15 +134,6 @@
 	id_trim = /datum/id_trim/job/cook/chef
 	suit = /obj/item/clothing/suit/toggle/chef
 
-/datum/outfit/job/cook/chef/plasmaman
-	name = "Chef (Plasmaman)"
-
-	id_trim = /datum/id_trim/job/cook/chef
-	uniform = /obj/item/clothing/under/plasmaman/chef
-	gloves = /obj/item/clothing/gloves/color/plasmaman/white
-	head = /obj/item/clothing/head/helmet/space/plasmaman/white
-	suit = /obj/item/clothing/suit/toggle/chef
-
 /datum/outfit/job/bartender
 	name = "Bartender"
 	jobtype = /datum/job/cook
@@ -176,16 +148,6 @@
 	ears = /obj/item/radio/headset/headset_srv
 	glasses = /obj/item/clothing/glasses/sunglasses/reagent
 	shoes = /obj/item/clothing/shoes/laceup
-
-/datum/outfit/job/bartender/plasmaman
-	name = "Bartender (Plasmaman)"
-
-	uniform = /obj/item/clothing/under/plasmaman/enviroslacks
-	gloves = /obj/item/clothing/gloves/color/plasmaman/white
-	head = /obj/item/clothing/head/helmet/space/plasmaman/white
-	mask = /obj/item/clothing/mask/breath
-	r_hand = /obj/item/tank/internals/plasmaman/belt/full
-
 
 /datum/outfit/job/bartender/post_equip(mob/living/carbon/human/H, visualsOnly)
 	. = ..()

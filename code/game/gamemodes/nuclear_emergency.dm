@@ -5,43 +5,24 @@
 	name = "Nuclear Emergency"
 
 	weight = GAMEMODE_WEIGHT_EPIC
-	restricted_jobs = list(
-		JOB_SITE_DIRECTOR,
-		JOB_SECURITY_DIRECTOR,
-	)// Just to be sure that a nukie getting picked won't ever imply a Captain or HoS not getting drafted
-
 	required_enemies = 5
 	min_pop = 25
 
-	antag_datum = /datum/antagonist/nukeop
-	antag_flag = ROLE_OPERATIVE
-
-	var/datum/antagonist/antag_leader_datum = /datum/antagonist/nukeop/leader
 	var/datum/team/nuclear/nuke_team
+	///The antagonist selector for this gamemode.
+	var/datum/antagonist_selector/nukeop/antag_selector
 
 /datum/game_mode/nuclear_emergency/pre_setup()
 	. = ..()
 
 	var/num_nukies = max(required_enemies, round(length(SSticker.ready_players) * NUKIE_SCALING_COEFF))
 
+	antag_selector = new /datum/antagonist_selector/nukeop()
+	antag_selector.setup(num_nukies, possible_antags)
 
-	for(var/i in 1 to num_nukies)
-		if(possible_antags.len <= 0)
-			break
-
-		var/mob/M = pick_n_take(possible_antags)
-		select_antagonist(M.mind)
-
-/datum/game_mode/nuclear_emergency/give_antag_datums()
-	var/chosen_leader = FALSE
-	for(var/datum/mind/M as anything in shuffle(antagonists))
-		if (!chosen_leader)
-			chosen_leader = TRUE
-			var/datum/antagonist/nukeop/leader/new_op = M.add_antag_datum(antag_leader_datum)
-			nuke_team = new_op.nuke_team
-		else
-			var/datum/antagonist/nukeop/new_op = new antag_datum()
-			M.add_antag_datum(new_op)
+/datum/game_mode/nuclear_emergency/post_setup()
+	. = ..()
+	antag_selector.give_antag_datums(src)
 
 /datum/game_mode/nuclear_emergency/set_round_result()
 	. = ..()
@@ -77,4 +58,3 @@
 		else
 			SSticker.mode_result = "halfwin - interrupted"
 			SSticker.news_report = OPERATIVE_SKIRMISH
-

@@ -16,7 +16,6 @@
 	outfits = list(
 		"Default" = list(
 			SPECIES_HUMAN = /datum/outfit/job/junior_researcher,
-			SPECIES_PLASMAMAN = /datum/outfit/job/junior_researcher/plasmaman,
 		),
 	)
 
@@ -59,15 +58,6 @@
 	pda_slot = ITEM_SLOT_BELT
 	skillchips = list()
 
-/datum/outfit/job/junior_researcher/plasmaman
-	name = "Junior Researcher (Plasmaman)"
-
-	uniform = /obj/item/clothing/under/plasmaman/enviroslacks
-	gloves = /obj/item/clothing/gloves/color/plasmaman/white
-	head = /obj/item/clothing/head/helmet/space/plasmaman/science
-	mask = /obj/item/clothing/mask/breath
-	r_hand = /obj/item/tank/internals/plasmaman/belt/full
-
 // Researcher
 
 /datum/job/researcher
@@ -88,7 +78,6 @@
 	outfits = list(
 		"Default" = list(
 			SPECIES_HUMAN = /datum/outfit/job/researcher,
-			SPECIES_PLASMAMAN = /datum/outfit/job/researcher/plasmaman,
 		),
 	)
 
@@ -131,15 +120,6 @@
 	pda_slot = ITEM_SLOT_BELT
 	skillchips = list(/obj/item/skillchip/job/roboticist)
 
-/datum/outfit/job/researcher/plasmaman
-	name = "Researcher (Plasmaman)"
-
-	uniform = /obj/item/clothing/under/plasmaman/enviroslacks
-	gloves = /obj/item/clothing/gloves/color/plasmaman/white
-	head = /obj/item/clothing/head/helmet/space/plasmaman/science
-	mask = /obj/item/clothing/mask/breath
-	r_hand = /obj/item/tank/internals/plasmaman/belt/full
-
 // Senior Researcher
 
 /datum/job/senior_researcher
@@ -159,8 +139,7 @@
 
 	outfits = list(
 		"Default" = list(
-			SPECIES_HUMAN = /datum/outfit/job/senior_researcher,
-			SPECIES_PLASMAMAN = /datum/outfit/job/senior_researcher/plasmaman,
+			SPECIES_HUMAN = /datum/outfit/job/senior_researcher,,
 		),
 	)
 
@@ -201,13 +180,4 @@
 	duffelbag = /obj/item/storage/backpack/duffelbag/science
 
 	pda_slot = ITEM_SLOT_BELT
-	skillchips = list(/obj/item/skillchip/job/roboticist)
-
-/datum/outfit/job/senior_researcher/plasmaman
-	name = "Researcher (Plasmaman)"
-
-	uniform = /obj/item/clothing/under/plasmaman/enviroslacks
-	gloves = /obj/item/clothing/gloves/color/plasmaman/white
-	head = /obj/item/clothing/head/helmet/space/plasmaman/science
-	mask = /obj/item/clothing/mask/breath
-	r_hand = /obj/item/tank/internals/plasmaman/belt/full
+	skillchips = list()

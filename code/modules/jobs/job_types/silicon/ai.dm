@@ -23,7 +23,6 @@
 		/datum/job_department/silicon,
 		)
 
-	spawn_logic = JOBSPAWN_FORCE_FIXED
 	job_flags = JOB_NEW_PLAYER_JOINABLE | JOB_EQUIP_RANK
 	var/do_special_check = TRUE
 
@@ -37,8 +36,7 @@
 	var/mob/living/silicon/ai/ai_spawn = spawned
 	ai_spawn.log_current_laws()
 
-
-/datum/job/ai/get_roundstart_spawn_point_fixed()
+/datum/job/ai/get_roundstart_spawn_point()
 	return get_latejoin_spawn_point()
 
 /datum/job/ai/get_latejoin_spawn_point()

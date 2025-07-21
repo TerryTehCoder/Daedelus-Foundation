@@ -21,7 +21,6 @@
 	outfits = list(
 		"Default" = list(
 			SPECIES_HUMAN = /datum/outfit/job/junior_lcz_guard,
-			SPECIES_PLASMAMAN = /datum/outfit/job/junior_lcz_guard/plasmaman,
 		),
 	)
 
@@ -79,15 +78,6 @@
 		//The helmet is necessary because /obj/item/clothing/head/helmet/sec is overwritten in the chameleon list by the standard helmet, which has the same name and icon state
 	implants = list(/obj/item/implant/mindshield)
 
-/datum/outfit/job/junior_lcz_guard/plasmaman
-	name = "Junior LCZ Guard (Plasmaman)"
-
-	uniform = /obj/item/clothing/under/plasmaman/security
-	gloves = /obj/item/clothing/gloves/color/plasmaman/black
-	head = /obj/item/clothing/head/helmet/space/plasmaman/security
-	mask = /obj/item/clothing/mask/breath
-	r_hand = /obj/item/tank/internals/plasmaman/belt/full
-
 /datum/outfit/job/junior_lcz_guard/mod
 	name = "Junior LCZ Guard (MODsuit)"
 
@@ -125,7 +115,6 @@
 	outfits = list(
 		"Default" = list(
 			SPECIES_HUMAN = /datum/outfit/job/lcz_guard,
-			SPECIES_PLASMAMAN = /datum/outfit/job/lcz_guard/plasmaman,
 		),
 	)
 
@@ -183,15 +172,6 @@
 		//The helmet is necessary because /obj/item/clothing/head/helmet/sec is overwritten in the chameleon list by the standard helmet, which has the same name and icon state
 	implants = list(/obj/item/implant/mindshield)
 
-/datum/outfit/job/lcz_guard/plasmaman
-	name = "LCZ Guard (Plasmaman)"
-
-	uniform = /obj/item/clothing/under/plasmaman/security
-	gloves = /obj/item/clothing/gloves/color/plasmaman/black
-	head = /obj/item/clothing/head/helmet/space/plasmaman/security
-	mask = /obj/item/clothing/mask/breath
-	r_hand = /obj/item/tank/internals/plasmaman/belt/full
-
 /datum/outfit/job/lcz_guard/mod
 	name = "LCZ Guard (MODsuit)"
 
@@ -229,7 +209,6 @@
 	outfits = list(
 		"Default" = list(
 			SPECIES_HUMAN = /datum/outfit/job/senior_lcz_guard,
-			SPECIES_PLASMAMAN = /datum/outfit/job/senior_lcz_guard/plasmaman,
 		),
 	)
 
@@ -287,15 +266,6 @@
 		//The helmet is necessary because /obj/item/clothing/head/helmet/sec is overwritten in the chameleon list by the standard helmet, which has the same name and icon state
 	implants = list(/obj/item/implant/mindshield)
 
-/datum/outfit/job/senior_lcz_guard/plasmaman
-	name = "Senior LCZ Guard (Plasmaman)"
-
-	uniform = /obj/item/clothing/under/plasmaman/security
-	gloves = /obj/item/clothing/gloves/color/plasmaman/black
-	head = /obj/item/clothing/head/helmet/space/plasmaman/security
-	mask = /obj/item/clothing/mask/breath
-	r_hand = /obj/item/tank/internals/plasmaman/belt/full
-
 /datum/outfit/job/senior_lcz_guard/mod
 	name = "Senior LCZ Guard (MODsuit)"
 
@@ -333,7 +303,6 @@
 	outfits = list(
 		"Default" = list(
 			SPECIES_HUMAN = /datum/outfit/job/lcz_commander,
-			SPECIES_PLASMAMAN = /datum/outfit/job/lcz_commander/plasmaman,
 		),
 	)
 
@@ -390,15 +359,6 @@
 		)
 		//The helmet is necessary because /obj/item/clothing/head/helmet/sec is overwritten in the chameleon list by the standard helmet, which has the same name and icon state
 	implants = list(/obj/item/implant/mindshield)
-
-/datum/outfit/job/lcz_commander/plasmaman
-	name = "LCZ Commander (Plasmaman)"
-
-	uniform = /obj/item/clothing/under/plasmaman/security
-	gloves = /obj/item/clothing/gloves/color/plasmaman/black
-	head = /obj/item/clothing/head/helmet/space/plasmaman/security
-	mask = /obj/item/clothing/mask/breath
-	r_hand = /obj/item/tank/internals/plasmaman/belt/full
 
 /datum/outfit/job/lcz_commander/mod
 	name = "LCZ Commander (MODsuit)"

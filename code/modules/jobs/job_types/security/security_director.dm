@@ -23,7 +23,6 @@
 	outfits = list(
 		"Default" = list(
 			SPECIES_HUMAN = /datum/outfit/job/security_director,
-			SPECIES_PLASMAMAN = /datum/outfit/job/security_director/plasmaman,
 		),
 	)
 
@@ -95,15 +94,6 @@
 		/obj/item/stamp/hos,
 		)
 	implants = list(/obj/item/implant/mindshield)
-
-/datum/outfit/job/security_director/plasmaman
-	name = "Security Director (Plasmaman)"
-
-	uniform = /obj/item/clothing/under/plasmaman/security/head_of_security
-	gloves = /obj/item/clothing/gloves/color/plasmaman/black
-	head = /obj/item/clothing/head/helmet/space/plasmaman/security/head_of_security
-	mask = /obj/item/clothing/mask/breath
-	r_hand = /obj/item/tank/internals/plasmaman/belt/full
 
 /datum/outfit/job/security_director/mod
 	name = "Security Director (MODsuit)"

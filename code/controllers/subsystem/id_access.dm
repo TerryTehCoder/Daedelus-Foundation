@@ -180,7 +180,7 @@ SUBSYSTEM_DEF(id_access)
 		),
 		"[ACCESS_MEDICAL_LVL5]" = list(
 			"regions" = list(REGION_MEDBAY),
-			"head" = JOB_AUGUR,
+			"head" = JOB_MEDICAL_DIRECTOR,
 			"templates" = list(),
 			"pdas" = list(),
 		),

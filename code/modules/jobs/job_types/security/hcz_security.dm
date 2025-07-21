@@ -20,7 +20,6 @@
 	outfits = list(
 		"Default" = list(
 			SPECIES_HUMAN = /datum/outfit/job/junior_hcz_guard,
-			SPECIES_PLASMAMAN = /datum/outfit/job/junior_hcz_guard/plasmaman,
 		),
 	)
 
@@ -78,15 +77,6 @@
 		//The helmet is necessary because /obj/item/clothing/head/helmet/sec is overwritten in the chameleon list by the standard helmet, which has the same name and icon state
 	implants = list(/obj/item/implant/mindshield)
 
-/datum/outfit/job/junior_hcz_guard/plasmaman
-	name = "Junior HCZ Guard (Plasmaman)"
-
-	uniform = /obj/item/clothing/under/plasmaman/security
-	gloves = /obj/item/clothing/gloves/color/plasmaman/black
-	head = /obj/item/clothing/head/helmet/space/plasmaman/security
-	mask = /obj/item/clothing/mask/breath
-	r_hand = /obj/item/tank/internals/plasmaman/belt/full
-
 /datum/outfit/job/junior_hcz_guard/mod
 	name = "Junior HCZ Guard (MODsuit)"
 
@@ -123,7 +113,6 @@
 	outfits = list(
 		"Default" = list(
 			SPECIES_HUMAN = /datum/outfit/job/hcz_guard,
-			SPECIES_PLASMAMAN = /datum/outfit/job/hcz_guard/plasmaman,
 		),
 	)
 
@@ -181,15 +170,6 @@
 		//The helmet is necessary because /obj/item/clothing/head/helmet/sec is overwritten in the chameleon list by the standard helmet, which has the same name and icon state
 	implants = list(/obj/item/implant/mindshield)
 
-/datum/outfit/job/hcz_guard/plasmaman
-	name = "HCZ Guard (Plasmaman)"
-
-	uniform = /obj/item/clothing/under/plasmaman/security
-	gloves = /obj/item/clothing/gloves/color/plasmaman/black
-	head = /obj/item/clothing/head/helmet/space/plasmaman/security
-	mask = /obj/item/clothing/mask/breath
-	r_hand = /obj/item/tank/internals/plasmaman/belt/full
-
 /datum/outfit/job/hcz_guard/mod
 	name = "HCZ Guard (MODsuit)"
 
@@ -226,7 +206,6 @@
 	outfits = list(
 		"Default" = list(
 			SPECIES_HUMAN = /datum/outfit/job/senior_hcz_guard,
-			SPECIES_PLASMAMAN = /datum/outfit/job/senior_hcz_guard/plasmaman,
 		),
 	)
 
@@ -284,15 +263,6 @@
 		//The helmet is necessary because /obj/item/clothing/head/helmet/sec is overwritten in the chameleon list by the standard helmet, which has the same name and icon state
 	implants = list(/obj/item/implant/mindshield)
 
-/datum/outfit/job/senior_hcz_guard/plasmaman
-	name = "Senior HCZ Guard (Plasmaman)"
-
-	uniform = /obj/item/clothing/under/plasmaman/security
-	gloves = /obj/item/clothing/gloves/color/plasmaman/black
-	head = /obj/item/clothing/head/helmet/space/plasmaman/security
-	mask = /obj/item/clothing/mask/breath
-	r_hand = /obj/item/tank/internals/plasmaman/belt/full
-
 /datum/outfit/job/senior_hcz_guard/mod
 	name = "Senior HCZ Guard (MODsuit)"
 
@@ -329,7 +299,6 @@
 	outfits = list(
 		"Default" = list(
 			SPECIES_HUMAN = /datum/outfit/job/hcz_commander,
-			SPECIES_PLASMAMAN = /datum/outfit/job/hcz_commander/plasmaman,
 		),
 	)
 
@@ -386,15 +355,6 @@
 		)
 		//The helmet is necessary because /obj/item/clothing/head/helmet/sec is overwritten in the chameleon list by the standard helmet, which has the same name and icon state
 	implants = list(/obj/item/implant/mindshield)
-
-/datum/outfit/job/hcz_commander/plasmaman
-	name = "HCZ Commander (Plasmaman)"
-
-	uniform = /obj/item/clothing/under/plasmaman/security
-	gloves = /obj/item/clothing/gloves/color/plasmaman/black
-	head = /obj/item/clothing/head/helmet/space/plasmaman/security
-	mask = /obj/item/clothing/mask/breath
-	r_hand = /obj/item/tank/internals/plasmaman/belt/full
 
 /datum/outfit/job/hcz_commander/mod
 	name = "HCZ Commander (MODsuit)"

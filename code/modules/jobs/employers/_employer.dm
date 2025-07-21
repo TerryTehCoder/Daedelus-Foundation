@@ -57,7 +57,7 @@
 /datum/employer/communications
 	name = "SCP Foundation - Communication Management & Maintenance Sub-Department"
 	short_name = "Communications Department"
-	creator_info = "The Communication Management & Maintenance Sub-Department functions as the strongest ally to the Admin Dept - as without the constant, twenty four hour connections across the globe to relay orders and information the Foundation would of never reached the level it is as currently."
+	creator_info = "The Communication Management & Maintenance Sub-Department functions as the strongest ally to the Admin Dept - as without the constant, twenty four hour connections across the globe to relay orders and information the Foundation would have never reached the level it is as currently."
 */
 
 /datum/employer/goc

@@ -19,9 +19,6 @@
 	outfits = list(
 		"Default" = list(
 			SPECIES_HUMAN = /datum/outfit/job/containment_engineer,
-			SPECIES_TESHARI = /datum/outfit/job/containment_engineer,
-			SPECIES_VOX = /datum/outfit/job/containment_engineer,
-			SPECIES_PLASMAMAN = /datum/outfit/job/containment_engineer/plasmaman,
 		)
 	)
 
@@ -67,15 +64,6 @@
 	box = /obj/item/storage/box/survival/engineer
 	pda_slot = ITEM_SLOT_LPOCKET
 	skillchips = list(/obj/item/skillchip/job/engineer)
-
-/datum/outfit/job/containment_engineer/plasmaman
-	name = "Containment Engineer (Plasmaman)"
-
-	uniform = /obj/item/clothing/under/plasmaman/engineering
-	gloves = /obj/item/clothing/gloves/color/plasmaman/engineer
-	head = /obj/item/clothing/head/helmet/space/plasmaman/engineering
-	mask = /obj/item/clothing/mask/breath
-	r_hand = /obj/item/tank/internals/plasmaman/belt/full
 
 /datum/outfit/job/containment_engineer/mod
 	name = "Junior Engineer (MODsuit)"

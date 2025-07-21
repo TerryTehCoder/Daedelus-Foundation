@@ -19,19 +19,12 @@
 	outfits = list(
 		"Default" = list(
 			SPECIES_HUMAN = /datum/outfit/job/junior_engineer,
-			SPECIES_TESHARI = /datum/outfit/job/junior_engineer,
-			SPECIES_VOX = /datum/outfit/job/junior_engineer,
-			SPECIES_PLASMAMAN = /datum/outfit/job/junior_engineer/plasmaman,
 		),
 		"Junior Engine Technician" = list(
 			SPECIES_HUMAN = /datum/outfit/job/junior_engineer/enginetech,
-			SPECIES_TESHARI = /datum/outfit/job/junior_engineer/enginetech,
-			SPECIES_VOX = /datum/outfit/job/junior_engineer/enginetech,
 		),
 		"Junior Electrician" = list(
 			SPECIES_HUMAN = /datum/outfit/job/junior_engineer/electrician,
-			SPECIES_TESHARI = /datum/outfit/job/junior_engineer/electrician,
-			SPECIES_VOX = /datum/outfit/job/junior_engineer/electrician,
 		),
 		"Junior Maintenance Technician" = list(
 			SPECIES_HUMAN = /datum/outfit/job/junior_engineer/mainttech,
@@ -81,15 +74,6 @@
 	pda_slot = ITEM_SLOT_LPOCKET
 	skillchips = list(/obj/item/skillchip/job/engineer)
 
-/datum/outfit/job/junior_engineer/plasmaman
-	name = "Junior Engineer (Plasmaman)"
-
-	uniform = /obj/item/clothing/under/plasmaman/engineering
-	gloves = /obj/item/clothing/gloves/color/plasmaman/engineer
-	head = /obj/item/clothing/head/helmet/space/plasmaman/engineering
-	mask = /obj/item/clothing/mask/breath
-	r_hand = /obj/item/tank/internals/plasmaman/belt/full
-
 /datum/outfit/job/junior_engineer/mod
 	name = "Junior Engineer (MODsuit)"
 
@@ -136,19 +120,12 @@
 	outfits = list(
 		"Default" = list(
 			SPECIES_HUMAN = /datum/outfit/job/engineer,
-			SPECIES_TESHARI = /datum/outfit/job/engineer,
-			SPECIES_VOX = /datum/outfit/job/engineer,
-			SPECIES_PLASMAMAN = /datum/outfit/job/engineer/plasmaman,
 		),
 		"Engine Technician" = list(
 			SPECIES_HUMAN = /datum/outfit/job/engineer/enginetech,
-			SPECIES_TESHARI = /datum/outfit/job/engineer/enginetech,
-			SPECIES_VOX = /datum/outfit/job/engineer/enginetech,
 		),
 		"Electrician" = list(
 			SPECIES_HUMAN = /datum/outfit/job/engineer/electrician,
-			SPECIES_TESHARI = /datum/outfit/job/engineer/electrician,
-			SPECIES_VOX = /datum/outfit/job/engineer/electrician,
 		),
 		"Maintenance Technician" = list(
 			SPECIES_HUMAN = /datum/outfit/job/engineer/mainttech,
@@ -198,15 +175,6 @@
 	pda_slot = ITEM_SLOT_LPOCKET
 	skillchips = list(/obj/item/skillchip/job/engineer)
 
-/datum/outfit/job/engineer/plasmaman
-	name = "Engineer (Plasmaman)"
-
-	uniform = /obj/item/clothing/under/plasmaman/engineering
-	gloves = /obj/item/clothing/gloves/color/plasmaman/engineer
-	head = /obj/item/clothing/head/helmet/space/plasmaman/engineering
-	mask = /obj/item/clothing/mask/breath
-	r_hand = /obj/item/tank/internals/plasmaman/belt/full
-
 /datum/outfit/job/engineer/mod
 	name = "Engineer (MODsuit)"
 
@@ -253,19 +221,12 @@
 	outfits = list(
 		"Default" = list(
 			SPECIES_HUMAN = /datum/outfit/job/senior_engineer,
-			SPECIES_TESHARI = /datum/outfit/job/senior_engineer,
-			SPECIES_VOX = /datum/outfit/job/senior_engineer,
-			SPECIES_PLASMAMAN = /datum/outfit/job/senior_engineer/plasmaman,
 		),
 		"Senior Engine Technician" = list(
 			SPECIES_HUMAN = /datum/outfit/job/senior_engineer/enginetech,
-			SPECIES_TESHARI = /datum/outfit/job/senior_engineer/enginetech,
-			SPECIES_VOX = /datum/outfit/job/senior_engineer/enginetech,
 		),
 		"Senior Electrician" = list(
 			SPECIES_HUMAN = /datum/outfit/job/senior_engineer/electrician,
-			SPECIES_TESHARI = /datum/outfit/job/senior_engineer/electrician,
-			SPECIES_VOX = /datum/outfit/job/senior_engineer/electrician,
 		),
 		"Junior Maintenance Technician" = list(
 			SPECIES_HUMAN = /datum/outfit/job/senior_engineer/mainttech,
@@ -314,15 +275,6 @@
 	box = /obj/item/storage/box/survival/engineer
 	pda_slot = ITEM_SLOT_LPOCKET
 	skillchips = list(/obj/item/skillchip/job/engineer)
-
-/datum/outfit/job/senior_engineer/plasmaman
-	name = "Senior Engineer (Plasmaman)"
-
-	uniform = /obj/item/clothing/under/plasmaman/engineering
-	gloves = /obj/item/clothing/gloves/color/plasmaman/engineer
-	head = /obj/item/clothing/head/helmet/space/plasmaman/engineering
-	mask = /obj/item/clothing/mask/breath
-	r_hand = /obj/item/tank/internals/plasmaman/belt/full
 
 /datum/outfit/job/senior_engineer/mod
 	name = "Senior Engineer (MODsuit)"

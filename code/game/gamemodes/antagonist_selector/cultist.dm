@@ -1,22 +1,34 @@
 /datum/antagonist_selector/cultist
 	restricted_jobs = list(
 		JOB_AI,
-		JOB_CAPTAIN,
+		JOB_SITE_DIRECTOR,
 		JOB_CHAPLAIN,
 		JOB_CYBORG,
-		JOB_DETECTIVE,
-		JOB_HEAD_OF_PERSONNEL,
-		JOB_SECURITY_MARSHAL,
-		JOB_PRISONER,
-		JOB_SECURITY_OFFICER,
-		JOB_WARDEN,
+		JOB_INVESTIGATIONS_AGENT,
+		JOB_HUMAN_RESOURCES_DIRECTOR,
+		JOB_SECURITY_DIRECTOR,
+		JOB_DCLASS,
+		JOB_JUNIOR_EZ_GUARD,
+		JOB_EZ_GUARD,
+		JOB_SENIOR_EZ_GUARD,
+		JOB_EZ_COMMANDER,
+		JOB_RAISA_AGENT,
+		JOB_INVESTIGATIONS_AGENT,
+		JOB_LCZ_COMMANDER,
+		JOB_SENIOR_LCZ_GUARD,
+		JOB_LCZ_GUARD,
+		JOB_JUNIOR_LCZ_GUARD,
+		JOB_HCZ_COMMANDER,
+		JOB_SENIOR_HCZ_GUARD,
+		JOB_HCZ_GUARD,
+		JOB_JUNIOR_HCZ_GUARD
 	)
 
 	antag_datum = /datum/antagonist/cult
 	antag_flag = ROLE_CULTIST
 
 /datum/antagonist_selector/cultist/give_antag_datums(datum/game_mode/gamemode)
-	var/datum/game_mode/one_antag/bloodcult/cult_gamemode = gamemode
+	var/datum/game_mode/bloodcult/cult_gamemode = gamemode
 	cult_gamemode.main_cult = new
 
 	for(var/datum/mind/M in selected_antagonists)

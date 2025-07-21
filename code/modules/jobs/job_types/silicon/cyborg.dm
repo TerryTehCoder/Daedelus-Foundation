@@ -19,7 +19,6 @@
 	departments_list = list(
 		/datum/job_department/silicon,
 		)
-	spawn_logic = JOBSPAWN_FORCE_FIXED
 	job_flags = JOB_NEW_PLAYER_JOINABLE | JOB_EQUIP_RANK
 
 

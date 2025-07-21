@@ -19,9 +19,6 @@
 	outfits = list(
 		"Default" = list(
 			SPECIES_HUMAN = /datum/outfit/job/investigations_agent,
-			SPECIES_TESHARI = /datum/outfit/job/investigations_agent,
-			SPECIES_VOX = /datum/outfit/job/investigations_agent,
-			SPECIES_PLASMAMAN = /datum/outfit/job/investigations_agent/plasmaman,
 		),
 	)
 
@@ -70,16 +67,6 @@
 		/obj/item/gun/ballistic/revolver/detective,
 		)
 
-
-/datum/outfit/job/investigations_agent/plasmaman
-	name = JOB_INVESTIGATIONS_AGENT + " (Plasmaman)"
-
-	uniform = /obj/item/clothing/under/plasmaman/enviroslacks
-	gloves = /obj/item/clothing/gloves/color/plasmaman/white
-	head = /obj/item/clothing/head/helmet/space/plasmaman/white
-	mask = /obj/item/clothing/mask/breath
-	r_hand = /obj/item/tank/internals/plasmaman/belt/full
-
 /datum/outfit/job/investigations_agent/post_equip(mob/living/carbon/human/H, visualsOnly = FALSE)
 	..()
 	var/obj/item/clothing/mask/cigarette/cig = H.wear_mask
@@ -97,10 +84,3 @@
 	gloves = /obj/item/clothing/gloves/color/latex
 	head = /obj/item/clothing/head/flatcap
 	shoes = /obj/item/clothing/shoes/laceup
-
-/datum/outfit/job/investigations_agent/forensic/plasmaman
-	name = "Forensic Technician (Plasmaman)"
-
-	uniform = /obj/item/clothing/under/plasmaman/enviroslacks
-	gloves = /obj/item/clothing/gloves/color/plasmaman/white
-	head = /obj/item/clothing/head/helmet/space/plasmaman/white

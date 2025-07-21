@@ -28,7 +28,7 @@
 	moth.dna.features["moth_markings"] = "None"
 	moth.dna.features["moth_wings"] = "Firewatch"
 	moth.set_species(/datum/species/moth)
-	moth.equipOutfit(/datum/outfit/job/cmo, visualsOnly = TRUE)
+	moth.equipOutfit(/datum/outfit/job/medical_director, visualsOnly = TRUE)
 	test_screenshot("[/datum/species/moth]", get_flat_icon_for_all_directions(moth))
 
 	// The rest of the species

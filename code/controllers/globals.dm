@@ -6,6 +6,7 @@ GLOBAL_REAL(GLOB, /datum/controller/global_vars)
 	var/static/list/gvars_datum_protected_varlist
 	var/list/gvars_datum_in_built_vars
 	var/list/gvars_datum_init_order
+	var/list/jobspawn_overrides
 
 /datum/controller/global_vars/New()
 	if(GLOB)
@@ -47,6 +48,7 @@ GLOBAL_REAL(GLOB, /datum/controller/global_vars)
 /datum/controller/global_vars/Initialize()
 	gvars_datum_init_order = list()
 	gvars_datum_protected_varlist = list(NAMEOF(src, gvars_datum_protected_varlist) = TRUE)
+	jobspawn_overrides = list()
 	var/list/global_procs = typesof(/datum/controller/global_vars/proc)
 	var/expected_len = vars.len - gvars_datum_in_built_vars.len
 	if(global_procs.len != expected_len)

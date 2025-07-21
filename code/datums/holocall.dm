@@ -358,12 +358,6 @@
 /datum/preset_holoimage/engineer/engineering_director/mod
 	outfit_type = /datum/outfit/job/engineering_director/mod
 
-/datum/preset_holoimage/engineer/atmospheric_technician
-	outfit_type = /datum/outfit/job/atmospheric_technician
-
-/datum/preset_holoimage/engineer/atmospheric_technician/mod
-	outfit_type = /datum/outfit/job/atmospheric_technician/mod
-
 /datum/preset_holoimage/site_director
 	outfit_type = /datum/outfit/job/site_director
 

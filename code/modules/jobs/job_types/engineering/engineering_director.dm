@@ -22,7 +22,6 @@
 	outfits = list(
 		"Default" = list(
 			SPECIES_HUMAN = /datum/outfit/job/engineering_director,
-			SPECIES_PLASMAMAN = /datum/outfit/job/engineering_director/plasmaman,
 		),
 	)
 
@@ -81,15 +80,6 @@
 	chameleon_extras = /obj/item/stamp/ce
 	skillchips = list(/obj/item/skillchip/job/engineer)
 	pda_slot = ITEM_SLOT_LPOCKET
-
-/datum/outfit/job/engineering_director/plasmaman
-	name = "Chief Engineer Plasmaman"
-
-	uniform = /obj/item/clothing/under/plasmaman/chief_engineer
-	gloves = /obj/item/clothing/gloves/color/plasmaman/chief_engineer
-	head = /obj/item/clothing/head/helmet/space/plasmaman/chief_engineer
-	mask = /obj/item/clothing/mask/breath
-	r_hand = /obj/item/tank/internals/plasmaman/belt/full
 
 /datum/outfit/job/engineering_director/mod
 	name = "Engineering Director (MODsuit)"

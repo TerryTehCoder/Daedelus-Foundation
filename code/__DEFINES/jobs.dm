@@ -108,6 +108,7 @@
 //Service
 #define JOB_BOTANIST "Botanist"
 #define JOB_COOK "Cook"
+#define JOB_BARTENDER "Bartender"
 #define JOB_JANITOR "Janitor"
 #define JOB_CLOWN "Morale Officer"
 #define JOB_MIME "Morale Agent"

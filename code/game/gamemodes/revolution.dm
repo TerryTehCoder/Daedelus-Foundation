@@ -8,74 +8,27 @@
 	weight = GAMEMODE_WEIGHT_EPIC
 	min_pop = 25
 
-	//Atleast 1 of any head.
-	required_jobs = list(
-		list(JOB_SITE_DIRECTOR = 1),
-		list(JOB_HUMAN_RESOURCES_DIRECTOR = 1),
-		list(JOB_SECURITY_DIRECTOR = 1),
-		list(JOB_ENGINEERING_DIRECTOR = 1),
-		list(JOB_MEDICAL_DIRECTOR = 1),
-		list(JOB_RESEARCH_DIRECTOR = 1)
-	)
-
-	restricted_jobs = list(
-		JOB_AI,
-		JOB_CYBORG,
-		JOB_SITE_DIRECTOR,
-		JOB_HUMAN_RESOURCES_DIRECTOR,
-		JOB_SECURITY_DIRECTOR,
-		JOB_ENGINEERING_DIRECTOR,
-		JOB_MEDICAL_DIRECTOR,
-		JOB_EZ_COMMANDER,
-		JOB_SENIOR_EZ_GUARD,
-		JOB_EZ_GUARD,
-		JOB_JUNIOR_EZ_GUARD,
-		JOB_RAISA_AGENT,
-		JOB_LCZ_COMMANDER,
-		JOB_SENIOR_LCZ_GUARD,
-		JOB_LCZ_GUARD,
-		JOB_JUNIOR_LCZ_GUARD,
-		JOB_HCZ_COMMANDER,
-		JOB_SENIOR_HCZ_GUARD,
-		JOB_HCZ_GUARD,
-		JOB_JUNIOR_HCZ_GUARD
-	)
-
-	antag_flag = ROLE_REV_HEAD
-	antag_datum = /datum/antagonist/rev/head
-
 	var/datum/team/revolution/revolution
 	var/round_winner
+	///The antagonist selector for this gamemode.
+	var/datum/antagonist_selector/revolutionary/antag_selector
 
 /datum/game_mode/revolution/pre_setup()
 	. = ..()
 	var/num_revs = clamp(round(length(SSticker.ready_players) * REVOLUTION_SCALING_COEFF), 1, REVOLUTION_MAX_HEADREVS)
 
-	for(var/i = 1 to num_revs)
-		if(possible_antags.len <= 0)
-			break
-		var/mob/M = pick_n_take(possible_antags)
-		select_antagonist(M.mind)
+	antag_selector = new /datum/antagonist_selector/revolutionary()
+	antag_selector.setup(num_revs, possible_antags)
 
 /datum/game_mode/revolution/setup_antags()
 	revolution = new()
 	. = ..()
 
+	antag_selector.give_antag_datums(src)
+
 	revolution.update_objectives()
 	revolution.update_heads()
 	SSshuttle.registerHostileEnvironment(revolution)
-
-/datum/game_mode/revolution/give_antag_datums()
-	for(var/datum/mind/M in antagonists)
-		if(!check_eligible(M))
-			antagonists -= M
-			log_game("Revolution: discarded [M.name] from head revolutionary due to ineligibility.")
-			continue
-
-		var/datum/antagonist/rev/head/new_head = new antag_datum()
-		new_head.give_flash = TRUE
-		new_head.remove_clumsy = TRUE
-		M.add_antag_datum(new_head,revolution)
 
 /// Checks for revhead loss conditions and other antag datums.
 /datum/game_mode/revolution/proc/check_eligible(datum/mind/M)

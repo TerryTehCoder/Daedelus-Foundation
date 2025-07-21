@@ -8,46 +8,22 @@
 	min_pop = 30
 	required_enemies = 2
 
-	restricted_jobs = list(
-		JOB_AI,
-		JOB_SITE_DIRECTOR,
-		JOB_CHAPLAIN,
-		JOB_CYBORG,
-		JOB_INVESTIGATIONS_AGENT,
-		JOB_HUMAN_RESOURCES_DIRECTOR,
-		JOB_SECURITY_DIRECTOR,
-		JOB_EZ_COMMANDER,
-		JOB_SENIOR_EZ_GUARD,
-		JOB_EZ_GUARD,
-		JOB_JUNIOR_EZ_GUARD,
-		JOB_RAISA_AGENT,
-		JOB_LCZ_COMMANDER,
-		JOB_SENIOR_LCZ_GUARD,
-		JOB_LCZ_GUARD,
-		JOB_JUNIOR_LCZ_GUARD,
-		JOB_HCZ_COMMANDER,
-		JOB_SENIOR_HCZ_GUARD,
-		JOB_HCZ_GUARD,
-		JOB_JUNIOR_HCZ_GUARD
-	)
-
-	antag_datum = /datum/antagonist/cult
-	antag_flag = ROLE_CULTIST
 	///The cult created by the gamemode.
 	var/datum/team/cult/main_cult
+	///The antagonist selector for this gamemode.
+	var/datum/antagonist_selector/cultist/antag_selector
 
 /datum/game_mode/bloodcult/pre_setup()
 	. = ..()
 
-	var/num_cultists = 1
+	var/num_cultists = max(1, round(length(SSticker.ready_players) * CULT_SCALING_COEFF))
 
-	num_cultists = max(1, round(length(SSticker.ready_players) * CULT_SCALING_COEFF))
+	antag_selector = new /datum/antagonist_selector/cultist()
+	antag_selector.setup(num_cultists, possible_antags)
 
-	for (var/i in 1 to num_cultists)
-		if(possible_antags.len <= 0)
-			break
-		var/mob/M = pick_n_take(possible_antags)
-		select_antagonist(M.mind)
+/datum/game_mode/bloodcult/post_setup()
+	. = ..()
+	antag_selector.give_antag_datums(src)
 
 /datum/game_mode/bloodcult/set_round_result()
 	. = ..()

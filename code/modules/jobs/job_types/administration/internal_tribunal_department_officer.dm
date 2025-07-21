@@ -22,7 +22,6 @@
 	outfits = list(
 		"Default" = list(
 			SPECIES_HUMAN = /datum/outfit/job/internal_tribunal_department_officer,
-			SPECIES_PLASMAMAN = /datum/outfit/job/internal_tribunal_department_officer/plasmaman,
 		),
 	)
 
@@ -77,15 +76,6 @@
 		)
 	implants = list(/obj/item/implant/mindshield)
 	skillchips = list(/obj/item/skillchip/disk_verifier)
-
-/datum/outfit/job/internal_tribunal_department_officer/plasmaman
-	name = JOB_INTERNAL_TRIBUNAL_DEPARTMENT_OFFICER + " (Plasmaman)"
-
-	uniform = /obj/item/clothing/under/plasmaman/captain
-	gloves = /obj/item/clothing/gloves/color/captain
-	head = /obj/item/clothing/head/helmet/space/plasmaman/captain
-	mask = /obj/item/clothing/mask/breath
-	r_hand = /obj/item/tank/internals/plasmaman/belt/full
 
 /datum/outfit/job/internal_tribunal_department_officer/mod
 	name = "Internal Tribunal Department Officer (MODsuit)"
