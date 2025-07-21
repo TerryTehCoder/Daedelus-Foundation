@@ -240,7 +240,7 @@
 	var/turf/flee_turf
 	var/max_distance_from_lights = -1
 
-	for(var/turf/T in current_turf.Adjacent())
+	for(var/turf/T in get_adjacent_open_turfs(current_turf))
 		var/area/A = get_area(T)
 		if(A.area_lighting == AREA_LIGHTING_DYNAMIC && T.get_lumcount() <= shadow_threshold)
 			var/min_dist_to_light = INFINITY
@@ -480,11 +480,6 @@
 		for(var/obj/item/I in M.held_items)
 			if(IsStrongLightSource(I))
 				return TRUE
-	// Check mob's inventory
-	if(M.contents)
-		for(var/obj/item/I in M.contents)
-			if(IsStrongLightSource(I))
-				return TRUE
 	return FALSE
 
 /mob/living/simple_animal/hostile/scp017/AttackingTarget(atom/attacked_target)
@@ -550,8 +545,8 @@
 
 	// Apply initial vision reduction and blurriness
 	if(enveloping_target.client)
-		enveloping_target.client.eye = src // Force eye to SCP-017 for effect
-		enveloping_target.see_in_dark = max(0, enveloping_target.see_in_dark - 5) // Initial vision reduction
+		reset_perspective(src) // Force eye to SCP-017 for effect
+		enveloping_target.apply_status_effect(/datum/status_effect/vision_reduction, 5) // Initial vision reduction
 		enveloping_target.adjust_blurriness(0.2) // Initial blurriness
 
 	enveloping_progress_timer_id = addtimer(CALLBACK(src, PROC_REF(UpdateEnveloping)), 10, enveloping_duration / 10) // Call every 1 second for duration
@@ -564,7 +559,7 @@
 		return
 
 	if(enveloping_target.client)
-		enveloping_target.see_in_dark = max(0, enveloping_target.see_in_dark - 5) // Progressively reduce vision
+		enveloping_target.apply_status_effect(/datum/status_effect/vision_reduction, 5) // Progressively reduce vision
 		enveloping_target.adjust_blurriness(0.2) // Progressively increase blurriness
 
 		// Check if vision is fully obscured or timer runs out
@@ -582,13 +577,12 @@
 
 	if(enveloping_target && !QDELETED(enveloping_target))
 		if(enveloping_target.client)
-			enveloping_target.client.eye = enveloping_target // Reset eye
-			enveloping_target.see_in_dark = initial(enveloping_target.see_in_dark) // Restore vision
-			enveloping_target.set_blurriness(0) // Remove blurriness
+			reset_perspective(null) // Reset eye
+			update_sight() // Remove blurriness
+			enveloping_target.remove_status_effect(/datum/status_effect/vision_reduction) // Remove vision reduction status effect
 
 		if(force_death)
 			SafeVisibleMessage(span_danger("[enveloping_target] is fully absorbed by [src]!"))
-			enveloping_target.ghostize()
 			qdel(enveloping_target)
 		else
 			SafeVisibleMessage(span_notice("[enveloping_target] escapes from [src]'s grasp!"))

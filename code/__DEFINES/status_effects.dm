@@ -52,6 +52,9 @@
 
 #define VAMPIRE_EFFECT "vampire_effect"
 
+/// Vision reduction status effect
+#define STATUS_EFFECT_VISION_REDUCTION "vision_reduction"
+
 // Status effect application helpers.
 // These are macros for easier use of adjust_timed_status_effect and set_timed_status_effect.
 //
@@ -114,5 +117,3 @@
 
 #define adjust_pacifism(duration) adjust_timed_status_effect(/datum/status_effect/pacify, duration)
 #define set_pacifism(duration) set_timed_status_effect(/datum/status_effect/pacify, duration)
-
-
