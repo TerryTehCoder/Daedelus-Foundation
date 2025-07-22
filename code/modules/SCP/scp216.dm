@@ -197,13 +197,19 @@
 
 	if(href_list["open"])
 		to_chat(user, span_notice("You [open ? "close" : "open"] [src]."))
-		open = !open
+		if(open)
+			open = FALSE
+			SEND_SIGNAL(src, COMSIG_SCP216_CLOSE)
+		else
+			open = TRUE
+			SEND_SIGNAL(src, COMSIG_SCP216_OPEN)
 		update_icon()
 		// JUMPSCARE!!
 		if(open && (num2text(current_code, 7) in all_codes))
 			for(var/mob/living/L in all_codes[num2text(current_code, 7)])
 				L.forceMove(get_turf(src))
 				visible_message(span_danger("[L] falls out of \the [src]!"))
+				SEND_SIGNAL(src, COMSIG_SCP216_MOB_RELEASED, L)
 		attack_hand(user)
 		return
 
@@ -224,6 +230,7 @@
 		current_code = temp_code
 		if(!(num2text(current_code, 7) in all_codes))
 			GenerateRandomItemsAt(current_code)
+		SEND_SIGNAL(src, COMSIG_SCP216_CODE_CHANGED, current_code)
 		attack_hand(user)
 		return
 
@@ -246,6 +253,7 @@
 	for(var/i = 1 to rand(1, max_items_generated))
 		var/chosen_atom = pick_weight(random_items)
 		all_codes[num2text(code, 7)] += new chosen_atom(src)
+	SEND_SIGNAL(src, COMSIG_SCP216_ITEMS_GENERATED, code)
 
 /obj/structure/scp216/proc/InsertItem(mob/living/carbon/human/user, atom/movable/A, code_loc = 0)
 	if(!(num2text(code_loc, 7) in all_codes) || !islist(all_codes[num2text(code_loc, 7)]))
@@ -256,6 +264,7 @@
 	if(!user.transferItemToLoc(A, src))
 		return
 	all_codes[num2text(code_loc, 7)] += A
+	SEND_SIGNAL(src, COMSIG_SCP216_ITEM_INSERTED, A, user)
 	attack_hand(user)
 
 /obj/structure/scp216/proc/RetrieveItem(mob/living/carbon/human/user, atom/movable/A, code_loc = 0)
@@ -267,4 +276,5 @@
 			A.forceMove(user)
 	else // In case we want to get funky and put mobs into it
 		A.forceMove(get_turf(src))
+	SEND_SIGNAL(src, COMSIG_SCP216_ITEM_RETRIEVED, A, user)
 	attack_hand(user)
