@@ -225,6 +225,8 @@
 					item_data["original_code"] = current_code
 					item_data["displacement_round"] = GLOB.round_id
 					item_data["rounds_until_reappearance"] = rand(1, 5) // Reappear 1-5 rounds later
+					item_data["original_user_ckey"] = user.ckey
+					item_data["original_user_name"] = user.name
 
 					SSpersistence.displaced_scp216_items += list(item_data)
 					SEND_SIGNAL(src, COMSIG_SCP216_TEMPORAL_DISPLACEMENT, A, user)
