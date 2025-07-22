@@ -41,3 +41,6 @@ GLOBAL_REAL_VAR(list/atmospherics) = list()
 
 /// Is a real global for speed
 GLOBAL_REAL_VAR(list/cable_list) = list()
+
+// Extra HUD Lists
+GLOBAL_LIST_EMPTY(scramble_hud_users)     // List of all entities using SCRAMBLE gear

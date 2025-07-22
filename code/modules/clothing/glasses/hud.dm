@@ -139,6 +139,34 @@
 /datum/action/item_action/switch_hud
 	name = "Switch HUD"
 
+/datum/action/item_action/toggle_scramble_hud
+	name = "Toggle SCRAMBLE Goggles"
+	button_icon_state = "scramble"
+
+/datum/action/item_action/toggle_scramble_hud/Trigger(trigger_flags)
+	. = ..()
+	if(!.)
+		return FALSE
+
+	var/obj/item/clothing/glasses/hud/scramble/S = target
+	if(!istype(S) || !istype(owner))
+		return FALSE
+
+	if(S.hud_type == DATA_HUD_SCRAMBLE)
+		S.hud_type = null
+		S.hud_trait = null
+		REMOVE_TRAIT(owner, TRAIT_SCRAMBLE_HUD, GLASSES_TRAIT)
+		S.icon_state = S.off_state
+	else
+		S.hud_type = DATA_HUD_SCRAMBLE
+		S.hud_trait = TRAIT_SCRAMBLE_HUD
+		ADD_TRAIT(owner, TRAIT_SCRAMBLE_HUD, GLASSES_TRAIT)
+		S.icon_state = initial(S.icon_state)
+
+	S.update_icon()
+	owner.update_sight()
+	return TRUE
+
 /obj/item/clothing/glasses/hud/toggle/thermal
 	name = "thermal HUD scanner"
 	desc = "Thermal imaging HUD in the shape of glasses."
@@ -185,3 +213,12 @@
 	icon_state = "sun"
 	inhand_icon_state = "sunglasses"
 
+/obj/item/clothing/glasses/hud/scramble
+	name = "SCRAMBLE goggles"
+	desc = "State-of-the-art SCRAMBLE goggles. They work by obscuring the face of SCP-096 in software before the brain can register the image."
+	icon_state = "scramble"
+	inhand_icon_state = null
+	hud_type = DATA_HUD_SCRAMBLE
+	hud_trait = TRAIT_SCRAMBLE_HUD
+	actions_types = list(/datum/action/item_action/toggle_scramble_hud)
+	var/off_state = "denight" //Does an inherent off_state function exist? Is it Hiding from me????

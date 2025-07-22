@@ -33,3 +33,10 @@
 #define MPERSISTENT			(1<<5)
 ///Is the scp memetic effect synced? If this flag is enabled the memetic comp's active_memetic_effect() must be called to enact the memetic effect.
 #define MSYNCED				(1<<6)
+
+//SCP 096
+#define STATE_096_IDLE		(1<<0)
+#define STATE_096_SCREAMING	(1<<1)
+#define STATE_096_CHASING	(1<<2)
+#define STATE_096_SLAUGHTER	(1<<3)
+#define STATE_096_STAGGERED	(1<<4)

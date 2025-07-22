@@ -38,6 +38,7 @@
 #define GLAND_HUD "17"
 #define SENTIENT_PATHOGEN_HUD "18"
 #define AI_DETECT_HUD "19"
+#define SCRAMBLE_HUD "20"
 /// Displays launchpads' targeting reticle
 #define DIAG_LAUNCHPAD_HUD "22"
 
@@ -52,6 +53,7 @@
 #define DATA_HUD_MEDICAL_BASIC 3
 #define DATA_HUD_MEDICAL_ADVANCED 4
 #define DATA_HUD_DIAGNOSTIC_BASIC 5
+#define DATA_HUD_SCRAMBLE 6
 #define DATA_HUD_DIAGNOSTIC_ADVANCED 6
 #define DATA_HUD_ABDUCTOR 7
 #define DATA_HUD_SENTIENT_DISEASE 8

@@ -78,6 +78,28 @@
 	for(var/mob/camera/ai_eye/eye as anything in GLOB.aiEyes)
 		eye.update_ai_detect_hud()
 
+/datum/atom_hud/data/scramble
+	hud_icons = list(SCRAMBLE_HUD)
+	var/atom/movable/screen/fullscreen/hud/scramble/scramble_overlay
+
+/datum/atom_hud/data/scramble/New()
+	. = ..()
+	scramble_overlay = new /atom/movable/screen/fullscreen/hud/scramble()
+
+/datum/atom_hud/data/scramble/Destroy()
+	qdel(scramble_overlay)
+	. = ..()
+
+/datum/atom_hud/data/scramble/show_to(mob/new_viewer)
+	. = ..()
+	if(new_viewer && new_viewer.client)
+		new_viewer.client.images |= scramble_overlay
+
+/datum/atom_hud/data/scramble/hide_from(mob/former_viewer, absolute = FALSE)
+	. = ..()
+	if(former_viewer && former_viewer.client)
+		former_viewer.client.images -= scramble_overlay
+
 /* MED/SEC/DIAG HUD HOOKS */
 
 /*

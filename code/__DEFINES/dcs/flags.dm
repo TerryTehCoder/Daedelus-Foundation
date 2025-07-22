@@ -1,6 +1,7 @@
 /// Return this from `/datum/component/Initialize` or `datum/component/OnTransfer` to have the component be deleted if it's applied to an incorrect type.
 /// `parent` must not be modified if this is to be returned.
 /// This will be noted in the runtime logs
+#define COMPONENT_INITIALIZE_PASSTHROUGH 0
 #define COMPONENT_INCOMPATIBLE 1
 /// Returned in PostTransfer to prevent transfer, similar to `COMPONENT_INCOMPATIBLE`
 #define COMPONENT_NOTRANSFER 2
