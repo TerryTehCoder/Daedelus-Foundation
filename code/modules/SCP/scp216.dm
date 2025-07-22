@@ -15,6 +15,8 @@
 	var/generate_chance = 75
 	///Max amount of items that can be generated for a code
 	var/max_items_generated = 9
+	///Chance that an item is temporally displaced when inserted
+	var/temporal_displacement_chance = 3 // Staggeringly unlikely, so you might be there awhile.
 
 	//Mechanics
 
@@ -145,9 +147,11 @@
 		SCP_SAFE, //Obj Class
 		"216", //Numerical Designation
 	)
+	GLOB.all_scp216s += src
 
 /obj/structure/scp216/Destroy()
 	LAZYCLEARLIST(all_codes) // Forever gone
+	GLOB.all_scp216s -= src
 	return ..()
 
 /obj/structure/scp216/update_icon()
@@ -183,6 +187,9 @@
 	popup.set_content(dat)
 	popup.open()
 
+/obj/structure/scp216/proc/check_safe_conditions(mob/user_mob)
+	return user_mob.stat == CONSCIOUS && in_range(src, user_mob)
+
 /obj/structure/scp216/Topic(href, href_list)
 	..()
 	if(!usr.canUseTopic(src, USE_CLOSE|USE_NEED_HANDS|USE_IGNORE_TK|USE_DEXTERITY))
@@ -196,14 +203,45 @@
 		return
 
 	if(href_list["open"])
-		to_chat(user, span_notice("You [open ? "close" : "open"] [src]."))
-		if(open)
+		if(open) // Closing the safe
+			if(!do_after(user, src, 20, extra_checks = CALLBACK(src, .proc/check_safe_conditions, user))) // 2 seconds delay (20 ticks)
+				return
+			to_chat(user, span_notice("You close [src]."))
+			playsound(src, 'sound/structures/safe_toggle.ogg', 50, TRUE)
 			open = FALSE
 			SEND_SIGNAL(src, COMSIG_SCP216_CLOSE)
-		else
+			update_icon()
+
+			// Handle temporal displacement on close
+			if(num2text(current_code, 7) in all_codes)
+				var/list/items_to_displace = list()
+				for(var/atom/movable/A in all_codes[num2text(current_code, 7)])
+					if(prob(temporal_displacement_chance))
+						items_to_displace += A
+
+				for(var/atom/movable/A in items_to_displace)
+					var/list/item_data = list()
+					item_data["path"] = A.type
+					item_data["original_code"] = current_code
+					item_data["displacement_round"] = GLOB.round_id
+					item_data["rounds_until_reappearance"] = rand(1, 5) // Reappear 1-5 rounds later
+
+					SSpersistence.displaced_scp216_items += list(item_data)
+					SEND_SIGNAL(src, COMSIG_SCP216_TEMPORAL_DISPLACEMENT, A, user)
+					all_codes[num2text(current_code, 7)] -= A // Remove from safe's current contents
+					qdel(A) // Remove item from current round
+					to_chat(user, span_notice("The [A.name] vanishes as you close the safe!"))
+
+		else // Opening the safe
+			playsound(src, 'sound/structures/safedial.ogg', 50, TRUE, channel = CHANNEL_SAFE_DIAL)
+			if(!do_after(user, src, 20, extra_checks = CALLBACK(src, .proc/check_safe_conditions, user))) // 2 seconds delay (20 ticks)
+				user.stop_sound_channel(CHANNEL_SAFE_DIAL) // Stop the sound if do_after fails
+				return
+			to_chat(user, span_notice("You open [src]."))
+			playsound(src, 'sound/structures/safe_toggle.ogg', 50, TRUE)
 			open = TRUE
 			SEND_SIGNAL(src, COMSIG_SCP216_OPEN)
-		update_icon()
+			update_icon()
 		// JUMPSCARE!!
 		if(open && (num2text(current_code, 7) in all_codes))
 			for(var/mob/living/L in all_codes[num2text(current_code, 7)])
@@ -263,8 +301,11 @@
 		return
 	if(!user.transferItemToLoc(A, src))
 		return
+
 	all_codes[num2text(code_loc, 7)] += A
 	SEND_SIGNAL(src, COMSIG_SCP216_ITEM_INSERTED, A, user)
+	to_chat(user, span_notice("You place the [A.name] into the safe."))
+
 	attack_hand(user)
 
 /obj/structure/scp216/proc/RetrieveItem(mob/living/carbon/human/user, atom/movable/A, code_loc = 0)

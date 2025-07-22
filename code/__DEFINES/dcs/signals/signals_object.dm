@@ -433,3 +433,5 @@
 #define COMSIG_SCP216_CODE_CHANGED "scp216_code_changed"
 /// Sent after random items are generated for a new code. (int/code)
 #define COMSIG_SCP216_ITEMS_GENERATED "scp216_items_generated"
+/// Sent when an item is temporally displaced by SCP-216. (atom/movable/displaced_item, mob/user)
+#define COMSIG_SCP216_TEMPORAL_DISPLACEMENT "scp216_temporal_displacement"
