@@ -997,6 +997,33 @@
 		user.visible_message(span_notice("[user] pins [C] to [src]."), span_notice("You pin [C] to [src]."), span_hear("You hear a metallic thud."))
 		note = C
 		update_appearance()
+	else if(istype(C, /obj/item/airlock_brace))
+		var/obj/item/airlock_brace/A = C
+		if(!density)
+			to_chat(user, span_warning("You must close \the [src] before installing \the [A]!"))
+			return
+		if(!length(A.req_access) && (alert("\the [A]'s 'Access Not Set' light is flashing. Install it anyway?", "Access not set", "Yes", "No") == "No"))
+			return
+		if(do_after(user, 7 SECONDS, src) && density && A && (A in user.contents))
+			to_chat(user, span_notice("You successfully install \the [A]."))
+			A.airlock = src
+			seal = A
+			update_appearance()
+			qdel(A)
+		return
+	else if (istype(C, /obj/item/crowbar/brace_jack))
+		if(seal)
+			var/obj/item/door_seal/airlockseal = seal
+			user.visible_message(span_notice("You begin forcibly removing \the [airlockseal] with \the [C]."))
+			if(do_after(user, 25 SECONDS, src))
+				user.visible_message(span_notice("You finish removing \the [airlockseal]."))
+				airlockseal.forceMove(get_turf(user))
+				seal = null
+				update_appearance()
+			return
+		else
+			to_chat(user, span_warning("There is no brace installed on this airlock."))
+			return
 	else
 		return ..()
 
