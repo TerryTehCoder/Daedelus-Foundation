@@ -15,11 +15,17 @@
 	///How long until we can emote again?
 	var/emote_cooldown = 40 SECONDS
 	///Speed at which we move at
-	var/scp096_speed = 0.2
+	var/scp096_speed = 1 // Handeled by movespeed modifier usually, but Base.
 	///How close we have to be before we can leap at a target
 	var/scp096_leap_range = 4
 	///Maximium JPS distance. Dont fuck with this unless you know what you're doing.
 	var/maxJPSdistance = 240
+	///How long 096 holds onto a target for (in deciseconds)
+	var/scp096_grab_duration = 50
+	///How often 096 slashes a grabbed target (in deciseconds)
+	var/scp096_slash_interval = 10
+	///Damage per slash
+	var/scp096_slash_damage = 50
 
 	//Mechanicial
 
@@ -44,6 +50,10 @@
 	var/stagger_counter
 	var/seedarkness  =  1
 	var/datum/component/scp096_tackler/scp_tackler // New component for SCP-096's leap
+
+/datum/movespeed_modifier/scp096_enraged_speed
+	slowdown = -7 // Very fast (3 deciseconds per tile if base is 10)
+	priority = 10 // High priority
 
 //Overide, unsure if buckleable var exists.
 /mob/living/scp096/is_buckle_possible(mob/living/target, force, check_loc)
@@ -73,6 +83,8 @@
 	current_state = STATE_096_IDLE
 	icon_state = "scp"
 	update_icon()
+	remove_movespeed_modifier(/datum/movespeed_modifier/scp096_enraged_speed, TRUE)
+
 /mob/living/scp096/Initialize()
 	. = ..()
 	SCP = new /datum/scp(
@@ -132,6 +144,7 @@
 	icon_state = "scp-chasing"
 	update_icon()
 	chase_noise()
+	add_movespeed_modifier(/datum/movespeed_modifier/scp096_enraged_speed, TRUE)
 
 /mob/living/scp096/proc/chase_noise()
 	if(current_state == STATE_096_IDLE)
@@ -185,15 +198,6 @@
 // AI procs
 
 ///Handles 096 AI
-/mob/living/scp096/get_status_tab_items()
-	. = ..()
-	for(var/mob/living/carbon/human/Ptarget in targets)
-		if(Ptarget != null)
-			. += "Real Name: [Ptarget.real_name]"
-			. += "Job: [Ptarget.job]"
-			. += "Locate X: [Ptarget.x]"
-			. += "Locate Y: [Ptarget.y]"
-			. += "Locate Z: [Ptarget.z]"
 //
 /mob/living/scp096/proc/handle_AI()
 	switch(current_state)
@@ -205,6 +209,9 @@
 		if(STATE_096_CHASING)
 			//Find path to target
 			for(var/mob/living/carbon/human/Ptarget in targets)
+				if(QDELETED(Ptarget)) // If target is deleted, remove it and continue to next
+					targets -= Ptarget
+					continue
 				if(LAZYLEN(current_path))
 					break
 				target = Ptarget
@@ -220,48 +227,7 @@
 				for(var/mob/living/carbon/human/hearer in hearers(world.view, src))
 					hearer.playsound_local(src, sound(null))
 				update_icon()
-				return
-			//If we havent found a path for any of our targets, we notify admins and switch ourselves to the first target in our list. Path code will also use byond's inherent pathfinding for this life call.
-			if(!LAZYLEN(current_path))
-				log_admin("Instance of SCP-[SCP.designation] failed to find paths for targets. Switching to byond pathfinding for current life iteration. SCP: [src], Location: [loc]")
-				message_admins("Instance of SCP-[SCP.designation] failed to find paths for targets. Switching to byond pathfinding for current life iteration. SCP: [src], Location: [loc]")
-				target = targets[1]
-				lastTargetTurf = get_turf(target)
-			//If the target moved, we must regenerate the path list
-			if(get_turf(target) != lastTargetTurf)
-				current_path = jps_path_to(src, target, maxJPSdistance)
-				//if we cant path to target we reset the target
-				if(!LAZYLEN(current_path))
-					target = null
-					return
-				lastTargetTurf = get_turf(target)
-		if(STATE_096_STAGGERED)
-			if(world.time > stagger_counter)
-				current_state = STATE_096_CHASING
-	switch(current_state)
-		if(STATE_096_IDLE)
-			if(prob(45) && ((world.time - emote_cooldown_track) > emote_cooldown))
-				audible_message(pick("[src] cries.", "[src] sobs.", "[src] wails."))
-				playsound(src, 'sound/scp/scp096/096-idle.ogg', 80, ignore_walls = TRUE)
-				emote_cooldown_track = world.time
-		if(STATE_096_CHASING)
-			//Find path to target
-			for(var/mob/living/carbon/human/Ptarget in targets)
-				if(LAZYLEN(current_path))
-					break
-				target = Ptarget
-				lastTargetTurf = get_turf(target)
-				current_path = jps_path_to(src, target, maxJPSdistance)
-			//If we have no more targets, we go back to idle
-			if(!LAZYLEN(targets))
-				current_state = STATE_096_IDLE
-				icon_state = "scp"
-				target = null
-				current_path = null
-				//This resets the screaming noise for everyone.
-				for(var/mob/living/carbon/human/hearer in hearers(world.view, src))
-					hearer.playsound_local(src, sound(null))
-				update_icon()
+				remove_movespeed_modifier(/datum/movespeed_modifier/scp096_enraged_speed)
 				return
 			//If we havent found a path for any of our targets, we notify admins and switch ourselves to the first target in our list. Path code will also use byond's inherent pathfinding for this life call.
 			if(!LAZYLEN(current_path))
@@ -280,32 +246,35 @@
 			//Gets our next step
 			LAZYINITLIST(current_path)
 			var/turf/next_step = LAZYLEN(current_path) ? current_path[1] : get_step_towards(src, target)
+			// If we couldn't find a valid next step (i.e., next_step is our current location),
+			// we should not try to clear obstacles on our current tile.
+			if(next_step == src.loc)
+				return // Do nothing, allow next tick to re-evaluate pathing
 			//Get rid of obstacles
-			if(next_step.contains_dense_objects())
+			else if(next_step.contains_dense_objects())
 				for(var/atom/obstacle in next_step)
 					if(!obstacle.density)
 						continue
 					if(isturf(obstacle) && !istype(obstacle, /turf/closed/wall))
 						continue
 					UnarmedAttack(obstacle)
-				if(!(src in next_step))
-					return
 			//Murder!
 			if(get_dist(src, target) <= 1)
 				UnarmedAttack(target)
 				return
 			else if((get_dist(src, target) <= scp096_leap_range) && scp_tackler.can_leap(src, target))
-				scp_tackler.leap(src, target, scp096_leap_range, scp096_speed)
+				scp_tackler.leap(src, target, scp096_leap_range, src.movement_delay)
 				return
-			step_towards(src, next_step, scp096_speed)
+			step_towards(src, next_step, src.movement_delay)
 			if(get_turf(src) != next_step)
-				target = null
-				current_path = null
 				return
-			current_path -= next_step
+			else
+				current_path -= next_step
 		if(STATE_096_STAGGERED)
 			if(world.time > stagger_counter)
 				current_state = STATE_096_CHASING
+		if(STATE_096_SLAUGHTER) // If in slaughter state, do nothing in AI loop, wait for UnarmedAttack to resolve
+			return
 
 //Overrides
 
@@ -379,29 +348,55 @@
 	else if(A == target)
 		current_state = STATE_096_SLAUGHTER
 
-		target.loc = loc
-		target.anchored = TRUE //Only humans can use grab so we have to do this ugly shit
 		visible_message(span_danger("[src] grabs [target] and starts trying to pull [target.p_them()] apart!"))
+
+		// Create a grab object to hold the target in place
+		var/obj/item/hand_item/grab/scp096_grab = new /obj/item/hand_item/grab(src, target, /datum/grab/normal/aggressive)
+		if(!scp096_grab) // If grab creation fails, revert to chasing
+			target = null
+			current_path = null
+			current_state = STATE_096_CHASING
+			return
 
 		playsound(src, 'sound/scp/scp096/096-kill.ogg', 100)
 		target.emote("scream")
 
-		if(!do_after(src, 2 SECONDS, target))
-			target.anchored = FALSE
-			return
+		addtimer(CALLBACK(src, PROC_REF(handle_grab_slashing), scp096_grab, target, world.time), scp096_slash_interval)
 
-		visible_message(span_danger("[src] tears [target] apart!"))
-		target.anchored = FALSE
-		target.gib()
-
-		log_admin("[target] ([target.ckey]) has been torn apart by an active SCP-[SCP.designation].")
-		message_admins(span_warning("ALERT: [target.real_name] [ADMIN_JMP(target)] has been torn apart by an active SCP-[SCP.designation]."))
-		targets -= target
+//Lets us attack after a leap
+/mob/living/scp096/proc/handle_grab_slashing(obj/item/hand_item/grab/the_grab, mob/living/carbon/human/the_target, var/grab_start_time)
+	if(QDELETED(the_grab) || QDELETED(the_target) || !(the_target in the_grab.affecting.grabbed_by) || current_state != STATE_096_SLAUGHTER)
+		// Grab ended prematurely or state changed, clean up
+		if(!QDELETED(the_grab))
+			qdel(the_grab)
+		if(!QDELETED(the_target))
+			visible_message(span_danger("[src] loses its grip on [the_target]!"))
+		targets -= the_target
 		target = null
 		current_path = null
 		current_state = STATE_096_CHASING
+		return
 
-//Lets us attack after a leap
+	if(world.time - grab_start_time >= scp096_grab_duration)
+		// Grab duration ended, perform final gib and clean up
+		visible_message(span_danger("[src] tears [the_target] apart!"))
+		the_target.gib()
+		log_admin("[the_target] ([the_target.ckey]) has been torn apart by an active SCP-[SCP.designation].")
+		message_admins(span_warning("ALERT: [the_target.real_name] [ADMIN_JMP(the_target)] has been torn apart by an active SCP-[SCP.designation]."))
+		qdel(the_grab)
+		targets -= the_target
+		target = null
+		current_path = null
+		current_state = STATE_096_CHASING
+		return
+
+	// Perform slash attack
+	visible_message(span_danger("[src] slashes [the_target]!"))
+	the_target.adjustBruteLoss(scp096_slash_damage)
+
+	// Reschedule next slash
+	addtimer(CALLBACK(src, PROC_REF(handle_grab_slashing), the_grab, the_target, grab_start_time), scp096_slash_interval)
+
 /mob/living/scp096/proc/post_maneuver()
 	if((get_dist(src, target) <= 1) && (current_state != STATE_096_SLAUGHTER))
 		UnarmedAttack(target)
@@ -431,9 +426,6 @@
 		else
 			stagger_counter = world.time + 5 SECOND
 			current_state = STATE_096_STAGGERED
-
-/mob/living/scp096/proc/movement_delay()
-	return -2
 
 /mob/living/scp096/get_status_tab_items()
 	. = ..()
