@@ -262,16 +262,16 @@ CHECK_RANDOMIZER
 # SERVER ss13.example.com:2506
 
 ## forum address
-# FORUMURL https://daedalus13.net/
+# FORUMURL https://scp13.miraheze.org/wiki/Main_Page
 
 ## Wiki address
-# WIKIURL https://daedalus13.net/
+# WIKIURL https://scp13.miraheze.org/wiki/Main_Page
 
 ## Rules address
-# RULESURL https://daedalus13.net/
+# RULESURL https://scp13.miraheze.org/wiki/Rules
 
 ## Github address
-GITHUBURL https://github.com/DaedalusDock/Gameserver
+GITHUBURL https://github.com/Foundation-19/Daedelus-Foundation
 
 ## Discord bot command prefix, if the discord bot is used
 # DISCORDBOTCOMMANDPREFIX ?
