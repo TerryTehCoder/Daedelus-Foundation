@@ -1,3 +1,6 @@
+// Global list to store pending 294-Clarity prompts for admin responses.
+GLOBAL_LIST_EMPTY(pending_clarity_prompts)
+
 /obj/machinery/scp294
 	name = "coffee machine"
 	desc = "A standard coffee vending machine. This one seems to have a QWERTY keyboard."
@@ -274,6 +277,7 @@
 	description = "A liquid that grants unsettling insights."
 	icon_state = "sillycup"
 	reagent_to_add = /datum/reagent/water
+	var/admin_custom_response_enabled = TRUE // New variable to enable/disable admin custom responses
 	var/list/event_prophecies = list(
 		"Meteor Wave: Normal" = "The sky weeps fire, a celestial wrath descends.",
 		"Meteor Wave: Threatening" = "The sky weeps fire, a celestial wrath descends.",
@@ -343,7 +347,6 @@
 
 /datum/scp294_custom_effect/clarity/apply_effect(mob/living/user)
 	. = ..()
-	to_chat(user, span_notice("You understand far too much. That can’t be good."))
 
 	var/list/all_messages = list()
 
@@ -354,7 +357,8 @@
 	all_messages += span_warning("You are a player character in a heavily modified version of a game called 'Space Station 13'.")
 
 	// Information about potential future events
-	var/players_amt = get_active_player_count(alive_check = 1, afk_check = 1, human_check = 1)
+	var/players_amt = get_active_player_count(alive_check = 1,
+	afk_check = 1, human_check = 1)
 	for(var/datum/round_event_control/E as anything in SSevents.control)
 		if(E.canSpawnEvent(players_amt))
 			var/event_name = E.name
@@ -374,13 +378,50 @@
 
 	if(all_messages.len) // Ensure there are messages to display
 		var/chosen_message = pick(all_messages) // Pick one random message
-		addtimer(CALLBACK(src, TYPE_PROC_REF(/datum/scp294_custom_effect/clarity, display_single_clarity_message), user, chosen_message), 10) // Display the chosen message after 1 second
+
+		if(admin_custom_response_enabled)
+			// Store the prompt context globally and set a timer for fallback
+			if(!GLOB.pending_clarity_prompts)
+				GLOB.pending_clarity_prompts = list()
+
+			var/prompt_id = REF(user) // Use player ref as unique ID for simplicity
+			GLOB.pending_clarity_prompts[prompt_id] = list("user" = user, "message" = chosen_message)
+
+			var/timer_id = addtimer(CALLBACK(src, TYPE_PROC_REF(/datum/scp294_custom_effect/clarity, display_clarity_fallback_message), prompt_id), 10 SECONDS)
+			prompt_admin_for_response(user, src, timer_id, prompt_id)
+		else
+			// If admin custom response is not enabled, display immediately
+			to_chat(user, span_notice("You understand far too much. That can’t be good."))
+			addtimer(CALLBACK(src, TYPE_PROC_REF(/datum/scp294_custom_effect/clarity, display_single_clarity_message), user, chosen_message), 10)
+	return
+
+/datum/scp294_custom_effect/clarity/proc/display_clarity_fallback_message(prompt_id)
+	if(!GLOB.pending_clarity_prompts || !GLOB.pending_clarity_prompts[prompt_id])
+		return // Already handled by an admin or invalid prompt
+
+	var/list/prompt_context = GLOB.pending_clarity_prompts[prompt_id]
+	var/mob/living/user = prompt_context["user"]
+	var/message_to_display = prompt_context["message"]
+
+	if(user && message_to_display)
+		to_chat(user, span_notice("You understand far too much. That can’t be good."))
+		addtimer(CALLBACK(src, TYPE_PROC_REF(/datum/scp294_custom_effect/clarity, display_single_clarity_message), user, message_to_display), 10)
+
+	GLOB.pending_clarity_prompts -= prompt_id // Clean up the pending prompt
 	return
 
 /datum/scp294_custom_effect/clarity/proc/display_single_clarity_message(mob/living/user, message_to_display)
 	if(!user || !message_to_display) // Basic checks
 		return
 	to_chat(user, message_to_display)
+	return
+
+/datum/scp294_custom_effect/clarity/proc/prompt_admin_for_response(mob/living/user, obj/machinery/scp294/machine, timer_id, prompt_id)
+	if(!user || !machine)
+		return
+
+	var/admin_message_html = "<span class=\"admin\"><span class=\"prefix\">CLARITY ADMIN PROMPT:</span> <span class=\"message\">[key_name(user)] ([user.ckey]) drank Clarity from [machine.name] ([REF(machine)]). <a href='?_src_=holder;clarity_admin_prompt=1;player_ref=[REF(user)];scp_ref=[REF(machine)];timer_id=[timer_id];prompt_id=[prompt_id]'>Click here to provide a custom response.</a></span></span>"
+	message_admins(admin_message_html)
 	return
 
 /datum/scp294_custom_effect/purity
