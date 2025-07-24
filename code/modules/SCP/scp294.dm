@@ -55,7 +55,9 @@
 
 	///Custom effect definitions
 	var/list/custom_effect_definitions = list(
-		new /datum/scp294_custom_effect/music()
+		new /datum/scp294_custom_effect/music(),
+		new /datum/scp294_custom_effect/clarity(),
+		new /datum/scp294_custom_effect/purity()
 	)
 
 /* TD: Need to be readded to the above blacklist once implemented.
@@ -238,7 +240,7 @@
 
 /datum/movespeed_modifier/music_buff
 	variable = TRUE
-	slowdown = -3 // Speed buff
+	slowdown = -2 // Speed buff
 	priority = 10
 	var/fumble_chance = 10 // Default fumble chance for the buff
 	var/is_music_stamina_active = FALSE
@@ -265,4 +267,58 @@
 	if(burnout_timer_id)
 		deltimer(burnout_timer_id)
 		burnout_timer_id = null
+	return
+
+/datum/scp294_custom_effect/clarity
+	name = "Clarity"
+	description = "A liquid that grants unsettling insights."
+	icon_state = "sillycup"
+	reagent_to_add = /datum/reagent/water
+
+/datum/scp294_custom_effect/clarity/apply_effect(mob/living/user)
+	. = ..()
+	to_chat(user, span_notice("You understand far too much. That can’t be good."))
+
+	var/list/all_messages = list()
+
+	// Information about potential future events
+	var/list/potential_events = list()
+	var/players_amt = get_active_player_count(alive_check = 1, afk_check = 1, human_check = 1)
+	for(var/datum/round_event_control/E as anything in SSevents.control)
+		if(E.canSpawnEvent(players_amt))
+			potential_events += E.name
+	if(potential_events.len)
+		all_messages += span_info("You glimpse threads of fate, revealing [english_list(potential_events)] on the horizon.")
+
+	// Information about currently running events
+	var/list/running_events = list()
+	for(var/datum/round_event/R as anything in SSevents.running)
+		if(R.control && R.control.name) // Ensure control and its name exist
+			running_events += R.control.name
+	if(running_events.len)
+		all_messages += span_info("A chilling clarity reveals the present: [english_list(running_events)] already unfold.")
+
+	if(all_messages.len) // Ensure there are messages to display
+		var/chosen_message = pick(all_messages) // Pick one random message
+		addtimer(CALLBACK(src, TYPE_PROC_REF(/datum/scp294_custom_effect/clarity, display_single_clarity_message), user, chosen_message), 10) // Display the chosen message after 1 second
+	return
+
+/datum/scp294_custom_effect/clarity/proc/display_single_clarity_message(mob/living/user, message_to_display)
+	if(!user || !message_to_display) // Basic checks
+		return
+	to_chat(user, message_to_display)
+	return
+
+/datum/scp294_custom_effect/purity
+	name = "Purity"
+	description = "A cleansing liquid that purges all chemicals."
+	icon_state = "sillycup"
+	reagent_to_add = /datum/reagent/water // We'll make it add water, and then apply the effect
+
+/datum/scp294_custom_effect/purity/apply_effect(mob/living/user)
+	. = ..()
+	to_chat(user, span_notice("You feel a profound cleansing as all foreign substances are purged from your system."))
+	if(user.reagents)
+		user.reagents.clear_reagents()
+		user.reagents.update_total()
 	return
