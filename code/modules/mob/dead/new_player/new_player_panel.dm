@@ -205,23 +205,23 @@
 	output += {"
 		<fieldset class='computerPane' style='height:260px'>
 			<legend class='computerLegend' style='margin: 0 auto'>
-				<b>ThinkDOS Terminal</b>
+				<b>SCipNet Terminal</b>
 			</legend>
 			<div class='computerLegend flexColumn' style='font-size: 14px; height: 80%; text-align:left'>
 				<div style='font-size: 16px'>
-					C:\\Users\\[parent.ckey]\\ss13&gt;[last_cmd]
+					C:\\Foundation\\[parent.ckey]\\SCP-Link>[last_cmd]
 				</div>
 				<div>
-					>[LINKIFY_CONSOLE_OPTION("space_station_13.exe", "npp_game=1")]
+					>[LINKIFY_CONSOLE_OPTION("Personnel_File.exe", "npp_game=1")]
 				</div>
 				<div>
-					>[LINKIFY_CONSOLE_OPTION("options.cfg", "npp_options=1")]
+					>[LINKIFY_CONSOLE_OPTION("Site_Operations.cfg", "npp_options=1")]
 				</div>
 				<div>
-					>[LINKIFY_CONSOLE_OPTION("lore_primer.txt", "view_primer=1")]
+					>[LINKIFY_CONSOLE_OPTION("Foundation_Briefing (Lore).txt", "view_primer=1")]
 				</div>
 				<div>
-					>[LINKIFY_CONSOLE_OPTION("discord_link.lnk", "verify=1")]
+					>[LINKIFY_CONSOLE_OPTION("Secure_Comms_Link (Discord).lnk", "verify=1")]
 				</div>
 				[poll]
 				<br>
@@ -263,7 +263,7 @@
 					C:\\Users\\[parent.ckey]\\ss13&gt;[last_cmd]
 				</div>
 				<div>
-					>Loaded Character: <b>[name]</b>
+					>Loaded File: <b>[name]</b>
 				</div>
 				[status]
 				<br>
@@ -373,19 +373,18 @@
 /datum/new_player_panel/proc/view_primer()
 	var/content = {"
 		<div style='width:100%; text-align:center; font-size: 16px'>
-			Welcome, space-farer, to the Great Pool. A large sea of a substance known as Aether, speckled with stars, planets, and other stellar bodies.
+			Welcome, Foundation Personnel. The year is 2068.
 		</div>
 		<br><br>
 		<div style='width:100%; text-align:center'>
-			You are an inhabitant of a residential space station tucked in a little-explored region of the Pool. Perhaps you were born here, or are a Hermes merchanter lying low after a smuggling bust. Some weeks ago, a group from the Federation Galaxias arrived and announced the station was commandeered for emergency
-			resource production amidst the Resonance Crisis. They brought with them a small group of enforcers from the Mars People's Coalition to ensure a 'smooth transition'.
+			You are an employee of the SCP Foundation, a clandestine organization dedicated to containing anomalous entities, objects, and phenomena that pose a threat to global normalcy. Your current assignment is to a secure Foundation site, where you will contribute to the ongoing mission of Secure, Contain, Protect.
 		</div>
 		<br><br>
 		<div style='width:100%; text-align:center'>
-		Earn the respect of your superiors. Scam your fellow citizens out of their precious coin. Wash your sorrows down your throat with a chaser of brandy. No matter which you choose, make the most of your time on Olympus Outpost.
+		Your duties may vary, from research and containment to security and logistics. Adhere strictly to all protocols, maintain operational security, and report any unusual occurrences immediately. The safety of humanity depends on your diligence.
 		</div>
 	"}
-	var/datum/browser/popup = new(parent, "primer", "<center><div>New Player Primer</div></center>", 660, 350)
+	var/datum/browser/popup = new(parent, "primer", "<center><div>Foundation Briefing</div></center>", 660, 350)
 	popup.set_content(content)
 	popup.open()
 
