@@ -275,39 +275,69 @@
 	icon_state = "sillycup"
 	reagent_to_add = /datum/reagent/water
 	var/list/event_prophecies = list(
-		"meteor_shower" = "The sky weeps fire, a celestial wrath descends.",
-		"blob_attack" = "A creeping, formless horror consumes all, an unstoppable tide.",
-		"cult_invasion" = "Whispers of forbidden knowledge, a dark ritual unfolds.",
-		"nuke_event" = "The world shudders, a final, blinding light approaches.",
-		"singularity_event" = "A tear in reality, a void hungers for existence.",
-		"xenomorph_invasion" = "From the shadows, a perfect organism emerges, bringing terror.",
-		"revolution" = "The chains break, a storm of rebellion sweeps through.",
-		"nuclear_fission" = "The core trembles, a catastrophic release of power.",
-		"space_dragon" = "A cosmic leviathan stirs, its shadow eclipses the stars.",
-		"syndicate_raid" = "Shadowy figures descend, their motives shrouded in mystery.",
-		"malfunction" = "The very fabric of the station unravels, chaos reigns.",
-		"gang_war" = "Factions clash, the station bleeds with conflict.",
-		"spider_invasion" = "Eight-legged horrors scuttle from the vents, a web of fear.",
-		"bluespace_anomaly" = "Reality twists and warps, the impossible becomes real.",
-		"solar_flare" = "The sun roars, a wave of radiation washes over all.",
-		"asteroid_field" = "Stones of destruction hurtle through the void, a deadly dance.",
-		"space_bear" = "A primal roar echoes through the void, a furry terror.",
-		"space_carp" = "Silent hunters of the void, their hunger knows no bounds.",
-		"pirate_raid" = "Marauders from the stars, their greed knows no limits.",
-		"emergency_shuttle_call" = "A desperate plea, the final escape looms.",
-		"arrival_of_the_clown_car" = "Laughter turns to madness, a chaotic spectacle.",
-		"arrival_of_the_mime_car" = "Silence descends, a performance of despair.",
-		"arrival_of_the_wizard" = "Arcane energies surge, magic twists reality.",
-		"arrival_of_the_chaplain" = "A beacon of faith, a struggle against the darkness.",
-		"arrival_of_the_syndicate_agent" = "A wolf in sheep's clothing, their true intentions hidden.",
-		"arrival_of_the_blob" = "The station groans, a growing mass consumes all.",
-		"arrival_of_the_nuclear_bomb" = "The countdown begins, the end is nigh.",
-		"arrival_of_the_space_goliath" = "A monstrous presence, its shadow engulfs the station.",
-		"arrival_of_the_space_kraken" = "Tentacles of terror, a grip from the abyss.",
-		"arrival_of_the_space_whale" = "A gentle giant, its song echoes through the void.",
-		"arrival_of_the_space_dragon" = "A fiery breath, the sky burns with its passage.",
-		"arrival_of_the_space_bear" = "A lumbering beast, its roar shakes the very stars.",
-		"arrival_of_the_space_carp" = "A silent predator, its hunger is insatiable."
+		"Meteor Wave: Normal" = "The sky weeps fire, a celestial wrath descends.",
+		"Meteor Wave: Threatening" = "The sky weeps fire, a celestial wrath descends.",
+		"Meteor Wave: Catastrophic" = "The sky weeps fire, a celestial wrath descends.",
+		"Meteor Wave: Meaty" = "The sky weeps meat, a celestial wrath descends.",
+		"Minor Space Dust" = "Minor space dust is approaching, expect minor damage.",
+		"Major Space Dust" = "Major space dust is approaching, expect minor damage.",
+		"Zombie Outbreak" = "A creeping, undead horror consumes all, an unstoppable tide.",
+		"Fake Nuclear Explosion" = "The world shudders, a deceptive blinding light approaches.",
+		"Portal Storm: Syndicate Shocktroops" = "Shadowy figures descend, their motives shrouded in mystery.",
+		"Stray Syndicate Cargo Pod" = "Shadowy figures descend, their motives shrouded in mystery.",
+		"Electrical Storm" = "The very fabric of the site unravels, chaos reigns.",
+		"Processor Overload" = "The very fabric of the site unravels, chaos reigns.",
+		"Animal Infesite: Vermin" = "Eight-legged horrors scuttle from the vents, a web of fear.",
+		"Animal Infesite: Dangerous" = "Eight-legged horrors scuttle from the vents, a web of fear.",
+		"Wormholes" = "Reality twists and warps, the impossible becomes real.",
+		"Portal Storm: Constructs" = "Reality twists and warps, the impossible becomes real.",
+		"Solar Flare" = "The sun roars, a wave of radiation washes over all.",
+		"Carp Migration" = "Silent hunters of the void, their hunger knows no bounds.",
+		"Magicarp" = "Silent hunters of the void, their hunger knows no bounds.",
+		"Shuttle Catastrophe" = "A desperate plea, the final escape looms.",
+		"Shuttle Insurance" = "A desperate plea, the final escape looms.",
+		"Shuttle Loan" = "A desperate plea, the final escape looms.",
+		"Aurora Caelus" = "A gentle light appears in the void, a moment of peace.",
+		"Spontaneous Brain Trauma" = "A sudden, inexplicable trauma afflicts a mind.",
+		"Brand Intelligence" = "Machines awaken, their purpose twisted by new directives.",
+		"Bureaucratic Error" = "The system falters, leading to unexpected personnel shifts.",
+		"Camera Failure" = "The eyes of the site dim, leaving blind spots.",
+		"Communications Blackout" = "The airwaves fall silent, isolating the site.",
+		"Obsession Awakening" = "A dark fixation takes root in a mind.",
+		"Disease Outbreak" = "A silent sickness spreads, threatening all.",
+		"Grid Check" = "The site's power flickers, a momentary lapse.",
+		"Random Heart Attack" = "A sudden, fatal arrhythmia strikes without warning.",
+		"Immovable Rod" = "An unyielding object hurtles through space, unstoppable.",
+		"Ion Storm" = "Cosmic energies disrupt the site's systems and minds.",
+		"Market Crash" = "The economy falters, prices soar and resources dwindle.",
+		"Mass Hallucination" = "Reality bends, and illusions plague the senses.",
+		"Grey Tide" = "The gates open, and a tide of chaos is unleashed.",
+		"Radiation Storm" = "Invisible waves of energy wash over the site, bringing decay.",
+		"RPG Titles" = "The world takes on a fantastical hue, roles are redefined.",
+		"Space Vines" = "An invasive flora spreads, consuming all in its path.",
+		"Stray Cargo Pod" = "A lost shipment arrives, bringing unexpected contents.",
+		"Robeless Casting" = "Magic flows freely, unburdened by tradition.",
+		"Improved Casting" = "Arcane power surges, spells become more potent.",
+		"Cursed Items" = "Objects become imbued with strange, malevolent properties.",
+		"Make Everything Embeddable" = "The world becomes a canvas for impromptu impalement.",
+		"Make Everything Sticky" = "Surfaces cling, making movement a struggle.",
+		"G-G-G-Ghosts!" = "The veil thins, and spectral presences become apparent.",
+		"Possessing G-G-G-Ghosts!" = "Spirits seek new vessels, taking control of the living.",
+		"Greentext" = "A legendary artifact appears, promising untold fortune.",
+		"Mass Identity Spoof" = "Faces blur, and identities become fluid.",
+		"Imposter Wizard" = "A false prophet emerges, mimicking true power.",
+		"Invincibility" = "A temporary shield against all harm descends.",
+		"The Floor Is LAVA!" = "The ground itself becomes a deadly inferno.",
+		"Curse of Madness" = "Sanity erodes, and hidden truths are revealed.",
+		"Magicarp" = "Magical aquatic creatures appear, causing chaos.",
+		"Petsplosion" = "Creatures multiply exponentially, overwhelming the site.",
+		"Race Swap" = "Forms shift, and identities are transformed.",
+		"RPG Loot" = "The mundane becomes magical, with random enchantments.",
+		"Change Places!" = "Locations shift, disorienting all within.",
+		"Change Faces!" = "Appearances are swapped, leading to confusion.",
+		"Change Minds!" = "Consciousnesses are exchanged, altering perceptions.",
+		"Summon Guns" = "Weapons appear from thin air, arming the masses.",
+		"Summon Magic" = "Arcane artifacts manifest, granting mystical abilities."
 	)
 //TD - More SCP related Events? We haven't ported those at this moment, and there weren't many to begin with.
 
@@ -324,7 +354,6 @@
 	all_messages += span_warning("You are a player character in a heavily modified version of a game called 'Space Station 13'.")
 
 	// Information about potential future events
-	var/list/potential_events = list()
 	var/players_amt = get_active_player_count(alive_check = 1, afk_check = 1, human_check = 1)
 	for(var/datum/round_event_control/E as anything in SSevents.control)
 		if(E.canSpawnEvent(players_amt))
@@ -335,7 +364,6 @@
 				all_messages += span_info("You glimpse threads of fate, revealing a shadow of [event_name] on the horizon.") // Fallback generic message
 
 	// Information about currently running events
-	var/list/running_events = list()
 	for(var/datum/round_event/R as anything in SSevents.running)
 		if(R.control && R.control.name) // Ensure control and its name exist
 			var/event_name = R.control.name
