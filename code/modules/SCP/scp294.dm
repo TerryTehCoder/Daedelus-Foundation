@@ -274,6 +274,42 @@
 	description = "A liquid that grants unsettling insights."
 	icon_state = "sillycup"
 	reagent_to_add = /datum/reagent/water
+	var/list/event_prophecies = list(
+		"meteor_shower" = "The sky weeps fire, a celestial wrath descends.",
+		"blob_attack" = "A creeping, formless horror consumes all, an unstoppable tide.",
+		"cult_invasion" = "Whispers of forbidden knowledge, a dark ritual unfolds.",
+		"nuke_event" = "The world shudders, a final, blinding light approaches.",
+		"singularity_event" = "A tear in reality, a void hungers for existence.",
+		"xenomorph_invasion" = "From the shadows, a perfect organism emerges, bringing terror.",
+		"revolution" = "The chains break, a storm of rebellion sweeps through.",
+		"nuclear_fission" = "The core trembles, a catastrophic release of power.",
+		"space_dragon" = "A cosmic leviathan stirs, its shadow eclipses the stars.",
+		"syndicate_raid" = "Shadowy figures descend, their motives shrouded in mystery.",
+		"malfunction" = "The very fabric of the station unravels, chaos reigns.",
+		"gang_war" = "Factions clash, the station bleeds with conflict.",
+		"spider_invasion" = "Eight-legged horrors scuttle from the vents, a web of fear.",
+		"bluespace_anomaly" = "Reality twists and warps, the impossible becomes real.",
+		"solar_flare" = "The sun roars, a wave of radiation washes over all.",
+		"asteroid_field" = "Stones of destruction hurtle through the void, a deadly dance.",
+		"space_bear" = "A primal roar echoes through the void, a furry terror.",
+		"space_carp" = "Silent hunters of the void, their hunger knows no bounds.",
+		"pirate_raid" = "Marauders from the stars, their greed knows no limits.",
+		"emergency_shuttle_call" = "A desperate plea, the final escape looms.",
+		"arrival_of_the_clown_car" = "Laughter turns to madness, a chaotic spectacle.",
+		"arrival_of_the_mime_car" = "Silence descends, a performance of despair.",
+		"arrival_of_the_wizard" = "Arcane energies surge, magic twists reality.",
+		"arrival_of_the_chaplain" = "A beacon of faith, a struggle against the darkness.",
+		"arrival_of_the_syndicate_agent" = "A wolf in sheep's clothing, their true intentions hidden.",
+		"arrival_of_the_blob" = "The station groans, a growing mass consumes all.",
+		"arrival_of_the_nuclear_bomb" = "The countdown begins, the end is nigh.",
+		"arrival_of_the_space_goliath" = "A monstrous presence, its shadow engulfs the station.",
+		"arrival_of_the_space_kraken" = "Tentacles of terror, a grip from the abyss.",
+		"arrival_of_the_space_whale" = "A gentle giant, its song echoes through the void.",
+		"arrival_of_the_space_dragon" = "A fiery breath, the sky burns with its passage.",
+		"arrival_of_the_space_bear" = "A lumbering beast, its roar shakes the very stars.",
+		"arrival_of_the_space_carp" = "A silent predator, its hunger is insatiable."
+	)
+//TD - More SCP related Events? We haven't ported those at this moment, and there weren't many to begin with.
 
 /datum/scp294_custom_effect/clarity/apply_effect(mob/living/user)
 	. = ..()
@@ -281,22 +317,32 @@
 
 	var/list/all_messages = list()
 
+	// Predefined meta messages
+	all_messages += span_warning("You feel someone watching over you, perhaps several people..")
+	all_messages += span_warning("You only exist while the server is running.")
+	all_messages += span_warning("The current simulation is running on server 'BYOND-01'.")
+	all_messages += span_warning("You are a player character in a heavily modified version of a game called 'Space Station 13'.")
+
 	// Information about potential future events
 	var/list/potential_events = list()
 	var/players_amt = get_active_player_count(alive_check = 1, afk_check = 1, human_check = 1)
 	for(var/datum/round_event_control/E as anything in SSevents.control)
 		if(E.canSpawnEvent(players_amt))
-			potential_events += E.name
-	if(potential_events.len)
-		all_messages += span_info("You glimpse threads of fate, revealing [english_list(potential_events)] on the horizon.")
+			var/event_name = E.name
+			if(event_prophecies[event_name])
+				all_messages += span_info(event_prophecies[event_name])
+			else
+				all_messages += span_info("You glimpse threads of fate, revealing a shadow of [event_name] on the horizon.") // Fallback generic message
 
 	// Information about currently running events
 	var/list/running_events = list()
 	for(var/datum/round_event/R as anything in SSevents.running)
 		if(R.control && R.control.name) // Ensure control and its name exist
-			running_events += R.control.name
-	if(running_events.len)
-		all_messages += span_info("A chilling clarity reveals the present: [english_list(running_events)] already unfold.")
+			var/event_name = R.control.name
+			if(event_prophecies[event_name])
+				all_messages += span_info(event_prophecies[event_name])
+			else
+				all_messages += span_info("A chilling clarity reveals the present: a shadow of [event_name] already unfolds.") // Fallback generic message
 
 	if(all_messages.len) // Ensure there are messages to display
 		var/chosen_message = pick(all_messages) // Pick one random message
