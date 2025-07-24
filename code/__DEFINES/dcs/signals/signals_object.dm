@@ -418,3 +418,5 @@
 #define COMSIG_SPEED_POTION_APPLIED "speed_potion"
 	#define SPEED_POTION_STOP (1<<0)
 
+/// from /obj/machinery/scp294/attack_hand(): (mob/user, datum/reagent/chosen_reagent)
+#define COMSIG_SCP294_DISPENSE_ATTEMPT "scp294_dispense_attempt"

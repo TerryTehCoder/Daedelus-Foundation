@@ -120,6 +120,7 @@
 					set_temperature(reagtemp)
 
 			SEND_SIGNAL(src, COMSIG_REAGENTS_ADD_REAGENT, iter_reagent, amount, reagtemp, data, no_react)
+			LAZYADD(SSreagents.reagent_location_index[iter_reagent.type], src) // Ensure holder is indexed for this reagent type
 			if(!no_react && !is_reacting) //To reduce the amount of calculations for a reaction the reaction list is only updated on a reagents addition.
 				handle_reactions()
 			return amount
@@ -147,6 +148,7 @@
 			set_temperature(reagtemp)
 
 	SEND_SIGNAL(src, COMSIG_REAGENTS_NEW_REAGENT, new_reagent, amount, reagtemp, data, no_react)
+	LAZYADD(SSreagents.reagent_location_index[new_reagent.type], src) // Ensure holder is indexed for this new reagent type
 	if(!no_react)
 		handle_reactions()
 	return amount
@@ -1789,6 +1791,14 @@
 		qdel(reagents)
 	reagents = new /datum/reagents(max_vol, flags)
 	reagents.my_atom = src
+	// Register signals for the new reagent holder with SSreagents
+	reagents.RegisterSignal(reagents, COMSIG_REAGENTS_ADD_REAGENT, TYPE_PROC_REF(/datum/controller/subsystem/processing/reagents, handle_reagent_add))
+	reagents.RegisterSignal(reagents, COMSIG_REAGENTS_REM_REAGENT, TYPE_PROC_REF(/datum/controller/subsystem/processing/reagents, handle_reagent_remove))
+	reagents.RegisterSignal(reagents, COMSIG_REAGENTS_CLEAR_REAGENTS, TYPE_PROC_REF(/datum/controller/subsystem/processing/reagents, handle_reagent_clear))
+
+	// Ensure initial reagents are registered with the SSreagents's location index
+	for(var/datum/reagent/R in reagents.reagent_list)
+		SSreagents.handle_reagent_add(reagents, R, R.volume)
 
 /atom/movable/chem_holder
 	name = "This atom exists to hold chems. If you can see this, make an issue report"

@@ -20,6 +20,8 @@ PROCESSING_SUBSYSTEM_DEF(reagents)
 	var/chemical_reagents_list
 	///List of all reactions with their associated product and result ids. Used for reaction lookups
 	var/chemical_reactions_results_lookup_list
+	///Indexed list of all active reagent containers by reagent type. Key: reagent typepath, Value: LAZYLIST of datum/reagents
+	var/list/reagent_location_index
 
 /datum/controller/subsystem/processing/reagents/Initialize()
 	//So our first step isn't insane
@@ -27,6 +29,11 @@ PROCESSING_SUBSYSTEM_DEF(reagents)
 	chemical_reagents_list = init_chemical_reagent_list()
 	//Build GLOB lists - see holder.dm
 	build_chemical_reactions_lists()
+
+	// Initialize reagent_location_index
+	reagent_location_index = list()
+	// Initial population and signal subscription will be handled by atom/proc/create_reagents dynamically
+
 	return ..()
 
 /datum/controller/subsystem/processing/reagents/fire(resumed = FALSE)
@@ -134,3 +141,29 @@ PROCESSING_SUBSYSTEM_DEF(reagents)
 				SSreagents.chemical_reactions_list_reactant_index[id] = list()
 			SSreagents.chemical_reactions_list_reactant_index[id] += D
 			break // Don't bother adding ourselves to other reagent ids, it is redundant
+
+/datum/controller/subsystem/processing/reagents/proc/handle_reagent_add(datum/reagents/holder, datum/reagent/reagent_def, amount, reagtemp, data, no_react)
+	LAZYADD(reagent_location_index[reagent_def.type], holder)
+
+/datum/controller/subsystem/processing/reagents/proc/handle_reagent_remove(datum/reagents/holder, datum/reagent/reagent_def, amount)
+	if(holder.get_reagent_amount(reagent_def.type) <= CHEMICAL_VOLUME_MINIMUM) // Only remove if amount is negligible
+		LAZYREMOVE(reagent_location_index[reagent_def.type], holder)
+
+/datum/controller/subsystem/processing/reagents/proc/handle_reagent_clear(datum/reagents/holder)
+	for(var/reagent_type_path in reagent_location_index)
+		LAZYREMOVE(reagent_location_index[reagent_type_path], holder)
+
+/datum/controller/subsystem/processing/reagents/proc/get_reagent_sources_by_type(reagent_type_path, z_level_stack)
+	var/list/sources = list()
+	var/list/potential_holders = reagent_location_index[reagent_type_path]
+	if(!potential_holders)
+		return sources
+
+	for(var/datum/reagents/holder in potential_holders)
+		if(QDELETED(holder) || QDELETED(holder.my_atom))
+			LAZYREMOVE(reagent_location_index[reagent_type_path], holder) // Clean up deleted holders
+			continue
+		var/turf/holder_turf = get_turf(holder.my_atom)
+		if(holder_turf && (holder_turf.z in z_level_stack))
+			LAZYADD(sources, holder)
+	return sources

@@ -71,20 +71,17 @@
 
 ///Cycles through all reagents datums and picks out ones that contain the chemical we are looking for
 /obj/machinery/scp294/proc/find_reagents_to_fill_from(input_path)
-	var/list/datum/reagents/reagents_to_fill_from = list()
-	if(!ispath(input_path))
+	var/turf/current_turf = get_turf(src)
+	if(!current_turf)
 		return FALSE
-	for(var/datum/reagents/reagent_container in SSreagents.chemical_reagents_list)
-		var/amount_contained = reagent_container.get_reagent_amount(input_path)
-		var/turf/reagent_turf = get_turf(reagent_container.my_atom)
-		if(!amount_contained || !reagent_turf || !(reagent_turf.z in SSmapping.get_zstack(src.z, include_lateral = TRUE)))
-			continue
-		LAZYADD(reagents_to_fill_from, reagent_container)
-	return reagents_to_fill_from
+	var/list/z_level_stack = SSmapping.get_zstack(current_turf.z, include_lateral = TRUE)
+	if(!z_level_stack)
+		return FALSE
+	return SSreagents.get_reagent_sources_by_type(input_path, z_level_stack)
 
 ///Adds reagent we want to passed cup from list made in find_reagents_to_fill_from
 /obj/machinery/scp294/proc/add_reagent_to_cup(input_path, D, reagents_to_fill_from)
-	var/obj/item/reagent_containers/food/drinks/sillycup/scp294cup/cup = D
+	var/obj/item/reagent_containers/food/drinks/sillycup/cup = D
 	var/amount_need_filled = cup.volume
 	if(!ispath(input_path) || !istype(cup) || !islist(reagents_to_fill_from))
 		return
@@ -106,7 +103,7 @@
 //Overrides
 
 /obj/machinery/scp294/attack_hand(mob/living/user)
-	if(!user.combat_mode)
+	if(user.combat_mode)
 		return ..()
 
 	if(((world.time - usage_cooldown_tracker) > usage_cooldown) && uses_tracker >= max_uses)
@@ -121,7 +118,7 @@
 		return
 
 	playsound(src, 'sound/machines/cb_button.ogg', 35, TRUE)
-	var/chosen_reagen_text = tgui_input_text(user, "Please type in your preffered beverage.", "[src] Keyboard")
+	var/chosen_reagen_text = tgui_input_text(user, "Please type in your preferred beverage.", "[src] Keyboard")
 	if(!chosen_reagen_text)
 		return
 
@@ -158,8 +155,17 @@
 	log_admin("[user.ckey]/[user.real_name] used SCP-[SCP.designation], dispensing [chosen_reagent]", user, get_turf(src))
 	message_admins(span_notice("[user.ckey]/[user.real_name] used SCP-[SCP.designation], dispensing [chosen_reagent]"))
 
-	var/obj/item/reagent_containers/food/drinks/sillycup/scp294cup/D = new /obj/item/reagent_containers/food/drinks/sillycup/scp294cup(get_turf(src))
+	SEND_SIGNAL(src, COMSIG_SCP294_DISPENSE_ATTEMPT, user, chosen_reagent)
+
+	var/obj/item/reagent_containers/food/drinks/sillycup/D = new /obj/item/reagent_containers/food/drinks/sillycup(get_turf(src))
 	D.anchored = TRUE
-	spawn(3 SECONDS)
-		add_reagent_to_cup(chosen_reagent, D, reagents_to_fill_from)
-		D.anchored = FALSE
+	D.desc = "A strange paper cup."
+	addtimer(CALLBACK(src, TYPE_PROC_REF(/obj/machinery/scp294, finish_dispensing_cup), D, chosen_reagent, reagents_to_fill_from), 3 SECONDS)
+
+/obj/machinery/scp294/proc/finish_dispensing_cup(obj/item/reagent_containers/food/drinks/sillycup/D, datum/reagent/chosen_reagent, list/reagents_to_fill_from)
+	add_reagent_to_cup(chosen_reagent, D, reagents_to_fill_from)
+	addtimer(CALLBACK(src, TYPE_PROC_REF(/obj/machinery/scp294, finalize_cup_unanchoring), D), 10) // Increased delay to 10 ticks
+
+/obj/machinery/scp294/proc/finalize_cup_unanchoring(obj/item/reagent_containers/food/drinks/sillycup/D)
+	D.anchored = FALSE
+	return

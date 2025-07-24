@@ -407,15 +407,6 @@
 	icon_state = reagents.total_volume ? "water_cup" : "water_cup_e"
 	return ..()
 
-/obj/item/reagent_containers/food/drinks/sillycup/scp294cup
-	name = "A strange cup"
-	desc = "Weird cup seemingly made of styrofoam."
-	icon = 'icons/SCP/scp294.dmi'
-
-	volume = 20
-
-	icon_state = "294_cup_e"
-
 /obj/item/reagent_containers/food/drinks/sillycup/smallcarton
 	name = "small carton"
 	desc = "A small carton, intended for holding drinks."
