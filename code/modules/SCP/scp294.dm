@@ -53,6 +53,11 @@
 	var/list/blacklist = list(
 	)
 
+	///Custom effect definitions
+	var/list/custom_effect_definitions = list(
+		new /datum/scp294_custom_effect/music()
+	)
+
 /* TD: Need to be readded to the above blacklist once implemented.
 		/datum/reagent/scp008,
 		/datum/reagent/scp500
@@ -122,6 +127,30 @@
 	if(!chosen_reagen_text)
 		return
 
+	var/datum/scp294_custom_effect/chosen_custom_effect
+
+	for(var/datum/scp294_custom_effect/effect in custom_effect_definitions)
+		if(findtext(chosen_reagen_text, effect.name, 1, length(chosen_reagen_text) + 1))
+			chosen_custom_effect = effect
+			break
+
+	if(chosen_custom_effect)
+		uses_tracker++
+		playsound(src, 'sound/scp/scp294/dispense1.ogg', 35, FALSE)
+		visible_message(span_notice("[src] dispenses a small paper cup and starts filling it with a liquid."))
+		log_admin("[user.ckey]/[user.real_name] used SCP-[SCP.designation], dispensing [chosen_custom_effect.name] (custom effect)", user, get_turf(src))
+		message_admins(span_notice("[user.ckey]/[user.real_name] used SCP-[SCP.designation], dispensing [chosen_custom_effect.name] (custom effect)"))
+
+		SEND_SIGNAL(src, COMSIG_SCP294_DISPENSE_ATTEMPT, user, chosen_custom_effect)
+
+		var/obj/item/reagent_containers/food/drinks/sillycup/D = new /obj/item/reagent_containers/food/drinks/sillycup(get_turf(src))
+		D.anchored = TRUE
+		D.desc = chosen_custom_effect.description
+		D.icon_state = chosen_custom_effect.icon_state
+		D.custom_scp294_effect = chosen_custom_effect // Attach the custom effect datum to the cup
+		addtimer(CALLBACK(src, TYPE_PROC_REF(/obj/machinery/scp294, finish_dispensing_cup), D, chosen_custom_effect.reagent_to_add, find_reagents_to_fill_from(chosen_custom_effect.reagent_to_add)), 3 SECONDS)
+		return
+
 	var/datum/reagent/chosen_reagent
 
 	for(var/reagent_name in shortcut_chems)
@@ -168,4 +197,72 @@
 
 /obj/machinery/scp294/proc/finalize_cup_unanchoring(obj/item/reagent_containers/food/drinks/sillycup/D)
 	D.anchored = FALSE
+	return
+
+// Custom Liquids - This is for more Abstract liquids that aren't in the shortcuts list or a definable "reagent"
+
+/datum/scp294_custom_effect
+	var/name = "Abstract Liquid"
+	var/description = "A strange, unidentifiable liquid."
+	var/icon_state = "sillycup" // Default icon state for the cup
+	var/reagent_to_add = /datum/reagent/water // Default reagent to add to the cup
+
+/datum/scp294_custom_effect/proc/apply_effect(mob/living/user)
+	// This proc will be overridden by specific custom effects
+	// It will contain the logic for what happens when the drink is consumed.
+	return
+
+/datum/scp294_custom_effect/music
+	name = "Music"
+	reagent_to_add = /datum/reagent/water
+
+/datum/scp294_custom_effect/music/apply_effect(mob/living/user)
+	. = ..()
+	to_chat(user, span_notice("You feel a continuous rhythm pulsating through your body, and a sudden urge to dance!"))
+	to_chat(user, span_notice("Your movements become more fluid and energetic!"))
+
+	user.add_movespeed_modifier(/datum/movespeed_modifier/music_buff) // Add the modifier first
+
+	var/datum/movespeed_modifier/music_buff/M = user.has_movespeed_modifier(/datum/movespeed_modifier/music_buff) // Get the actual instance
+
+	if(M)
+		var/sound_path = 'sound/scp/scp294/SCP294song.ogg'
+		var/max_volume = 30 // Max volume for the music
+
+		user.playsound_local(user, sound_path, max_volume, channel = CHANNEL_294_MUSIC)
+		M.stamina_holder_ref = user.stamina
+		M.start_music_stamina_effect()
+
+	addtimer(CALLBACK(user, TYPE_PROC_REF(/mob, remove_movespeed_modifier), /datum/movespeed_modifier/music_buff), 990) // Remove buff after 1 minute and 39 seconds
+	return
+
+/datum/movespeed_modifier/music_buff
+	variable = TRUE
+	slowdown = -3 // Speed buff
+	priority = 10
+	var/fumble_chance = 10 // Default fumble chance for the buff
+	var/is_music_stamina_active = FALSE
+	var/is_burnt_out = FALSE
+	var/burnout_timer_id
+	var/datum/stamina_container/stamina_holder_ref
+
+
+/datum/movespeed_modifier/music_buff/proc/start_music_stamina_effect()
+	is_music_stamina_active = TRUE
+	addtimer(CALLBACK(src, PROC_REF(end_music_stamina_effect)), 990) // End high regen after music duration
+	return
+
+/datum/movespeed_modifier/music_buff/proc/end_music_stamina_effect()
+	is_music_stamina_active = FALSE
+	is_burnt_out = TRUE
+	if(stamina_holder_ref)
+		stamina_holder_ref.adjust(-STAMINA_BURNOUT_HIT)
+	burnout_timer_id = addtimer(CALLBACK(src, PROC_REF(end_burnout_effect)), STAMINA_BURNOUT_DURATION)
+	return
+
+/datum/movespeed_modifier/music_buff/proc/end_burnout_effect()
+	is_burnt_out = FALSE
+	if(burnout_timer_id)
+		deltimer(burnout_timer_id)
+		burnout_timer_id = null
 	return

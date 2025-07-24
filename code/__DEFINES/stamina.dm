@@ -71,3 +71,9 @@
 #define STAMINA_MIN2SPRINT_MODIFER 0.4 //Same as exhaustion threshold
 ///How much stamina is taken per tile while sprinting
 #define STAMINA_SPRINT_COST 8
+
+///SCP-294 Music Effect
+#define STAMINA_MUSIC_REGEN_MULTIPLIER 50 // 50 times the normal regen rate
+#define STAMINA_BURNOUT_HIT 100 // 100 stamina hit
+#define STAMINA_BURNOUT_REGEN_PENALTY -20 // -20 to regen rate
+#define STAMINA_BURNOUT_DURATION 30 SECONDS

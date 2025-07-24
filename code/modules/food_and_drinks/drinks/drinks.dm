@@ -14,6 +14,7 @@
 	volume = 50
 	resistance_flags = NONE
 	var/isGlass = TRUE //Whether the 'bottle' is made of glass or not so that milk cartons dont shatter when someone gets hit by it
+	var/datum/scp294_custom_effect/custom_scp294_effect // Holds a custom effect datum from SCP-294
 
 /obj/item/reagent_containers/food/drinks/attack(mob/living/M, mob/user, def_zone)
 
@@ -61,6 +62,10 @@
 					diseases_to_add += malady
 			if(LAZYLEN(diseases_to_add))
 				AddComponent(/datum/component/infective, diseases_to_add)
+
+	if(custom_scp294_effect)
+		custom_scp294_effect.apply_effect(M)
+		qdel(custom_scp294_effect) // Clean up the datum after use
 	return TRUE
 
 /*

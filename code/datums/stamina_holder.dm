@@ -29,7 +29,14 @@
 
 /datum/stamina_container/process(delta_time)
 	if(delta_time && is_regenerating && !HAS_TRAIT(parent, TRAIT_HALOPERIDOL))
-		current = min(current + (regen_rate*delta_time), maximum)
+		var/effective_regen_rate = regen_rate
+		var/datum/movespeed_modifier/music_buff/M = parent.has_movespeed_modifier(/datum/movespeed_modifier/music_buff)
+		if(M)
+			if(M.is_music_stamina_active)
+				effective_regen_rate *= STAMINA_MUSIC_REGEN_MULTIPLIER
+			else if(M.is_burnt_out)
+				effective_regen_rate += STAMINA_BURNOUT_REGEN_PENALTY
+		current = min(current + (effective_regen_rate*delta_time), maximum)
 	if(delta_time && decrement)
 		current = max(current + (decrement*delta_time), 0)
 	loss = maximum - current
