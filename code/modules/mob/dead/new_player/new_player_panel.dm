@@ -209,7 +209,7 @@
 			</legend>
 			<div class='computerLegend flexColumn' style='font-size: 14px; height: 80%; text-align:left'>
 				<div style='font-size: 16px'>
-					C:\\Foundation\\[parent.ckey]\\SCP-Link>[last_cmd]
+					C:\\Users\\[parent.ckey]\\SCP-Link>[last_cmd]
 				</div>
 				<div>
 					>[LINKIFY_CONSOLE_OPTION("Personnel_File.exe", "npp_game=1")]
@@ -226,7 +226,7 @@
 				[poll]
 				<br>
 				<div>
-					<span>C:\\Users\\[parent.ckey]\\ss13&gt</span>
+					<span>C:\\Users\\[parent.ckey]\\SCP-Link&gt</span>
 					<span id='input' class='consoleInput'>&#8203;</span>
 				</div>
 			</div>
