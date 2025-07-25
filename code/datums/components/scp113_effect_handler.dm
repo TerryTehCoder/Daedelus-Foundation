@@ -32,7 +32,7 @@
 	if(user != user_mob)
 		return
 
-	to_chat(user, span_warning("Bones begin to shift and grind inside of you, and every single one of your nerves seems like it's on fire."))
+	to_chat(user, span_warning("Bones begin to shift and grind inside of you, and every single one of your nerves seems like it's on fire!"))
 	user.visible_message(span_notice("\The [user] starts to scream and writhe in pain as their bone structure reforms."))
 	addtimer(CALLBACK(src, PROC_REF(dispatch_signal_on_user), COMSIG_SCP113_EFFECT_STAGE_4, user), 60 SECONDS)
 
@@ -40,7 +40,7 @@
 	if(user != user_mob)
 		return
 
-	to_chat(user, span_warning("The burning begins to fade, and you feel your hand relax its grip on the [src]."))
+	to_chat(user, span_warning("The burning begins to fade, and you feel your hand relax its grip on the quartz."))
 	if(user.humanStageHandler.getStage("BlueLady"))
 		if(user.gender == MALE)
 			to_chat(user, span_notice("A vast sense of relief washes over you, as you feel your body reshape itself to be more like hers.."))
