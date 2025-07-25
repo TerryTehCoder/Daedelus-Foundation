@@ -949,6 +949,7 @@
 #include "code\datums\components\riding\riding.dm"
 #include "code\datums\components\riding\riding_mob.dm"
 #include "code\datums\components\riding\riding_vehicle.dm"
+#include "code\datums\components\scp113_effect_handler.dm"
 #include "code\datums\elements\_element.dm"
 #include "code\datums\elements\animal_variety.dm"
 #include "code\datums\elements\art.dm"
