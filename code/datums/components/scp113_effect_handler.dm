@@ -1,9 +1,11 @@
 /datum/component/scp113_effect_handler
 	var/mob/living/carbon/human/user_mob
+	var/obj/item/scp113/scp_item // Reference to the SCP-113 item being handled for TRAITS.
 
-/datum/component/scp113_effect_handler/Initialize(mob/living/carbon/human/user)
+/datum/component/scp113_effect_handler/Initialize(mob/living/carbon/human/user, obj/item/scp113/scp_object)
 	. = ..()
 	user_mob = user
+	scp_item = scp_object
 	RegisterSignal(user_mob, COMSIG_SCP113_EFFECT_STAGE_1, PROC_REF(handle_stage_1))
 	RegisterSignal(user_mob, COMSIG_SCP113_EFFECT_STAGE_2, PROC_REF(handle_stage_2))
 	RegisterSignal(user_mob, COMSIG_SCP113_EFFECT_STAGE_3, PROC_REF(handle_stage_3))
@@ -53,6 +55,7 @@
 	user.dna.update_dna_identity()
 	user.update_body()
 	user.humanStageHandler.adjustStage("113_conversions", 1)
+	REMOVE_TRAIT(scp_item, TRAIT_NODROP, SCP113_TRAIT)
 	qdel(src) // Effect complete, remove the handler
 
 /datum/component/scp113_effect_handler/proc/dispatch_signal_on_user(signal_type, mob/living/carbon/human/user)

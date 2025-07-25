@@ -32,6 +32,7 @@
 
 	var/mob/living/carbon/human/H = user
 	var/hand_covered = H.active_hand_index == LEFT_HANDS ? HAND_LEFT : HAND_RIGHT //determines which hand needs to be covered
+	ADD_TRAIT(src, TRAIT_NODROP, SCP113_TRAIT)
 
 	for(var/obj/item/clothing/C in H.get_equipped_items())
 		if(C.body_parts_covered & hand_covered)
@@ -49,13 +50,11 @@
 	H.humanStageHandler.setStage("113_effect", 0)
 	H.AddComponent(/datum/component/scp113_effect_handler, H)
 	SEND_SIGNAL(H, COMSIG_SCP113_EFFECT_STAGE_1, H)
-	ADD_TRAIT(src, TRAIT_NODROP, SCP113_TRAIT)
 
 /obj/item/scp113/proc/handle_item_unequipped(datum/source, mob/living/user)
 	if(!ishuman(user))
 		return
 
 	var/mob/living/carbon/human/H = user
-	REMOVE_TRAIT(src, TRAIT_NODROP, SCP113_TRAIT)
 	qdel(H.GetComponent(/datum/component/scp113_effect_handler))
 	SEND_SIGNAL(H, COMSIG_SCP113_EFFECT_STAGE_1, H, 0)
