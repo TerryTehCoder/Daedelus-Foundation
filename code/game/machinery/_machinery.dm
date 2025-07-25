@@ -1195,3 +1195,34 @@ GLOBAL_REAL_VAR(machinery_default_armor) = list()
 
 		log_game("[key_name(user)] moved [data] from an external disk to [src] ([get_area_name(src)])")
 		return TRUE
+
+// Coarse - dismantles the machine
+// Fine - randomly upgrades components of the machine via same proc
+// Very fine - same as above, but has a chance to start small explosion
+/obj/machinery/Conversion914(mode = MODE_ONE_TO_ONE, mob/user = usr)
+	switch(mode)
+		if(MODE_COARSE)
+			deconstruct()
+			return src // Gets deleted in deconstruct() anyway
+		if(MODE_FINE)
+			for(var/obj/item/stock_parts/S in component_parts)
+				if(istype(S, /obj/item/circuitboard))
+					continue
+				if(prob(20))
+					continue
+				S.Conversion914(mode, user)
+			playsound(src, 'sound/items/rped.ogg', 50, TRUE)
+			return src
+		if(MODE_VERY_FINE)
+			for(var/obj/item/stock_parts/S in component_parts)
+				if(istype(S, /obj/item/circuitboard))
+					continue
+				if(prob(10))
+					continue
+				if(prob(3)) // The more parts you got - the more likely it is to explode
+					explosion(get_turf(src), -1, prob(33), 5, 7, FALSE)
+					return src
+				S.Conversion914(mode, user)
+			playsound(src, 'sound/items/rped.ogg', 75, TRUE, 3)
+			return src
+	return ..()

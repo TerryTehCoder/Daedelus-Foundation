@@ -418,3 +418,14 @@
 #define COMSIG_SPEED_POTION_APPLIED "speed_potion"
 	#define SPEED_POTION_STOP (1<<0)
 
+// /obj/structure/scp_914 signals
+///from /obj/structure/scp_914/proc/Activate(): (mob/user)
+#define COMSIG_SCP914_ACTIVATED "scp914_activated"
+///from /obj/structure/scp_914/proc/Activate(): ()
+#define COMSIG_SCP914_DOORS_CLOSE "scp914_doors_close"
+///from /obj/structure/scp_914/proc/Activate(): ()
+#define COMSIG_SCP914_PROCESSING_START "scp914_processing_start"
+///from /obj/structure/scp_914/proc/Activate(): ()
+#define COMSIG_SCP914_PROCESSING_COMPLETE "scp914_processing_complete"
+///from /obj/structure/scp_914/proc/Activate(): ()
+#define COMSIG_SCP914_DOORS_OPEN "scp914_doors_open"
