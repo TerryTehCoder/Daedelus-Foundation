@@ -553,3 +553,62 @@ MAPPING_DIRECTIONAL_HELPERS(/obj/structure/chair/stool/bar, 0)
 	desc = "Oh, so this is like the fucked up Monopoly rules where there are no rules and you can pick up and place the musical chairs as you please."
 	particles = new /particles/musical_notes
 	origin_type = /obj/structure/chair/musical
+
+// Bay Comfy Chairs - They look So Tactical, I love them.
+
+/obj/structure/chair/bay/office/comfy
+	name = "comfy office chair"
+	desc = "It's an office chair. It looks comfy."
+	icon_state = "bayofficecomfy"
+	material_flags = MATERIAL_EFFECTS | MATERIAL_ADD_PREFIX | MATERIAL_GREYSCALE | MATERIAL_AFFECT_STATISTICS
+
+/obj/structure/chair/bay/office/comfy/brown
+	color = rgb(139,69,19)
+
+/obj/structure/chair/bay/office/comfy/red
+	color = rgb(255,0,0)
+
+/obj/structure/chair/bay/office/comfy/teal
+	color = rgb(0,128,128)
+
+/obj/structure/chair/bay/office/comfy/black
+	color = rgb(0,0,0)
+
+/obj/structure/chair/bay/office/comfy/green
+	color = rgb(0,255,0)
+
+/obj/structure/chair/bay/office/comfy/purple
+	color = rgb(128,0,128)
+
+/obj/structure/chair/bay/office/comfy/blue
+	color = rgb(0,0,255)
+
+/obj/structure/chair/bay/office/comfy/beige
+	color = rgb(245,245,220)
+
+/obj/structure/chair/bay/office/comfy/lime
+	color = rgb(191,255,0)
+
+/obj/structure/chair/bay/office/comfy/yellow
+	color = rgb(255,255,0)
+
+/obj/structure/chair/bay/comfy
+	name = "comfy chair"
+	desc = "It's a chair. It looks comfy."
+	icon_state = "baycomfy"
+	material_flags = MATERIAL_EFFECTS | MATERIAL_ADD_PREFIX | MATERIAL_GREYSCALE | MATERIAL_AFFECT_STATISTICS
+
+/obj/structure/chair/bay/comfy/brown
+	color = rgb(255,113,0)
+
+/obj/structure/chair/bay/comfy/beige
+	color = rgb(255,253,195)
+
+/obj/structure/chair/bay/comfy/teal
+	color = rgb(0,255,255)
+
+/obj/structure/chair/bay/comfy/black
+	color = rgb(167,164,153)
+
+/obj/structure/chair/bay/comfy/lime
+	color = rgb(255,251,0)

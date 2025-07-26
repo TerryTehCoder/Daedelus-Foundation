@@ -40,6 +40,14 @@
 
 	setup_device()
 
+/obj/machinery/button/alternate/door/Initialize(mapload, ndir = 0, built = 0)
+	. = ..(mapload, ndir, built)
+	setup_device()
+
+/obj/machinery/button/alternate/door/bolts/Initialize(mapload, ndir = 0, built = 0)
+	. = ..(mapload, ndir, built)
+	setup_device()
+
 /obj/machinery/button/update_icon_state()
 	if(panel_open)
 		icon_state = "button-open"
@@ -328,3 +336,46 @@ MAPPING_DIRECTIONAL_HELPERS(/obj/machinery/button/door, 24)
 	. = ..()
 	. += span_notice("There's a small inscription on the button...")
 	. += span_notice("THIS CALLS THE TRAM! IT DOES NOT OPERATE IT! The console on the tram tells it where to go!")
+
+//Toggle button determines icon state from active, not operating
+/obj/machinery/button/toggle
+	var/toggled = FALSE
+
+/obj/machinery/button/toggle/attack_hand(mob/user, list/modifiers)
+	. = ..(user, modifiers)
+	if(.)
+		return
+	toggled = !toggled
+
+/obj/machinery/button/toggle/update_icon()
+	..()
+	if(toggled)
+		icon_state = "launcheract"
+	else
+		icon_state = "launcherbtt"
+
+//alternate button with the same toggle functionality, except has a lightswitch sprite instead
+/obj/machinery/button/toggle/switch
+	icon = 'icons/obj/power.dmi'
+	icon_state = "light0"
+
+/obj/machinery/button/toggle/switch/update_icon()
+	..()
+	icon_state = "light[toggled]"
+
+//alternate button with the same toggle functionality, except has a door control sprite instead
+/obj/machinery/button/toggle/alternate
+	icon = 'icons/obj/stationobjs.dmi'
+	icon_state = "doorctrl"
+
+/obj/machinery/button/toggle/alternate/update_icon()
+	..()
+	if(toggled)
+		icon_state = "doorctrl"
+	else
+		icon_state = "doorctrl2"
+
+/obj/machinery/button/alternate/door
+	icon = 'icons/obj/stationobjs.dmi'
+	icon_state = "doorctrl"
+	device_type = /obj/item/assembly/control/airlock
