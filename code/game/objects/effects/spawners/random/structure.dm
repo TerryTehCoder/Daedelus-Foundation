@@ -235,3 +235,142 @@
 		/obj/structure/billboard/roadsign/twomillion = 25,
 		/obj/structure/billboard/roadsign/error = 25,
 	)
+
+/obj/effect/spawner/random/structure/security_crate
+	name = "security crate spawner"
+	icon_state = "crate_secure"
+	loot = list(
+		/obj/structure/closet/crate/secure/weapon = 33,
+		/obj/structure/closet/crate/secure/gear = 33,
+		/obj/structure/closet/crate/secure/large = 34
+	)
+
+/obj/effect/spawner/random/structure/security_crate/spawn_item(location, path)
+	var/obj/structure/closet/crate/secure/C = ..()
+	if(!C)
+		return
+
+	var/list/security_items = list(
+		/obj/item/gun/energy/disabler,
+		/obj/item/gun/energy/laser,
+		/obj/item/clothing/suit/armor/vest,
+		/obj/item/clothing/head/helmet/sec,
+		/obj/item/melee/baton/security/loaded,
+		/obj/item/storage/box/flashbangs,
+		/obj/item/storage/box/teargas,
+		/obj/item/storage/box/flashes,
+		/obj/item/storage/box/handcuffs,
+		/obj/item/reagent_containers/spray/pepper,
+		/obj/item/storage/box/beanbag,
+		/obj/item/storage/box/rubbershot,
+		/obj/item/ammo_box/c38/trac,
+		/obj/item/ammo_box/c38/hotshot,
+		/obj/item/ammo_box/c38/iceblox,
+		/obj/item/storage/box/firingpins,
+		/obj/item/storage/box/firingpins/paywall,
+		/obj/item/clothing/head/helmet/justice,
+		/obj/item/clothing/mask/gas/sechailer,
+		/obj/item/clothing/suit/armor/bulletproof,
+		/obj/item/clothing/head/helmet/alt,
+		/obj/item/storage/box/chemimp,
+		/obj/item/gun/ballistic/shotgun/automatic/combat,
+		/obj/item/storage/belt/bandolier,
+		/obj/item/gun/energy/e_gun/dragnet,
+		/obj/item/gun/energy/e_gun,
+		/obj/item/storage/box/exileimp,
+		/obj/item/flamethrower/full,
+		/obj/item/tank/internals/plasma,
+		/obj/item/grenade/chem_grenade/incendiary,
+		/obj/item/weaponcrafting/gunkit/ion,
+		/obj/item/storage/lockbox/loyalty,
+		/obj/item/storage/box/trackimp,
+		/obj/item/clothing/suit/armor/laserproof,
+		/obj/item/clothing/suit/armor/riot,
+		/obj/item/clothing/head/helmet/riot,
+		/obj/item/shield/riot,
+		/obj/item/clothing/head/helmet/swat/nanotrasen,
+		/obj/item/clothing/suit/armor/swat,
+		/obj/item/clothing/mask/gas/sechailer/swat,
+		/obj/item/storage/belt/military/assault,
+		/obj/item/clothing/gloves/tackler/combat,
+		/obj/item/storage/belt/holster/shoulder/thermal,
+		/obj/item/storage/box/stingbangs,
+		/obj/item/storage/box/wall_flash,
+		/obj/item/storage/scene_cards,
+		/obj/item/storage/box/evidence,
+		/obj/item/camera,
+		/obj/item/taperecorder,
+		/obj/item/toy/crayon/white,
+		/obj/item/clothing/head/fedora/det_hat,
+		/obj/item/storage/briefcase/crimekit,
+		/obj/item/grenade/barrier
+	)
+
+	var/num_items = rand(2, 5) // Spawn between 2 and 5 items
+	for(var/i in 1 to num_items)
+		var/item_path = pick(security_items)
+		new item_path(C)
+
+	return C
+
+/obj/effect/spawner/random/structure/medical_crate
+	name = "medical crate spawner"
+	icon_state = "crate_secure"
+	loot = list(
+		/obj/structure/closet/crate/medical = 50,
+		/obj/structure/closet/crate/freezer = 50
+	)
+
+/obj/effect/spawner/random/structure/medical_crate/spawn_item(location, path)
+	var/obj/structure/closet/crate/C = ..()
+	if(!C)
+		return
+
+	var/list/medical_items = list(
+		/obj/item/reagent_containers/blood,
+		/obj/item/reagent_containers/blood/a_plus,
+		/obj/item/reagent_containers/blood/a_minus,
+		/obj/item/reagent_containers/blood/b_plus,
+		/obj/item/reagent_containers/blood/b_minus,
+		/obj/item/reagent_containers/blood/o_plus,
+		/obj/item/reagent_containers/blood/o_minus,
+		/obj/item/reagent_containers/blood/lizard,
+		/obj/item/reagent_containers/blood/ethereal,
+		/obj/item/reagent_containers/hypospray/medipen,
+		/obj/item/reagent_containers/hypospray/medipen/ekit,
+		/obj/item/reagent_containers/hypospray/medipen/blood_loss,
+		/obj/item/clothing/glasses/science,
+		/obj/item/reagent_containers/dropper,
+		/obj/item/storage/box/beakers,
+		/obj/item/defibrillator/loaded,
+		/obj/item/reagent_containers/glass/bottle/dylovene,
+		/obj/item/reagent_containers/glass/bottle/epinephrine,
+		/obj/item/reagent_containers/glass/bottle/morphine,
+		/obj/item/stack/gauze,
+		/obj/item/storage/box/medigels,
+		/obj/item/storage/box/syringes,
+		/obj/item/storage/box/bodybags,
+		/obj/item/storage/medkit/regular,
+		/obj/item/storage/medkit/o2,
+		/obj/item/storage/medkit/toxin,
+		/obj/item/storage/medkit/brute,
+		/obj/item/storage/medkit/fire,
+		/obj/item/storage/pill_bottle/mining,
+		/obj/item/reagent_containers/pill/alkysine,
+		/obj/item/stack/medical/bone_gel/twelve,
+		/obj/item/vending_refill/medical,
+		/obj/item/vending_refill/drugs,
+		/obj/item/storage/backpack/duffelbag/med/surgery,
+		/obj/item/roller,
+		/obj/machinery/iv_drip/saline,
+		/obj/item/stack/medical/bruise_pack,
+		/obj/item/stack/medical/suture,
+		/obj/item/bodybag/stasis
+	)
+
+	var/num_items = rand(2, 5) // Spawn between 2 and 5 items
+	for(var/i in 1 to num_items)
+		var/item_path = pick(medical_items)
+		new item_path(C)
+
+	return C
