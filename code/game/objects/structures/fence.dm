@@ -37,6 +37,13 @@
 		if(LARGE_HOLE)
 			. += "\The [src] has been completely cut through."
 
+/obj/structure/fence/door/examine(mob/user)
+	. = ..()
+	if(current_lock)
+		. += "It has a [current_lock.name] attached."
+		if(current_lock.locked)
+			. += " The [current_lock.name] is currently locked."
+
 /obj/structure/fence/end
 	icon_state = "end"
 	cuttable = FALSE
@@ -110,9 +117,15 @@
 	desc = "Not very useful without a real lock."
 	icon_state = "door_closed"
 	cuttable = FALSE
+	var/obj/item/fence_door_lock/current_lock = null
+	var/locked = FALSE
 
 /obj/structure/fence/door/Initialize(mapload)
 	. = ..()
+	if(current_lock)
+		current_lock.forceMove(src) // Ensure the lock is on the door
+		locked = current_lock.locked
+		update_icon_state() // Update door icon based on lock state
 
 	update_icon_state()
 
@@ -126,18 +139,127 @@
 
 	return TRUE
 
+/obj/structure/fence/door/attackby(obj/item/W, mob/user)
+	if(istype(W, /obj/item/fence_door_lock))
+		if(current_lock)
+			to_chat(user, span_warning("There's already a lock on this door."))
+			return
+		user.transferItemToLoc(W, src)
+		current_lock = W
+		locked = current_lock.locked
+		update_icon_state()
+		to_chat(user, span_notice("You attach \the [W] to \the [src]."))
+		qdel(W)
+		return TRUE
+	if(istype(W, /obj/item/fence_door_key))
+		if(!current_lock)
+			to_chat(user, span_warning("There's no lock on this door."))
+			return
+		current_lock.attack_self(user) // Let the lock handle the key interaction
+		locked = current_lock.locked
+		update_icon_state()
+		return TRUE
+	return ..()
+
 /obj/structure/fence/door/proc/toggle(mob/user)
+	if(locked)
+		to_chat(user, span_warning("The door is locked!"))
+		return
 	visible_message(span_notice("\The [user] [density ? "opens" : "closes"] \the [src]."))
 	set_density(!density)
 	update_icon_state()
-	playsound(src, 'sound/machines/click.ogg', 100, TRUE)
+	playsound(src, 'sound/structures/fencedoortoggle.ogg', 100, TRUE)
 
 /obj/structure/fence/door/update_icon_state()
 	icon_state = density ? "door_closed" : "door_opened"
 	return ..()
 
 /obj/structure/fence/door/proc/can_open(mob/user)
+	if(current_lock && current_lock.locked)
+		to_chat(user, span_warning("The door is locked!"))
+		return FALSE
 	return TRUE
+
+/obj/structure/fence/door/locked
+	name = "locked fence door"
+	desc = "A sturdy fence door with a built-in lock."
+	var/initial_lock_id = "" // Mapper can set this to define the lock's ID
+
+/obj/structure/fence/door/locked/Initialize(mapload)
+	. = ..()
+	if(!current_lock) // If a lock wasn't already attached (e.g., by another map var)
+		current_lock = new /obj/item/fence_door_lock(src.loc)
+	if(initial_lock_id) // If mapper set an initial_lock_id on the door
+		current_lock.lock_id = initial_lock_id
+	current_lock.forceMove(src) // Ensure the lock is on the door
+	current_lock.locked = TRUE // Ensure the lock starts locked
+	locked = TRUE // Synchronize door's locked state
+	update_icon_state()
+
+/obj/structure/fence/door/locked/opened
+	icon_state = "door_opened"
+
+/obj/structure/fence/door/locked/opened/Initialize(mapload)
+	. = ..()
+	density = FALSE // Start open
+	if(!current_lock)
+		current_lock = new /obj/item/fence_door_lock(src.loc)
+	if(initial_lock_id)
+		current_lock.lock_id = initial_lock_id
+	current_lock.forceMove(src)
+	current_lock.locked = TRUE
+	locked = TRUE
+	update_icon_state()
+
+// FENCE DOOR KEY
+/obj/item/fence_door_key
+	name = "fence door key"
+	desc = "A key for a fence door lock."
+	icon = 'icons/obj/vehicles.dmi'
+	icon_state = "key"
+	var/key_id = "" // This will be set by mappers
+
+/obj/item/fence_door_key/Initialize(mapload)
+	. = ..()
+	if (!key_id)
+		key_id = "default" // Default ID if not set by mapper
+
+// FENCE DOOR LOCK
+/obj/item/fence_door_lock
+	name = "fence door lock"
+	desc = "A lock for a fence door."
+	icon = 'icons/obj/vehicles.dmi'
+	icon_state = "key" //Placeholder
+	var/lock_id = "" // This will be set by mappers
+	var/locked = FALSE // Initial state
+
+/obj/item/fence_door_lock/Initialize(mapload)
+	. = ..()
+	if (!lock_id)
+		lock_id = "default" // Default ID if not set by mapper
+	update_icon()
+
+/obj/item/fence_door_lock/attack_self(mob/user)
+	if(!ismob(user) || !isliving(user))
+		return
+	var/obj/item/fence_door_key/found_key
+	for(var/obj/item/I in user.contents)
+		if(istype(I, /obj/item/fence_door_key))
+			var/obj/item/fence_door_key/K = I
+			if(K.key_id == lock_id)
+				found_key = K
+				break
+	if(found_key)
+		locked = !locked
+		update_icon()
+		to_chat(user, span_notice("You [locked ? "lock" : "unlock"] \the [src]."))
+		playsound(src, 'sound/weapons/gun/pistol/lock_small.ogg', 100, TRUE) //Nefarious sound reusage.
+	else
+		to_chat(user, span_warning("You don't have the correct key for this lock."))
+
+/obj/item/fence_door_luck/update_icon(updates)
+	. = ..()
+	return
 
 #undef CUT_TIME
 #undef CLIMB_TIME

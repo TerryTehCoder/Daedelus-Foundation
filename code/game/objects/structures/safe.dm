@@ -37,6 +37,10 @@ FLOOR SAFES
 	var/space = 0
 	/// Tough, but breakable if explosion counts reaches set value
 	var/explosion_count = 0
+	/// An optional list of type paths. If this list is populated, the safe will only pick up items on its turf that match one of these paths.
+	var/list/initial_contents_whitelist_paths
+	/// An optional list of type paths. If this list is populated, the safe will NOT pick up items on its turf that match one of these paths.
+	var/list/initial_contents_blacklist_paths
 
 /obj/structure/safe/Initialize(mapload)
 	. = ..()
@@ -45,14 +49,30 @@ FLOOR SAFES
 	for(var/iterating in 1 to number_of_tumblers)
 		tumblers.Add(rand(0, 99))
 
-	if(!mapload)
-		return
+	if(mapload && (initial_contents_whitelist_paths?.len || initial_contents_blacklist_paths?.len))
+		. = INITIALIZE_HINT_LATELOAD
 
+/obj/structure/safe/LateInitialize()
+	. = ..()
 	// Put as many items on our turf inside as possible
 	for(var/obj/item/inserting_item in loc)
 		if(space >= maxspace)
-			return
-		if(inserting_item.w_class + space <= maxspace)
+			break
+		var/should_pickup = FALSE
+		if(initial_contents_whitelist_paths?.len) // If a whitelist is defined, only pick up whitelisted items
+			for(var/path in initial_contents_whitelist_paths)
+				if(istype(inserting_item, path))
+					should_pickup = TRUE
+					break
+		else // Otherwise, pick up all items by default, then check blacklist
+			should_pickup = TRUE
+			if(initial_contents_blacklist_paths?.len)
+				for(var/path in initial_contents_blacklist_paths)
+					if(istype(inserting_item, path))
+						should_pickup = FALSE
+						break
+
+		if(should_pickup && (inserting_item.w_class + space <= maxspace))
 			space += inserting_item.w_class
 			inserting_item.forceMove(src)
 
@@ -233,6 +253,12 @@ FLOOR SAFES
 		balloon_alert(user, pick(sounds))
 
 //FLOOR SAFES
+/obj/structure/safe/floor
+	name = "floor safe"
+	icon_state = "floorsafe"
+	density = FALSE
+	layer = LOW_OBJ_LAYER
+
 /obj/structure/safe/floor
 	name = "floor safe"
 	icon_state = "floorsafe"

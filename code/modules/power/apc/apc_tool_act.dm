@@ -221,3 +221,23 @@
 				ui_interact(user)
 		else
 			to_chat(user, span_warning("Access denied."))
+
+/obj/machinery/power/apc/attack_hand_secondary(mob/user, list/modifiers)
+	. = ..()
+	if(!can_interact(user))
+		return
+	if(!user.canUseTopic(src, USE_CLOSE|USE_SILICON_REACH) || !isturf(loc))
+		return
+	if(!ishuman(user))
+		return
+	if(istype(src, /obj/machinery/power/apc/breaker_box)) // Breaker box handles its own secondary attack
+		return SECONDARY_ATTACK_CANCEL_ATTACK_CHAIN
+	var/mob/living/carbon/human/apc_interactor = user
+	var/obj/item/organ/stomach/ethereal/maybe_ethereal_stomach = apc_interactor.getorganslot(ORGAN_SLOT_STOMACH)
+	if(!istype(maybe_ethereal_stomach))
+		togglelock(user)
+	else
+		if(maybe_ethereal_stomach.crystal_charge >= ETHEREAL_CHARGE_NORMAL)
+			togglelock(user)
+		ethereal_interact(user,modifiers)
+	return SECONDARY_ATTACK_CANCEL_ATTACK_CHAIN
