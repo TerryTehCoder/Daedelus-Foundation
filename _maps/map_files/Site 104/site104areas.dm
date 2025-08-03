@@ -317,3 +317,13 @@
 
 /area/site104/cryogenics/bay/commandbay
 	name = "Cryogenics Command Bay"
+
+// Heavy Containment Zone
+
+/area/site104/hcz
+	name = "Heavy Containment Zone"
+	requires_power = 0
+	area_lighting = AREA_LIGHTING_DYNAMIC
+
+/area/site104/hcz/equipmentwarehouse
+	name = "Heavy Containment Warehouse A0"

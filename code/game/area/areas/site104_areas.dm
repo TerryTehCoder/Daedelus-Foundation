@@ -328,3 +328,11 @@ Comment these out for now, while I port everything else over.
 
 /area/site104/cryogenics/bay/commandbay
 	name = "Cryogenics Command Bay"
+
+/area/site104/hcz
+	name = "Heavy Containment Zone"
+	requires_power = 0
+	dynamic_lighting = 1
+
+/area/site104/hcz/equipmentwarehouse
+	name = "Heavy Containment Warehouse A0"
