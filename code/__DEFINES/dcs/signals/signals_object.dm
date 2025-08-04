@@ -418,3 +418,5 @@
 #define COMSIG_SPEED_POTION_APPLIED "speed_potion"
 	#define SPEED_POTION_STOP (1<<0)
 
+/// from /obj/structure/scp151/proc/effect(): (mob/living/carbon/human/H, obj/structure/scp151/source_scp)
+#define COMSIG_SCP151_EFFECT_APPLIED "scp151_effect_applied"
