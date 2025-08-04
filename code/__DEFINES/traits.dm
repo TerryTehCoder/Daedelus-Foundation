@@ -1022,5 +1022,8 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define TRAIT_MEMETIC_BLIND "TRAIT_MEMETIC_BLIND"
 ///Are we insulated to audible memetics?
 #define TRAIT_MEMETIC_DEAF "TRAIT_MEMETIC_DEAF"
+
+#define SCP113_TRAIT "scp113_effect"
+
 /// Experiencing panic due to SCP-151
 #define TRAIT_SCP151_PANIC "scp151_panic"
