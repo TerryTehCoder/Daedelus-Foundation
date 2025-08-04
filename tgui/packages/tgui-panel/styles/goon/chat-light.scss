@@ -192,12 +192,6 @@ a.popt {
   padding: 2px 0;
 }
 
-.filterMessages input {
-}
-
-.filterMessages label {
-}
-
 .icon-stack {
   height: 1em;
   line-height: 1em;
@@ -286,6 +280,7 @@ em {
 .system {
   color: #638500;
   font-family: 'Lucida Console', monospace;
+  text-shadow: 0 0 0.1em #638500;
 }
 
 .systemfont {
@@ -295,6 +290,7 @@ em {
 .ooc {
   color: #002eb8;
   font-family: 'Lucida Console', monospace;
+  text-shadow: 0 0 0.1em #002eb8;
 }
 
 .oocplain {
@@ -305,47 +301,47 @@ em {
 .looc {
   color: #6699cc;
   font-family: 'Lucida Console', monospace;
+  text-shadow: 0 0 0.1em #6699cc;
 }
 
 .adminobserverooc {
   color: #0099cc;
   font-weight: bold;
+  text-shadow: 0 0 0.1em #0099cc;
 }
 
 .adminooc {
   color: #700038;
   font-weight: bold;
+  text-shadow: 0 0 0.1em #700038;
 }
 
 .adminsay {
   color: #ff4500;
   font-weight: bold;
+  text-shadow: 0 0 0.1em #ff4500;
 }
 
 .admin {
   color: #4473ff;
   font-weight: bold;
+  text-shadow: 0 0 0.1em #4473ff;
 }
 
 .name {
   font-weight: bold;
 }
 
-.say,
-.emote,
-.infoplain,
-.oocplain,
-.warningplain {
-}
-
 .deadsay {
   color: #5c00e6;
+  text-shadow: 0 0 0.1em #5c00e6;
 }
 
 .binarysay {
   color: #20c20e;
   background-color: #000000;
   display: block;
+  text-shadow: 0 0 0.1em #20c20e;
 }
 
 .binarysay a {
@@ -359,66 +355,82 @@ em {
 
 .radio {
   color: #008000;
+  text-shadow: 0 0 0.1em #008000;
 }
 
 .sciradio {
   color: #993399;
+  text-shadow: 0 0 0.1em #993399;
 }
 
 .comradio {
   color: #948f02;
+  text-shadow: 0 0 0.1em #948f02;
 }
 
 .secradio {
   color: #a30000;
+  text-shadow: 0 0 0.1em #a30000;
 }
 
 .medradio {
   color: #337296;
+  text-shadow: 0 0 0.1em #337296;
 }
 
 .engradio {
   color: #fb5613;
+  text-shadow: 0 0 0.1em #fb5613;
 }
 
 .suppradio {
   color: #a8732b;
+  text-shadow: 0 0 0.1em #a8732b;
 }
 
 .servradio {
   color: #6eaa2c;
+  text-shadow: 0 0 0.1em #6eaa2c;
 }
 
 .syndradio {
   color: #6d3f40;
+  text-shadow: 0 0 0.1em #6d3f40;
 }
 
 .gangradio {
   color: #ac2ea1;
+  text-shadow: 0 0 0.1em #ac2ea1;
 }
 
 .centcomradio {
   color: #686868;
+  text-shadow: 0 0 0.1em #686868;
 }
 
 .aiprivradio {
   color: #ff00ff;
+  text-shadow: 0 0 0.1em #ff00ff;
 }
 
 .redteamradio {
   color: #ff0000;
+  text-shadow: 0 0 0.1em #ff0000;
 }
 
 .blueteamradio {
   color: #0000ff;
+  text-shadow: 0 0 0.1em #0000ff;
 }
 
 .greenteamradio {
   color: #00ff00;
+  text-shadow: 0 0 0.1em #00ff00;
 }
 
 .yellowteamradio {
   color: #d1ba22;
+  text-shadow: 0 0 0.1em #d1ba22;
 }
 
 .yell {
@@ -427,6 +439,7 @@ em {
 
 .alert {
   color: #ff0000;
+  text-shadow: 0 0 0.1em #ff0000;
 }
 
 h1.alert,
@@ -438,288 +451,346 @@ h2.alert {
   color: #ff0000;
   font-weight: bold;
   font-size: 185%;
+  text-shadow: 0 0 0.1em #ff0000;
 }
 
 .bolddanger {
   color: #ff0000;
   font-weight: bold;
+  text-shadow: 0 0 0.1em #ff0000;
 }
 
 .danger {
   color: #ff0000;
+  text-shadow: 0 0 0.1em #ff0000;
 }
 
 .tinydanger {
   color: #ff0000;
   font-size: 85%;
+  text-shadow: 0 0 0.1em #ff0000;
 }
 
 .smalldanger {
   color: #ff0000;
   font-size: 90%;
+  text-shadow: 0 0 0.1em #ff0000;
 }
 
 .warning {
   color: #ff0000;
   font-style: italic;
+  text-shadow: 0 0 0.1em #ff0000;
 }
 
 .alertwarning {
   color: #ff0000;
   font-weight: bold;
+  text-shadow: 0 0 0.1em #ff0000;
 }
 
 .boldwarning {
   color: #ff0000;
   font-style: italic;
   font-weight: bold;
+  text-shadow: 0 0 0.1em #ff0000;
 }
 
 .announce {
   color: #228b22;
   font-weight: bold;
+  text-shadow: 0 0 0.1em #228b22;
 }
 
 .boldannounce {
   color: #ff0000;
   font-weight: bold;
+  text-shadow: 0 0 0.1em #ff0000;
 }
 
 .minorannounce {
   font-weight: bold;
   font-size: 185%;
+  text-shadow: 0 0 0.1em currentColor;
 }
 
 .greenannounce {
   color: #00ff00;
   font-weight: bold;
+  text-shadow: 0 0 0.1em #00ff00;
 }
 
 .rose {
   color: #ff5050;
+  text-shadow: 0 0 0.1em #ff5050;
 }
 
 .info {
   color: #0000cc;
+  text-shadow: 0 0 0.1em #0000cc;
 }
 
 .notice {
-  color: #000099;
+  color: #444444;
+  text-shadow: 0 0 0.1em #444444;
 }
 
 .tinynotice {
   color: #000099;
   font-size: 85%;
+  text-shadow: 0 0 0.1em #000099;
 }
 
 .tinynoticeital {
   color: #000099;
   font-style: italic;
   font-size: 85%;
+  text-shadow: 0 0 0.1em #000099;
 }
 
 .smallnotice {
   color: #000099;
   font-size: 90%;
+  text-shadow: 0 0 0.1em #000099;
 }
 
 .smallnoticeital {
   color: #000099;
   font-style: italic;
   font-size: 90%;
+  text-shadow: 0 0 0.1em #000099;
 }
 
 .boldnotice {
   color: #000099;
   font-weight: bold;
+  text-shadow: 0 0 0.1em #000099;
 }
 
 .hear {
   color: #000099;
   font-style: italic;
+  text-shadow: 0 0 0.1em #000099;
 }
 
 .adminnotice {
   color: #0000ff;
+  text-shadow: 0 0 0.1em #0000ff;
 }
 
 .adminhelp {
   color: #ff0000;
   font-weight: bold;
+  text-shadow: 0 0 0.1em #ff0000;
 }
 
 .unconscious {
   color: #0000ff;
   font-weight: bold;
+  text-shadow: 0 0 0.1em #0000ff;
 }
 
 .suicide {
   color: #ff5050;
   font-style: italic;
+  text-shadow: 0 0 0.1em #ff5050;
 }
 
 .green {
   color: #03ff39;
+  text-shadow: 0 0 0.1em #03ff39;
 }
 
 .grey {
   color: #838383;
+  text-shadow: 0 0 0.1em #838383;
 }
 
 .red {
   color: #ff0000;
+  text-shadow: 0 0 0.1em #ff0000;
 }
 
 .blue {
   color: #0000ff;
+  text-shadow: 0 0 0.1em #0000ff;
 }
 
 .nicegreen {
   color: #14a833;
+  text-shadow: 0 0 0.1em #14a833;
 }
 
 .boldnicegreen {
   color: #14a833;
   font-weight: bold;
+  text-shadow: 0 0 0.1em #14a833;
 }
 
 .cult {
   color: #973e3b;
+  text-shadow: 0 0 0.1em #973e3b;
 }
 
 .cultitalic {
   color: #973e3b;
   font-style: italic;
+  text-shadow: 0 0 0.1em #973e3b;
 }
 
 .cultbold {
   color: #973e3b;
   font-style: italic;
   font-weight: bold;
+  text-shadow: 0 0 0.1em #973e3b;
 }
 
 .cultboldtalic {
   color: #973e3b;
   font-weight: bold;
   font-size: 185%;
+  text-shadow: 0 0 0.1em #973e3b;
 }
 
 .cultlarge {
   color: #973e3b;
   font-weight: bold;
   font-size: 185%;
+  text-shadow: 0 0 0.1em #973e3b;
 }
 
 .narsie {
   color: #973e3b;
   font-weight: bold;
   font-size: 925%;
+  text-shadow: 0 0 0.1em #973e3b;
 }
 
 .narsiesmall {
   color: #973e3b;
   font-weight: bold;
   font-size: 370%;
+  text-shadow: 0 0 0.1em #973e3b;
 }
 
 .colossus {
   color: #7f282a;
   font-size: 310%;
+  text-shadow: 0 0 0.1em #7f282a;
 }
 
 .hierophant {
   color: #660099;
   font-weight: bold;
   font-style: italic;
+  text-shadow: 0 0 0.1em #660099;
 }
 
 .hierophant_warning {
   color: #660099;
   font-style: italic;
+  text-shadow: 0 0 0.1em #660099;
 }
 
 .purple {
   color: #5e2d79;
+  text-shadow: 0 0 0.1em #5e2d79;
 }
 
 .holoparasite {
   color: #35333a;
+  text-shadow: 0 0 0.1em #35333a;
 }
 
 .revennotice {
   color: #1d2953;
+  text-shadow: 0 0 0.1em #1d2953;
 }
 
 .revenboldnotice {
   color: #1d2953;
   font-weight: bold;
+  text-shadow: 0 0 0.1em #1d2953;
 }
 
 .revenbignotice {
   color: #1d2953;
   font-weight: bold;
   font-size: 185%;
+  text-shadow: 0 0 0.1em #1d2953;
 }
 
 .revenminor {
   color: #823abb;
+  text-shadow: 0 0 0.1em #823abb;
 }
 
 .revenwarning {
   color: #760fbb;
   font-style: italic;
+  text-shadow: 0 0 0.1em #760fbb;
 }
 
 .revendanger {
   color: #760fbb;
   font-weight: bold;
   font-size: 185%;
+  text-shadow: 0 0 0.1em #760fbb;
 }
 
 .deconversion_message {
   color: #5000a0;
   font-size: 185%;
   font-style: italic;
+  text-shadow: 0 0 0.1em #5000a0;
 }
 
 .ghostalert {
   color: #5c00e6;
   font-style: italic;
   font-weight: bold;
+  text-shadow: 0 0 0.1em #5c00e6;
 }
 
 .alien {
   color: #543354;
+  text-shadow: 0 0 0.1em #543354;
 }
 
 .noticealien {
   color: #00c000;
+  text-shadow: 0 0 0.1em #00c000;
 }
 
 .alertalien {
   color: #00c000;
   font-weight: bold;
+  text-shadow: 0 0 0.1em #00c000;
 }
 
 .changeling {
   color: #800080;
   font-style: italic;
+  text-shadow: 0 0 0.1em #800080;
 }
 
 .alertsyndie {
   color: #ff0000;
   font-size: 185%;
   font-weight: bold;
+  text-shadow: 0 0 0.1em #ff0000;
 }
 
 .spider {
   color: #4d004d;
   font-weight: bold;
   font-size: 185%;
+  text-shadow: 0 0 0.1em #4d004d;
 }
 
 .interface {
   color: #330033;
+  text-shadow: 0 0 0.1em #330033;
 }
 
 .sans {
@@ -737,6 +808,7 @@ h2.alert {
 .tape_recorder {
   color: #800000;
   font-family: 'Courier New', cursive, sans-serif;
+  text-shadow: 0 0 0.1em #800000;
 }
 
 .command_headset {
@@ -775,6 +847,7 @@ h2.alert {
   font-size: 160%;
   font-family: 'Comic Sans MS', cursive, sans-serif;
   font-weight: bold;
+  text-shadow: 0 0 0.1em #ff69bf;
 }
 
 .singing {
@@ -786,6 +859,7 @@ h2.alert {
   color: #15d512;
   font-family: 'Courier New', cursive, sans-serif;
   font-style: italic;
+  text-shadow: 0 0 0.1em #15d512;
 }
 
 .hypnophrase {
@@ -849,6 +923,7 @@ h2.alert {
 .memo {
   color: #638500;
   text-align: center;
+  text-shadow: 0 0 0.1em #638500;
 }
 
 .memoedit {
@@ -859,6 +934,7 @@ h2.alert {
 .abductor {
   color: #800080;
   font-style: italic;
+  text-shadow: 0 0 0.1em #800080;
 }
 
 .mind_control {
@@ -866,35 +942,43 @@ h2.alert {
   font-size: 100%;
   font-weight: bold;
   font-style: italic;
+  text-shadow: 0 0 0.1em #a00d6f;
 }
 
 .slime {
   color: #00ced1;
+  text-shadow: 0 0 0.1em #00ced1;
 }
 
 .drone {
   color: #848482;
+  text-shadow: 0 0 0.1em #848482;
 }
 
 .monkey {
   color: #975032;
+  text-shadow: 0 0 0.1em #975032;
 }
 
 .swarmer {
   color: #2c75ff;
+  text-shadow: 0 0 0.1em #2c75ff;
 }
 
 .resonate {
   color: #298f85;
+  text-shadow: 0 0 0.1em #298f85;
 }
 
 .monkeyhive {
   color: #774704;
+  text-shadow: 0 0 0.1em #774704;
 }
 
 .monkeylead {
   color: #774704;
   font-size: 80%;
+  text-shadow: 0 0 0.1em #774704;
 }
 
 .connectionClosed,
@@ -910,6 +994,7 @@ h2.alert {
 
 .internal {
   color: blue;
+  text-shadow: 0 0 0.1em blue;
 }
 
 /* HELPER CLASSES */
@@ -971,15 +1056,18 @@ h2.alert {
 .sayverb {
   color: #2e2e2e;
   font-style: italic;
+  text-shadow: 0 0 0.1em #2e2e2e;
 }
 
 .emote {
   color: #2e2e2e;
+  text-shadow: 0 0 0.1em #2e2e2e;
 }
 
 .debug {
   color: #5ce43d;
   font-weight: bold;
+  text-shadow: 0 0 0.1em #5ce43d;
 }
 
 .adminpmbox {
@@ -1007,6 +1095,7 @@ h2.alert {
 
 .flocksay {
   color: #488276;
+  text-shadow: 0 0 0.1em #488276;
 }
 
 .flocksay a {
@@ -1029,6 +1118,7 @@ h2.alert {
 .flocknpc {
   color: #869995;
   font-size: 80%;
+  text-shadow: 0 0 0.1em #869995;
 }
 
 .flocksay.ping {
