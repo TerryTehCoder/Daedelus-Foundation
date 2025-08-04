@@ -8,6 +8,7 @@
 #define CHANNEL_BUZZ 1018
 #define CHANNEL_TRAITOR 1017
 #define CHANNEL_BREATHING 1016
+#define CHANNEL_SAFE_DIAL 1015 // Unique channel for the safe dial sound
 
 //THIS SHOULD ALWAYS BE THE LOWEST ONE!
 //KEEP IT UPDATED
