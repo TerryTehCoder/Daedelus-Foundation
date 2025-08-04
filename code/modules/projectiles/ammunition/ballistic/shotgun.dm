@@ -134,6 +134,12 @@
 	projectile_type = /obj/projectile/bullet/dart
 	var/reagent_amount = 30
 
+/obj/item/ammo_casing/shotgun/flash
+	name = "flash shell"
+	desc = "A chemical shell used to signal distress or provide illumination."
+	icon_state = "shell-flash"
+	projectile_type = /obj/projectile/energy/flash/flare
+
 /obj/item/ammo_casing/shotgun/dart/Initialize(mapload)
 	. = ..()
 	create_reagents(reagent_amount, OPENCONTAINER)

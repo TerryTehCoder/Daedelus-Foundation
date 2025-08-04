@@ -481,3 +481,286 @@
 		1 MINUTES + 47 SECONDS,
 		1 MINUTES + 59 SECONDS,
 	)
+
+// SCP Tapes - Misc
+
+/obj/item/tape/birthday_party
+	name = "tape (Birthday Party)"
+	desc = "A tape labeled 'Birthday Party'."
+	icon_state = "tape_yellow"
+	storedinfo = list(
+		"\[00:01\] (Sound of balloons being inflated and party music playing softly)",
+		"\[00:15\] Mother: Happy birthday, sweetie! Look at all the decorations!",
+		"\[00:30\] Child: Mommy, when are my friends coming?",
+		"\[00:45\] Mother: They're just running a little late, darling. They'll be here any minute.",
+		"\[01:00\] (A long silence, only the faint party music and the mother's nervous humming can be heard.)",
+		"\[01:45\] Mother: (Voice strained, almost a whisper) Any minute now... they just hit traffic, that's all.",
+		"\[02:30\] Child: (Small, sad voice) But the cake is getting warm.",
+		"\[02:45\] Mother: We can put it back in the fridge, sweetie. They'll be here. They promised.",
+		"\[03:30\] (Sound of a door creaking open and then closing. A child's faint whimper.)",
+		"\[03:45\] Mother: (Sighs, then a forced cheerfulness) Well, more cake for us, right?",
+		"\[04:10\] (The audio captures the silence of an empty room, with only the faint rustling of deflated balloons. A single party hat is heard falling to the floor.)",
+		"\[04:20\] (A faint, almost imperceptible scratching sound is picked up by the recorder.)"
+	)
+	timestamp = list(
+		1 SECONDS,
+		15 SECONDS,
+		30 SECONDS,
+		45 SECONDS,
+		1 MINUTES,
+		1 MINUTES + 45 SECONDS,
+		2 MINUTES + 30 SECONDS,
+		2 MINUTES + 45 SECONDS,
+		3 MINUTES + 30 SECONDS,
+		3 MINUTES + 45 SECONDS,
+		4 MINUTES + 10 SECONDS,
+		4 MINUTES + 20 SECONDS
+	)
+
+/obj/item/tape/therapy_session
+	name = "tape (Therapy Session)"
+	desc = "A dust covered recording with the label 'Session-2: Allie'."
+	icon_state = "tape_greyscale"
+	storedinfo = list(
+		"\[00:05\] Patient: I feel like my real mother is calling to me from the woods. It's not my mom, not the one I live with.",
+		"\[00:20\] Therapist: Can you elaborate on that feeling? What does this 'real mother' sound like?",
+		"\[00:40\] Patient: It's a song... a lullaby. It's so clear when I'm alone. It tells me to come home.",
+		"\[01:00\] Therapist: (Clears throat, shuffles papers) And how does this make you feel? Frightened? Comforted?",
+		"\[01:15\] Patient: Both. It's... compelling. Like I have to go.",
+		"\[01:30\] Patient: (Begins humming a strange, melodic tune, eyes unfocused, swaying slightly)",
+		"\[01:45\] Therapist: (Silence, shifting uncomfortably in chair. A faint rustling sound from outside the window.)",
+		"\[02:10\] Patient: (Singing in an unknown, lullaby-like language, growing louder and more insistent)",
+		"\[02:30\] Therapist: (Voice barely audible) I think we should perhaps... reschedule.",
+		"\[02:45\] Patient: (Stops singing abruptly) She's here.",
+		"\[02:50\] (A loud thud from outside the room. The singing resumes, now accompanied by a low, guttural growl.)",
+		"\[03:10\] (The recording device falls, making a loud clunk. The singing and growling continue, fading slowly as if moving away.)"
+	)
+	timestamp = list(
+		5 SECONDS,
+		20 SECONDS,
+		40 SECONDS,
+		1 MINUTES,
+		1 MINUTES + 15 SECONDS,
+		1 MINUTES + 30 SECONDS,
+		1 MINUTES + 45 SECONDS,
+		2 MINUTES + 10 SECONDS,
+		2 MINUTES + 30 SECONDS,
+		2 MINUTES + 45 SECONDS,
+		2 MINUTES + 50 SECONDS,
+		3 MINUTES + 10 SECONDS
+	)
+
+/obj/item/tape/cheese_dance_97
+	name = "tape (Cheese Dance '97)"
+	desc = "A recording of a very enthusiastic talent show performance."
+	icon_state = "tape_red"
+	storedinfo = list(
+		"\[00:02\] (Polka music begins to play. Something stumbles across what sounds like a small stage—soft thud, then shuffle of feet.)",
+		"\[00:10\] (Uncoordinated movements can be heard—fabric rustling, limbs flailing. A few polite claps and scattered laughter from the audience.)",
+		"\[00:30\] (Audience cheers swell unnaturally loud, building into a near roar. Chairs scrape and thump as people rise and move in unison.)",
+		"\[00:50\] (The cheering synchronizes into a rhythmic chant: 'Cheese! Cheese! Cheese!')",
+		"\[01:15\] (The music cuts out abruptly. The chant continues undisturbed, echoing in the sudden silence. Someone breathes shakily.)",
+		"\[01:30\] (A soft, frightened whimper is heard, muffled slightly. The audience continues chanting for several seconds before quieting.)",
+		"\[01:45\] (A slow, deliberate clap begins—rhythmic, too close to the mic. Nothing else moves.)",
+		"\[01:50\] (The mic rattles slightly, possibly brushed or bumped. The single clap continues, echoing in the silence. Recording ends.)"
+	)
+	timestamp = list(
+		2 SECONDS,
+		10 SECONDS,
+		30 SECONDS,
+		50 SECONDS,
+		1 MINUTES + 15 SECONDS,
+		1 MINUTES + 30 SECONDS,
+		1 MINUTES + 45 SECONDS,
+		1 MINUTES + 50 SECONDS
+	)
+
+/obj/item/tape/fish_funeral
+	name = "tape (Fish Funeral)"
+	desc = "A solemn home video of a goldfish funeral."
+	icon_state = "tape_blue"
+	storedinfo = list(
+		"\[00:03\] Man: We are gathered here today to mourn the loss of Goldie, a truly magnificent aquatic companion.",
+		"\[00:15\] Child: (Playing 'Ave Maria' on a recorder, off-key, but with great solemnity)",
+		"\[00:30\] Woman: Goldie brought us so much joy in his short, vibrant life. He will be deeply missed.",
+		"\[00:45\] (Sound of dirt being shoveled onto a small cardboard casket. The child sniffles loudly.)",
+		"\[01:00\] Child: Goodbye, Goldie. You were the best fish ever. (A tear rolls down the child's cheek.)",
+		"\[01:10\] Man: Rest in peace, little guy. You're swimming with the angels now.",
+		"\[01:15\] (A zoom is heard as a camera moves. A distinct flopping sound is heard from within the box of cardboard.)",
+		"\[01:20\] Woman: Did you hear that?",
+		"\[01:25\] Child: (Gasps) Goldie!",
+		"\[01:30\] (The fish is audibly flopping inside the box, pushing against the cardboard. The dirt on top shifts noisily.)",
+		"\[01:35\] Man: (Stammering) W-what in the...?",
+		"\[01:40\] (The flopping intensifies, the box begins to vibrate. A faint, wet gurgling sound.)",
+		"\[01:45\] (The recorder drops, hearing only faint sounds of flopping and gurgling continue, growing louder.)"
+	)
+	timestamp = list(
+		3 SECONDS,
+		15 SECONDS,
+		30 SECONDS,
+		45 SECONDS,
+		1 MINUTES,
+		1 MINUTES + 10 SECONDS,
+		1 MINUTES + 15 SECONDS,
+		1 MINUTES + 20 SECONDS,
+		1 MINUTES + 25 SECONDS,
+		1 MINUTES + 30 SECONDS,
+		1 MINUTES + 35 SECONDS,
+		1 MINUTES + 40 SECONDS,
+		1 MINUTES + 45 SECONDS
+	)
+
+/obj/item/tape/cereal_argument
+	name = "tape (Cereal Argument)"
+	desc = "A breakfast argument, focused on a cereal box."
+	icon_state = "tape_purple"
+	storedinfo = list(
+		"\[00:01\] Father: I told you, that was the last box! You know I like to have my cereal in the morning!",
+		"\[00:05\] Mother: Well, I didn't see your name on it! And I was hungry!",
+		"\[00:10\] Child (whispering): I drew a picture of Mommy on the cereal box...",
+		"\[00:20\] Father: We agreed! One box each for the week! This is ridiculous!",
+		"\[00:30\] Mother: (Scoffs) You always do this! You're so selfish!",
+		"\[00:40\] (A faint, almost imperceptible whisper is picked up in the background. The mic hisses slightly.)",
+		"\[00:45\] Child: (Whispering) Mommy Two says you're mean, Daddy.",
+		"\[00:50\] Father: (Confused) What was that, sweetie? Who said that?",
+		"\[01:00\] Mother: (Hushed) Did... did you hear that?",
+		"\[01:10\] (The whispering grows louder—soft, lilting, unintelligible. Something shifts with a papery rasp.)",
+		"\[01:20\] Father: (Voice trembling) This isn't funny Melany!.",
+		"\[01:30\] (There’s a subtle vibration—cardboard scraping on wood, picked up by the mic.)",
+		"\[01:40\] (A high-pitched giggle breaks through the background noise. Tape crackles faintly.)",
+		"\[01:45\] (A sudden thud—possibly the recorder falling. Giggling intensifies, followed by a loud, wet crunching sound.)"
+	)
+	timestamp = list(
+		1 SECONDS,
+		5 SECONDS,
+		10 SECONDS,
+		20 SECONDS,
+		30 SECONDS,
+		40 SECONDS,
+		45 SECONDS,
+		50 SECONDS,
+		1 MINUTES,
+		1 MINUTES + 10 SECONDS,
+		1 MINUTES + 20 SECONDS,
+		1 MINUTES + 30 SECONDS,
+		1 MINUTES + 40 SECONDS,
+		1 MINUTES + 45 SECONDS
+	)
+
+/obj/item/tape/moms_furniture
+	name = "tape (Mom's Furniture Ad)"
+	desc = "A surreal local furniture ad."
+	icon_state = "tape_white"
+	storedinfo = list(
+		"\[00:01\] (Upbeat, slightly off-key jingle begins, with a cheerful acoustic guitar and tambourine.)",
+		"\[00:05\] Singer: If it rocks, it's from Mom's! Your one-stop shop for comfort and style!",
+		"\[00:10\] (Light instrumental continues with friendly background chatter and the faint squeak of a rocking chair.)",
+		"\[00:20\] Singer: Quality you can trust, prices you'll love! We've got sofas, tables, and beds galore!",
+		"\[00:30\] (A gentle breeze can be heard through open windows. A clock chimes in the distance.)",
+		"\[00:40\] Singer: If it rocks, it's from Mom's! (Jingle repeats joyfully.)",
+		"\[00:50\] (The sound of laughter, kids playing in the background. Someone softly hums along to the tune.)",
+		"\[01:00\] Singer: From Mom's — where your home feels like home!",
+		"\[01:10\] (The jingle finishes with a cheerful little flourish. Faint sound of a bell ringing as a door opens.)",
+		"\[01:20\] (Friendly voiceover: 'Located just off Route 9. Open 7 days a week!')",
+		"\[01:30\] (Fade out with gentle acoustic strumming and one final squeak from a rocking chair.)"
+	)
+	timestamp = list(
+		1 SECONDS,
+		5 SECONDS,
+		10 SECONDS,
+		20 SECONDS,
+		30 SECONDS,
+		40 SECONDS,
+		50 SECONDS,
+		1 MINUTES,
+		1 MINUTES + 10 SECONDS,
+		1 MINUTES + 20 SECONDS,
+		1 MINUTES + 30 SECONDS
+	)
+
+// SCP Tapes - Research
+
+/obj/item/tape/scp_test_001
+	name = "tape (SCP Test 001)"
+	desc = "A lost SCP test recording, designated 001."
+	icon_state = "tape_greyscale"
+	storedinfo = list(
+		"\[00:01\] Dr. \[REDACTED\]: Test log 001. Subject D-5432 exposed to SCP-███ within containment chamber 7.",
+		"\[00:10\] (Sound of a low, resonant hum, growing steadily in intensity. Subject shifts nervously.)",
+		"\[00:25\] D-5432: What is that noise? It's... beautiful. Like a choir, but not.",
+		"\[00:40\] Dr. \[REDACTED\]: D-5432, report your current state. Any anomalous sensations?",
+		"\[00:55\] D-5432: (Giggles uncontrollably, voice unsteady) I can hear the colors! All the colors! They're singing!",
+		"\[01:10\] (Humming intensifies, becoming almost painful. Subject begins to twitch. A high-pitched whine overlays the hum.)",
+		"\[01:25\] Dr. \[REDACTED\]: Subject is exhibiting signs of extreme euphoria and sensory overload. Recommend immediate termination of exposure.",
+		"\[01:40\] (The whine becomes a piercing shriek. Subject collapses, convulsing. The hum reaches a crescendo.)",
+		"\[01:50\] (Abrupt silence. Then, a faint, rhythmic clicking sound. Static.)"
+	)
+	timestamp = list(
+		1 SECONDS,
+		10 SECONDS,
+		25 SECONDS,
+		40 SECONDS,
+		55 SECONDS,
+		1 MINUTES + 10 SECONDS,
+		1 MINUTES + 25 SECONDS,
+		1 MINUTES + 40 SECONDS,
+		1 MINUTES + 50 SECONDS
+	)
+
+/obj/item/tape/scp_test_002
+	name = "tape (SCP Test 002)"
+	desc = "A lost SCP test recording, designated 002."
+	icon_state = "tape_greyscale"
+	storedinfo = list(
+		"\[00:01\] Researcher: Test log 002. Observation of SCP-███'s interaction with organic matter. Initiating exposure with porcine tissue sample.",
+		"\[00:15\] (Sound of dripping, followed by a wet, tearing noise. Environmental sensors detect a faint, sickly sweet odor.)",
+		"\[00:30\] Researcher: Fascinating. The tissue is being... reconfigured. Not consumed, but reshaped.",
+		"\[00:45\] (A faint, rhythmic thumping begins, as if something is growing or pulsating.)",
+		"\[01:00\] Researcher: It's forming a new structure. Unprecedented. Cellular integrity appears to be changing.",
+		"\[01:15\] (Thumping grows louder, accompanied by squelching. Pulsations become more distinct.)",
+		"\[01:30\] Researcher: (Voice strained, a hint of fear) It's... it's perceiving me. The structure has developed... sensory awareness.",
+		"\[01:40\] (A guttural, wet gasp from the researcher. The thumping becomes frantic.)",
+		"\[01:45\] (Sound of a chair scraping, a struggle. Loud, wet tearing followed by a choked scream.)",
+		"\[01:50\] (Silence, aside from the persistent thumping and a faint, wet slurping sound. Audio ends abruptly.)"
+	)
+	timestamp = list(
+		1 SECONDS,
+		15 SECONDS,
+		30 SECONDS,
+		45 SECONDS,
+		1 MINUTES,
+		1 MINUTES + 15 SECONDS,
+		1 MINUTES + 30 SECONDS,
+		1 MINUTES + 40 SECONDS,
+		1 MINUTES + 45 SECONDS,
+		1 MINUTES + 50 SECONDS
+	)
+
+/obj/item/tape/scp_test_003
+	name = "tape (SCP Test 003)"
+	desc = "A lost SCP test recording, designated 003."
+	icon_state = "tape_greyscale"
+	storedinfo = list(
+		"\[00:01\] Agent \[REDACTED\]: Field recording, SCP-███ containment breach. We're in Sector C, attempting to re-establish perimeter.",
+		"\[00:10\] (Intense gunfire and shouting in the background. Explosions shake the area.)",
+		"\[00:25\] Agent \[REDACTED\]: We've lost visual on the anomaly! It's too fast! It just phased through the wall!",
+		"\[00:40\] (Sound of heavy metal tearing, followed by a distorted, high-pitched roar that seems to vibrate the air.)",
+		"\[00:55\] Agent \[REDACTED\]: Fall back! Fall back! It's adapting! It's learning our movements!",
+		"\[01:10\] (More frantic gunfire, then a series of wet, sickening impacts. A gurgling sound, then a scream cut short.)",
+		"\[01:20\] (Heavy, ragged breathing from Agent \[REDACTED\]. A faint, almost melodic hum begins to emanate from the darkness.)",
+		"\[01:25\] Agent \[REDACTED\]: (Whispering, terrified) It knows... it knows where we are. It's playing with us.",
+		"\[01:30\] (The humming grows louder, accompanied by a soft, rhythmic tapping. A final, wet crunch, impossibly close to the microphone.)",
+		"\[01:35\] (Silence, then a faint, satisfied sigh. Tape cuts out.)"
+	)
+	timestamp = list(
+		1 SECONDS,
+		10 SECONDS,
+		25 SECONDS,
+		40 SECONDS,
+		55 SECONDS,
+		1 MINUTES + 10 SECONDS,
+		1 MINUTES + 20 SECONDS,
+		1 MINUTES + 25 SECONDS,
+		1 MINUTES + 30 SECONDS,
+		1 MINUTES + 35 SECONDS
+	)

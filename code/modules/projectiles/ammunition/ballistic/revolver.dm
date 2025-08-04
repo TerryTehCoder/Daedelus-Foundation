@@ -56,3 +56,9 @@
 	name = ".38 Iceblox bullet casing"
 	desc = "A .38 Iceblox bullet casing."
 	projectile_type = /obj/projectile/bullet/c38/iceblox
+
+/obj/item/ammo_casing/a50
+	desc = "A .44 magnum bullet casing."
+	caliber = ".44"
+	projectile_type = /obj/projectile/bullet/a50
+	icon_state = "magnum-brass"

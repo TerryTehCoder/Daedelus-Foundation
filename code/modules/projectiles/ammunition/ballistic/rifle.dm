@@ -10,6 +10,21 @@
 /obj/item/ammo_casing/a762/enchanted
 	projectile_type = /obj/projectile/bullet/a762/enchanted
 
+/obj/item/ammo_casing/a762x54
+	desc = "A 7.62x54mmR bullet casing."
+	caliber = "7.62x54mmR"
+	projectile_type = /obj/projectile/bullet/rifle/a762x54
+
+/obj/item/ammo_casing/a762nato
+	desc = "A 7.62x51mm NATO bullet casing."
+	caliber = "a762nato"
+	projectile_type = /obj/projectile/bullet/rifle/a762nato
+	icon_state = "rifle-brass"
+
+/obj/item/ammo_casing/a762/practice
+	desc = "A 7.62mm practice bullet casing."
+	projectile_type = /obj/projectile/bullet/a762/practice
+
 // 5.56mm (M-90gl Carbine)
 
 /obj/item/ammo_casing/a556
