@@ -14,6 +14,7 @@
 	var/climbable = TRUE
 	///Initial direction of the railing.
 	var/ini_dir
+	layer = ABOVE_OBJ_LAYER
 
 /obj/structure/railing/corner //aesthetic corner sharp edges hurt oof ouch
 	icon_state = "railing_corner"

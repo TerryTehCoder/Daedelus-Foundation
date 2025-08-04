@@ -22,6 +22,7 @@
 	var/cuttable = TRUE
 	var/hole_size= NO_HOLE
 	var/invulnerable = FALSE
+	layer = ABOVE_OBJ_LAYER
 
 /obj/structure/fence/Initialize(mapload)
 	. = ..()
