@@ -417,7 +417,6 @@
 /// from base of /obj/item/slimepotion/speed/afterattack(): (obj/target, /obj/src, mob/user)
 #define COMSIG_SPEED_POTION_APPLIED "speed_potion"
 	#define SPEED_POTION_STOP (1<<0)
-
 // SCP-216 signals
 /// Sent when the safe is opened.
 #define COMSIG_SCP216_OPEN "scp216_open"
@@ -435,3 +434,5 @@
 #define COMSIG_SCP216_ITEMS_GENERATED "scp216_items_generated"
 /// Sent when an item is temporally displaced by SCP-216. (atom/movable/displaced_item, mob/user)
 #define COMSIG_SCP216_TEMPORAL_DISPLACEMENT "scp216_temporal_displacement"
+/// from /obj/structure/scp151/proc/effect(): (mob/living/carbon/human/H, obj/structure/scp151/source_scp)
+#define COMSIG_SCP151_EFFECT_APPLIED "scp151_effect_applied"

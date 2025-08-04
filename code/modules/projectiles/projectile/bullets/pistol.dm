@@ -22,6 +22,12 @@
 	damage = 15
 	fire_stacks = 2
 
+/obj/projectile/bullet/c9mm/rubber //"rubber" bullets
+	name = "rubber bullet"
+	damage = 60
+	weak_against_armor = 2
+
+
 // 10mm
 
 /obj/projectile/bullet/c10mm
@@ -42,3 +48,19 @@
 	name = "10mm incendiary bullet"
 	damage = 20
 	fire_stacks = 2
+
+// P90 SMG
+/obj/projectile/bullet/a57
+	armor_penetration = 10
+
+/obj/projectile/bullet/a57/rubber
+	armor_penetration = 0
+
+/obj/projectile/bullet/a57/hollowpoint
+	armor_penetration = 0
+
+/obj/projectile/bullet/a57/ap
+	armor_penetration = 20
+
+/obj/projectile/bullet/a57/silver
+	armor_penetration = 10
