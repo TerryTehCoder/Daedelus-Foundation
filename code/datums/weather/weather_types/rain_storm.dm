@@ -9,6 +9,7 @@
 
 	weather_message = "<span class='userdanger'><i>The wind picks up as a slow drizzle begins to turn into a downpour!</i></span>"
 	weather_overlay = "rain_storm"
+	weather_sound = 'sound/weather/rainstorm_loop.ogg'
 	weather_duration_lower = 1800 SECONDS
 	weather_duration_upper = 3600 SECONDS
 
@@ -21,26 +22,6 @@
 
 	barometer_predictable = TRUE
 	use_glow = FALSE
-
-	// Define ambient sound profiles for this weather type
-	// Handled by play_ambient_sound_for_mob() in SS fire() loop.
-	ambient_sound_profiles = list(
-
-		// Far range rain sound
-		list(
-			"sound" = 'sound/weather/rainstorm_loop.ogg',
-			"volume" = 50,
-			"max_dist" = 10, // Plays up to 10 tiles from an exposed turf
-			"falloff" = 1
-		),
-		// Close range, heavy rain sound
-		list(
-			"sound" = 'sound/weather/rainstorm_loop.ogg',
-			"volume" = 70,
-			"max_dist" = 3, // Plays up to 3 tiles from an exposed turf
-			"falloff" = 2
-		)
-	)
 
 /datum/weather/rain_storm/weather_act(mob/living/L)
 	..()

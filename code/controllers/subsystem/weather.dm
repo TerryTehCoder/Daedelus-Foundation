@@ -122,24 +122,18 @@ SUBSYSTEM_DEF(weather)
 		var/list/mobs_to_affect = list()
 		var/list/objects_to_affect = list()
 
-		// Mobs that entered the storm's area
+		// Register movement signal for all mobs in range, so check_mob_ambient_sound is called on movement.
 		for(var/mob/M in mob_canidates)
-			if(!M.client)
-				continue
-			// The check_mob_ambient_sound proc will handle adding the mob to mobs_with_ambient_sound and playing the sound.
-			RegisterSignal(M, COMSIG_MOVABLE_MOVED, TYPE_PROC_REF(/datum/weather, handle_mob_moved))
-			current_storm.check_mob_ambient_sound(M) // Start sound immediately for new mobs
-
-		// Mobs that left the storm's area
+			if(M && M.client)
+				RegisterSignal(M, COMSIG_MOVABLE_MOVED, TYPE_PROC_REF(/datum/weather, handle_mob_moved))
+		// Unregister signals for mobs that left the storm's area.
 		// Iterate over a copy of mobs_with_ambient_sound to safely remove elements during iteration.
 		var/list/mobs_to_check_for_exit = current_storm.mobs_with_ambient_sound.Copy()
-		for(var/mob/M in mobs_to_check_for_exit) // Iterate over mobs currently playing sound
-			if(!M || !M.client) // Mob might have been deleted or logged out
-				current_storm.mobs_with_ambient_sound -= M // Remove from list if mob is gone
-				continue
-
-			// Same as before, proc below handles removing and stopping sound.
-			current_storm.check_mob_ambient_sound(M)
+		for(var/mob/M in mobs_to_check_for_exit)
+			if(!M || !M.client || !(M.z in current_storm.impacted_z_levels)) // Mob might have been deleted, logged out, or left the storm's Z-level
+				current_storm.mobs_with_ambient_sound -= M
+				SEND_SOUND(M, sound(null, channel = current_storm.sound_channel)) // Stop sound
+				UnregisterSignal(M, COMSIG_MOVABLE_MOVED, TYPE_PROC_REF(/datum/weather, handle_mob_moved))
 
 		// Determining the mobs/objs lists here and flagging them appropriately.
 		for(var/mob/living/M in mob_canidates)

@@ -131,18 +131,17 @@
 			if (!current_turf) // No turf at this Z-level
 				// If we're at the highest relevant Z-level and there's no turf, then the turf below it might be exposed.
 				if(z == max_z_level) // If the very top is empty, the turf below it might be exposed
-					if (z - 1 >= 1) // Ensure z-1 is a valid Z-level
-						var/turf/turf_to_expose = locate(column_x, column_y, z - 1)
-						if(turf_to_expose) // Ensure it exists
-							if(turf_to_expose.z in initialized_relevant_z_levels) // Only expose if the Z-level is relevant
-								set_exposed(turf_to_expose, TRUE)
-								if(debug_verbose_coverage_messages)
-									message_admins(span_adminnotice("Weather Coverage: Exposed turf [turf_to_expose.loc] due to empty space at max_z_level."))
+					var/turf/turf_to_expose = GetBelow(locate(column_x, column_y, z))
+					if(turf_to_expose) // Ensure it exists
+						if(turf_to_expose.z in initialized_relevant_z_levels) // Only expose if the Z-level is relevant
+							set_exposed(turf_to_expose, TRUE)
+							if(debug_verbose_coverage_messages)
+								message_admins(span_adminnotice("Weather Coverage: Exposed turf [turf_to_expose.loc] due to empty space at max_z_level."))
 				continue // Always continue to the next lower Z-level, let the main logic handle subsequent turfs
 
 			// If we are at the highest Z-level and this turf exists, it is exposed.
 			// Or if the turf above it does not block weather, this turf is exposed.
-			var/turf/turf_above = locate(current_turf.x, current_turf.y, current_turf.z + 1)
+			var/turf/turf_above = GetAbove(current_turf)
 			if(debug_verbose_coverage_messages && debug_message_count < 100)
 				message_admins(span_adminnotice("Weather Coverage Debug: Evaluating Turf [current_turf.loc] (Type: [current_turf.type], Z: [current_turf.z]). Turf above: [turf_above ? turf_above.loc : "None"] (Type: [turf_above ? turf_above.type : "N/A"], Blocks Weather: [turf_above ? turf_above.blocks_weather : "N/A"]). Z relevant: [current_turf.z in initialized_relevant_z_levels]. Exposed Candidate: [(!turf_above || !turf_above.blocks_weather)]."))
 				debug_message_count++ // Increment counter
@@ -179,7 +178,7 @@
 /datum/weather/weather_coverage/proc/on_turf_created(turf/T)
 	if(!T || !T.z) return
 
-	var/turf/below = locate(T.x, T.y, T.z - 1)
+	var/turf/below = GetBelow(T)
 
 	if(!below)
 		return
@@ -197,7 +196,7 @@
 		return
 
 	//Check the turf below the destroyed turf
-	var/turf/below = locate(T.x, T.y, T.z - 1)
+	var/turf/below = GetBelow(T)
 	if(below) //If the turf below exists, go through the next step of validations
 		update_turf_exposure(below)
 
@@ -206,7 +205,7 @@
 		return
 
 	// Turf that blocked weather is now gone; below might be exposed
-	var/turf/above = locate(T.x, T.y, T.z + 1)
+	var/turf/above = GetAbove(T)
 	var/is_exposed = (!above || !above.blocks_weather);
 
 	set_exposed(T, is_exposed);
