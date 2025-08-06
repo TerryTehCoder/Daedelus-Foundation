@@ -101,12 +101,15 @@
 //Disk boxes
 
 /obj/item/storage/box/disks
-	name = "diskette box"
-	illustration = "disk_kit"
+	name = "box of floppy disks"
+	desc = "A box able to fit 4 floppy disks."
+
+	icon_state = "floopybox-closed"
+	illustration = null
 
 /obj/item/storage/box/disks/PopulateContents()
-	for(var/i in 1 to 7)
-		new /obj/item/disk/data(src)
+	for(var/i in 1 to 4)
+		new /obj/item/disk/data/floppy(src)
 
 // Ordinary survival box
 /obj/item/storage/box/survival

@@ -11,7 +11,7 @@
 
 /**
  * Paper is now using markdown (like in github pull notes) for ALL rendering
- * so we do loose a bit of functionality but we gain in easy of use of
+ * so we do loose a bit of functionality but we gain in ease of use of
  * paper and getting rid of that crashing bug
  */
 /obj/item/paper
@@ -52,6 +52,11 @@
 	var/list/add_info_style
 
 	var/show_written_words = TRUE
+
+	/// If FALSE, pens and things cannot write on them.
+	var/writable = TRUE
+	/// If FALSE, cannot be stamped.
+	var/stampable = TRUE
 
 	/// The (text for the) stamps on the paper.
 	var/list/stamps /// Positioning for the stamp in tgui
@@ -322,7 +327,7 @@
 		// use the clipboard's pen, if applicable.
 		if(!istype(holding, /obj/item/stamp) && clipboard.pen)
 			holding = clipboard.pen
-	if(istype(holding, /obj/item/toy/crayon))
+	if(writable && istype(holding, /obj/item/toy/crayon))
 		var/obj/item/toy/crayon/PEN = holding
 		data["pen_font"] = CRAYON_FONT
 		data["pen_color"] = PEN.paint_color
@@ -330,7 +335,7 @@
 		data["is_crayon"] = TRUE
 		data["stamp_class"] = "FAKE"
 		data["stamp_icon_state"] = "FAKE"
-	else if(istype(holding, /obj/item/pen))
+	else if(writable && istype(holding, /obj/item/pen))
 		var/obj/item/pen/PEN = holding
 		data["pen_font"] = PEN.font
 		data["pen_color"] = PEN.colour
@@ -338,7 +343,7 @@
 		data["is_crayon"] = FALSE
 		data["stamp_class"] = "FAKE"
 		data["stamp_icon_state"] = "FAKE"
-	else if(istype(holding, /obj/item/stamp))
+	else if(stampable && istype(holding, /obj/item/stamp))
 		var/datum/asset/spritesheet/sheet = get_asset_datum(/datum/asset/spritesheet/simple/paper)
 		data["stamp_icon_state"] = holding.icon_state
 		data["stamp_class"] = sheet.icon_class_name(holding.icon_state)
@@ -400,6 +405,8 @@
 		return
 	switch(action)
 		if("stamp")
+			if(!stampable)
+				return
 			var/stamp_x = text2num(params["x"])
 			var/stamp_y = text2num(params["y"])
 			var/stamp_r = text2num(params["r"]) // rotation in degrees
@@ -412,6 +419,8 @@
 			. = TRUE
 
 		if("save")
+			if(!writable)
+				return
 			var/in_paper = params["text"]
 			var/paper_len = length(in_paper)
 			field_counter = params["field_counter"] ? text2num(params["field_counter"]) : field_counter
@@ -468,6 +477,17 @@
 
 /obj/item/paper/crumpled/muddy
 	icon_state = "scrap_mud"
+
+/**
+ * Thermal paper, cannot be written on.
+ */
+/obj/item/paper/thermal
+	name = "thermal paper"
+	icon_state = "thermal_paper"
+	show_written_words = FALSE
+
+	writable = FALSE
+	stampable = FALSE
 
 #undef MAX_PAPER_LENGTH
 #undef MAX_PAPER_STAMPS
