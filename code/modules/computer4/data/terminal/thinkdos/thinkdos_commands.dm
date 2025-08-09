@@ -7,7 +7,7 @@
 
 /// Attempt to execute the command. Return TRUE if *any* action is taken.
 /datum/shell_command/proc/try_exec(command_name, datum/c4_file/terminal_program/operating_system/thinkdos/system, datum/c4_file/terminal_program/program, list/arguments, list/options)
-	if(!(lowertext(command_name) in aliases))
+	if(!(command_name in aliases))
 		return FALSE
 
 	exec(system, program, arguments, options)
@@ -427,7 +427,7 @@
 /// Renames the drive title
 /datum/shell_command/thinkdos/title
 	aliases = list("title")
-	help_text = "Changes the name of the current drive.<br>Usage: 'title \[new name\]'"
+	help_text = "Changes the name of the current drivee.<br>Usage: 'title \[new name\]'"
 
 /datum/shell_command/thinkdos/title/exec(datum/c4_file/terminal_program/operating_system/thinkdos/system, datum/c4_file/terminal_program/program, list/arguments, list/options)
 	if(!length(arguments))
@@ -586,7 +586,7 @@
 		system.login("AIUSR", "Colony Intelligence")
 		return
 
-	var/obj/item/peripheral/card_reader/reader = system.computer.get_peripheral(PERIPHERAL_TYPE_CARD_READER)
+	var/obj/item/peripheral/card_reader/reader = system.get_computer().get_peripheral(PERIPHERAL_TYPE_CARD_READER)
 	if(!reader)
 		system.println("<b>Error:</b> No card reader detected.")
 		return
