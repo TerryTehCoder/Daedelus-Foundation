@@ -656,6 +656,7 @@
 #include "code\controllers\subsystem\processing\tramprocess.dm"
 #include "code\controllers\subsystem\processing\wet_floors.dm"
 #include "code\datums\ai_laws.dm"
+#include "code\datums\aic_key_data.dm"
 #include "code\datums\alarm.dm"
 #include "code\datums\armor.dm"
 #include "code\datums\beam.dm"

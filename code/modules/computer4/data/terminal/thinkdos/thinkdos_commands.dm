@@ -11,9 +11,9 @@
 		return FALSE
 
 	var/remote_target_address
-	if(options && options[REMOTE_TARGET_OPTION])
-		remote_target_address = options[REMOTE_TARGET_OPTION]
-		options -= REMOTE_TARGET_OPTION // Remove the option so the command doesn't process it locally
+	if(options && options["R"])
+		remote_target_address = options["R"]
+		options -= "R" // Remove the option so the command doesn't process it locally
 
 	if(remote_target_address)
 		system.send_remote_command(remote_target_address, command_name, arguments, options)
@@ -389,7 +389,15 @@
 
 /datum/shell_command/thinkdos/read
 	aliases = list("read", "type")
-	help_text = "Displays the contents of a file. Can be used remotely with -[REMOTE_TARGET_OPTION] <address>.<br>Usage: 'read \[directory\]'"
+	var/list/help_list = list(
+		"Displays the contents of a file.",
+		"Usage: 'read \[directory\]'",
+	)
+
+/datum/shell_command/thinkdos/read/New()
+	..()
+	help_list += "Can be used remotely with -R <address>."
+	help_text = jointext(help_list, "<br>")
 
 /datum/shell_command/thinkdos/read/exec(datum/c4_file/terminal_program/operating_system/thinkdos/system, datum/c4_file/terminal_program/program, list/arguments, list/options, is_remote = FALSE, source_address = null)
 	if(!length(arguments))
@@ -595,7 +603,7 @@
 
 /datum/shell_command/thinkdos/login/exec(datum/c4_file/terminal_program/operating_system/thinkdos/system, datum/c4_file/terminal_program/program, list/arguments, list/options)
 	if(usr?.has_unlimited_silicon_privilege)
-		system.login("AIUSR", "Colony Intelligence")
+		system.login("AIC", "Colony Intelligence")
 		return
 
 	var/obj/item/peripheral/card_reader/reader = system.get_computer().get_peripheral(PERIPHERAL_TYPE_CARD_READER)
@@ -763,7 +771,7 @@
 
 /datum/shell_command/thinkdos/shutdown
 	aliases = list("shutdown")
-	help_text = "Shuts down the computer. Can be used remotely with -[REMOTE_TARGET_OPTION] <address>."
+	help_text = "Shuts down the computer. Can be used remotely with -R <address>."
 
 /datum/shell_command/thinkdos/shutdown/exec(datum/c4_file/terminal_program/operating_system/thinkdos/system, datum/c4_file/terminal_program/program, list/arguments, list/options, is_remote = FALSE, source_address = null)
 	if(is_remote)
@@ -774,7 +782,7 @@
 
 /datum/shell_command/thinkdos/reboot
 	aliases = list("reboot")
-	help_text = "Reboots the computer. Can be used remotely with -[REMOTE_TARGET_OPTION] <address>."
+	help_text = "Reboots the computer. Can be used remotely with -R <address>."
 
 /datum/shell_command/thinkdos/reboot/exec(datum/c4_file/terminal_program/operating_system/thinkdos/system, datum/c4_file/terminal_program/program, list/arguments, list/options, is_remote = FALSE, source_address = null)
 	if(is_remote)
@@ -785,7 +793,7 @@
 
 /datum/shell_command/thinkdos/netmsg
 	aliases = list("netmsg", "nm")
-	help_text = "Sends a network message to a specified address. Can be used remotely with -[REMOTE_TARGET_OPTION] <address>.<br>Usage: 'netmsg <target_address> <message>'"
+	help_text = "Sends a network message to a specified address. Can be used remotely with -R <address>.<br>Usage: 'netmsg <target_address> <message>'"
 
 /datum/shell_command/thinkdos/netmsg/exec(datum/c4_file/terminal_program/operating_system/thinkdos/system, datum/c4_file/terminal_program/program, list/arguments, list/options, is_remote = FALSE, source_address = null)
 	if(length(arguments) < 2)
@@ -804,7 +812,7 @@
 	message_signal.data[PACKET_NETCLASS] = NET_CLASS_MESSAGE // Assuming NET_CLASS_MESSAGE exists or will be defined
 	message_signal.data[PACKET_DEST_ADDRESS] = target_address
 	message_signal.data[PACKET_DATA] = message
-	message_signal.data[PACKET_SOURCE_ADDRESS] = system.get_computer().network_address // Include source address
+	message_signal.data[PACKET_SOURCE_ADDRESS] = adapter.network_id // Include source address
 
 	if(adapter.post_signal(message_signal))
 		system.println("Message sent to [target_address]: '[message]'.")
@@ -813,7 +821,7 @@
 
 /datum/shell_command/thinkdos/syslock
 	aliases = list("syslock")
-	help_text = "Temporarily locks the terminal, preventing input. Can be used remotely with -[REMOTE_TARGET_OPTION] <address>.<br>Usage: 'syslock \[duration_seconds?\]'"
+	help_text = "Temporarily locks the terminal, preventing input. Can be used remotely with -R <address>.<br>Usage: 'syslock \[duration_seconds?\]'"
 
 /datum/shell_command/thinkdos/syslock/exec(datum/c4_file/terminal_program/operating_system/thinkdos/system, datum/c4_file/terminal_program/program, list/arguments, list/options, is_remote = FALSE, source_address = null)
 	var/duration = text2num(arguments[1])
@@ -826,4 +834,5 @@
 		system.println("Locking terminal for [duration] seconds.")
 
 	system.deadlocked = TRUE
-	system.schedule_proc(CALLBACK(system, PROC_REF(system.set_deadlocked), FALSE), duration * SECONDS)
+//	system.schedule_proc(CALLBACK(system, /datum/c4_file/terminal_program/operating_system/proc/set_deadlocked, FALSE), duration * SECONDS)
+

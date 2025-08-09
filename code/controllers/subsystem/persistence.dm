@@ -3,6 +3,8 @@
 #define KEEP_ROUNDS_MAP 3
 #define FILE_SCP216_DISPLACED_ITEMS "data/scp216_displaced_items.json"
 
+#define MAX_AIC_KEYS 3 // Configurable cap for AIC keys per ckey
+
 SUBSYSTEM_DEF(persistence)
 	name = "Persistence"
 	init_order = INIT_ORDER_PERSISTENCE
@@ -19,6 +21,8 @@ SUBSYSTEM_DEF(persistence)
 	var/list/obj/item/storage/photo_album/photo_albums
 	/// Temporally displaced items from SCP-216
 	var/list/displaced_scp216_items = list()
+	/// AIC Key hashes
+	var/list/aic_keys = list()
 
 
 /datum/controller/subsystem/persistence/Initialize()
@@ -30,6 +34,7 @@ SUBSYSTEM_DEF(persistence)
 	LoadRandomizedRecipes()
 	load_custom_outfits()
 	LoadDisplacedSCP216Items()
+	LoadAICKeys()
 
 	load_adventures()
 	return ..()
@@ -42,6 +47,7 @@ SUBSYSTEM_DEF(persistence)
 	SaveRandomizedRecipes()
 	save_custom_outfits()
 	SaveDisplacedSCP216Items()
+	SaveAICKeys()
 
 /datum/controller/subsystem/persistence/proc/LoadPoly()
 	for(var/mob/living/simple_animal/parrot/poly/P in GLOB.alive_mob_list)
@@ -396,3 +402,107 @@ SUBSYSTEM_DEF(persistence)
 	file_data["data"] = displaced_scp216_items
 	fdel(json_file)
 	WRITE_FILE(json_file, json_encode(file_data))
+
+/datum/controller/subsystem/persistence/proc/LoadAICKeys()
+	var/json_file = file("data/aic_keys.json")
+	if(!fexists(json_file))
+		return
+	var/list/json = json_decode(file2text(json_file))
+	if(!json)
+		return
+
+	var/list/keys_by_ckey = list()
+
+	for(var/key_data in json["data"])
+		var/datum/aic_key_data/new_key = new
+		if(new_key.load_from_json(key_data))
+			if(!is_valid_aic_key_hash(new_key.key_hash))
+				warning("Persistence: Loaded AIC key for ckey '[new_key.ckey]' has an invalid hash format: '[new_key.key_hash]'. Skipping.")
+				qdel(new_key)
+				continue
+
+			if(!keys_by_ckey[new_key.ckey])
+				keys_by_ckey[new_key.ckey] = list()
+			keys_by_ckey[new_key.ckey] += new_key
+
+	// Apply capping logic after all keys are loaded
+	for(var/ckey in keys_by_ckey)
+		var/list/player_keys = keys_by_ckey[ckey]
+		sortTim(player_keys, GLOBAL_PROC_REF(global_sort_aic_key_data_by_timestamp)) // Sort by timestamp (oldest first)
+
+		while((player_keys.len > MAX_AIC_KEYS))
+			var/datum/aic_key_data/oldest_key = player_keys[1]
+			warning("Persistence: Capping AIC keys for ckey '[oldest_key.ckey]'. Deleting oldest key: '[oldest_key.key_hash]'.")
+			player_keys.Remove(oldest_key)
+			qdel(oldest_key)
+
+		aic_keys += player_keys // Add the capped list of keys to the main aic_keys list
+
+/datum/controller/subsystem/persistence/proc/SaveAICKeys()
+	var/json_file = file("data/aic_keys.json")
+	var/list/file_data = list()
+	file_data["data"] = list()
+
+	var/list/keys_by_ckey = list()
+	for(var/datum/aic_key_data/key in aic_keys)
+		if(!keys_by_ckey[key.ckey])
+			keys_by_ckey[key.ckey] = list()
+		keys_by_ckey[key.ckey] += key
+
+	// Apply capping logic before saving
+	for(var/ckey in keys_by_ckey)
+		var/list/player_keys = keys_by_ckey[ckey]
+		sortTim(player_keys, GLOBAL_PROC_REF(global_sort_aic_key_data_by_timestamp)) // Sort by timestamp (oldest first)
+
+		while((player_keys.len > MAX_AIC_KEYS))
+			var/datum/aic_key_data/oldest_key = player_keys[1]
+			warning("Persistence: Capping AIC keys for ckey '[oldest_key.ckey]' before saving. Deleting oldest key: '[oldest_key.key_hash]'.")
+			player_keys.Remove(oldest_key)
+			qdel(oldest_key)
+
+		for(var/datum/aic_key_data/key in player_keys)
+			file_data["data"] += key.save_to_json()
+
+	fdel(json_file)
+	WRITE_FILE(json_file, json_encode(file_data))
+
+// I hate this so much, but I can't get Regex to work in the way I want it to.
+/datum/controller/subsystem/persistence/proc/is_valid_aic_key_hash(key_hash)
+	if(!istext(key_hash))
+		return FALSE
+
+	var/list/parts = splittext(key_hash, "-")
+	if(parts.len != 4)
+		return FALSE
+
+	if(parts[1] != "AIC")
+		return FALSE
+
+	// Part 2: 4 alphanumeric characters (0-9, A-Z)
+	var/part2 = parts[2]
+	if(length(part2) != 4)
+		return FALSE
+	for(var/i = 1, i <= length(part2), i++)
+		var/char = copytext(part2, i, i + 1)
+		if(!((char >= "0" && char <= "9") || (char >= "A" && char <= "Z")))
+			return FALSE
+
+	// Part 3: 2 hexadecimal characters (0-9, A-F)
+	var/part3 = parts[3]
+	if(length(part3) != 2)
+		return FALSE
+	for(var/i = 1, i <= length(part3), i++)
+		var/char = copytext(part3, i, i + 1)
+		if(!((char >= "0" && char <= "9") || (char >= "A" && char <= "F")))
+			return FALSE
+
+	// Part 4: 2 hexadecimal characters (0-9, A-F)
+	var/part4 = parts[4]
+	if(length(part4) != 2)
+		return FALSE
+	for(var/i = 1, i <= length(part4), i++)
+		var/char = copytext(part4, i, i + 1)
+		if(!((char >= "0" && char <= "9") || (char >= "A" && char <= "F")))
+			return FALSE
+
+	return TRUE

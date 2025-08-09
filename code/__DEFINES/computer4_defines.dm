@@ -25,7 +25,10 @@
 #define NET_CLASS_REMOTE_COMMAND "remote_command"
 
 // Remote Command Execution Defines
-#define REMOTE_TARGET_OPTION "target" // Option to specify remote target address (e.g., -t <address>)
 #define PACKET_COMMAND_ARGS "command_args" // Key for command arguments in remote packet
 #define PACKET_COMMAND_OPTIONS "command_options" // Key for command options in remote packet
+#define PACKET_DEST_ADDRESS "dest_address" // Key for destination address in remote packet
+#define PACKET_DATA "data" // Key for message data in remote packet
 #define NET_CLASS_MESSAGE "message" // Network class for general messages
+
+#define WATCHDOG_COOLDOWN_SECONDS 60 // Cooldown for watchdog alert in seconds
