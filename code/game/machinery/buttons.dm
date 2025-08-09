@@ -3,8 +3,13 @@
 	desc = "A remote control switch."
 	icon = 'icons/obj/stationobjs.dmi'
 	icon_state = "doorctrl"
-	var/skin = "doorctrl"
+
+	resistance_flags = LAVA_PROOF | FIRE_PROOF
+
+	idle_power_usage = BASE_MACHINE_IDLE_CONSUMPTION * 0.02
 	power_channel = AREA_USAGE_ENVIRON
+
+	var/skin = "doorctrl"
 	var/obj/item/assembly/device
 	var/obj/item/electronics/airlock/board
 	var/device_type = null
@@ -12,8 +17,6 @@
 	var/initialized_button = 0
 	var/silicon_access_disabled = FALSE
 	armor = list(BLUNT = 50, PUNCTURE = 50, SLASH = 90, LASER = 50, ENERGY = 50, BOMB = 10, BIO = 100, FIRE = 90, ACID = 70)
-	idle_power_usage = BASE_MACHINE_IDLE_CONSUMPTION * 0.02
-	resistance_flags = LAVA_PROOF | FIRE_PROOF
 
 /obj/machinery/button/indestructible
 	resistance_flags = INDESTRUCTIBLE | LAVA_PROOF | FIRE_PROOF | UNACIDABLE | ACID_PROOF
@@ -168,25 +171,29 @@
 			to_chat(user, span_notice("You change the button frame's front panel."))
 		return
 
+	return try_activate_button(user)
+
+/obj/machinery/button/proc/try_activate_button(mob/living/user)
 	if((machine_stat & (NOPOWER|BROKEN)))
-		return
+		return FALSE
 
 	if(device && device.next_activate > world.time)
-		return
+		return FALSE
 
 	if(!allowed(user))
 		to_chat(user, span_alert("Access Denied."))
 		z_flick("[skin]-denied", src)
-		return
+		return FALSE
 
 	use_power(5)
 	icon_state = "[skin]1"
 
 	if(device)
 		device.pulsed()
-	SEND_GLOBAL_SIGNAL(COMSIG_GLOB_BUTTON_PRESSED,src)
+	SEND_GLOBAL_SIGNAL(COMSIG_GLOB_BUTTON_PRESSED, src)
 
 	addtimer(CALLBACK(src, TYPE_PROC_REF(/atom, update_appearance)), 15)
+	return TRUE
 
 /obj/machinery/button/door
 	name = "door button"

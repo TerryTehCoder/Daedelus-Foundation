@@ -25,6 +25,18 @@
 // tool sound is only played when op is started. If not, it's played twice.
 #define MIN_TOOL_SOUND_DELAY 20
 
+/// Return when an item interaction is successful.
+/// This cancels the rest of the chain entirely and indicates success.
+#define ITEM_INTERACT_SUCCESS (1<<0) // Same as TRUE, as most tool (legacy) tool acts return TRUE on success
+/// Return to prevent the rest of the attacck chain from being executed / preventing the item user from thwacking the target.
+/// Similar to [ITEM_INTERACT_SUCCESS], but does not necessarily indicate success.
+#define ITEM_INTERACT_BLOCKING (1<<1)
+/// Return to skip the rest of the interaction chain, going straight to attack.
+#define ITEM_INTERACT_ATTACK (1<<2)
+
+/// Combination flag for any item interaction that blocks the rest of the attack chain
+#define ITEM_INTERACT_ANY_BLOCKER (ITEM_INTERACT_SUCCESS | ITEM_INTERACT_BLOCKING)
+
 // tool_act chain flags
 
 /// When a tooltype_act proc is successful

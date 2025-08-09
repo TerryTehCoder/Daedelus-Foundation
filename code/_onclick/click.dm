@@ -388,6 +388,7 @@
 		return
 
 	user.examinate(src)
+	return TRUE
 
 /**
  * Ctrl click

@@ -22,12 +22,12 @@
 #define NETCLASS_P2P_PHONE "PNET_VCSTATION"
 #define NETCLASS_APC "PNET_AREAPOWER"
 #define NETCLASS_TERMINAL "PNET_STERM"
-#define NETCLASS_GRPS_CARD "NET_GPRS"
-#define NETCLASS_MESSAGE_SERVER "NET_MSGSRV"
+#define NETCLASS_GRPS_CARD "WNET_GPRS"
+#define NETCLASS_MESSAGE_SERVER "WNET_MSGSRV"
+#define NETCLASS_BUTTON "WNET_BUTTON"
+#define NETCLASS_ADAPTER "WNET_BUTTON"
 
 // Packet fields
-// not honestly thrilled with having these be defines but kapu wants it that way
-// I believe every coder is empowered with a right to footgun by our lord Dennis Ritchie
 
 /// Source (sender) address of a packet
 #define PACKET_SOURCE_ADDRESS "s_addr"
@@ -52,6 +52,17 @@
 
 // PDA Text Message
 #define NETCMD_PDAMESSAGE "pda_message"
+
+// EC Slave Update Request
+#define NETCMD_UPDATE_REQUEST "update_rq"
+// EC Slave Update Response
+#define NETCMD_UPDATE_DATA "update_data"
+	#define PACKET_ARG_TEXTBUFFER "buf"
+	#define PACKET_ARG_DISPLAY "display"
+	#define PACKET_ARG_LEDS "leds"
+
+// EC Slave Access Data
+#define NETCMD_ECSLAVE_ACCESS "ec_cardswipe"
 
 // Dataterminal connection/disconnect return values
 
