@@ -2,9 +2,9 @@
 	needs_login = FALSE
 
 /datum/c4_file/terminal_program/operating_system/thinkdos
-	name = "ThinkDOS"
+	name = "SciP-Net"
 
-	var/system_version = "ThinkDOS 0.7.2"
+	var/system_version = "SciP-Net 1.2.0"
 
 	/// If you need to login to use the computer.
 	var/needs_login = TRUE
@@ -40,15 +40,17 @@
 	change_dir(containing_folder)
 
 	var/title_text = list(
-		@"<pre style='margin: 0px'> ___  _    _       _    ___  ___  ___</pre>",
-		@"<pre style='margin: 0px'>|_ _|| |_ &lt;_&gt;._ _ | |__| . \| . |/ __&gt;</pre>",
-		@"<pre style='margin: 0px'> | | | . || || &#39; || / /| | || | |\__ \</pre>",
-		@"<pre style='margin: 0px'> |_| |_|_||_||_|_||_\_\|___/`___&#39;&lt;___/</pre>",
+		@"<pre style='margin: 0px'>   _____    _____   _   _____             _   _          _  </pre>",
+		@"<pre style='margin: 0px'>  / ____|  / ____| (_) |  __ \           | \ | |        | | </pre>",
+		@"<pre style='margin: 0px'> | (___   | |       _  | |__) |  ______  |  \| |   ___  | |_ </pre>",
+		@"<pre style='margin: 0px'>  \___ \  | |      | | |  ___/  |______| | . ` |  / _ \ | __|</pre>",
+		@"<pre style='margin: 0px'>  ____) | | |____  | | | |               | |\  | |  __/ | |_</pre>",
+		@"<pre style='margin: 0px'> |_____/   \_____| |_| |_|               |_| \_|  \___|  \__|</pre>",
 	).Join("")
 	println(title_text)
 
 	if(needs_login)
-		println("Authenticated required. Insert an identification card and type 'login'.")
+		println("Authentication required. Insert an identification card and type 'login'.")
 	else
 		println("Type 'help' to get started.")
 
@@ -115,10 +117,20 @@
 	login_user.registered_name = account_name
 	login_user.assignment = account_occupation
 	login_user.access = text2access(account_access)
+
 	set_current_user(login_user)
 
 	write_log("<b>LOGIN</b>: [html_encode(account_name)] | [html_encode(account_occupation)]")
-	println("Welcome [html_encode(account_name)]!<br><b>Current Directory: [current_directory.path_to_string()]</b>")
+
+	var/obj/machinery/computer4/computer = get_computer()
+	if(istype(computer, /obj/machinery/computer4/silicon_terminal)) // Check if it's a Silicon terminal
+		println("Digital Handshake accepted from unit: [html_encode(account_name)].")
+		// Grant root access for Silicon
+		login_user.access |= ACCESS_CAPTAIN
+	else if(login_user.access & ACCESS_MANAGEMENT)
+		println("Welcome, [html_encode(account_name)]. System Administrator privileges granted.")
+	else
+		println("Welcome [html_encode(account_name)]!<br><b>Current Directory: [current_directory.path_to_string()]</b>")
 	return TRUE
 
 /datum/c4_file/terminal_program/operating_system/thinkdos/proc/logout()
@@ -210,3 +222,24 @@
 				continue
 
 			unload_program(running_program)
+
+/datum/c4_file/terminal_program/operating_system/thinkdos/peripheral_input(obj/item/peripheral/invoker, command, datum/signal/packet)
+	if(!packet)
+		return
+
+	if(packet.data[PACKET_NETCLASS] == NET_CLASS_REMOTE_COMMAND)
+		var/remote_command_name = packet.data[PACKET_COMMAND_TYPE]
+		var/remote_command_args = packet.data[PACKET_COMMAND_ARGS]
+		var/remote_command_options = packet.data[PACKET_COMMAND_OPTIONS]
+		var/source_address = packet.data[PACKET_SOURCE_ADDRESS]
+
+		if(!remote_command_name)
+			return
+
+		println("Received remote command '[remote_command_name]' from [source_address].")
+
+		for(var/datum/shell_command/potential_command as anything in commands)
+			if(potential_command.try_exec(remote_command_name, src, src, remote_command_args, remote_command_options, is_remote = TRUE, source_address = source_address))
+				return TRUE
+		println("Remote command '[remote_command_name]' not recognized or executable.")
+		return TRUE

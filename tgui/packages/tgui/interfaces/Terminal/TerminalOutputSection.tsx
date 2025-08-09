@@ -16,7 +16,6 @@ type TerminalOutputSectionProps = Pick<
   'bgColor' | 'displayHTML' | 'fontColor'
 > & { noscroll?: BooleanLike };
 
-
 export const TerminalOutputSection = (props: TerminalOutputSectionProps) => {
   const { displayHTML, fontColor, bgColor, noscroll } = props;
 

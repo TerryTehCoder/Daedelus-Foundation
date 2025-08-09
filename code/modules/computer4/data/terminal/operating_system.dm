@@ -145,6 +145,20 @@
 	get_computer()?.text_buffer = ""
 	get_computer()?.operating_system = null
 
+/// Set the terminal font color.
+/datum/c4_file/terminal_program/operating_system/proc/set_terminal_font_color(color_hex)
+	var/obj/machinery/computer4/computer = get_computer()
+	if(computer)
+		computer.screen_font_color = color_hex
+		SStgui.update_uis(computer)
+
+/// Set the terminal background color.
+/datum/c4_file/terminal_program/operating_system/proc/set_terminal_bg_color(color_hex)
+	var/obj/machinery/computer4/computer = get_computer()
+	if(computer)
+		computer.screen_bg_color = color_hex
+		SStgui.update_uis(computer)
+
 /// Run a program.
 /datum/c4_file/terminal_program/operating_system/proc/execute_program(datum/c4_file/terminal_program/program)
 	if(!program)
@@ -235,3 +249,30 @@
 
 
 	unload_program(active_program)
+
+/// Set the deadlocked state of the operating system.
+/datum/c4_file/terminal_program/operating_system/proc/set_deadlocked(value)
+	deadlocked = value
+	if(!value)
+		println("Terminal unlocked.")
+
+/// Send a remote command via the network adapter.
+/datum/c4_file/terminal_program/operating_system/proc/send_remote_command(target_address, command_name, command_args, command_options)
+	var/obj/item/peripheral/network_card/wireless/adapter = get_computer()?.get_peripheral(PERIPHERAL_TYPE_WIRELESS_CARD)
+	if(!adapter)
+		println("<b>Error:</b> No network adapter found to send remote command.")
+		return FALSE
+
+	var/datum/signal/command_signal = new
+	command_signal.data[PACKET_NETCLASS] = NET_CLASS_REMOTE_COMMAND
+	command_signal.data[PACKET_DEST_ADDRESS] = target_address
+	command_signal.data[PACKET_COMMAND_TYPE] = command_name
+	command_signal.data[PACKET_COMMAND_ARGS] = command_args
+	command_signal.data[PACKET_COMMAND_OPTIONS] = command_options
+
+	if(adapter.post_signal(command_signal))
+		println("Remote command '[command_name]' sent to [target_address].")
+		return TRUE
+	else
+		println("<b>Error:</b> Failed to send remote command to [target_address].")
+		return FALSE

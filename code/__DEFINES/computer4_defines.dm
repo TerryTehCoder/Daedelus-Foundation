@@ -18,3 +18,14 @@
 #define WIRELESS_FILTER_ID_TAGS 2 //! id_tag based filtering, for non-GPRS Control.
 
 #define WIRELESS_FILTER_MODEMAX 2 //! Max of WIRELESS_FILTER_* Defines.
+
+// Remote Command Packet Defines
+#define PACKET_COMMAND_TYPE "command_type"
+#define PACKET_COMMAND_DATA "command_data"
+#define NET_CLASS_REMOTE_COMMAND "remote_command"
+
+// Remote Command Execution Defines
+#define REMOTE_TARGET_OPTION "target" // Option to specify remote target address (e.g., -t <address>)
+#define PACKET_COMMAND_ARGS "command_args" // Key for command arguments in remote packet
+#define PACKET_COMMAND_OPTIONS "command_options" // Key for command options in remote packet
+#define NET_CLASS_MESSAGE "message" // Network class for general messages

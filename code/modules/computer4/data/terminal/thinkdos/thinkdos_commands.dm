@@ -10,12 +10,21 @@
 	if(!(command_name in aliases))
 		return FALSE
 
+	var/remote_target_address
+	if(options && options[REMOTE_TARGET_OPTION])
+		remote_target_address = options[REMOTE_TARGET_OPTION]
+		options -= REMOTE_TARGET_OPTION // Remove the option so the command doesn't process it locally
+
+	if(remote_target_address)
+		system.send_remote_command(remote_target_address, command_name, arguments, options)
+		return TRUE
+
 	exec(system, program, arguments, options)
 	return TRUE
 
 /// Execute the command.
-/datum/shell_command/proc/exec(datum/c4_file/terminal_program/operating_system/thinkdos/system, datum/c4_file/terminal_program/program, list/arguments, list/options)
-	CRASH("Unimplimented run()")
+/datum/shell_command/proc/exec(datum/c4_file/terminal_program/operating_system/thinkdos/system, datum/c4_file/terminal_program/program, list/arguments, list/options, is_remote = FALSE, source_address = null)
+	CRASH("Unimplemented run()")
 
 /datum/shell_command/thinkdos/help
 	aliases = list("help")
@@ -380,18 +389,21 @@
 
 /datum/shell_command/thinkdos/read
 	aliases = list("read", "type")
-	help_text = "Displays the contents of a file.<br>Usage: 'read \[directory\]'"
+	help_text = "Displays the contents of a file. Can be used remotely with -[REMOTE_TARGET_OPTION] <address>.<br>Usage: 'read \[directory\]'"
 
-/datum/shell_command/thinkdos/read/exec(datum/c4_file/terminal_program/operating_system/thinkdos/system, datum/c4_file/terminal_program/program, list/arguments, list/options)
+/datum/shell_command/thinkdos/read/exec(datum/c4_file/terminal_program/operating_system/thinkdos/system, datum/c4_file/terminal_program/program, list/arguments, list/options, is_remote = FALSE, source_address = null)
 	if(!length(arguments))
 		system.println("<b>Syntax:</b> \"read \[file name].\"")
 		return
 
-	var/datum/c4_file/file = system.resolve_filepath(jointext(arguments, ""))
+	var/file_path = jointext(arguments, "")
+	var/datum/c4_file/file = system.resolve_filepath(file_path, system.current_directory)
 	if(!file)
 		system.println("<b>Error</b>: No file found.")
 		return
 
+	if(is_remote)
+		system.println("Remotely reading file '[file_path]' from [source_address]:")
 	system.println(html_encode(file.to_string()))
 
 /datum/shell_command/thinkdos/version
@@ -399,7 +411,7 @@
 	help_text = "Displays the version of the operating system."
 
 /datum/shell_command/thinkdos/version/exec(datum/c4_file/terminal_program/operating_system/thinkdos/system, datum/c4_file/terminal_program/program, list/arguments, list/options)
-	system.println("[system.system_version]<br>Copyright Thinktronic Systems, LTD.")
+	system.println("[system.system_version]<br>© Foundation Technical Services Division - Contract Manufacturing Partner #FTSD-0013")
 
 /datum/shell_command/thinkdos/time
 	aliases = list("time")
@@ -604,3 +616,214 @@
 /datum/shell_command/thinkdos/logout/exec(datum/c4_file/terminal_program/operating_system/thinkdos/system, datum/c4_file/terminal_program/program, list/arguments, list/options)
 	system.logout()
 	system.println("Logout complete. Have a secure day.<br><br>Authentication required.<br>Please insert card and 'login'.")
+
+/datum/shell_command/thinkdos/color
+	aliases = list("color", "colour")
+	var/list/color_map = list(
+		"0" = "#000000", "8" = "#808080",
+		"1" = "#0000FF", "9" = "#ADD8E6",
+		"2" = "#008000", "A" = "#90EE90",
+		"3" = "#00FFFF", "B" = "#AFEEEE",
+		"4" = "#FF0000", "C" = "#FF6347",
+		"5" = "#800080", "D" = "#EE82EE",
+		"6" = "#FFFF00", "E" = "#FFFFED",
+		"7" = "#FFFFFF"
+	)
+	var/default_font_color = "#E0E0E0" // Default font color from computer4.dm
+	var/default_bg_color = "#1B1E1B" // Default background color from computer4.dm
+	help_text = "Changes the terminal foreground or background color. Use -c to reset colors.<br>Usage: 'color \[options?\] \[color_code?\]'<br><br>" + \
+				"  -f, --foreground &nbsp&nbsp&nbsp&nbsp&nbsp&nbspChange foreground color (default is background).<br>" + \
+				"  -c, --clear &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspReset both foreground and background colors to default.<br>" + \
+				"  0 = Black       8 = Gray<br>" + \
+				"  1 = Blue        9 = Light Blue<br>" + \
+				"  2 = Green       A = Light Green<br>" + \
+				"  3 = Aqua        B = Light Aqua<br>" + \
+				"  4 = Red         C = Light Red<br>" + \
+				"  5 = Purple      D = Light Purple<br>" + \
+				"  6 = Yellow      E = Light Yellow<br>" + \
+				"  7 = White       &nbsp&nbsp&nbsp&nbsp"
+
+/datum/shell_command/thinkdos/color/exec(datum/c4_file/terminal_program/operating_system/thinkdos/system, datum/c4_file/terminal_program/program, list/arguments, list/options)
+	var/change_foreground = !!length(options & list("f", "foreground"))
+	var/clear_colors = !!length(options & list("c", "clear"))
+
+	if(clear_colors)
+		system.set_terminal_font_color(default_font_color)
+		system.set_terminal_bg_color(default_bg_color)
+		system.println("Terminal colors reset to default.")
+		return
+
+	if(!length(arguments)) // No arguments, and not clearing, means print current colors or syntax help
+		system.println("<b>Syntax:</b> 'color \[options?\] \[color_code?\]'. Use 'color -c' to reset.")
+		return
+
+	var/input_code = uppertext(arguments[1])
+	var/color_hex_value = color_map[input_code]
+
+	if(isnull(color_hex_value))
+		system.print_error("<b>Error:</b> Invalid color code. Use a digit 0-9 or letter A-F.")
+		return
+
+	if(change_foreground)
+		system.set_terminal_font_color(color_hex_value)
+		system.println("Terminal foreground color set to <b>[input_code]</b>.")
+	else
+		system.set_terminal_bg_color(color_hex_value)
+		system.println("Terminal background color set to <b>[input_code]</b>.")
+
+/datum/shell_command/thinkdos/find
+	aliases = list("find")
+	help_text = "Searches for a text string in a file or files.<br>Usage: 'find \[options?\] \"string\" \[file_path?\]'<br><br>" + \
+				"  /V         Displays all lines NOT containing the specified string.<br>" + \
+				"  /C         Displays only the count of lines containing the string.<br>" + \
+				"  /N         Displays line numbers with the displayed lines.<br>" + \
+				"  /I         Ignores the case of characters when searching for the string."
+
+/datum/shell_command/thinkdos/find/exec(datum/c4_file/terminal_program/operating_system/thinkdos/system, datum/c4_file/terminal_program/program, list/arguments, list/options)
+	if(length(arguments) < 1)
+		system.println("<b>Syntax:</b> \"find \[options?\] \"string\" \[file_path?\]\"")
+		return
+
+	var/search_string = arguments[1]
+	var/file_paths_start_index = 2
+
+	// Check if the search string is quoted. If not, assume it's the first argument.
+	if(length(search_string) >= 2 && search_string[1] == "\"" && search_string[length(search_string)] == "\"")
+		search_string = copytext(search_string, 2, length(search_string)) // Remove quotes
+	else
+		// If not quoted, and there are multiple arguments, it's ambiguous.
+		// For simplicity, assume the first argument is the string if not quoted.
+		// More robust parsing would be needed for complex unquoted strings with spaces.
+		file_paths_start_index = 2
+
+	if(!search_string)
+		system.print_error("<b>Error:</b> No search string provided.")
+		return
+
+	var/invert_match = !!length(options & list("V"))
+	var/count_only = !!length(options & list("C"))
+	var/show_line_numbers = !!length(options & list("N"))
+	var/ignore_case = !!length(options & list("I"))
+
+	var/list/files_to_search = list()
+	if(length(arguments) >= file_paths_start_index)
+		for(var/i = file_paths_start_index, i <= length(arguments), i++)
+			var/file_path = arguments[i]
+			var/datum/c4_file/file = system.resolve_filepath(file_path, system.current_directory)
+			if(!file)
+				system.print_error("<b>Error:</b> File not found: [file_path]")
+				return
+			if(istype(file, /datum/c4_file/folder))
+				system.print_error("<b>Error:</b> Cannot search directories: [file_path]")
+				return
+			files_to_search += file
+	else
+		system.print_error("<b>Error:</b> No file(s) specified to search.")
+		return
+
+	var/total_matches = 0
+	for(var/datum/c4_file/file in files_to_search)
+		var/file_content = file.to_string()
+		if(isnull(file_content))
+			continue
+
+		var/list/lines = splittext(file_content, "\n")
+		var/file_matches = 0
+		var/list/output_lines = list()
+
+		for(var/i = 1, i <= length(lines), i++)
+			var/line = lines[i]
+			var/match = FALSE
+			if(ignore_case)
+				match = (findtext(lowertext(line), lowertext(search_string)))
+			else
+				match = (findtext(line, search_string))
+
+			if(match != invert_match) // If match and not invert, or no match and invert
+				file_matches++
+				if(!count_only)
+					var/output_line = line
+					if(show_line_numbers)
+						output_line = "[i]: [output_line]"
+					output_lines += output_line
+
+		if(count_only)
+			system.println("---------- [file.path_to_string()] ----------")
+			system.println("Lines found: [file_matches]")
+		else if(length(output_lines))
+			system.println("---------- [file.path_to_string()] ----------")
+			system.println(jointext(output_lines, "<br>"))
+
+		total_matches += file_matches
+
+	if(count_only)
+		system.println("<br>Total lines found: [total_matches]")
+	else if(total_matches == 0)
+		system.println("No matches found.")
+
+/datum/shell_command/thinkdos/shutdown
+	aliases = list("shutdown")
+	help_text = "Shuts down the computer. Can be used remotely with -[REMOTE_TARGET_OPTION] <address>."
+
+/datum/shell_command/thinkdos/shutdown/exec(datum/c4_file/terminal_program/operating_system/thinkdos/system, datum/c4_file/terminal_program/program, list/arguments, list/options, is_remote = FALSE, source_address = null)
+	if(is_remote)
+		system.println("Remotely shutting down.")
+	else
+		system.println("Shutting down...")
+	system.get_computer().set_is_operational(FALSE)
+
+/datum/shell_command/thinkdos/reboot
+	aliases = list("reboot")
+	help_text = "Reboots the computer. Can be used remotely with -[REMOTE_TARGET_OPTION] <address>."
+
+/datum/shell_command/thinkdos/reboot/exec(datum/c4_file/terminal_program/operating_system/thinkdos/system, datum/c4_file/terminal_program/program, list/arguments, list/options, is_remote = FALSE, source_address = null)
+	if(is_remote)
+		system.println("Remotely rebooting.")
+	else
+		system.println("Rebooting...")
+	system.get_computer().reboot()
+
+/datum/shell_command/thinkdos/netmsg
+	aliases = list("netmsg", "nm")
+	help_text = "Sends a network message to a specified address. Can be used remotely with -[REMOTE_TARGET_OPTION] <address>.<br>Usage: 'netmsg <target_address> <message>'"
+
+/datum/shell_command/thinkdos/netmsg/exec(datum/c4_file/terminal_program/operating_system/thinkdos/system, datum/c4_file/terminal_program/program, list/arguments, list/options, is_remote = FALSE, source_address = null)
+	if(length(arguments) < 2)
+		system.println("<b>Syntax:</b> netmsg <target_address> <message>")
+		return
+
+	var/target_address = arguments[1]
+	var/message = jointext(arguments.Copy(2), " ")
+
+	var/obj/item/peripheral/network_card/wireless/adapter = system.get_computer()?.get_peripheral(PERIPHERAL_TYPE_WIRELESS_CARD)
+	if(!adapter)
+		system.println("<b>Error:</b> No network adapter found.")
+		return
+
+	var/datum/signal/message_signal = new
+	message_signal.data[PACKET_NETCLASS] = NET_CLASS_MESSAGE // Assuming NET_CLASS_MESSAGE exists or will be defined
+	message_signal.data[PACKET_DEST_ADDRESS] = target_address
+	message_signal.data[PACKET_DATA] = message
+	message_signal.data[PACKET_SOURCE_ADDRESS] = system.get_computer().network_address // Include source address
+
+	if(adapter.post_signal(message_signal))
+		system.println("Message sent to [target_address]: '[message]'.")
+	else
+		system.println("<b>Error:</b> Failed to send message to [target_address].")
+
+/datum/shell_command/thinkdos/syslock
+	aliases = list("syslock")
+	help_text = "Temporarily locks the terminal, preventing input. Can be used remotely with -[REMOTE_TARGET_OPTION] <address>.<br>Usage: 'syslock \[duration_seconds?\]'"
+
+/datum/shell_command/thinkdos/syslock/exec(datum/c4_file/terminal_program/operating_system/thinkdos/system, datum/c4_file/terminal_program/program, list/arguments, list/options, is_remote = FALSE, source_address = null)
+	var/duration = text2num(arguments[1])
+	if(isnull(duration) || duration <= 0)
+		duration = 5 // Default lock duration
+
+	if(is_remote)
+		system.println("Remotely locking terminal for [duration] seconds.")
+	else
+		system.println("Locking terminal for [duration] seconds.")
+
+	system.deadlocked = TRUE
+	system.schedule_proc(CALLBACK(system, PROC_REF(system.set_deadlocked), FALSE), duration * SECONDS)

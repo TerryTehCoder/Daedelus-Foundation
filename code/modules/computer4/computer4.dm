@@ -41,7 +41,7 @@
 
 	// Read-only vars for making the computer
 	var/screen_bg_color = "#1B1E1B"
-	var/screen_font_color = "#19A319"
+	var/screen_font_color = "#E0E0E0"
 
 	/// k:v list of ckey to a list of past inputs.
 	var/list/tgui_input_history = list()
