@@ -836,3 +836,46 @@
 	system.deadlocked = TRUE
 //	system.schedule_proc(CALLBACK(system, /datum/c4_file/terminal_program/operating_system/proc/set_deadlocked, FALSE), duration * SECONDS)
 
+/datum/shell_command/thinkdos/setloginsound
+	aliases = list("setloginsound")
+	help_text = "Sets a custom login sound for AIC remote connections. Use -r to reset.<br>Usage: 'setloginsound \[options?\] \[sound_file_path.ogg?\]'"
+
+/datum/shell_command/thinkdos/setloginsound/exec(datum/c4_file/terminal_program/operating_system/thinkdos/system, datum/c4_file/terminal_program/program, list/arguments, list/options)
+	if(!usr?.has_unlimited_silicon_privilege)
+		system.print_error("<b>Error:</b> This command is only for Networked AIC Units.")
+		return
+
+	var/reset_sound = !!length(options & list("r", "reset"))
+
+	if(reset_sound)
+		var/client/C = usr.client
+		var/player_ckey = C.ckey
+		var/datum/aic_key_data/aic_key = system.get_or_generate_aic_key(player_ckey, system.current_user.registered_name)
+
+		if(!aic_key)
+			system.print_error("<b>Error:</b> Unable to retrieve AIC key data.")
+			return
+
+		aic_key.login_sound_path = null
+		system.println("Login sound reset to default.")
+		return
+
+	if(!length(arguments))
+		system.println("<b>Syntax:</b> setloginsound \[options?\] \[sound_file_path.ogg?\]")
+		return
+
+	var/sound_path = arguments[1]
+	if(!istext(sound_path) || !fexists(sound_path) || !sound_path.EndsWith(".ogg"))
+		system.print_error("<b>Error:</b> Invalid sound file path or file does not exist. Must be an .ogg file.")
+		return
+
+	var/client/C = usr.client
+	var/player_ckey = C.ckey
+	var/datum/aic_key_data/aic_key = system.get_or_generate_aic_key(player_ckey, system.current_user.registered_name)
+
+	if(!aic_key)
+		system.print_error("<b>Error:</b> Unable to retrieve AIC key data.")
+		return
+
+	aic_key.login_sound_path = sound_path
+	system.println("Login sound set to: [sound_path]")

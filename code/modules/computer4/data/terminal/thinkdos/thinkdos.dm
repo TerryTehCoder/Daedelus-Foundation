@@ -150,6 +150,14 @@
 		if(aic_key)
 			println("<b>AIC Challenge Key Match:</b> <code>[aic_key.key_hash]</code> Registration: [usr.real_name]<br>")
 			println("<span style='font-weight:bold; color:#0f0;'>Root Access Granted.</span>")
+			if(aic_key.login_sound_path)
+				var/obj/machinery/computer/C = get_computer()
+				if(C)
+					playsound(C, aic_key.login_sound_path, null, 50, FALSE)
+					if(usr && get_dist(usr, C) > AIC_LOGIN_SOUND_RANGE) // Play to user only if outside range of computer sound
+						playsound(usr, aic_key.login_sound_path, null, 50, FALSE)
+				else
+					playsound(usr, aic_key.login_sound_path, null, 50, FALSE)
 		// Grant root access for Silicon
 		login_user.access |= ACCESS_CAPTAIN
 	else if(login_user.access & ACCESS_MANAGEMENT)

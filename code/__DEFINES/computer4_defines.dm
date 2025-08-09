@@ -32,3 +32,4 @@
 #define NET_CLASS_MESSAGE "message" // Network class for general messages
 
 #define WATCHDOG_COOLDOWN_SECONDS 60 // Cooldown for watchdog alert in seconds
+#define AIC_LOGIN_SOUND_RANGE 6 // Range within which AIC login sound is not played directly to the player if already played at computer location
