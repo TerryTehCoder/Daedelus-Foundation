@@ -26,7 +26,6 @@
 	circuit = /obj/item/circuitboard/computer/voidcomputer
 
 	has_disk_slot = TRUE
-	internal_disk = new /obj/item/disk/data/floppy
 
 	/// Typing sound/sfx key
 	var/typing_sfx = SFX_KEYBOARD
@@ -74,6 +73,7 @@
 	. = ..()
 	// Suggested to readd with new soundloop.
 	//soundloop = new(src)
+	internal_disk = new /obj/item/disk/data //Insert a blank internal disk
 
 	if(default_operating_system)
 		internal_disk.root.try_add_file(new default_operating_system)
@@ -101,6 +101,9 @@
 		set_light(l_on = TRUE)
 
 /obj/machinery/computer4/on_set_is_operational(old_value)
+	if(rebooting) // Prevent post_system from being called during a reboot cycle
+		return
+
 	if(is_operational)
 		post_system()
 		soundloop?.start()
@@ -410,8 +413,7 @@
 	if(rebooting)
 		return
 
-	if(operating_system)
-		set_operating_system(null)
+	rebooting = TRUE // Set rebooting flag to prevent OS cleanup during the reboot cycle.
 
 	text_buffer = "Rebooting system...<br>"
 
@@ -422,7 +424,7 @@
 
 /obj/machinery/computer4/proc/finish_reboot()
 	rebooting = FALSE
-	if(!is_operational || operating_system)
+	if(!is_operational)
 		return
 
 	post_system()
@@ -432,12 +434,13 @@
 	PRIVATE_PROC(TRUE)
 
 	var/datum/c4_file/terminal_program/operating_system/old_os = operating_system
-	operating_system = os
+	operating_system = os // Assign the new OS first
 
-	if(operating_system)
+	if(operating_system) // Now operating_system refers to the new OS
+		operating_system.set_computer(src) // Set the computer reference on the new OS
 		operating_system.execute_program(operating_system)
 
-	if(old_os)
+	if(old_os && !rebooting) // Only clean up if not rebooting
 		old_os?.clean_up()
 
 /obj/machinery/computer4/process(delta_time)

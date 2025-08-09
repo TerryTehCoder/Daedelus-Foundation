@@ -5,6 +5,11 @@
 
 	is_executable = FALSE
 
+	/// The computer this OS is running on.
+	var/obj/machinery/computer4/computer
+
+
+
 	/// Gotta be logged in to access anything.
 	var/logged_in = FALSE
 
@@ -19,6 +24,10 @@
 	/// Halt And Catch Fire (Prevents STDIN, closest we can get to a HALT state.)
 	var/deadlocked = FALSE
 
+/// Setter for the computer this OS is running on.
+/datum/c4_file/terminal_program/operating_system/proc/set_computer(obj/machinery/computer4/new_computer)
+	computer = new_computer
+
 /datum/c4_file/terminal_program/operating_system/Destroy()
 	if(length(processing_programs))
 		clean_up()
@@ -26,7 +35,7 @@
 
 /// Should run this before executing any commands.
 /datum/c4_file/terminal_program/operating_system/proc/is_operational()
-	return (!!get_computer()?.is_operational) && (!deadlocked)
+	return (!!computer?.is_operational) && (!deadlocked)
 
 /// Change active directory.
 /datum/c4_file/terminal_program/operating_system/proc/change_dir(datum/c4_file/folder/directory)
@@ -107,8 +116,9 @@
 	if(isnull(text) || !is_operational())
 		return FALSE
 
+	if(!computer)
+		return FALSE // Cannot print if no computer is set.
 
-	var/obj/machinery/computer4/computer = get_computer()
 	computer.text_buffer += "[text]<br>"
 	if(update_ui)
 		SStgui.update_uis(computer)
@@ -119,7 +129,7 @@
 	if(!is_operational())
 		return FALSE
 
-	get_computer().text_buffer = ""
+	computer.text_buffer = ""
 	if(!fully)
 		println("Screen cleared.")
 	return TRUE
@@ -142,8 +152,8 @@
 	if(src in processing_programs)
 		unload_program(src)
 
-	get_computer()?.text_buffer = ""
-	get_computer()?.operating_system = null
+	computer?.text_buffer = ""
+	computer?.operating_system = null
 
 /// Run a program.
 /datum/c4_file/terminal_program/operating_system/proc/execute_program(datum/c4_file/terminal_program/program)
@@ -212,12 +222,12 @@
 
 	active_program = program
 
+
 /// Handles any running programs being moved in the filesystem.
 /datum/c4_file/terminal_program/operating_system/proc/processing_program_moved(datum/source)
 	SIGNAL_HANDLER
 
 	if(source == src)
-		var/obj/machinery/computer4/computer = get_computer()
 		if(QDELING(src))
 			clean_up()
 			return
