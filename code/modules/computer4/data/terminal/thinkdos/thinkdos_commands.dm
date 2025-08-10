@@ -819,6 +819,127 @@
 	else
 		system.println("<b>Error:</b> Failed to send message to [target_address].")
 
+/datum/shell_command/thinkdos/asciiart
+	aliases = list("asciiart", "aa")
+	help_text = "Manages AIC ASCII art on the terminal.<br>Usage: 'asciiart <command> \[terminal_id?\] \[arguments\]'<br><br>" + \
+				"  set {<art_string>} &nbsp&nbsp&nbsp&nbsp&nbsp&nbspSet or update your ASCII art. Use \\n for new lines. Use {} for multi-line input.<br>" + \
+				"  emote <emote_type> &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspSet an emote for your ASCII art.<br>" + \
+				"  clear &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspClear your ASCII art."
+
+/datum/shell_command/thinkdos/asciiart/exec(datum/c4_file/terminal_program/operating_system/thinkdos/system, datum/c4_file/terminal_program/program, list/arguments, list/options)
+	if(!usr?.has_unlimited_silicon_privilege)
+		system.print_error("<b>Error:</b> This command is only for Networked AIC Units.")
+		return
+
+	if(!system.current_user)
+		system.print_error("<b>Error:</b> Not logged in.")
+		return
+
+	if(length(arguments) < 1)
+		system.println("<b>Syntax:</b> asciiart <command> \[terminal_id?\] \[arguments\]")
+		return
+
+	var/command = arguments[1] // Correctly get the subcommand
+	var/terminal_id_arg = null
+	var/arg_start_index = 2 // Index where command-specific arguments begin (after "asciiart" and subcommand)
+
+	// Check if the second argument is a terminal ID (starts with REF_)
+	if(length(arguments) >= 2 && findtext(arguments[2], "REF_") == 1)
+		terminal_id_arg = arguments[2]
+		arg_start_index = 3 // Command-specific arguments are now at the third position
+
+	var/target_terminal_id = terminal_id_arg
+	if(isnull(target_terminal_id))
+		// Default to the current terminal if no terminal_id is specified
+		var/obj/machinery/computer4/current_terminal = system.get_computer()
+		if(current_terminal)
+			target_terminal_id = REF(current_terminal)
+		else
+			system.print_error("<b>Error:</b> No active terminal found and no terminal ID specified.")
+			return
+
+	var/datum/aic_ascii_art/aic_art = system.get_aic_ascii_art(system.logged_in_aic_ckey, target_terminal_id)
+
+	switch(command)
+		if("set")
+			if(length(arguments) < arg_start_index)
+				system.println("<b>Syntax:</b> asciiart set \[terminal_id?\] <art_string_or_name_or_filepath>")
+				return
+
+			var/art_input_arg = arguments[arg_start_index]
+			var/list/art_lines
+			var/list/art_emote_data // To store all emote variants from the library
+
+			// Check if the art_input_arg starts with '{' for multi-line art
+			if(findtext(art_input_arg, "{") == 1)
+				// Remove leading "{" and trailing "}"
+				art_input_arg = copytext(art_input_arg, 2, length(art_input_arg)) // Remove leading "{"
+				art_input_arg = copytext(art_input_arg, 1, length(art_input_arg)) // Remove trailing "}"
+
+			// Try to load from predefined library first
+			var/datum/aic_ascii_art_library/art_library = new /datum/aic_ascii_art_library()
+			art_emote_data = art_library.get_art_data(art_input_arg) // Get the full emote data map
+			if(art_emote_data)
+				art_lines = art_emote_data["default"] // Get the default art lines
+			else
+				// If not a predefined name, try to read from a file
+				var/datum/c4_file/art_file = system.resolve_filepath(art_input_arg, system.current_directory)
+				if(istype(art_file, /datum/c4_file/text))
+					art_lines = splittext(art_file.to_string(), "\n")
+					art_emote_data = list("default" = art_lines) // Create default emote data for file art
+				else
+					// If not a predefined name or a file, treat as literal art string
+					art_lines = splittext(replacetext(art_input_arg, "\\n", "\n"), "\n")
+					art_emote_data = list("default" = art_lines) // Create default emote data for literal art
+
+			if(!art_lines || !art_lines.len)
+				system.print_error("<b>Error:</b> No ASCII art provided, found in library, or readable from file for '[art_input_arg]'.")
+				return
+
+			if(!aic_art)
+				aic_art = new /datum/aic_ascii_art
+				aic_art.owner_ckey = system.logged_in_aic_ckey
+				aic_art.terminal_id = target_terminal_id // Set terminal ID for new art
+				system.add_aic_ascii_art(aic_art)
+
+			aic_art.ascii_data = art_lines
+			aic_art.emote_data = art_emote_data // Assign the full emote data
+			aic_art.current_emote = "default" // Reset emote on set
+			system.render_terminal_content()
+			system.println("ASCII art '[art_input_arg]' set on terminal [target_terminal_id].")
+
+		// Removed "move" command as it's no longer relevant for bottom-aligned art.
+
+		if("emote")
+			var/emote_type_index = arg_start_index // Emote type is at the same index as art_input_arg for 'set'
+			if(length(arguments) < emote_type_index)
+				system.println("<b>Syntax:</b> asciiart emote \[terminal_id?\] <emote_type>")
+				return
+			var/emote_type = arguments[emote_type_index]
+
+			if(!aic_art)
+				system.print_error("<b>Error:</b> No ASCII art set for terminal [target_terminal_id]. Use 'asciiart set' first.")
+				return
+
+			if(!(emote_type in aic_art.emote_data))
+				system.print_error("<b>Error:</b> Emote '[emote_type]' not found for terminal [target_terminal_id]. Only 'default' is available unless custom emotes are added.")
+				return
+
+			aic_art.current_emote = emote_type
+			system.render_terminal_content()
+			system.println("ASCII art emote set to '[emote_type]' on terminal [target_terminal_id].")
+
+		if("clear")
+			if(!aic_art)
+				system.print_error("<b>Error:</b> No ASCII art to clear for terminal [target_terminal_id].")
+				return
+			system.remove_aic_ascii_art(aic_art)
+			system.println("ASCII art cleared from terminal [target_terminal_id].")
+
+		else
+			system.println("<b>Error:</b> Unknown asciiart command. Use 'help asciiart' for usage.")
+	return TRUE
+
 /datum/shell_command/thinkdos/syslock
 	aliases = list("syslock")
 	help_text = "Temporarily locks the terminal, preventing input. Can be used remotely with -R <address>.<br>Usage: 'syslock \[duration_seconds?\]'"
@@ -865,7 +986,7 @@
 		return
 
 	var/sound_path = arguments[1]
-	if(!istext(sound_path) || !fexists(sound_path) || !sound_path.EndsWith(".ogg"))
+	if(!istext(sound_path) || !fexists(sound_path) || copytext(sound_path, length(sound_path) - 3) != ".ogg")
 		system.print_error("<b>Error:</b> Invalid sound file path or file does not exist. Must be an .ogg file.")
 		return
 

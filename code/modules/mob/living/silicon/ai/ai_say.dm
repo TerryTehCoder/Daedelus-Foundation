@@ -1,4 +1,9 @@
 /mob/living/silicon/ai/say(message, bubble_type, list/spans = list(), sanitize = TRUE, datum/language/language = null, ignore_spam = FALSE, forced = null, filterproof = null, range = 7)
+	//We could probably handle this as it's own channel like binary; but for now, we're just hijacking radio which uses say()
+	if(copytext(message, 1, 2) == "~") // Check for the ASCII art chat prefix
+		src.radio(message) // Pass the message to the radio proc for handling
+		return TRUE // Consume the message, don't send as regular chat
+
 	if(parent && istype(parent) && parent.stat != DEAD) //If there is a defined "parent" AI, it is actually an AI, and it is alive, anything the AI tries to say is said by the parent instead.
 		return parent.say(arglist(args))
 	return ..()

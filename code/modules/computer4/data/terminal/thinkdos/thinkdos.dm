@@ -28,6 +28,12 @@
 	/// Used as a reference against usr for physical input when determing watchdog alert.
 	var/logged_in_aic_ckey
 
+	/// List of active AIC ASCII art instances.
+	var/list/datum/aic_ascii_art/active_aic_ascii_art = list()
+
+	/// Counter for unique chat bubble IDs.
+	var/next_chat_bubble_id = 1
+
 /datum/c4_file/terminal_program/operating_system/thinkdos/New()
 	if(!commands)
 		commands = list()
@@ -67,7 +73,9 @@
 		return
 
 	var/encoded_in = html_encode(text)
-	println(encoded_in)
+	// Append to the buffer without immediately rendering.
+	// The actual rendering will happen after command execution, or when explicitly triggered.
+	get_computer().text_buffer += "[encoded_in]<br>"
 	write_log(encoded_in)
 
 	// Watchdog alert for physical input during AIC login
@@ -83,12 +91,85 @@
 			println("Login required. Please login using 'login'.")
 		return
 
-	for(var/datum/shell_command/potential_command as anything in commands)
-		if(potential_command.try_exec(parsed_stdin.command, src, src, parsed_stdin.arguments, parsed_stdin.options))
-			return TRUE
-
 	println("'[html_encode(parsed_stdin.raw)]' is not recognized as an internal or external command.")
 	return TRUE
+
+/datum/c4_file/terminal_program/operating_system/thinkdos/proc/get_aic_ascii_art(ckey, terminal_id_filter = null)
+	for(var/datum/aic_ascii_art/art in active_aic_ascii_art)
+		if(art.owner_ckey == ckey && !art.is_chat_bubble)
+			if(isnull(terminal_id_filter) || art.terminal_id == terminal_id_filter)
+				return art
+	return null
+
+/datum/c4_file/terminal_program/operating_system/thinkdos/proc/add_aic_ascii_art(datum/aic_ascii_art/art)
+	if(!art)
+		return FALSE
+	active_aic_ascii_art += art
+	println("DEBUG: Added ASCII art: [art.owner_ckey], [art.terminal_id], Lines:[art.ascii_data.len]")
+	render_terminal_content()
+	return TRUE
+
+/datum/c4_file/terminal_program/operating_system/thinkdos/proc/remove_aic_ascii_art(datum/aic_ascii_art/art)
+	if(!art)
+		return FALSE
+	active_aic_ascii_art -= art
+	println("DEBUG: Removed ASCII art: [art.owner_ckey], [art.terminal_id]")
+	render_terminal_content()
+	return TRUE
+
+// Override the parent's render_terminal_content to include ASCII art
+/datum/c4_file/terminal_program/operating_system/thinkdos/render_terminal_content()
+	var/obj/machinery/computer4/computer = get_computer()
+	if(computer)
+		computer.text_buffer = generate_terminal_display_html() // Update text_buffer with overlaid HTML
+		SStgui.update_uis(computer)
+
+/datum/c4_file/terminal_program/operating_system/thinkdos/proc/generate_terminal_display_html()
+	var/list/html_base_lines = splittext(get_computer().text_buffer, "<br>")
+	var/list/decoded_base_lines = list()
+	for(var/line in html_base_lines)
+		decoded_base_lines += html_decode(line) // Decode existing terminal content
+
+	var/list/rendered_lines = decoded_base_lines.Copy()
+
+	// Append ASCII art at the bottom
+	if(active_aic_ascii_art.len)
+		rendered_lines += "<br>" // Add a blank line for separation
+		rendered_lines += "<br>" // Add another blank line for separation
+
+		var/list/chat_bubbles = list()
+		var/list/main_art = list()
+
+		for(var/datum/aic_ascii_art/art in active_aic_ascii_art)
+			if(art.is_chat_bubble)
+				chat_bubbles += art
+			else
+				main_art += art
+
+		// Append chat bubbles first
+		for(var/datum/aic_ascii_art/art in chat_bubbles)
+			var/list/art_lines = art.emote_data[art.current_emote] || art.ascii_data
+			if(!art_lines)
+				continue
+			for(var/line in art_lines)
+				rendered_lines += "<pre style='margin: 0px'>[html_encode(line)]</pre>"
+
+		// Then append main ASCII art
+		for(var/datum/aic_ascii_art/art in main_art)
+			var/list/art_lines = art.emote_data[art.current_emote] || art.ascii_data
+			if(!art_lines)
+				continue
+			for(var/line in art_lines)
+				rendered_lines += "<pre style='margin: 0px'>[html_encode(line)]</pre>"
+
+	return jointext(rendered_lines, "<br>")
+
+/datum/c4_file/terminal_program/operating_system/thinkdos/proc/sort_ascii_art_by_chat_bubble(datum/aic_ascii_art/A, datum/aic_ascii_art/B)
+	if(A.is_chat_bubble && !B.is_chat_bubble)
+		return -1 // A comes before B
+	if(!A.is_chat_bubble && B.is_chat_bubble)
+		return 1 // B comes before A
+	return 0 // Maintain original order if both are same type
 
 /// Write to the command log.
 /datum/c4_file/terminal_program/operating_system/thinkdos/proc/write_log(text)
@@ -140,21 +221,28 @@
 	write_log("<b>LOGIN</b>: [html_encode(account_name)] | [html_encode(account_occupation)]")
 
 	if(usr?.has_unlimited_silicon_privilege)
-		var/client/C = usr.client
-		var/player_ckey = C.ckey
+		var/client/user_client = usr.client
+		var/player_ckey = user_client.ckey
 		var/datum/aic_key_data/aic_key = get_or_generate_aic_key(player_ckey, account_name)
 
 		logged_in_aic_ckey = player_ckey // Store the ckey of the AIC player
+		if(usr && isAI(usr))
+			var/mob/living/silicon/ai/AI_mob = usr
+			var/obj/machinery/computer4/current_terminal = get_computer()
+			if(current_terminal)
+				AI_mob.active_thinkdos_terminal = current_terminal // Set as active terminal
+				if(!(current_terminal in AI_mob.logged_in_terminals))
+					AI_mob.logged_in_terminals += current_terminal // Add to list of logged-in terminals
 
 		println("<b>Digital Handshake</b> accepted from <i>Networked AIC Unit</i>.")
 		if(aic_key)
 			println("<b>AIC Challenge Key Match:</b> <code>[aic_key.key_hash]</code> Registration: [usr.real_name]<br>")
 			println("<span style='font-weight:bold; color:#0f0;'>Root Access Granted.</span>")
 			if(aic_key.login_sound_path)
-				var/obj/machinery/computer/C = get_computer()
-				if(C)
-					playsound(C, aic_key.login_sound_path, null, 50, FALSE)
-					if(usr && get_dist(usr, C) > AIC_LOGIN_SOUND_RANGE) // Play to user only if outside range of computer sound
+				var/obj/machinery/computer/computer_obj = get_computer()
+				if(computer_obj)
+					playsound(computer_obj, aic_key.login_sound_path, null, 50, FALSE)
+					if(usr && get_dist(usr, computer_obj) > AIC_LOGIN_SOUND_RANGE) // Play to user only if outside range of computer sound
 						playsound(usr, aic_key.login_sound_path, null, 50, FALSE)
 				else
 					playsound(usr, aic_key.login_sound_path, null, 50, FALSE)
@@ -283,6 +371,13 @@
 	write_log("<b>LOGOUT:</b> [html_encode(current_user.registered_name)]")
 	set_current_user(null)
 	logged_in_aic_ckey = null // Clear the AIC ckey on logout
+	if(usr && isAI(usr))
+		var/mob/living/silicon/ai/AI_mob = usr
+		var/obj/machinery/computer4/current_terminal = get_computer()
+		if(current_terminal)
+			AI_mob.logged_in_terminals -= current_terminal // Remove from list of logged-in terminals
+			if(AI_mob.active_thinkdos_terminal == current_terminal)
+				AI_mob.active_thinkdos_terminal = null // Clear active terminal if it was this one
 	return TRUE
 
 /// Returns the logging folder, attempting to create it if it doesn't already exist.

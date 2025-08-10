@@ -33,6 +33,12 @@
 	current_directory = directory
 	return TRUE
 
+/// Render the terminal content, including any overlays like ASCII art.
+/datum/c4_file/terminal_program/operating_system/proc/render_terminal_content()
+	var/obj/machinery/computer4/computer = get_computer()
+	if(computer)
+		SStgui.update_uis(computer)
+
 /// Move a file to another location.
 /datum/c4_file/terminal_program/operating_system/proc/move_file(datum/c4_file/file, datum/c4_file/folder/destination, error_pointer, overwrite = FALSE, new_name = "")
 	if(file.containing_folder == destination)
@@ -111,8 +117,9 @@
 	var/obj/machinery/computer4/computer = get_computer()
 	computer.text_buffer += "[text]<br>"
 	if(update_ui)
-		SStgui.update_uis(computer)
+		render_terminal_content() // Call the new rendering proc
 	return TRUE
+
 
 /// Clear the screen completely.
 /datum/c4_file/terminal_program/operating_system/proc/clear_screen(fully = FALSE)

@@ -62,6 +62,10 @@
 	var/explosive = FALSE //does the AI explode when it dies?
 
 	var/mob/living/silicon/ai/parent
+	/// The ThinkDOS terminal this AI is currently logged into.
+	var/obj/machinery/computer4/active_thinkdos_terminal
+	/// List of all ThinkDOS terminals this AI is currently logged into.
+	var/list/obj/machinery/computer4/logged_in_terminals = list()
 	/// If we are lighting cameras as our eye passes by.
 	var/camera_light_on = TRUE
 
