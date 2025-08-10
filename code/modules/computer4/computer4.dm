@@ -39,6 +39,9 @@
 	/// Screen text buffer.
 	var/text_buffer = ""
 
+	/// Buffer for ASCII art HTML, separate from main text_buffer.
+	var/ascii_art_html_buffer = ""
+
 	// Read-only vars for making the computer
 	var/screen_bg_color = "#1B1E1B"
 	var/screen_font_color = "#E0E0E0"
@@ -262,6 +265,7 @@
 	tgui_last_accessed[user.ckey] ||= ""
 	var/list/data = list(
 		"displayHTML" = text_buffer,
+		"asciiArtHTML" = ascii_art_html_buffer, // New: Send ASCII art HTML separately
 		"terminalActive" = !!operating_system?.active_program,
 		"floppy" = inserted_disk,
 		"windowName" = name,

@@ -7,7 +7,7 @@
  */
 
 import { useBackend } from '../../backend';
-import { Stack } from '../../components';
+import { Box, Stack } from '../../components';
 import { Window } from '../../layouts';
 import { InputAndButtonsSection } from './InputAndButtonsSection';
 import { PeripheralsSection } from './PeripheralsSection';
@@ -16,7 +16,14 @@ import type { TerminalData } from './types';
 
 export const Terminal = (props) => {
   const { data } = useBackend<TerminalData>();
-  const { bgColor, displayHTML, fontColor, peripherals, windowName } = data;
+  const {
+    bgColor,
+    displayHTML,
+    fontColor,
+    peripherals,
+    windowName,
+    asciiArtHTML,
+  } = data;
 
   return (
     <Window theme="utilitarian-crt" title={windowName} width={670} height={500}>
@@ -35,6 +42,16 @@ export const Terminal = (props) => {
           <Stack.Item>
             <PeripheralsSection peripherals={peripherals} />
           </Stack.Item>
+          {/* Render ASCII art at the very bottom, separate from the main scrolling content */}
+          {asciiArtHTML && (
+            <Stack.Item>
+              {/* eslint-disable-next-line react/no-danger */}
+              <Box
+                dangerouslySetInnerHTML={{ __html: asciiArtHTML }}
+                backgroundColor={bgColor}
+              />
+            </Stack.Item>
+          )}
         </Stack>
       </Window.Content>
     </Window>

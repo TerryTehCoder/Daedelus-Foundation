@@ -58,13 +58,6 @@
 				" (____)"
 			)
 		)
-		predefined_art["chat_bubble"] = list(
-			"default" = list(
-				" .-----------.",
-				"/  @@TEXT_PLACEHOLDER@@   /",
-				"`-----------`"
-			)
-		)
 
 /datum/aic_ascii_art_library/proc/get_art_data(art_name)
 	return predefined_art[lowertext(art_name)]

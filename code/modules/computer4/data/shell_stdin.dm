@@ -21,15 +21,22 @@
 	for(var/i = 1, i <= length(text), i++)
 		var/char = copytext(text, i, i + 1)
 
-		if(escaped)
-			current_token += char
+		if(escaped) // Handle escaped character
+			switch(char)
+				if("n")
+					current_token += "\n"
+				if("t")
+					current_token += "\t"
+				else
+					current_token += char
 			escaped = FALSE
 			continue
 
-		if(char == "\\")
+		if(char == "\\") // Set escaped flag for next character
 			escaped = TRUE
 			continue
 
+		// Now handle characters based on quoting/bracing state
 		if(in_curly_brace)
 			if(char == "{")
 				curly_brace_nesting_level++
@@ -37,15 +44,14 @@
 				curly_brace_nesting_level--
 				if(curly_brace_nesting_level == 0)
 					in_curly_brace = FALSE
-					// Add the curly brace to the token, then finalize argument
-					current_token += char
+					current_token += char // Include the closing brace
 					if(command == "")
 						command = lowertext(current_token)
 					else
 						arguments += current_token
 					current_token = ""
-					continue // Continue to next char, don't add space
-			current_token += char
+					continue
+			current_token += char // Add any other character inside curly braces
 			continue
 
 		if(in_single_quote)

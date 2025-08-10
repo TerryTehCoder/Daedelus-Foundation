@@ -4,8 +4,6 @@
 	var/owner_ckey // Ckey of the AIC player who owns this ASCII art
 	var/terminal_id // Terminal binding (optional)
 	var/current_emote = "default" // Current emote state (e.g., "default", "happy", "sad")
-	var/is_chat_bubble = FALSE // True if this is a temporary chat bubble
-	var/chat_bubble_id // Unique ID for chat bubbles to manage their lifecycle
 
 /datum/aic_ascii_art/New()
 	. = ..()

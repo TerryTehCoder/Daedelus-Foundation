@@ -31,8 +31,15 @@
 	/// List of active AIC ASCII art instances.
 	var/list/datum/aic_ascii_art/active_aic_ascii_art = list()
 
-	/// Counter for unique chat bubble IDs.
-	var/next_chat_bubble_id = 1
+
+	/// The currently active main AIC ASCII art instance for this terminal.
+	var/datum/aic_ascii_art/current_main_aic_art
+
+	/// The message for the current AIC chat, displayed at the very bottom, replacing previous messages.
+	var/current_aic_chat_message_display
+
+	/// Stores the pre-rendered HTML for the ASCII art and its dynamic message.
+	var/ascii_art_html_display = ""
 
 /datum/c4_file/terminal_program/operating_system/thinkdos/New()
 	if(!commands)
@@ -91,29 +98,50 @@
 			println("Login required. Please login using 'login'.")
 		return
 
-	println("'[html_encode(parsed_stdin.raw)]' is not recognized as an internal or external command.")
+	var/command_executed = FALSE
+	for(var/datum/shell_command/potential_command as anything in commands)
+		if(potential_command.try_exec(parsed_stdin.command, src, src, parsed_stdin.arguments, parsed_stdin.options))
+			command_executed = TRUE
+			break
+
+	if(!command_executed)
+		println("'[html_encode(parsed_stdin.raw)]' is not recognized as an internal or external command.")
 	return TRUE
 
 /datum/c4_file/terminal_program/operating_system/thinkdos/proc/get_aic_ascii_art(ckey, terminal_id_filter = null)
 	for(var/datum/aic_ascii_art/art in active_aic_ascii_art)
-		if(art.owner_ckey == ckey && !art.is_chat_bubble)
+		if(art.owner_ckey == ckey) // Removed !art.is_chat_bubble
 			if(isnull(terminal_id_filter) || art.terminal_id == terminal_id_filter)
 				return art
 	return null
 
-/datum/c4_file/terminal_program/operating_system/thinkdos/proc/add_aic_ascii_art(datum/aic_ascii_art/art)
+/datum/c4_file/terminal_program/operating_system/thinkdos/proc/add_aic_ascii_art(datum/aic_ascii_art/art, update_ui = TRUE)
 	if(!art)
 		return FALSE
-	active_aic_ascii_art += art
-	println("DEBUG: Added ASCII art: [art.owner_ckey], [art.terminal_id], Lines:[art.ascii_data.len]")
-	render_terminal_content()
+
+	if(current_main_aic_art && current_main_aic_art != art)
+		// Remove the old main art if a new one is being set
+		active_aic_ascii_art -= current_main_aic_art
+		qdel(current_main_aic_art)
+	current_main_aic_art = art
+	if(!(art in active_aic_ascii_art)) // Only add if not already present (prevents duplicates when updating existing art)
+		active_aic_ascii_art += art
+
+	if(update_ui)
+		generate_ascii_art_html() // Update the HTML buffer for ASCII art
+		render_terminal_content()
 	return TRUE
 
 /datum/c4_file/terminal_program/operating_system/thinkdos/proc/remove_aic_ascii_art(datum/aic_ascii_art/art)
 	if(!art)
 		return FALSE
+
+	if(art == current_main_aic_art)
+		current_main_aic_art = null
+
 	active_aic_ascii_art -= art
-	println("DEBUG: Removed ASCII art: [art.owner_ckey], [art.terminal_id]")
+	qdel(art) // Ensure the datum is properly deleted
+	generate_ascii_art_html() // Update the HTML buffer for ASCII art
 	render_terminal_content()
 	return TRUE
 
@@ -121,55 +149,42 @@
 /datum/c4_file/terminal_program/operating_system/thinkdos/render_terminal_content()
 	var/obj/machinery/computer4/computer = get_computer()
 	if(computer)
-		computer.text_buffer = generate_terminal_display_html() // Update text_buffer with overlaid HTML
+		computer.text_buffer = generate_terminal_display_html() // Update text_buffer with regular terminal content
+		generate_ascii_art_html() // Generate and store ASCII art HTML
+		computer.ascii_art_html_buffer = ascii_art_html_display // Assign to computer's buffer
 		SStgui.update_uis(computer)
 
 /datum/c4_file/terminal_program/operating_system/thinkdos/proc/generate_terminal_display_html()
-	var/list/html_base_lines = splittext(get_computer().text_buffer, "<br>")
-	var/list/decoded_base_lines = list()
-	for(var/line in html_base_lines)
-		decoded_base_lines += html_decode(line) // Decode existing terminal content
+	var/final_html = ""
 
-	var/list/rendered_lines = decoded_base_lines.Copy()
+	// Append the regular terminal content only
+	var/obj/machinery/computer4/computer = get_computer()
+	if(computer)
+		var/list/html_base_lines = splittext(computer.text_buffer, "<br>")
+		var/list/decoded_base_lines = list()
+		for(var/line in html_base_lines)
+			decoded_base_lines += html_decode(line) // Decode existing terminal content
+		final_html += jointext(decoded_base_lines, "<br>")
 
-	// Append ASCII art at the bottom
-	if(active_aic_ascii_art.len)
-		rendered_lines += "<br>" // Add a blank line for separation
-		rendered_lines += "<br>" // Add another blank line for separation
+	return final_html
 
-		var/list/chat_bubbles = list()
-		var/list/main_art = list()
+/datum/c4_file/terminal_program/operating_system/thinkdos/proc/generate_ascii_art_html()
+	ascii_art_html_display = "" // Clear previous content
 
-		for(var/datum/aic_ascii_art/art in active_aic_ascii_art)
-			if(art.is_chat_bubble)
-				chat_bubbles += art
-			else
-				main_art += art
-
-		// Append chat bubbles first
-		for(var/datum/aic_ascii_art/art in chat_bubbles)
-			var/list/art_lines = art.emote_data[art.current_emote] || art.ascii_data
-			if(!art_lines)
-				continue
+	// Append the current main ASCII art if it exists, at the very bottom
+	if(current_main_aic_art)
+		ascii_art_html_display += "<br><br>" // Add two blank lines for separation before ASCII art
+		var/list/art_lines = current_main_aic_art.emote_data[current_main_aic_art.current_emote] || current_main_aic_art.ascii_data
+		if(art_lines)
 			for(var/line in art_lines)
-				rendered_lines += "<pre style='margin: 0px'>[html_encode(line)]</pre>"
+				ascii_art_html_display += "<pre style='margin: 0px'>[html_encode(line)]</pre>"
 
-		// Then append main ASCII art
-		for(var/datum/aic_ascii_art/art in main_art)
-			var/list/art_lines = art.emote_data[art.current_emote] || art.ascii_data
-			if(!art_lines)
-				continue
-			for(var/line in art_lines)
-				rendered_lines += "<pre style='margin: 0px'>[html_encode(line)]</pre>"
+	// Append the dynamic AIC chat message ONLY if ASCII art is active
+	if(current_main_aic_art && current_aic_chat_message_display)
+		ascii_art_html_display += "<br>" // Add a line break for separation
+		ascii_art_html_display += "<pre style='margin: 0px'>[html_encode(current_aic_chat_message_display)]</pre>"
+		current_aic_chat_message_display = null // Clear the message after displaying it
 
-	return jointext(rendered_lines, "<br>")
-
-/datum/c4_file/terminal_program/operating_system/thinkdos/proc/sort_ascii_art_by_chat_bubble(datum/aic_ascii_art/A, datum/aic_ascii_art/B)
-	if(A.is_chat_bubble && !B.is_chat_bubble)
-		return -1 // A comes before B
-	if(!A.is_chat_bubble && B.is_chat_bubble)
-		return 1 // B comes before A
-	return 0 // Maintain original order if both are same type
 
 /// Write to the command log.
 /datum/c4_file/terminal_program/operating_system/thinkdos/proc/write_log(text)
@@ -185,6 +200,10 @@
 		write_log(text)
 
 	return println(text)
+
+/datum/c4_file/terminal_program/operating_system/thinkdos/println(text, update_ui = TRUE)
+	. = ..()
+	return .
 
 /// Schedule a callback for the system to invoke after the specified time if able.
 /datum/c4_file/terminal_program/operating_system/thinkdos/proc/schedule_proc(datum/callback/callback, time)
@@ -371,6 +390,13 @@
 	write_log("<b>LOGOUT:</b> [html_encode(current_user.registered_name)]")
 	set_current_user(null)
 	logged_in_aic_ckey = null // Clear the AIC ckey on logout
+
+	// Clear all active ASCII art and delete the datums on logout
+	for(var/datum/aic_ascii_art/art in active_aic_ascii_art)
+		qdel(art)
+	active_aic_ascii_art.Cut()
+	current_main_aic_art = null
+
 	if(usr && isAI(usr))
 		var/mob/living/silicon/ai/AI_mob = usr
 		var/obj/machinery/computer4/current_terminal = get_computer()

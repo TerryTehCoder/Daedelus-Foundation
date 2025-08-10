@@ -18,6 +18,7 @@ export type PeripheralData = {
 };
 
 export type TerminalData = {
+  asciiArtHTML: string; // Added for persistent ASCII art display
   bgColor: string;
   ckey: string;
   displayHTML: string;

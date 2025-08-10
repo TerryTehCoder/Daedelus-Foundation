@@ -889,7 +889,7 @@
 					art_emote_data = list("default" = art_lines) // Create default emote data for file art
 				else
 					// If not a predefined name or a file, treat as literal art string
-					art_lines = splittext(replacetext(art_input_arg, "\\n", "\n"), "\n")
+					art_lines = splittext(art_input_arg, "\n") // \n is handled by shell_stdin.dm
 					art_emote_data = list("default" = art_lines) // Create default emote data for literal art
 
 			if(!art_lines || !art_lines.len)
@@ -900,15 +900,13 @@
 				aic_art = new /datum/aic_ascii_art
 				aic_art.owner_ckey = system.logged_in_aic_ckey
 				aic_art.terminal_id = target_terminal_id // Set terminal ID for new art
-				system.add_aic_ascii_art(aic_art)
+				system.add_aic_ascii_art(aic_art, FALSE) // Pass FALSE to prevent immediate render
 
 			aic_art.ascii_data = art_lines
 			aic_art.emote_data = art_emote_data // Assign the full emote data
 			aic_art.current_emote = "default" // Reset emote on set
-			system.render_terminal_content()
+			system.render_terminal_content() // Keep this for the kind of messy but cute render before the message
 			system.println("ASCII art '[art_input_arg]' set on terminal [target_terminal_id].")
-
-		// Removed "move" command as it's no longer relevant for bottom-aligned art.
 
 		if("emote")
 			var/emote_type_index = arg_start_index // Emote type is at the same index as art_input_arg for 'set'
