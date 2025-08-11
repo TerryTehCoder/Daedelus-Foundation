@@ -54,6 +54,7 @@
 
 /obj/machinery/rotating_alarm/Initialize()
 	. = ..()
+	SET_TRACKING(__TYPE__)
 
 	//Setup colour
 	var/list/color_matrix = color_rotation(angle)

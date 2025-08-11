@@ -5,14 +5,16 @@
 #define CHANNEL_JUKEBOX 1021
 #define CHANNEL_HEARTBEAT 1020 //sound channel for heartbeats
 #define CHANNEL_AMBIENCE 1019
-#define CHANNEL_BUZZ 1018
-#define CHANNEL_TRAITOR 1017
-#define CHANNEL_BREATHING 1016
-#define CHANNEL_SAFE_DIAL 1015 // Unique channel for the safe dial sound
+#define CHANNEL_SELF_DESTRUCT_AMBIENCE 1018 //channel for self-destruct ambient sounds
+#define CHANNEL_SELF_DESTRUCT_ALARM 1017 // Unique channel for intense alarm sounds
+#define CHANNEL_BUZZ 1016
+#define CHANNEL_TRAITOR 1015
+#define CHANNEL_BREATHING 1014
+#define CHANNEL_SAFE_DIAL 1013 // Unique channel for the safe dial sound
 
 //THIS SHOULD ALWAYS BE THE LOWEST ONE!
 //KEEP IT UPDATED
-#define CHANNEL_HIGHEST_AVAILABLE 1015
+#define CHANNEL_HIGHEST_AVAILABLE 1012
 
 #define MAX_INSTRUMENT_CHANNELS (128 * 6)
 
