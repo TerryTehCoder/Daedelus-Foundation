@@ -1,21 +1,15 @@
-#define SD_EVENT_START 1
-#define SD_EVENT_PAUSE 2
-#define SD_EVENT_RESUME 3
-#define SD_EVENT_CANCEL 4
-#define SD_EVENT_FINAL 5
-#define SD_EVENT_TICK 6
-#define SD_EVENT_MILESTONE 7
-
-#define SD_EFFECT_LIGHTS_RED 1
-#define SD_EFFECT_FINAL_DESTRUCTION 8
-
-#define SD_EFFECT_ALARM_5 10
-#define SD_EFFECT_ALARM_4 11
-#define SD_EFFECT_ALARM_3 12
-#define SD_EFFECT_ALARM_2 13
-#define SD_EFFECT_ALARM_1 14
-
 #define PROCESS_STOP 0
 #define PROCESS_CONTINUE 1
 
 #define NUKERANGE 127
+
+// Self-destruct effect defines
+#define SD_EFFECT_LIGHTS_RED "sd_effect_lights_red"
+#define SD_EFFECT_ALARM_5 "sd_effect_alarm_5"
+#define SD_EFFECT_ALARM_4 "sd_effect_alarm_4"
+#define SD_EFFECT_ALARM_3 "sd_effect_alarm_3"
+#define SD_EFFECT_ALARM_2 "sd_effect_alarm_2"
+#define SD_EFFECT_ALARM_1 "sd_effect_alarm_1"
+#define SD_EFFECT_FINAL_DESTRUCTION "sd_effect_final_destruction"
+#define SD_EFFECT_INTENSE_ALARM "sd_effect_intense_alarm"
+#define SD_EFFECT_HULL_BREACH "sd_effect_hull_breach"

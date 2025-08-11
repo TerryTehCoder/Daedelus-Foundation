@@ -1,35 +1,50 @@
 /datum/self_destruct_profile/self_destruct_sound_profile
+	var/datum/self_destruct_controller/controller // Reference to the controller
 	var/list/ambient_loops = list(
 		'sound/effects/selfdestruct/sirenloop.ogg'
 	)
 	// List of ambient sound file paths to loop during countdown
 
-/datum/self_destruct_sound_profile/New()
+/datum/self_destruct_profile/self_destruct_sound_profile/New(datum/self_destruct_controller/new_controller)
 	. = ..()
+	controller = new_controller
 
-/datum/self_destruct_profile/self_destruct_sound_profile/handle_event(event_type, data = null)
-	message_admins(span_adminnotice("Self-destruct Sound Profile: Handling event [event_type] with data [data]."))
-	switch(event_type)
-		if(SD_EVENT_START)
-			play_ambient_loops()
-			message_admins(span_adminnotice("Self-destruct Sound Profile: SD_EVENT_START - Playing ambient loops."))
-		if(SD_EVENT_TICK)
-			// No specific action on every tick
-		if(SD_EVENT_PAUSE, SD_EVENT_CANCEL)
-			stop_ambient_loops()
-			stop_alarm_sound() // Ensure alarm sound is stopped on pause/cancel
-			message_admins(span_adminnotice("Self-destruct Sound Profile: SD_EVENT_PAUSE/CANCEL - Stopping all sounds."))
-		if(SD_EVENT_RESUME)
-			log_game("Self-destruct: Resuming sound effects.")
-			play_ambient_loops()
-			message_admins(span_adminnotice("Self-destruct Sound Profile: SD_EVENT_RESUME - Resuming ambient loops."))
-		// Handle specific effects directly
-		if(SD_EFFECT_FINAL_DESTRUCTION)
-			stop_ambient_loops()
-			stop_alarm_sound()
-			// Play final destruction sound
-			sound_to_playing_players('sound/machines/alarm.ogg', 100, FALSE) // Play alarm.ogg for final destruction
-			message_admins(span_adminnotice("Self-destruct Sound Profile: SD_EFFECT_FINAL_DESTRUCTION - Playing final destruction sound."))
+	// Register for signals from the controller
+	RegisterSignal(controller, SD_SIGNAL_START, PROC_REF(on_start_signal))
+	RegisterSignal(controller, list(SD_SIGNAL_PAUSE, SD_SIGNAL_CANCEL), PROC_REF(on_stop_signal))
+	RegisterSignal(controller, SD_SIGNAL_RESUME, PROC_REF(on_resume_signal))
+	RegisterSignal(controller, SD_SIGNAL_FINAL_DESTRUCTION, PROC_REF(on_final_destruction_signal))
+	RegisterSignal(controller, SD_SIGNAL_MILESTONE, PROC_REF(on_milestone_signal))
+
+/datum/self_destruct_profile/self_destruct_sound_profile/proc/on_start_signal(datum/self_destruct_controller/controller_instance, data = null)
+	SIGNAL_HANDLER
+	play_ambient_loops()
+	message_admins(span_adminnotice("Self-destruct Sound Profile: SD_SIGNAL_START - Playing ambient loops."))
+
+/datum/self_destruct_profile/self_destruct_sound_profile/proc/on_stop_signal(datum/self_destruct_controller/controller_instance, data = null)
+	SIGNAL_HANDLER
+	stop_ambient_loops()
+	stop_alarm_sound() // Ensure alarm sound is stopped on pause/cancel
+	message_admins(span_adminnotice("Self-destruct Sound Profile: SD_SIGNAL_PAUSE/CANCEL - Stopping all sounds."))
+
+/datum/self_destruct_profile/self_destruct_sound_profile/proc/on_resume_signal(datum/self_destruct_controller/controller_instance, data = null)
+	SIGNAL_HANDLER
+	log_game("Self-destruct: Resuming sound effects.")
+	play_ambient_loops()
+	message_admins(span_adminnotice("Self-destruct Sound Profile: SD_SIGNAL_RESUME - Resuming ambient loops."))
+
+/datum/self_destruct_profile/self_destruct_sound_profile/proc/on_final_destruction_signal(datum/self_destruct_controller/controller_instance, data = null)
+	SIGNAL_HANDLER
+	stop_ambient_loops()
+	stop_alarm_sound()
+	// Play final destruction sound
+	sound_to_playing_players('sound/machines/alarm.ogg', 100, FALSE) // Play alarm.ogg for final destruction
+	message_admins(span_adminnotice("Self-destruct Sound Profile: SD_SIGNAL_FINAL_DESTRUCTION - Playing final destruction sound."))
+
+/datum/self_destruct_profile/self_destruct_sound_profile/proc/on_milestone_signal(datum/self_destruct_controller/controller_instance, effect_type, data = null)
+	SIGNAL_HANDLER
+	// Handle specific effects directly
+	switch(effect_type)
 		if(SD_EFFECT_ALARM_5)
 			message_admins(span_adminnotice("Self-destruct Sound Profile: SD_EFFECT_ALARM_5 - Playing alarm sound 5."))
 			sound_to_playing_players('sound/effects/selfdestruct/SelfDestructAlarm5Tone.ogg', 50, FALSE, CHANNEL_SELF_DESTRUCT_ALARM)

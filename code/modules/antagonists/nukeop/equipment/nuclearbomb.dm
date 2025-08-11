@@ -247,11 +247,6 @@ GLOBAL_VAR(nuke_time_left)
 			lights = "lights-exploding"
 	add_overlay(lights)
 
-/obj/machinery/nuclearbomb/process()
-	// The controller handles its own processing, this proc is still needed for the bomb to be processed by the engine, but it will just update UI
-	update_ui_mode()
-	update_appearance()
-
 /obj/machinery/nuclearbomb/proc/update_ui_mode()
 	if(exploded)
 		ui_mode = NUKEUI_EXPLODED
@@ -472,8 +467,8 @@ GLOBAL_VAR(nuke_time_left)
 
 /obj/machinery/nuclearbomb/proc/explode()
 	message_admins(span_adminnotice("Nuclear Bomb: explode() called."))
-	message_admins(span_adminnotice("Nuclear Bomb: Broadcasting SD_EFFECT_FINAL_DESTRUCTION event."))
-	controller.broadcast_event(SD_EFFECT_FINAL_DESTRUCTION, src)
+	message_admins(span_adminnotice("Nuclear Bomb: Sending SD_SIGNAL_FINAL_DESTRUCTION signal."))
+	SEND_SIGNAL(controller, SD_SIGNAL_FINAL_DESTRUCTION, src)
 
 /obj/machinery/nuclearbomb/proc/get_cinematic_type(off_station)
 	// This proc is still needed by the explosion profile, so it remains here.
