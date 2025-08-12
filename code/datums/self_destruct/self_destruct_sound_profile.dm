@@ -15,22 +15,26 @@
 
 /datum/self_destruct_profile/self_destruct_sound_profile/proc/on_start_signal(datum/self_destruct_controller/controller_instance, data = null)
 	SIGNAL_HANDLER
+	log_game("Self-destruct Sound Profile: On Start Signal received.")
 	stop_all_siren_sounds() // Stop all siren-related sounds and timers
 
 	sound_to_playing_players(siren_loop_sound_path, 30, FALSE, null, CHANNEL_SELF_DESTRUCT_AMBIENCE, loop = TRUE)
 
 /datum/self_destruct_profile/self_destruct_sound_profile/proc/on_stop_signal(datum/self_destruct_controller/controller_instance, data = null)
 	SIGNAL_HANDLER
+	log_game("Self-destruct Sound Profile: On Stop Signal received.")
 	stop_all_siren_sounds() // Stop all siren-related sounds and timers
 	stop_alarm_sound() // Ensure alarm sound is stopped on pause/cancel
 
 /datum/self_destruct_profile/self_destruct_sound_profile/proc/on_resume_signal(datum/self_destruct_controller/controller_instance, data = null)
 	SIGNAL_HANDLER
+	log_game("Self-destruct Sound Profile: On Resume Signal received.")
 	stop_all_siren_sounds() // Ensure a clean start
 	sound_to_playing_players(siren_loop_sound_path, 30, FALSE, null, CHANNEL_SELF_DESTRUCT_AMBIENCE, loop = TRUE)
 
 /datum/self_destruct_profile/self_destruct_sound_profile/proc/on_final_destruction_signal(datum/self_destruct_controller/controller_instance, data = null)
 	SIGNAL_HANDLER
+	log_game("Self-destruct Sound Profile: On Final Destruction Signal received.")
 	stop_all_siren_sounds() // Stop all siren-related sounds and timers
 	stop_alarm_sound()
 	// Play final destruction sound
@@ -38,6 +42,7 @@
 
 /datum/self_destruct_profile/self_destruct_sound_profile/proc/on_milestone_signal(datum/self_destruct_controller/controller_instance, effect_type, data = null)
 	SIGNAL_HANDLER
+	log_game("Self-destruct Sound Profile: On Milestone Signal received for effect type: [effect_type].")
 	// Handle specific effects directly
 	switch(effect_type)
 		if(SD_EFFECT_ALARM_5)

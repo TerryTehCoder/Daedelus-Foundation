@@ -17,11 +17,13 @@
 
 /datum/self_destruct_profile/self_destruct_mechanical_profile/proc/on_start_signal(datum/self_destruct_controller/controller_instance, data = null)
 	SIGNAL_HANDLER
+	log_game("Self-destruct Mechanical Profile: On Start Signal received.")
 	for(var/mob/living/silicon/ai/A in GLOB.ai_list)
 		to_chat(A, span_bolddanger("WARNING: Site-Wide Self-Destruct sequence initiated!"))
 
 /datum/self_destruct_profile/self_destruct_mechanical_profile/proc/on_stop_signal(datum/self_destruct_controller/controller_instance, data = null)
 	SIGNAL_HANDLER
+	log_game("Self-destruct Mechanical Profile: On Stop Signal received.")
 	// Revert red lights
 	for(var/obj/machinery/light/L in original_light_colors) // Iterate through light objects directly
 		if(istype(L) && !QDELETED(L)) // Check if the light object still exists
@@ -31,6 +33,7 @@
 
 /datum/self_destruct_profile/self_destruct_mechanical_profile/proc/on_resume_signal(datum/self_destruct_controller/controller_instance, data = null)
 	SIGNAL_HANDLER
+	log_game("Self-destruct Mechanical Profile: On Resume Signal received.")
 	// Re-apply red lights (if they were active before pause)
 	for(var/obj/machinery/light/L in original_light_colors)
 		if(istype(L) && !QDELETED(L))
@@ -39,4 +42,5 @@
 
 /datum/self_destruct_profile/self_destruct_mechanical_profile/proc/on_final_destruction_signal(datum/self_destruct_controller/controller_instance, data = null)
 	SIGNAL_HANDLER
+	log_game("Self-destruct Mechanical Profile: On Final Destruction Signal received.")
 	// Implement final destruction sequence (e.g., explosion)

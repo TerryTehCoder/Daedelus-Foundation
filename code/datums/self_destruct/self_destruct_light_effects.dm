@@ -25,12 +25,23 @@
 	var/list/active_alarm_spinning_lights // Tracks self_destruct_variant spinning lights created for rotating alarms
 	var/list/affected_lights // To track lights whose properties were changed by this profile
 
+	// Batching variables
+	var/light_update_batch_size = 20 // Number of lights to update per batch
+	var/light_update_delay = 1 // Delay between batches in deciseconds
+	var/current_light_index = 1
+	var/current_alarm_index = 1
+	var/list/all_lights_to_update // Stores all lights to be updated
+	var/list/all_alarms_to_update // Stores all rotating alarms to be updated
+	var/datum/callback/light_batch_timer // Timer for batch processing
+
 /datum/self_destruct_profile/self_destruct_light_profile/New(datum/self_destruct_controller/new_controller)
 	. = ..()
 	controller = new_controller
 	active_small_light_spinning_lights = list()
 	active_alarm_spinning_lights = list()
 	affected_lights = list()
+	all_lights_to_update = list()
+	all_alarms_to_update = list()
 
 	// Register for signals from the controller
 	RegisterSignal(controller, SD_SIGNAL_START, PROC_REF(on_start_signal))
@@ -40,31 +51,43 @@
 
 /datum/self_destruct_profile/self_destruct_light_profile/proc/on_start_signal(datum/self_destruct_controller/controller_instance, data = null)
 	SIGNAL_HANDLER
-	// Activate red emergency lights and spinning effect
-	for(var/obj/machinery/light/L in INSTANCES_OF(/obj/machinery/light)) // Iterate through all lights.
+	log_game("Self-destruct Light Profile: On Start Signal received.")
+	// Collect all lights and alarms for batched processing
+	all_lights_to_update.Cut()
+	all_alarms_to_update.Cut()
+	current_light_index = 1
+	current_alarm_index = 1
+
+	for(var/obj/machinery/light/L in INSTANCES_OF(/obj/machinery/light))
 		if(istype(L) && is_station_level(L.z))
-			if(!affected_lights[L]) // Store original states
+			if(!affected_lights[L])
 				affected_lights[L] = list(L.bulb_colour, L.on, L.emergency_mode)
-			L.bulb_colour = "#FF0000" // Set to pure red
-			L.on = TRUE // Ensure light is on
-			L.emergency_mode = TRUE // Set to emergency mode
-			L.update_appearance() // Update icon state
-			L.set_light(L.bulb_outer_range, L.bulb_inner_range, L.bulb_power, L.bulb_falloff, L.bulb_colour) // Update luminosity
-	for(var/obj/machinery/rotating_alarm/R in INSTANCES_OF(/obj/machinery/rotating_alarm)) // Iterate through rotating alarms.
+			all_lights_to_update += L
+
+	for(var/obj/machinery/rotating_alarm/R in INSTANCES_OF(/obj/machinery/rotating_alarm))
 		if(istype(R) && is_station_level(R.z))
-			if(!affected_lights[R]) // Store original states
-				affected_lights[R] = list(R.on, R.alarm_light_color, R.spin_effect?.spin_rate) // Store relevant states for rotating_alarm, including the original spin_effect's spin_rate
-			R.set_color("#FF0000") // Set to pure red
-			R.set_on() // Ensure alarm is on, which will activate its internal spinning light
-			if(R.spin_effect)
-				R.spin_effect.spin_rate = 1.5 SECONDS // Adjust the spin rate of the alarm's inherent spinning light
-	addtimer(CALLBACK(src, PROC_REF(spawn_spinning_lights)), 40) // Allows time for Every Single wall-light on station to update to red lighting first.
+			if(!affected_lights[R])
+				affected_lights[R] = list(R.on, R.alarm_light_color, R.spin_effect?.spin_rate)
+			all_alarms_to_update += R
+
+	// Start batched processing
+	light_batch_timer = addtimer(CALLBACK(src, PROC_REF(process_light_batch)), light_update_delay, 0)
 
 /datum/self_destruct_profile/self_destruct_light_profile/proc/on_final_signal(datum/self_destruct_controller/controller_instance, data = null)
 	SIGNAL_HANDLER
 
 /datum/self_destruct_profile/self_destruct_light_profile/proc/on_cancel_or_pause_signal(datum/self_destruct_controller/controller_instance, data = null)
 	SIGNAL_HANDLER
+	log_game("Self-destruct Light Profile: On Cancel/Pause Signal received.")
+	// Stop any ongoing batch processing
+	if(light_batch_timer)
+		qdel(light_batch_timer) // Explicitly delete the timer
+		light_batch_timer = null
+	all_lights_to_update.Cut()
+	all_alarms_to_update.Cut()
+	current_light_index = 1
+	current_alarm_index = 1
+
 	// Deactivate spinning effect and revert emergency lights for small lights
 	for(var/obj/effect/spinning_light/self_destruct_variant/S in active_small_light_spinning_lights)
 		qdel(S) // Delete the self-destruct variant spinning light
@@ -90,21 +113,59 @@
 
 /datum/self_destruct_profile/self_destruct_light_profile/proc/on_resume_signal(datum/self_destruct_controller/controller_instance, data = null)
 	SIGNAL_HANDLER
+	log_game("Self-destruct Light Profile: On Resume Signal received.")
+	// Re-collect all lights and alarms for batched processing on resume
+	all_lights_to_update.Cut()
+	all_alarms_to_update.Cut()
+	current_light_index = 1
+	current_alarm_index = 1
+
 	for(var/obj/machinery/light/L in affected_lights)
 		if(istype(L) && !QDELETED(L))
-			if(istype(L, /obj/machinery/light))
-				L.bulb_colour = "#FF0000" // Re-apply red
-				L.on = TRUE // Ensure light is on
-				L.emergency_mode = TRUE // Re-apply emergency mode
-				L.update_appearance() // Update icon state
-				L.set_light(L.bulb_outer_range, L.bulb_inner_range, L.bulb_power, L.bulb_falloff, L.bulb_colour) // Update luminosity
-			else if(istype(L, /obj/machinery/rotating_alarm))
-				var/obj/machinery/rotating_alarm/R_alarm = L
-				R_alarm.set_color("#FF0000") // Re-apply red
-				R_alarm.set_on() // Ensure alarm is on, which will activate its internal spinning light
-				if(R_alarm.spin_effect)
-					R_alarm.spin_effect.spin_rate = 1.5 SECONDS // Adjust the spin rate of the alarm's inherent spinning light
-	addtimer(CALLBACK(src, PROC_REF(spawn_spinning_lights)), 40) // Re-activate spinning lights for small light fixtures after a 4-second delay
+			all_lights_to_update += L
+
+	for(var/obj/machinery/rotating_alarm/R_alarm in affected_lights)
+		if(istype(R_alarm) && !QDELETED(R_alarm))
+			all_alarms_to_update += R_alarm
+
+	// Start batched processing
+	light_batch_timer = addtimer(CALLBACK(src, PROC_REF(process_light_batch)), light_update_delay, 0)
+
+/datum/self_destruct_profile/self_destruct_light_profile/proc/process_light_batch()
+	var/lights_processed_in_batch = 0
+	var/alarms_processed_in_batch = 0
+
+	// Process lights
+	while(lights_processed_in_batch < light_update_batch_size && current_light_index <= all_lights_to_update.len)
+		var/obj/machinery/light/L = all_lights_to_update[current_light_index]
+		if(L && !QDELETED(L))
+			L.bulb_colour = "#FF0000" // Set to pure red
+			L.on = TRUE // Ensure light is on
+			L.emergency_mode = TRUE // Set to emergency mode
+			L.update_appearance() // Update icon state
+			L.set_light(L.bulb_outer_range, L.bulb_inner_range, L.bulb_power, L.bulb_falloff, L.bulb_colour) // Update luminosity
+		current_light_index++
+		lights_processed_in_batch++
+
+	// Process rotating alarms
+	while(alarms_processed_in_batch < light_update_batch_size && current_alarm_index <= all_alarms_to_update.len)
+		var/obj/machinery/rotating_alarm/R = all_alarms_to_update[current_alarm_index]
+		if(R && !QDELETED(R))
+			R.set_color("#FF0000") // Set to pure red
+			R.set_on() // Ensure alarm is on, which will activate its internal spinning light
+			if(R.spin_effect)
+				R.spin_effect.spin_rate = 1.5 SECONDS // Adjust the spin rate of the alarm's inherent spinning light
+		current_alarm_index++
+		alarms_processed_in_batch++
+
+	// Check if all lights and alarms have been processed
+	if(current_light_index > all_lights_to_update.len && current_alarm_index > all_alarms_to_update.len)
+		qdel(light_batch_timer) // Explicitly delete the timer
+		light_batch_timer = null
+		addtimer(CALLBACK(src, PROC_REF(spawn_spinning_lights)), 40) // All lights updated, now spawn spinning lights
+	else
+		// Schedule next batch
+		light_batch_timer = addtimer(CALLBACK(src, PROC_REF(process_light_batch)), light_update_delay, 0)
 
 /datum/self_destruct_profile/self_destruct_light_profile/proc/spawn_spinning_lights()
 	// Red Emergency Spinny Light Logic
@@ -125,4 +186,5 @@
 						S.pixel_x = 21
 					if(WEST)
 						S.pixel_x = -21
+			L.self_destruct_spinning_light = S // Store reference on the light object
 			active_small_light_spinning_lights += S

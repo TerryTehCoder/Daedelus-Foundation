@@ -9,7 +9,6 @@
 /datum/self_destruct_config/New()
 	. = ..()
 	default_milestones = list()
-	var/datum/self_destruct_milestone/milestone_light_red = new /datum/self_destruct_milestone(list(SD_EFFECT_LIGHTS_RED), relative_percentage = 1.0)
 	var/datum/self_destruct_milestone/milestone_alarm_5 = new /datum/self_destruct_milestone(list(SD_EFFECT_ALARM_5), relative_percentage = 0.8)
 	var/datum/self_destruct_milestone/milestone_alarm_4 = new /datum/self_destruct_milestone(list(SD_EFFECT_ALARM_4), relative_percentage = 0.6)
 	var/datum/self_destruct_milestone/milestone_alarm_3 = new /datum/self_destruct_milestone(list(SD_EFFECT_ALARM_3), relative_percentage = 0.4)
@@ -17,7 +16,6 @@
 	var/datum/self_destruct_milestone/milestone_alarm_1 = new /datum/self_destruct_milestone(list(SD_EFFECT_ALARM_1), relative_percentage = 0.05)
 	var/datum/self_destruct_milestone/milestone_final = new /datum/self_destruct_milestone(list(SD_EFFECT_FINAL_DESTRUCTION), absolute_offset = 0)
 
-	default_milestones += milestone_light_red
 	default_milestones += milestone_alarm_5
 	default_milestones += milestone_alarm_4
 	default_milestones += milestone_alarm_3
