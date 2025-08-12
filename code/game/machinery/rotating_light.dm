@@ -79,8 +79,11 @@
 
 
 /obj/machinery/rotating_alarm/proc/set_color(color)
-	if (on)
+	if (spin_effect && spin_effect != spinning_lights_cache["[color]"]) // If there's an existing spin_effect and it's not the one we're about to use from cache
 		remove_viscontents(spin_effect)
+		spinning_lights_cache -= spin_effect.type // Remove from cache if it's a cached instance
+		QDEL_NULL(spin_effect) // Delete the old spinning light datum
+
 	if (isnull(spinning_lights_cache["[color]"]))
 		spinning_lights_cache["[color]"] = new /obj/effect/spinning_light()
 	spin_effect = spinning_lights_cache["[color]"]

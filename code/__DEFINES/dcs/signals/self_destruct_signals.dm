@@ -5,4 +5,3 @@
 #define SD_SIGNAL_FINAL "sd_final"
 #define SD_SIGNAL_TICK "sd_tick"
 #define SD_SIGNAL_MILESTONE "sd_milestone"
-#define SD_SIGNAL_FINAL_DESTRUCTION "sd_final_destruction"

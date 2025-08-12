@@ -7,7 +7,7 @@
 	controller = new_controller
 
 	// Register for signals from the controller
-	RegisterSignal(controller, SD_SIGNAL_FINAL_DESTRUCTION, PROC_REF(on_final_destruction_signal))
+	RegisterSignal(controller, SD_SIGNAL_FINAL, PROC_REF(on_final_destruction_signal))
 
 /datum/self_destruct_profile/self_destruct_explosion_profile/proc/on_final_destruction_signal(datum/self_destruct_controller/controller_instance, data = null)
 	SIGNAL_HANDLER

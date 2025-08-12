@@ -13,7 +13,7 @@
 	RegisterSignal(controller, SD_SIGNAL_START, PROC_REF(on_start_signal))
 	RegisterSignal(controller, list(SD_SIGNAL_PAUSE, SD_SIGNAL_CANCEL), PROC_REF(on_stop_signal))
 	RegisterSignal(controller, SD_SIGNAL_RESUME, PROC_REF(on_resume_signal))
-	RegisterSignal(controller, SD_SIGNAL_FINAL_DESTRUCTION, PROC_REF(on_final_destruction_signal))
+	RegisterSignal(controller, SD_SIGNAL_FINAL, PROC_REF(on_final_destruction_signal))
 
 /datum/self_destruct_profile/self_destruct_mechanical_profile/proc/on_start_signal(datum/self_destruct_controller/controller_instance, data = null)
 	SIGNAL_HANDLER
@@ -45,4 +45,4 @@
 	SIGNAL_HANDLER
 	// Implement final destruction sequence (e.g., explosion)
 	log_game("Self-destruct: Initiating final destruction sequence.")
-	message_admins(span_adminnotice("Self-destruct Mechanical Profile: SD_SIGNAL_FINAL_DESTRUCTION - Initiating final destruction sequence."))
+	message_admins(span_adminnotice("Self-destruct Mechanical Profile: SD_SIGNAL_FINAL - Initiating final destruction sequence."))

@@ -389,6 +389,7 @@ GLOBAL_VAR(nuke_time_left)
 			else
 				playsound(src, 'sound/machines/nuke/angry_beep.ogg', 50, FALSE)
 		if("arm")
+			message_admins(span_adminnotice("Nuclear Bomb: UI 'arm' action triggered."))
 			if(auth && yes_code && !safety && !exploded)
 				playsound(src, 'sound/machines/nuke/confirm_beep.ogg', 50, FALSE)
 				set_active()
@@ -396,6 +397,7 @@ GLOBAL_VAR(nuke_time_left)
 				. = TRUE
 			else
 				playsound(src, 'sound/machines/nuke/angry_beep.ogg', 50, FALSE)
+				message_admins(span_adminnotice("Nuclear Bomb: UI 'arm' action failed. Auth: [auth], Yes Code: [yes_code], Safety: [safety], Exploded: [exploded]."))
 		if("anchor")
 			if(auth && yes_code)
 				playsound(src, 'sound/machines/nuke/general_beep.ogg', 50, FALSE)
@@ -422,9 +424,11 @@ GLOBAL_VAR(nuke_time_left)
 	update_appearance()
 
 /obj/machinery/nuclearbomb/proc/set_active()
+	message_admins(span_adminnotice("Nuclear Bomb: set_active() called."))
 	var/turf/our_turf = get_turf(src)
 	if(safety)
 		to_chat(usr, span_danger("The safety is still on."))
+		message_admins(span_adminnotice("Nuclear Bomb: set_active() - Safety is ON, returning."))
 		return
 	if(!controller.timing) // If not timing, start countdown
 		message_admins("\The [src] was armed at [ADMIN_VERBOSEJMP(our_turf)] by [ADMIN_LOOKUPFLW(usr)].")
@@ -435,6 +439,7 @@ GLOBAL_VAR(nuke_time_left)
 
 		SEND_GLOBAL_SIGNAL(COMSIG_GLOB_NUKE_DEVICE_ARMED, src)
 
+		message_admins(span_adminnotice("Nuclear Bomb: Calling controller.start_countdown([timer_set])."))
 		controller.start_countdown(timer_set)
 		set_security_level("delta")
 		GLOB.nuke_time_left = controller.get_time_left() // Update global time on start
@@ -445,6 +450,7 @@ GLOBAL_VAR(nuke_time_left)
 		for(var/obj/item/pinpointer/nuke/syndicate/S in GLOB.pinpointer_list)
 			S.switch_mode_to(initial(S.mode))
 			S.alert = FALSE
+		message_admins(span_adminnotice("Nuclear Bomb: Calling controller.cancel_countdown()."))
 		controller.cancel_countdown()
 		GLOB.nuke_time_left = 0 // Update global time on cancel
 
@@ -467,8 +473,8 @@ GLOBAL_VAR(nuke_time_left)
 
 /obj/machinery/nuclearbomb/proc/explode()
 	message_admins(span_adminnotice("Nuclear Bomb: explode() called."))
-	message_admins(span_adminnotice("Nuclear Bomb: Sending SD_SIGNAL_FINAL_DESTRUCTION signal."))
-	SEND_SIGNAL(controller, SD_SIGNAL_FINAL_DESTRUCTION, src)
+	message_admins(span_adminnotice("Nuclear Bomb: Sending SD_SIGNAL_FINAL signal."))
+	SEND_SIGNAL(controller, SD_SIGNAL_FINAL, src)
 
 /obj/machinery/nuclearbomb/proc/get_cinematic_type(off_station)
 	// This proc is still needed by the explosion profile, so it remains here.
