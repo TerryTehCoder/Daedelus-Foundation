@@ -1,9 +1,6 @@
 /datum/self_destruct_profile/self_destruct_sound_profile
 	var/datum/self_destruct_controller/controller // Reference to the controller
-	var/list/ambient_loops = list(
-		'sound/effects/selfdestruct/sirenloop.ogg'
-	)
-	// List of ambient sound file paths to loop during countdown
+	var/siren_loop_sound_path = 'sound/effects/selfdestruct/sirenloop.ogg'
 
 /datum/self_destruct_profile/self_destruct_sound_profile/New(datum/self_destruct_controller/new_controller)
 	. = ..()
@@ -18,24 +15,27 @@
 
 /datum/self_destruct_profile/self_destruct_sound_profile/proc/on_start_signal(datum/self_destruct_controller/controller_instance, data = null)
 	SIGNAL_HANDLER
-	play_ambient_loops()
-	message_admins(span_adminnotice("Self-destruct Sound Profile: SD_SIGNAL_START - Playing ambient loops."))
+	stop_all_siren_sounds() // Stop all siren-related sounds and timers
+
+	sound_to_playing_players(siren_loop_sound_path, 30, FALSE, null, CHANNEL_SELF_DESTRUCT_AMBIENCE, loop = TRUE)
+	message_admins(span_adminnotice("Self-destruct Sound Profile: SD_SIGNAL_START - Playing siren entrance sound."))
 
 /datum/self_destruct_profile/self_destruct_sound_profile/proc/on_stop_signal(datum/self_destruct_controller/controller_instance, data = null)
 	SIGNAL_HANDLER
-	stop_ambient_loops()
+	stop_all_siren_sounds() // Stop all siren-related sounds and timers
 	stop_alarm_sound() // Ensure alarm sound is stopped on pause/cancel
 	message_admins(span_adminnotice("Self-destruct Sound Profile: SD_SIGNAL_PAUSE/CANCEL - Stopping all sounds."))
 
 /datum/self_destruct_profile/self_destruct_sound_profile/proc/on_resume_signal(datum/self_destruct_controller/controller_instance, data = null)
 	SIGNAL_HANDLER
 	log_game("Self-destruct: Resuming sound effects.")
-	play_ambient_loops()
-	message_admins(span_adminnotice("Self-destruct Sound Profile: SD_SIGNAL_RESUME - Resuming ambient loops."))
+	stop_all_siren_sounds() // Ensure a clean start
+	sound_to_playing_players(siren_loop_sound_path, 30, FALSE, null, CHANNEL_SELF_DESTRUCT_AMBIENCE, loop = TRUE)
+	message_admins(span_adminnotice("Self-destruct Sound Profile: SD_SIGNAL_RESUME - Playing siren entrance sound."))
 
 /datum/self_destruct_profile/self_destruct_sound_profile/proc/on_final_destruction_signal(datum/self_destruct_controller/controller_instance, data = null)
 	SIGNAL_HANDLER
-	stop_ambient_loops()
+	stop_all_siren_sounds() // Stop all siren-related sounds and timers
 	stop_alarm_sound()
 	// Play final destruction sound
 	message_admins(span_adminnotice("Self-destruct Sound Profile: Attempting to play final destruction sound: 'sound/machines/alarm.ogg' at volume 100 on no channel."))
@@ -68,22 +68,14 @@
 			message_admins(span_adminnotice("Self-destruct Sound Profile: Attempting to play 'sound/effects/selfdestruct/SelfDestructAlarm1Tone.ogg' at volume 90 on channel CHANNEL_SELF_DESTRUCT_ALARM."))
 			sound_to_playing_players('sound/effects/selfdestruct/SelfDestructAlarm1Tone.ogg', 45, FALSE, null, CHANNEL_SELF_DESTRUCT_ALARM)
 
-/datum/self_destruct_profile/self_destruct_sound_profile/proc/play_ambient_loops()
-	message_admins(span_adminnotice("Self-destruct Sound Profile: play_ambient_loops() called."))
-	if(!ambient_loops || !length(ambient_loops))
-		message_admins(span_adminnotice("Self-destruct Sound Profile: No ambient loops defined or list is empty."))
-		return // No loops to play
 
-	for(var/sound_path in ambient_loops)
-		message_admins(span_adminnotice("Self-destruct Sound Profile: Attempting to play ambient loop '[sound_path]' at volume 30 on channel CHANNEL_SELF_DESTRUCT_AMBIENCE."))
-		sound_to_playing_players(sound_path, 30, TRUE, null, CHANNEL_SELF_DESTRUCT_AMBIENCE)
 
-/datum/self_destruct_profile/self_destruct_sound_profile/proc/stop_ambient_loops()
-	// Stop all sounds on the self-destruct ambient channel
+/datum/self_destruct_profile/self_destruct_sound_profile/proc/stop_all_siren_sounds()
 	for(var/m in GLOB.player_list)
 		if(ismob(m) && !isnewplayer(m))
 			var/mob/M = m
-			M.stop_sound_channel(CHANNEL_SELF_DESTRUCT_AMBIENCE)
+			M.stop_sound_channel(CHANNEL_SELF_DESTRUCT_AMBIENCE) // For the entrance sound
+	message_admins(span_adminnotice("Self-destruct Sound Profile: Stopped all siren-related sounds and timers."))
 
 /datum/self_destruct_profile/self_destruct_sound_profile/proc/stop_alarm_sound()
 	// Stop all sounds on the self-destruct alarm channel

@@ -82,15 +82,12 @@
 				L.emergency_mode = original_states[3] // Restore original emergency_mode state
 				L.update_appearance() // Update icon state
 				L.set_light(L.bulb_outer_range, L.bulb_inner_range, L.bulb_power, L.bulb_falloff, L.bulb_colour) // Update luminosity
-			else if(istype(L, /obj/machinery/rotating_alarm))
-				var/obj/machinery/rotating_alarm/R_alarm = L
-				var/list/original_states = affected_lights[L]
-				R_alarm.set_color(original_states[2]) // Restore original color
-				R_alarm.set_off() // Explicitly turn off to clear any self-destruct spinning effect
-				if(R_alarm.spin_effect) // Always reset spin_rate to default for the internal spin_effect
-					R_alarm.spin_effect.spin_rate = 1 SECONDS // Default spin rate for /obj/effect/spinning_light
-				// Do NOT restore original 'on' state for rotating alarms, as they should remain off after cancellation.
-				// The set_off() call above ensures the spinning light is cleared.
+	for(var/obj/machinery/rotating_alarm/R_alarm in affected_lights)
+		var/list/original_states = affected_lights[R_alarm]
+		R_alarm.set_color(original_states[2]) // Restore original color
+		R_alarm.set_off() // Explicitly turn off to clear any self-destruct spinning effect
+		if(R_alarm.spin_effect) // Always reset spin_rate to default for the internal spin_effect
+			R_alarm.spin_effect.spin_rate = 1 SECONDS // Default spin rate for /obj/effect/spinning_light
 	affected_lights.Cut()
 
 

@@ -76,6 +76,10 @@
 
 /datum/self_destruct_controller/proc/start_countdown(initial_time)
 	message_admins(span_adminnotice("Self-destruct Controller: start_countdown([initial_time]) called. Initial time: [initial_time]."))
+	if(timing) // Sanity check: if already timing, something is wrong
+		message_admins(span_adminnotice("Self-destruct Controller: start_countdown - Already timing! Aborting start to prevent duplicate timers. Current time remaining: [time_remaining]."))
+		return FALSE
+
 	if(countdown_timer) // Explicitly stop any existing timer
 		deltimer(countdown_timer)
 		countdown_timer = null
@@ -112,6 +116,10 @@
 
 /datum/self_destruct_controller/proc/resume_countdown()
 	message_admins(span_adminnotice("Self-destruct Controller: resume_countdown() called."))
+	if(timing) // Sanity check: if already timing, something is wrong
+		message_admins(span_adminnotice("Self-destruct Controller: resume_countdown - Already timing! Aborting resume. Current time remaining: [time_remaining]."))
+		return FALSE
+
 	if(countdown_timer) // Explicitly stop any existing timer
 		deltimer(countdown_timer)
 		countdown_timer = null
