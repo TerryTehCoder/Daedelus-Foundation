@@ -1,6 +1,7 @@
 #define FILE_RECENT_MAPS "data/RecentMaps.json"
 
 #define KEEP_ROUNDS_MAP 3
+#define FILE_SCP216_DISPLACED_ITEMS "data/scp216_displaced_items.json"
 
 SUBSYSTEM_DEF(persistence)
 	name = "Persistence"
@@ -16,6 +17,8 @@ SUBSYSTEM_DEF(persistence)
 	var/list/picture_logging_information = list()
 	var/list/obj/structure/sign/picture_frame/photo_frames
 	var/list/obj/item/storage/photo_album/photo_albums
+	/// Temporally displaced items from SCP-216
+	var/list/displaced_scp216_items = list()
 
 
 /datum/controller/subsystem/persistence/Initialize()
@@ -26,6 +29,7 @@ SUBSYSTEM_DEF(persistence)
 	LoadPhotoPersistence()
 	LoadRandomizedRecipes()
 	load_custom_outfits()
+	LoadDisplacedSCP216Items()
 
 	load_adventures()
 	return ..()
@@ -37,6 +41,7 @@ SUBSYSTEM_DEF(persistence)
 	SavePhotoPersistence() //THIS IS PERSISTENCE, NOT THE LOGGING PORTION.
 	SaveRandomizedRecipes()
 	save_custom_outfits()
+	SaveDisplacedSCP216Items()
 
 /datum/controller/subsystem/persistence/proc/LoadPoly()
 	for(var/mob/living/simple_animal/parrot/poly/P in GLOB.alive_mob_list)
@@ -375,3 +380,19 @@ SUBSYSTEM_DEF(persistence)
 		data += list(outfit.get_json_data())
 
 	WRITE_FILE(file, json_encode(data))
+
+/datum/controller/subsystem/persistence/proc/LoadDisplacedSCP216Items()
+	var/json_file = file(FILE_SCP216_DISPLACED_ITEMS)
+	if(!fexists(json_file))
+		return
+	var/list/json = json_decode(file2text(json_file))
+	if(!json)
+		return
+	displaced_scp216_items = json["data"]
+
+/datum/controller/subsystem/persistence/proc/SaveDisplacedSCP216Items()
+	var/json_file = file(FILE_SCP216_DISPLACED_ITEMS)
+	var/list/file_data = list()
+	file_data["data"] = displaced_scp216_items
+	fdel(json_file)
+	WRITE_FILE(json_file, json_encode(file_data))

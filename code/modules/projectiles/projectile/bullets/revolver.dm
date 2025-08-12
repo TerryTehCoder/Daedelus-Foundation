@@ -112,3 +112,7 @@
 	ricochet_auto_aim_range = 6
 	ricochet_incidence_leeway = 80
 	ricochet_decay_chance = 1
+
+/obj/projectile/bullet/a50
+	damage = 50
+	armor_penetration = 0

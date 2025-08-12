@@ -211,27 +211,27 @@ h4
 
 .good
 {
-	color: #00ff00;
+	color: #4caf50; /* SCP good color */
 }
 
 .average
 {
-	color: #d09000;
+	color: #ff9800; /* SCP average color */
 }
 
 .bad
 {
-	color: #ff0000;
+	color: #f44336; /* SCP bad color */
 }
 
 .highlight
 {
-	color: #8BA5C4;
+	color: #cccccc; /* SCP foreground color */
 }
 
 .dark
 {
-	color: #272727;
+	color: #1c1c1c; /* SCP background color */
 }
 
 .notice
@@ -266,12 +266,12 @@ div.notice
 
 .computerPane
 {
-	border: 4px ridge #000000;
+	border: 4px ridge #1c1c1c; /* SCP background color */
 	padding: 4px;
 	margin: 3px 0;
-	color: #ffffff;
+	color: #cccccc; /* SCP foreground color */
 	overflow: hidden;
-	background-color: black;
+	background-color: #1c1c1c; /* SCP background color */
 	background-origin: border-box;
 	background-image:
 		repeating-linear-gradient(
@@ -282,34 +282,34 @@ div.notice
 			transparent 2px
 		),
 		radial-gradient(
-			rgba(185, 134, 4, 0.75),
-			black 120%
+			rgba(204, 204, 204, 0.2), /* rgba(base.$color-fg, $background-radial-opacity) */
+			#1c1c1c 120% /* SCP background color */
 		);
 }
 
 .computerPane hr{
-	background-color: rgba(255, 183, 0, 0.5);
-	border: 1px solid rgba(255, 183, 0, 0.5);
-	box-shadow: 0 0 10px #FFCC00;
+	background-color: rgba(204, 204, 204, 0.5); /* rgba(base.$color-fg, 0.5) */
+	border: 1px solid rgba(204, 204, 204, 0.5); /* rgba(base.$color-fg, 0.5) */
+	box-shadow: 0 0 10px #cccccc; /* base.$color-fg */
 }
 
 .computerPaneSimple /*Do not mix simple and non simple computerPanes*/
 {
-	background: #202020;
-	border: 1px solid #757575;
+	background: #1c1c1c; /* SCP background color */
+	border: 1px solid #cccccc; /* SCP foreground color */
 	padding: 4px;
 	margin: 3px 0;
-	color: #ffffff;
+	color: #cccccc; /* SCP foreground color */
 }
 .computerLegend
 {
-	background-color: black;
-	color: #FFCC00;
-	border: 2px solid rgba(255, 183, 0, 0.5);
+	background-color: #1c1c1c; /* SCP background color */
+	color: #cccccc; /* SCP foreground color */
+	border: 2px solid rgba(204, 204, 204, 0.5); /* rgba(base.$color-fg, 0.5) */
 	padding: 4px;
 	margin: 3px 0;
 	text-align: center;
-	text-shadow: 0 0 0.417em #FFCC00;
+	text-shadow: 0 0 0.417em #cccccc; /* SCP foreground color */
 	overflow: hidden;
 	font-size: 15px;
 	font-family: monospace;
@@ -317,13 +317,13 @@ div.notice
 
 .computerPaneNested
 {
-	border: 1px solid rgba(255, 183, 0, 0.5);
+	border: 1px solid rgba(204, 204, 204, 0.5); /* rgba(base.$color-fg, 0.5) */
 	padding: 4px;
 	margin: 3px 0;
-	color: #ffffff;
+	color: #cccccc; /* SCP foreground color */
 	overflow: hidden;
 	background: none;
-	box-shadow: 0 0 10px #FFCC00
+	box-shadow: 0 0 10px #cccccc; /* SCP foreground color */
 }
 
 .computerPaneNested::selection {
@@ -332,15 +332,15 @@ div.notice
 }
 
 .computerText{
-	text-shadow: 0 0 0.417em #C8C8C8;
-	color: #ffffff;
+	text-shadow: 0 0 0.417em #cccccc; /* SCP foreground color */
+	color: #cccccc; /* SCP foreground color */
 }
 
 .statusDisplay
 {
-	background: #000000;
-	color: #ffffff;
-	border: 1px solid #40628a;
+	background: #1c1c1c; /* SCP background color */
+	color: #cccccc; /* SCP foreground color */
+	border: 1px solid #cccccc; /* SCP foreground color */
 	padding: 4px;
 	margin: 3px 0;
 }
@@ -350,7 +350,7 @@ div.notice
 	width: 138px;
 	float: left;
 	overflow: hidden;
-	color: #98B0C3;
+	color: #cccccc; /* SCP foreground color */
 }
 
 .statusValue
@@ -362,8 +362,8 @@ div.notice
 {
 	padding: 8px;
 	margin: 10px 4px 4px 4px;
-	border: 1px solid #40628a;
-	background-color: #23272a;
+	border: 1px solid #cccccc; /* SCP foreground color */
+	background-color: #1c1c1c; /* SCP background color */
 }
 
 .block h3
@@ -375,7 +375,7 @@ div.notice
 {
 	width: 240px;
 	height: 14px;
-	border: 1px solid #666666;
+	border: 1px solid #8f8f8f; /* $dark-fg */
 	float: left;
 	margin: 0 5px;
 	overflow: hidden;
@@ -385,32 +385,32 @@ div.notice
 {
 	width: 100%;
 	height: 100%;
-	background: #40628a;
+	background: #cccccc; /* base.$color-fg */
 	overflow: hidden;
 }
 
 .progressFill.good
 {
-	color: #ffffff;
-	background: #00ff00;
+	color: #cccccc; /* base.$color-fg */
+	background: #4caf50; /* colors.$good */
 }
 
 .progressFill.average
 {
-	color: #ffffff;
-	background: #d09000;
+	color: #cccccc; /* base.$color-fg */
+	background: #ff9800; /* colors.$average */
 }
 
 .progressFill.bad
 {
-	color: #ffffff;
-	background: #ff0000;
+	color: #cccccc; /* base.$color-fg */
+	background: #f44336; /* colors.$bad */
 }
 
 .progressFill.highlight
 {
-	color: #ffffff;
-	background: #8BA5C4;
+	color: #cccccc; /* base.$color-fg */
+	background: #cccccc; /* base.$color-fg */
 }
 
 .clearBoth
@@ -452,7 +452,7 @@ div.notice
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: #383838;
+  background-color: #1c1c1c; /* base.$color-bg */
   transition: .4s;
 }
 
@@ -463,41 +463,41 @@ div.notice
   width: 18px;
   left: 4px;
   bottom: 4px;
-  background-color: #98B0C3;
+  background-color: #8f8f8f; /* darken(base.$color-fg, 0.2) */
   transition: .4s;
 }
 
 .slider.red:before {
-  background-color: #d6858b;
+  background-color: #f44336; /* colors.$bad */
 }
 
 .slider.locked:before {
   content: url("padlock.png");
-  background-color: #b4b4b4;
+  background-color: #8f8f8f; /* $dark-fg */
 }
 
 input:checked + .slider {
-  background-color: #40628a;
+  background-color: #cccccc; /* base.$color-fg */
 }
 
 input:checked + .slider.red {
-  background-color: #a92621;
+  background-color: #f44336; /* colors.$bad */
 }
 
 input:checked + .slider.locked {
-  background-color: #707070;
+  background-color: #8f8f8f; /* $dark-fg */
 }
 
 input:focus + .slider {
-  box-shadow: 0 0 1px #2196F3;
+  box-shadow: 0 0 1px #cccccc; /* base.$color-fg */
 }
 
 input:focus + .slider.red {
-  box-shadow: 0 0 1px #f3212d;
+  box-shadow: 0 0 1px #f44336; /* colors.$bad */
 }
 
 input:focus + .slider.locked {
-  box-shadow: 0 0 1px #979797;
+  box-shadow: 0 0 1px #8f8f8f; /* $dark-fg */
 }
 
 input:checked + .slider:before {
@@ -531,9 +531,9 @@ ul.sparse {
 	margin:0px;
 	padding: 1px 8px 1px 8px;
 	border-radius: 25px;
-	border: 1px solid #161616;
-	background: #40628a;
-	color: #ffffff;
+	border: 1px solid #cccccc; /* base.$color-fg */
+	background: #8f8f8f; /* $dark-fg */
+	color: #cccccc; /* base.$color-fg */
 }
 
 .severity img {
@@ -620,23 +620,23 @@ span.color_holder_box{
 }
 
 .zebraTable{
-	border: 1px solid rgba(255, 183, 0, 0.5);
+	border: 1px solid rgba(204, 204, 204, 0.5); /* rgba(base.$color-fg, 0.5) */
 }
 
 .zebraTable div:nth-child(2n){
-	background-color: #7c5500;
+	background-color: #8f8f8f; /* $dark-fg */
 }
 
 .zebraTable div:nth-child(2n+1){
-	background-color: #533200;
+	background-color: #1c1c1c; /* base.$color-bg */
 }
 
 .zebraTable tr:nth-child(even){
-	background-color: #7c5500;
+	background-color: #8f8f8f; /* $dark-fg */
 }
 
 .zebraTable tr:nth-child(odd){
-	background-color: #533200;
+	background-color: #1c1c1c; /* base.$color-bg */
 }
 
 .good
@@ -660,8 +660,7 @@ span.color_holder_box{
 
 /* Highlights the element on hover. For use with onClick events. */
 .highlighter:hover {
-	/*background-color: #f0c400 !important;*/
-	background-color: #aa8136 !important;
+	background-color: rgba(204, 204, 204, 0.3) !important; /* rgba(base.$color-fg, 0.3) */
 }
 
 .paragraph {
@@ -698,7 +697,7 @@ span.color_holder_box{
 	right: -15px;
 	/* Remove display: inline-block if not required to be on the same line as text etc */
 	display: inline-block;
-	background-color: #606060;
+	background-color: #cccccc; /* base.$color-fg */
 	vertical-align: top;
 	width: 10px;
 	/* Set height to the line height of .text */
