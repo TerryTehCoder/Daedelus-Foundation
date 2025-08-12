@@ -10,7 +10,6 @@
     else
         src.effect_types = list(effects)
     if(relative_percentage != null && absolute_offset != null)
-        log_game("Self-destruct Milestone Warning: Both relative_percentage and absolute_time_offset provided for milestone. Prioritizing absolute_time_offset.")
         src.absolute_time_offset = absolute_offset
         src.relative_time_percentage = null // Ensure only one is active
     else if(relative_percentage != null)

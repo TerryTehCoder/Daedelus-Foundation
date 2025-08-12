@@ -40,7 +40,6 @@
 
 /datum/self_destruct_profile/self_destruct_light_profile/proc/on_start_signal(datum/self_destruct_controller/controller_instance, data = null)
 	SIGNAL_HANDLER
-	message_admins(span_adminnotice("Self-destruct Light Profile: SD_SIGNAL_START - Activating red emergency lights and spinning effect."))
 	// Activate red emergency lights and spinning effect
 	for(var/obj/machinery/light/L in INSTANCES_OF(/obj/machinery/light)) // Iterate through all lights.
 		if(istype(L) && is_station_level(L.z))
@@ -63,11 +62,9 @@
 
 /datum/self_destruct_profile/self_destruct_light_profile/proc/on_final_signal(datum/self_destruct_controller/controller_instance, data = null)
 	SIGNAL_HANDLER
-	message_admins(span_adminnotice("Self-destruct Light Profile: SD_SIGNAL_FINAL - Lights remain active after detonation."))
 
 /datum/self_destruct_profile/self_destruct_light_profile/proc/on_cancel_or_pause_signal(datum/self_destruct_controller/controller_instance, data = null)
 	SIGNAL_HANDLER
-	message_admins(span_adminnotice("Self-destruct Light Profile: SD_SIGNAL_CANCEL/PAUSE - Deactivating spinning effect and reverting emergency lights."))
 	// Deactivate spinning effect and revert emergency lights for small lights
 	for(var/obj/effect/spinning_light/self_destruct_variant/S in active_small_light_spinning_lights)
 		qdel(S) // Delete the self-destruct variant spinning light
@@ -93,8 +90,6 @@
 
 /datum/self_destruct_profile/self_destruct_light_profile/proc/on_resume_signal(datum/self_destruct_controller/controller_instance, data = null)
 	SIGNAL_HANDLER
-	log_game("Self-destruct: Resuming light effects.")
-	message_admins(span_adminnotice("Self-destruct Light Profile: SD_SIGNAL_RESUME - Resuming light effects."))
 	for(var/obj/machinery/light/L in affected_lights)
 		if(istype(L) && !QDELETED(L))
 			if(istype(L, /obj/machinery/light))

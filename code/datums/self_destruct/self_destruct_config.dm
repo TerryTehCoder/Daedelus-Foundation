@@ -25,8 +25,6 @@
 	default_milestones += milestone_alarm_1
 	default_milestones += milestone_final
 
-	message_admins(span_adminnotice("Self-destruct Config: Initialized milestones. Types: [istype(milestone_light_red)], [istype(milestone_alarm_5)], [istype(milestone_alarm_4)], [istype(milestone_alarm_3)], [istype(milestone_alarm_2)], [istype(milestone_alarm_1)], [istype(milestone_final)]."))
-
 	default_profiles = list(
 		/datum/self_destruct_profile/self_destruct_light_profile,
 		/datum/self_destruct_profile/self_destruct_mechanical_profile,

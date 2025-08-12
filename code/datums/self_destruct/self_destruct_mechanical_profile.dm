@@ -22,8 +22,6 @@
 
 /datum/self_destruct_profile/self_destruct_mechanical_profile/proc/on_stop_signal(datum/self_destruct_controller/controller_instance, data = null)
 	SIGNAL_HANDLER
-	log_game("Self-destruct: Reverting mechanical effects.")
-	message_admins(span_adminnotice("Self-destruct Mechanical Profile: SD_SIGNAL_PAUSE/CANCEL - Reverting mechanical effects."))
 	// Revert red lights
 	for(var/obj/machinery/light/L in original_light_colors) // Iterate through light objects directly
 		if(istype(L) && !QDELETED(L)) // Check if the light object still exists
@@ -33,8 +31,6 @@
 
 /datum/self_destruct_profile/self_destruct_mechanical_profile/proc/on_resume_signal(datum/self_destruct_controller/controller_instance, data = null)
 	SIGNAL_HANDLER
-	log_game("Self-destruct: Resuming mechanical effects.")
-	message_admins(span_adminnotice("Self-destruct Mechanical Profile: SD_SIGNAL_RESUME - Resuming mechanical effects."))
 	// Re-apply red lights (if they were active before pause)
 	for(var/obj/machinery/light/L in original_light_colors)
 		if(istype(L) && !QDELETED(L))
@@ -44,5 +40,3 @@
 /datum/self_destruct_profile/self_destruct_mechanical_profile/proc/on_final_destruction_signal(datum/self_destruct_controller/controller_instance, data = null)
 	SIGNAL_HANDLER
 	// Implement final destruction sequence (e.g., explosion)
-	log_game("Self-destruct: Initiating final destruction sequence.")
-	message_admins(span_adminnotice("Self-destruct Mechanical Profile: SD_SIGNAL_FINAL - Initiating final destruction sequence."))

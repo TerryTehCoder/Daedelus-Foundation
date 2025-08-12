@@ -11,7 +11,7 @@
 
 	var/time_remaining = 0 // In seconds
 	var/timing = FALSE
-	var/datum/callback/countdown_timer // Manages the countdown ticks
+	var/countdown_timer // Manages the countdown ticks (stores timer ID)
 	var/instance_id // Unique identifier for this instance
 
 	var/list/defined_milestones = list() // List of /datum/self_destruct_milestone
@@ -90,11 +90,15 @@
 	message_admins(span_adminnotice("Self-destruct Controller: timing set to TRUE. Time remaining: [time_remaining]."))
 	generate_milestones(initial_time) // Generate milestones based on initial time
 
-	countdown_timer = addtimer(CALLBACK(src, PROC_REF(tick_countdown)), 10, TIMER_LOOP) // 10 deciseconds = 1 second
-	if(countdown_timer)
-		message_admins(span_adminnotice("Self-destruct Controller: Started internal countdown timer. Timer ID: [countdown_timer]."))
+	countdown_timer = null // Sanity check: Ensure timer is null before attempting to create a new one
+	if(!countdown_timer) // Defensive check: ensure no timer is active before creating a new one
+		countdown_timer = addtimer(CALLBACK(src, PROC_REF(tick_countdown)), 10, TIMER_LOOP | TIMER_STOPPABLE) // 10 deciseconds = 1 second
+		if(countdown_timer)
+			message_admins(span_adminnotice("Self-destruct Controller: Started internal countdown timer. Timer ID: [countdown_timer]."))
+		else
+			message_admins(span_adminnotice("Self-destruct Controller: FAILED to start internal countdown timer."))
 	else
-		message_admins(span_adminnotice("Self-destruct Controller: FAILED to start internal countdown timer."))
+		message_admins(span_adminnotice("Self-destruct Controller: start_countdown - Timer already active, not starting a new one."))
 
 	SEND_SIGNAL(src, SD_SIGNAL_START, time_remaining)
 	message_admins(span_adminnotice("Self-destruct: Countdown started with initial time [initial_time]"))
@@ -126,8 +130,12 @@
 		message_admins(span_adminnotice("Self-destruct Controller: resume_countdown - Stopped existing timer before resuming."))
 
 	timing = TRUE
-	countdown_timer = addtimer(CALLBACK(src, PROC_REF(tick_countdown)), 10, TIMER_LOOP) // 10 deciseconds = 1 second
-	message_admins(span_adminnotice("Self-destruct Controller: Resumed internal countdown timer."))
+	countdown_timer = null // Sanity check: Ensure timer is null before attempting to create a new one
+	if(!countdown_timer) // Defensive check: ensure no timer is active before creating a new one
+		countdown_timer = addtimer(CALLBACK(src, PROC_REF(tick_countdown)), 10, TIMER_LOOP | TIMER_STOPPABLE) // 10 deciseconds = 1 second
+		message_admins(span_adminnotice("Self-destruct Controller: Resumed internal countdown timer."))
+	else
+		message_admins(span_adminnotice("Self-destruct Controller: resume_countdown - Timer already active, not starting a new one."))
 	SEND_SIGNAL(src, SD_SIGNAL_RESUME, time_remaining)
 	message_admins(span_adminnotice("Self-destruct Controller: Countdown resumed. Time remaining: [time_remaining]."))
 	return TRUE
@@ -159,6 +167,11 @@
 	return time_remaining
 
 /datum/self_destruct_controller/proc/tick_countdown()
+	// Sanity check: If not timing and time is 0 or less, this timer should have stopped.
+	// This prevents continuous execution from a lingering timer after countdown completion/cancellation.
+	if(!timing && time_remaining <= 0)
+		return
+
 	message_admins(span_adminnotice("Self-destruct Controller (ID: [instance_id], Ref: [src]): Time remaining BEFORE processing: [time_remaining] (Type: [isnum(time_remaining) ? "Number" : "Other"])."))
 
 	// Ensure time_remaining is a strict integer for consistent lookup
