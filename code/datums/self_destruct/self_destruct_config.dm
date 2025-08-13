@@ -2,7 +2,7 @@
     // This datum holds the default configuration for self-destruct milestones and profiles.
     // It can be extended or overridden to provide different self-destruct presets.
 	// We validate that only one time type is set (relative or absolute), and if both are, we force absolute.
-	// We assume a default countdown minimum of 90 seconds, but this might change in the future, so be careful with absolutes.
+	// We assume a default countdown minimum of 300 seconds, but this might change in the future, so be careful with absolutes.
 
     var/list/default_milestones
     var/list/default_profiles

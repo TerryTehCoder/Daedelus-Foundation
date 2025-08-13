@@ -12,8 +12,8 @@ GLOBAL_VAR(nuke_time_left)
 	density = TRUE
 	resistance_flags = INDESTRUCTIBLE | LAVA_PROOF | FIRE_PROOF | UNACIDABLE | ACID_PROOF
 
-	var/timer_set = 90
-	var/minimum_timer_set = 90
+	var/timer_set = 300
+	var/minimum_timer_set = 300
 	var/maximum_timer_set = 3600
 
 	var/numeric_input = ""
