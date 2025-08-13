@@ -2,6 +2,7 @@
     // This datum holds the default configuration for self-destruct milestones and profiles.
     // It can be extended or overridden to provide different self-destruct presets.
 	// We validate that only one time type is set (relative or absolute), and if both are, we force absolute.
+	// We assume a default countdown minimum of 90 seconds, but this might change in the future, so be careful with absolutes.
 
     var/list/default_milestones
     var/list/default_profiles
@@ -13,7 +14,7 @@
 	var/datum/self_destruct_milestone/milestone_alarm_4 = new /datum/self_destruct_milestone(list(SD_EFFECT_ALARM_4), relative_percentage = 0.6)
 	var/datum/self_destruct_milestone/milestone_alarm_3 = new /datum/self_destruct_milestone(list(SD_EFFECT_ALARM_3), relative_percentage = 0.4)
 	var/datum/self_destruct_milestone/milestone_alarm_2 = new /datum/self_destruct_milestone(list(SD_EFFECT_ALARM_2), relative_percentage = 0.2)
-	var/datum/self_destruct_milestone/milestone_alarm_1 = new /datum/self_destruct_milestone(list(SD_EFFECT_ALARM_1), relative_percentage = 0.05)
+	var/datum/self_destruct_milestone/milestone_alarm_1 = new /datum/self_destruct_milestone(list(SD_EFFECT_ALARM_1), relative_percentage = 0.05, absolute_minimum = 20) // Takes about 17 seconds to play, alarm.ogg plays at 0.
 	var/datum/self_destruct_milestone/milestone_final = new /datum/self_destruct_milestone(list(SD_EFFECT_FINAL_DESTRUCTION), absolute_offset = 0)
 
 	default_milestones += milestone_alarm_5
@@ -36,6 +37,7 @@
     default_milestones = list(
         new /datum/self_destruct_milestone(list(SD_EFFECT_LIGHTS_RED, SD_EFFECT_INTENSE_ALARM), relative_percentage = 1.0),
         new /datum/self_destruct_milestone(list(SD_EFFECT_HULL_BREACH), absolute_offset = 120),
+        new /datum/self_destruct_milestone(list(SD_EFFECT_ALARM_5), relative_percentage = 0.8, absolute_minimum = 60), 90 * .8 = 72, effect triggers at 72 seconds with 90 second countdown.
         new /datum/self_destruct_milestone(list(SD_EFFECT_FINAL_DESTRUCTION), absolute_offset = 0)
     )
     default_profiles = list(
