@@ -41,7 +41,7 @@
 	if(bomb_location && is_station_level(bomb_location.z))
 		if(istype(A, /area/space))
 			off_station = NUKE_NEAR_MISS
-		else if((bomb_location.x < (128-NUKERANGE)) || (bomb_location.y < (128+NUKERANGE)))
+		else if((bomb_location.x < (128-NUKERANGE)) || (bomb_location.x > (128+NUKERANGE)) || (bomb_location.y < (128-NUKERANGE)) || (bomb_location.y > (128+NUKERANGE)))
 			off_station = NUKE_NEAR_MISS
 		else // station actually nuked
 			off_station = STATION_DESTROYED_NUKE

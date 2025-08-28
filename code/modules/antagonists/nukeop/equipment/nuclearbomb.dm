@@ -537,7 +537,7 @@ GLOBAL_VAR(nuke_time_left)
 	disarm()
 	stationwide_foam()
 
-/proc/KillEveryoneOnStation()
+/proc/KillEveryoneOnStation(detonation_z)
 	for(var/mob/living/victim as anything in GLOB.mob_living_list)
 		var/turf/target_turf = get_turf(victim)
 		if(istype(victim.loc, /obj/structure/closet/secure_closet/freezer))
@@ -546,7 +546,7 @@ GLOBAL_VAR(nuke_time_left)
 				to_chat(victim, span_boldannounce("You hold onto \the [victim.loc] as the nuclear bomb goes off. Luckily as \the [victim.loc] is lead-lined, you survive."))
 				freezer.jones = TRUE
 				continue
-		if(victim.stat != DEAD && target_turf && is_station_level(target_turf.z))
+		if(victim.stat != DEAD && target_turf && (target_turf.z == detonation_z || is_station_level(target_turf.z)))
 			to_chat(victim, span_userdanger("You are shredded to atoms!"))
 			victim.gib()
 
