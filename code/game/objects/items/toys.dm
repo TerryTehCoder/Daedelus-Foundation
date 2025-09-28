@@ -971,7 +971,7 @@
 	toysay = "Any heads of staff?"
 
 /obj/item/toy/figure/cargotech
-	name = "\improper" + JOB_DECKHAND + "action figure"
+	name = "\improper" + JOB_LOGISTICS_TECHNICIAN + "action figure"
 	icon_state = "cargotech"
 	toysay = "For Cargonia!"
 
@@ -1057,7 +1057,7 @@
 	toysay = "One day while..."
 
 /obj/item/toy/figure/md
-	name = "\improper " + JOB_ACOLYTE + "action figure"
+	name = "\improper " + JOB_MEDICAL_DOCTOR + "action figure"
 	icon_state = "md"
 	toysay = "The patient is already dead!"
 

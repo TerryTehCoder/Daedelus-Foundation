@@ -1,4 +1,4 @@
 /datum/asset/simple/lobby
 	assets = list(
-		"playeroptions.css" = 'html/browser/playeroptions.css'
+		// Removed playeroptions.css reference to avoid file locking issues
 	)

@@ -10,7 +10,7 @@
 	exp_granted_type = EXP_TYPE_CREW
 
 	employers = list(
-		/datum/employer/none
+		/datum/employer/foundation_admin
 	)
 
 	outfits = list(

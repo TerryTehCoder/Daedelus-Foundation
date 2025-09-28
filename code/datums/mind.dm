@@ -196,6 +196,9 @@
 		LAZYCLEARLIST(new_character.client.recent_examines)
 		new_character.client.init_verbs() // re-initialize character specific verbs
 
+		// Initialize persistent progression data
+		initialize_persistent_data()
+
 	current.update_atom_languages()
 
 	SEND_SIGNAL(src, COMSIG_MIND_TRANSFERRED, old_current)
@@ -944,6 +947,14 @@
 	if(!mind.name)
 		mind.name = real_name
 	mind.set_current(src)
+
+	// Initialize persistent progression data
+	if(mind && mind.key)
+		mind.initialize_persistent_data()
+
+		// Sync achievements with SSachievements system
+		if(SSpersistent_progression.achievement_integration)
+			SSpersistent_progression.achievement_integration.sync_achievements(mind.key)
 
 /mob/living/carbon/mind_initialize()
 	..()

@@ -2,6 +2,14 @@
 	add_verb(src, /mob/living/proc/mob_sleep)
 	add_verb(src, /mob/living/proc/toggle_resting)
 
+	// Add persistent progression verbs
+	add_verb(src, /mob/living/proc/show_persistent_progress)
+	add_verb(src, /mob/living/proc/debug_persistent_data)
+	add_verb(src, /mob/living/carbon/human/proc/change_persistent_class)
+	add_verb(src, /mob/living/carbon/human/proc/change_persistent_faction)
+	add_verb(src, /mob/living/carbon/human/proc/show_available_classes)
+	add_verb(src, /mob/living/carbon/human/proc/show_available_factions)
+
 	icon_state = "" //Remove the inherent human icon that is visible on the map editor. We're rendering ourselves limb by limb, having it still be there results in a bug where the basic human icon appears below as south in all directions and generally looks nasty.
 
 	create_dna()
@@ -452,7 +460,7 @@
 
 	//Check for weapons
 	if( (judgement_criteria & JUDGE_WEAPONCHECK) && weaponcheck)
-		if(!idcard || !(ACCESS_WEAPONS in idcard.access))
+		if(!idcard || !(ACCESS_SECURITY in idcard.access))
 			for(var/obj/item/I in held_items) //if they're holding a gun
 				if(weaponcheck.Invoke(I))
 					threatcount += 4
@@ -1334,4 +1342,125 @@
 	if(legs_exposure)
 		apply_damage(0.6 * temp_multiplier * legs_exposure, BURN, BODY_ZONE_L_LEG)
 		apply_damage(0.6 * temp_multiplier * legs_exposure, BURN, BODY_ZONE_R_LEG)
+
+
+/mob/living/carbon/human/proc/track_combat_action(action_type)
+    if(!mind || !mind.persistent_data)
+        return
+
+    var/datum/performance_tracker/tracker = SSpersistent_progression.active_trackers[ckey]
+    if(!tracker)
+        return
+
+    switch(action_type)
+        if("combat_win")
+            tracker.update_metric("combat", "combats_won", tracker.combat_stats["combats_won"] + 1)
+        if("arrest")
+            tracker.update_metric("combat", "arrests_made", tracker.combat_stats["arrests_made"] + 1)
+        if("protect_civilian")
+            tracker.update_metric("combat", "civilians_protected", tracker.combat_stats["civilians_protected"] + 1)
+        if("contain_breach")
+            tracker.update_metric("combat", "breaches_contained", tracker.combat_stats["breaches_contained"] + 1)
+        if("scp_interaction")
+            tracker.update_metric("combat", "scp_interactions", tracker.combat_stats["scp_interactions"] + 1)
+
+/mob/living/carbon/human/proc/track_medical_action(action_type)
+    if(!mind || !mind.persistent_data)
+        return
+
+    var/datum/performance_tracker/tracker = SSpersistent_progression.active_trackers[ckey]
+    if(!tracker)
+        return
+
+    switch(action_type)
+        if("treatment")
+            tracker.update_metric("medical", "treatments_given", tracker.medical_stats["treatments_given"] + 1)
+        if("surgery")
+            tracker.update_metric("medical", "surgeries_performed", tracker.medical_stats["surgeries_performed"] + 1)
+        if("revival")
+            tracker.update_metric("medical", "revivals_completed", tracker.medical_stats["revivals_completed"] + 1)
+        if("diagnosis")
+            tracker.update_metric("medical", "diagnoses_made", tracker.medical_stats["diagnoses_made"] + 1)
+        if("prevention")
+            tracker.update_metric("medical", "prevention_measures", tracker.medical_stats["prevention_measures"] + 1)
+
+/mob/living/carbon/human/proc/track_research_action(action_type)
+    if(!mind || !mind.persistent_data)
+        return
+
+    var/datum/performance_tracker/tracker = SSpersistent_progression.active_trackers[ckey]
+    if(!tracker)
+        return
+
+    switch(action_type)
+        if("scp_study")
+            tracker.update_metric("research", "scp_studies", tracker.research_stats["scp_studies"] + 1)
+        if("experiment")
+            tracker.update_metric("research", "experiments_conducted", tracker.research_stats["experiments_conducted"] + 1)
+        if("documentation")
+            tracker.update_metric("research", "documentations_written", tracker.research_stats["documentations_written"] + 1)
+        if("breakthrough")
+            tracker.update_metric("research", "breakthroughs_achieved", tracker.research_stats["breakthroughs_achieved"] + 1)
+        if("collaboration")
+            tracker.update_metric("research", "collaborations_made", tracker.research_stats["collaborations_made"] + 1)
+
+/mob/living/carbon/human/proc/track_engineering_action(action_type)
+    if(!mind || !mind.persistent_data)
+        return
+
+    var/datum/performance_tracker/tracker = SSpersistent_progression.active_trackers[ckey]
+    if(!tracker)
+        return
+
+    switch(action_type)
+        if("repair")
+            tracker.update_metric("engineering", "repairs_completed", tracker.engineering_stats["repairs_completed"] + 1)
+        if("construction")
+            tracker.update_metric("engineering", "constructions_built", tracker.engineering_stats["constructions_built"] + 1)
+        if("maintenance")
+            tracker.update_metric("engineering", "maintenance_tasks", tracker.engineering_stats["maintenance_tasks"] + 1)
+        if("emergency")
+            tracker.update_metric("engineering", "emergency_responses", tracker.engineering_stats["emergency_responses"] + 1)
+        if("innovation")
+            tracker.update_metric("engineering", "innovations_created", tracker.engineering_stats["innovations_created"] + 1)
+
+/mob/living/carbon/human/proc/track_administrative_action(action_type)
+    if(!mind || !mind.persistent_data)
+        return
+
+    var/datum/performance_tracker/tracker = SSpersistent_progression.active_trackers[ckey]
+    if(!tracker)
+        return
+
+    switch(action_type)
+        if("coordination")
+            tracker.update_metric("administrative", "coordinations_made", tracker.administrative_stats["coordinations_made"] + 1)
+        if("communication")
+            tracker.update_metric("administrative", "communications_sent", tracker.administrative_stats["communications_sent"] + 1)
+        if("decision")
+            tracker.update_metric("administrative", "decisions_made", tracker.administrative_stats["decisions_made"] + 1)
+        if("crisis")
+            tracker.update_metric("administrative", "crises_managed", tracker.administrative_stats["crises_managed"] + 1)
+        if("team_success")
+            tracker.update_metric("administrative", "team_successes", tracker.administrative_stats["team_successes"] + 1)
+
+/mob/living/carbon/human/proc/track_containment_action(action_type)
+    if(!mind || !mind.persistent_data)
+        return
+
+    var/datum/performance_tracker/tracker = SSpersistent_progression.active_trackers[ckey]
+    if(!tracker)
+        return
+
+    switch(action_type)
+        if("scp_containment")
+            tracker.update_metric("containment", "scp_containments", tracker.containment_stats["scp_containments"] + 1)
+        if("breach_response")
+            tracker.update_metric("containment", "breach_responses", tracker.containment_stats["breach_responses"] + 1)
+        if("procedure")
+            tracker.update_metric("containment", "procedures_followed", tracker.containment_stats["procedures_followed"] + 1)
+        if("containment_research")
+            tracker.update_metric("containment", "containment_research", tracker.containment_stats["containment_research"] + 1)
+        if("innovation")
+            tracker.update_metric("containment", "innovations_developed", tracker.containment_stats["innovations_developed"] + 1)
 

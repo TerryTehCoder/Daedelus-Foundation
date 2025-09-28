@@ -1,16 +1,30 @@
-/datum/game_mode/one_antag/nuclear_emergency
+///What percentage of the crew can become traitors.
+#define NUKIE_SCALING_COEFF 0.0555 // About 1 in 18 crew
+
+/datum/game_mode/nuclear_emergency
 	name = "Nuclear Emergency"
 
 	weight = GAMEMODE_WEIGHT_EPIC
 	required_enemies = 5
 	min_pop = 25
 
-	antagonist_pop_ratio = 0.0555 // About 1 in 18 crew
-	antag_selector = /datum/antagonist_selector/nukeop
-
 	var/datum/team/nuclear/nuke_team
+	///The antagonist selector for this gamemode.
+	var/datum/antagonist_selector/nukeop/antag_selector
 
-/datum/game_mode/one_antag/nuclear_emergency/set_round_result()
+/datum/game_mode/nuclear_emergency/pre_setup()
+	. = ..()
+
+	var/num_nukies = max(required_enemies, round(length(SSticker.ready_players) * NUKIE_SCALING_COEFF))
+
+	antag_selector = new /datum/antagonist_selector/nukeop()
+	antag_selector.setup(num_nukies, possible_antags)
+
+/datum/game_mode/nuclear_emergency/post_setup()
+	. = ..()
+	antag_selector.give_antag_datums(src)
+
+/datum/game_mode/nuclear_emergency/set_round_result()
 	. = ..()
 	var/result = nuke_team.get_result()
 	switch(result)
@@ -44,4 +58,3 @@
 		else
 			SSticker.mode_result = "halfwin - interrupted"
 			SSticker.news_report = OPERATIVE_SKIRMISH
-

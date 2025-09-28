@@ -1,9 +1,9 @@
 /obj/item/scp113
 	name = "red piece of quartz"
 	desc = "A red piece of quartz that gleams with unnatural smoothness."
-	icon = 'icons/scp/scp-113.dmi'
-
+	icon = 'icons/scp/scpstructures(32x32).dmi'
 	icon_state = "scp113"
+
 	force = 10.0
 	throwforce = 10.0
 	throw_range = 15
@@ -48,7 +48,7 @@
 			return
 
 	H.humanStageHandler.setStage("113_effect", 0)
-	H.AddComponent(/datum/component/scp113_effect_handler, H)
+	H.AddComponent(/datum/component/scp113_effect_handler, H, src)
 	SEND_SIGNAL(H, COMSIG_SCP113_EFFECT_STAGE_1, H)
 
 /obj/item/scp113/proc/handle_item_unequipped(datum/source, mob/living/user)
