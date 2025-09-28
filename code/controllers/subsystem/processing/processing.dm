@@ -32,7 +32,7 @@ SUBSYSTEM_DEF(processing)
 		current_run.len--
 		if(QDELETED(thing))
 			processing -= thing
-		else if(call(thing, TYPE_PROC_REF(/datum, process))(wait) == PROCESS_KILL)
+		else if(call(thing, TYPE_PROC_REF(/datum, process))(wait * 0.1) == PROCESS_KILL)
 			// fully stop so that a future START_PROCESSING will work
 			STOP_PROCESSING(src, thing)
 		if (MC_TICK_CHECK)
