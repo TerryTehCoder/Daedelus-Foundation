@@ -89,7 +89,7 @@ GLOBAL_LIST_EMPTY(pending_clarity_prompts)
 		return FALSE
 	return SSreagents.get_reagent_sources_by_type(input_path, z_level_stack)
 
-///Adds reagent we want to passed cup from list made in find_reagents_to_fill_from
+///Adds reagent we want to pass to cup from list made in find_reagents_to_fill_from
 /obj/machinery/scp294/proc/add_reagent_to_cup(input_path, D, reagents_to_fill_from)
 	var/obj/item/reagent_containers/food/drinks/sillycup/cup = D
 	var/amount_need_filled = cup.volume
@@ -243,9 +243,8 @@ GLOBAL_LIST_EMPTY(pending_clarity_prompts)
 
 /datum/movespeed_modifier/music_buff
 	variable = TRUE
-	slowdown = -2 // Speed buff
+	slowdown = -0.5 // Speed buff
 	priority = 10
-	var/fumble_chance = 10 // Default fumble chance for the buff
 	var/is_music_stamina_active = FALSE
 	var/is_burnt_out = FALSE
 	var/burnout_timer_id
@@ -420,7 +419,7 @@ GLOBAL_LIST_EMPTY(pending_clarity_prompts)
 	if(!user || !machine)
 		return
 
-	var/admin_message_html = "<span class=\"admin\"><span class=\"prefix\">CLARITY ADMIN PROMPT:</span> <span class=\"message\">[key_name(user)] ([user.ckey]) drank Clarity from [machine.name] ([REF(machine)]). <a href='?_src_=holder;clarity_admin_prompt=1;player_ref=[REF(user)];scp_ref=[REF(machine)];timer_id=[timer_id];prompt_id=[prompt_id]'>Click here to provide a custom response.</a></span></span>"
+	var/admin_message_html = "<span class=\"admin\"><span class=\"prefix\">CLARITY ADMIN PROMPT:</span> <span class=\"message\">[key_name(user)] ([user.ckey]) drank Clarity from SCP-294). <a href='?_src_=holder;[HrefToken(TRUE)];clarity_admin_prompt=1;player_ref=[REF(user)];scp_ref=[REF(machine)];timer_id=[timer_id];prompt_id=[prompt_id]'>(Custom Response?)</a></span></span>"
 	message_admins(admin_message_html)
 	return
 

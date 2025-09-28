@@ -37,3 +37,6 @@
 #define COMSIG_SCP113_EFFECT_STAGE_2 "scp113_effect_stage_2"
 #define COMSIG_SCP113_EFFECT_STAGE_3 "scp113_effect_stage_3"
 #define COMSIG_SCP113_EFFECT_STAGE_4 "scp113_effect_stage_4"
+
+// SCP-294 signals
+#define COMSIG_SCP294_DISPENSE_ATTEMPT "scp294_dispense_attempt"

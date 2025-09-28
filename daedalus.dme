@@ -4400,6 +4400,7 @@
 #include "code\modules\SCP\scp013.dm"
 #include "code\modules\SCP\scp294.dm"
 #include "code\modules\SCP\scp113.dm"
+#include "code\datums\components\scp113_effect_handler.dm"
 // #include "code\modules\SCP\scp035.dm"
 // #include "code\modules\SCP\scp049.dm"
 // #include "code\modules\SCP\scp066.dm"
