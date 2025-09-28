@@ -30,3 +30,27 @@
 //Same turf, but instead used in the Beach Biodome
 /turf/open/water/beach/biodome
 	initial_gas = OPENTURF_DEFAULT_ATMOS
+
+/turf/open/water/ocean
+	name = "ocean"
+	desc = "The vast, deep ocean."
+	baseturfs = /turf/open/water // Inherit from base water turf
+	initial_gas = OPENTURF_DEFAULT_ATMOS
+	slowdown = 1.5 // Slightly more slowdown for deep ocean
+
+/turf/open/water/ocean/Initialize()
+	. = ..()
+	// Add FluidComponent
+	var/datum/component/fluid/fluid_comp = GetComponent(/datum/component/fluid)
+	if (!fluid_comp)
+		fluid_comp = AddComponent(/datum/component/fluid)
+	fluid_comp.fluid_type = /datum/fluid/water
+	fluid_comp.addFluid(FLUID_MAX_DEPTH, 276.65) // Fill to max depth, 3.5C, or 38.3F for everyone else.
+
+	// Add FluidSourceComponent to ensure continuous replenishment
+	var/datum/component/fluid_source/fluid_source_comp = GetComponent(/datum/component/fluid_source)
+	if (!fluid_source_comp)
+		fluid_source_comp = AddComponent(/datum/component/fluid_source)
+	fluid_source_comp.generated_fluid_type = /datum/fluid/water
+	fluid_source_comp.flow_rate = FLUID_MAX_DEPTH / 5 // Replenish 20% of max depth per tick
+	fluid_source_comp.activate()
