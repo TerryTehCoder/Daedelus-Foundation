@@ -49,7 +49,7 @@
 	else
 		message_admins(span_notice("ocean/Initialize(): FluidComponent [fluid_comp] already exists on [src]"))
 
-	fluid_comp.fluid_type = /datum/fluid/water
+	fluid_comp.fluid_type_instance = new /datum/fluid/water
 	fluid_comp.addFluid(FLUID_MAX_DEPTH, 276.65) // Fill to max depth, 3.5C, or 38.3F for everyone else.
 	message_admins(span_notice("ocean/Initialize(): Called addFluid on [fluid_comp] with amount [FLUID_MAX_DEPTH]"))
 

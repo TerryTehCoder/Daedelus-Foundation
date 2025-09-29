@@ -6,16 +6,48 @@ SUBSYSTEM_DEF(fluid_visuals)
 	priority = FIRE_PRIORITY_OBJ
 
 	var/static/list/fluid_image_cache = list() // Cache for image objects
+	var/list/active_fluid_components = list() // List of FluidComponent instances to manage visuals for
 
 /datum/controller/subsystem/fluid_visuals/Initialize()
 	. = ..()
-	// FluidVisualsSystem listens to COMSIG_FLUID_VISUAL_STATE_CHANGED directly from FluidComponent,
-	// as this signal is emitted by the component itself regardless of which subsystem manages its simulation.
-	RegisterSignal(src, COMSIG_FLUID_VISUAL_STATE_CHANGED, .proc/onFluidVisualStateChanged)
 
 /datum/controller/subsystem/fluid_visuals/Destroy()
-	UnregisterSignal(src, COMSIG_FLUID_VISUAL_STATE_CHANGED)
+	active_fluid_components.Cut()
 	. = ..()
+
+/datum/controller/subsystem/fluid_visuals/proc/registerFluidComponent(datum/component/fluid/F)
+	if (!(F in active_fluid_components))
+		active_fluid_components += F
+		RegisterSignal(F, COMSIG_FLUID_VISUAL_STATE_CHANGED, PROC_REF(onFluidVisualStateChanged)) // Register to the component's signal
+		message_admins(span_notice("FluidVisuals: Registered FluidComponent [F.parent] and its visual state signal."))
+
+/datum/controller/subsystem/fluid_visuals/proc/unregisterFluidComponent(datum/component/fluid/F)
+	if (F in active_fluid_components)
+		active_fluid_components -= F
+		UnregisterSignal(F, COMSIG_FLUID_VISUAL_STATE_CHANGED) // Unregister from the component's signal
+		message_admins(span_notice("FluidVisuals: Unregistered FluidComponent [F.parent] and its visual state signal."))
+		// Ensure any existing overlays are removed when a component is unregistered
+		var/atom/parent_atom = F.parent
+		if (istype(parent_atom) && F.fluid_overlay)
+			parent_atom.overlays -= F.fluid_overlay
+			qdel(F.fluid_overlay)
+			F.fluid_overlay = null
+			message_admins(span_notice("FluidVisuals: Removed overlay from [parent_atom] during unregistration"))
+
+/datum/controller/subsystem/fluid_visuals/fire(resumed)
+	var/list/components_to_process = active_fluid_components.Copy() // Iterate over a copy to allow modification
+	for(var/datum/component/fluid/fluid_comp in components_to_process)
+		if (QDELETED(fluid_comp) || QDELETED(fluid_comp.parent))
+			unregisterFluidComponent(fluid_comp)
+			continue
+
+		// Directly call updateVisuals on the component, which will then send the signal
+		// if the visual state has changed. The onFluidVisualStateChanged proc will then
+		// be triggered by the signal.
+		fluid_comp.updateVisuals()
+
+		if (MC_TICK_CHECK)
+			break
 
 /datum/controller/subsystem/fluid_visuals/proc/onFluidVisualStateChanged(datum/component/fluid/fluid_comp, new_visual_state, current_fluid_amount)
 	message_admins(span_notice("FluidVisuals: onFluidVisualStateChanged() called for [fluid_comp.parent]. New state: [new_visual_state], Amount: [current_fluid_amount]"))
@@ -24,23 +56,27 @@ SUBSYSTEM_DEF(fluid_visuals)
 		message_admins(span_notice("FluidVisuals: Parent atom is not of type atom. Returning."))
 		return
 
-	var/image/fluid_overlay = get_fluid_overlay(fluid_comp.fluid_type, new_visual_state, current_fluid_amount)
-	message_admins(span_notice("FluidVisuals: get_fluid_overlay returned [fluid_overlay ? "an image" : "null"] for [parent_atom]"))
+	var/image/new_fluid_overlay_data = get_fluid_overlay(fluid_comp.fluid_type_instance, new_visual_state, current_fluid_amount)
+	message_admins(span_notice("FluidVisuals: get_fluid_overlay returned [new_fluid_overlay_data ? "an image" : "null"] for [parent_atom]"))
 
-	// Remove existing fluid overlays and add the new one
-	for(var/image/I in parent_atom.overlays)
-		if (I.name == "fluid_overlay") // Identify fluid overlays by name
-			parent_atom.overlays -= I
-			message_admins(span_notice("FluidVisuals: Removed existing fluid overlay from [parent_atom]"))
-			break // Assuming only one fluid overlay per turf
+	if (new_fluid_overlay_data)
+		// Always remove and re-add the overlay to ensure visual refresh
+		if (fluid_comp.fluid_overlay)
+			parent_atom.overlays -= fluid_comp.fluid_overlay
+			qdel(fluid_comp.fluid_overlay)
+			fluid_comp.fluid_overlay = null
+			message_admins(span_notice("FluidVisuals: Removed old fluid overlay from [parent_atom] for refresh"))
 
-	if (fluid_overlay)
-		parent_atom.overlays += fluid_overlay
+		// Add new overlay and store reference
+		fluid_comp.fluid_overlay = new_fluid_overlay_data
+		parent_atom.overlays += fluid_comp.fluid_overlay
 		message_admins(span_notice("FluidVisuals: Added new fluid overlay to [parent_atom]"))
-	else if (current_fluid_amount <= FLUID_EVAPORATION_POINT) // If fluid is gone, ensure overlay is removed
-		message_admins(span_notice("FluidVisuals: Fluid amount <= FLUID_EVAPORATION_POINT. Ensuring overlay is removed."))
-		// Already removed above, but good to have a check
-		return
+	else if (fluid_comp.fluid_overlay)
+		// Remove existing overlay if no fluid should be visible
+		parent_atom.overlays -= fluid_comp.fluid_overlay
+		qdel(fluid_comp.fluid_overlay)
+		fluid_comp.fluid_overlay = null
+		message_admins(span_notice("FluidVisuals: Removed fluid overlay from [parent_atom] as fluid amount <= FLUID_EVAPORATION_POINT"))
 
 /datum/controller/subsystem/fluid_visuals/proc/get_fluid_overlay(datum/fluid/fluid_type, visual_state, current_fluid_amount)
 	message_admins(span_notice("FluidVisuals: get_fluid_overlay([fluid_type.type], [visual_state], [current_fluid_amount]) called."))

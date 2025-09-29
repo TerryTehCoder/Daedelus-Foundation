@@ -3,7 +3,7 @@
 
 SUBSYSTEM_DEF(component_fluid_simulation)
 	name = "Component Fluid Simulation"
-	wait = 0 // Will be autoset based on specific fluid type needs
+	wait = 1 // Set to 1 decisecond to ensure delta_time is positive and simulation runs every tick.
 	flags = SS_KEEP_TIMING
 	runlevels = RUNLEVEL_GAME | RUNLEVEL_POSTGAME
 	priority = FIRE_PRIORITY_FLUIDS
@@ -36,9 +36,9 @@ SUBSYSTEM_DEF(component_fluid_simulation)
 /datum/controller/subsystem/component_fluid_simulation/Initialize()
 	. = ..()
 	initialize_simulation_carousel()
-	RegisterSignal(src, COMSIG_BREACH_CREATED, .proc/onBreachCreated)
-	RegisterSignal(src, COMSIG_BREACH_REPAIRED, .proc/onBreachRepaired)
-	RegisterSignal(src, COMSIG_FLUID_COMPONENT_DIRTY, .proc/onFluidComponentDirty)
+	RegisterSignal(src, COMSIG_BREACH_CREATED, PROC_REF(onBreachCreated))
+	RegisterSignal(src, COMSIG_BREACH_REPAIRED, PROC_REF(onBreachRepaired))
+	RegisterSignal(src, COMSIG_FLUID_COMPONENT_DIRTY, PROC_REF(onFluidComponentDirty))
 
 	if (simulated_fluid_type)
 		all_fluid_simulations[simulated_fluid_type] = src
@@ -69,8 +69,8 @@ SUBSYSTEM_DEF(component_fluid_simulation)
 
 	var/datum/component/fluid/fluid_comp = location.GetComponent(/datum/component/fluid)
 	if (!fluid_comp)
-		fluid_comp = location.AddComponent(/datum/component/fluid, fluid_type = simulated_fluid_type)
-	else if (fluid_comp.fluid_type != simulated_fluid_type)
+		fluid_comp = location.AddComponent(/datum/component/fluid, fluid_type_instance = new simulated_fluid_type)
+	else if (fluid_comp.fluid_type_instance.type != simulated_fluid_type)
 		// If a different fluid type is already present, we don't mix or override it from a breach.
 		return
 
@@ -89,6 +89,9 @@ SUBSYSTEM_DEF(component_fluid_simulation)
 		simulation_carousel[bucket_index] += T
 		turf_to_bucket_map[T] = simulation_carousel[bucket_index] // Store reference to its bucket
 		message_admins(span_notice("ComponentFluidSimulation ([simulated_fluid_type]): Added turf [T] to active list (bucket [bucket_index])"))
+		message_admins(span_notice("ComponentFluidSimulation ([simulated_fluid_type]): DEBUG: add_active_fluid_turf called for [T]. Bucket: [bucket_index]. Total active turfs: [LAZYLEN(turf_to_bucket_map)]"))
+
+
 		if (QDELETED(src))
 			return
 		SEND_SIGNAL(src, COMSIG_FLUID_SIMULATION_TURF_ACTIVE, T)
@@ -101,6 +104,7 @@ SUBSYSTEM_DEF(component_fluid_simulation)
 		bucket -= T
 		turf_to_bucket_map -= T
 		message_admins(span_notice("ComponentFluidSimulation ([simulated_fluid_type]): Removed turf [T] from active list"))
+
 		if (QDELETED(src))
 			return
 		SEND_SIGNAL(src, COMSIG_FLUID_SIMULATION_TURF_INACTIVE, T)
@@ -125,7 +129,7 @@ SUBSYSTEM_DEF(component_fluid_simulation)
 			continue
 
 		var/datum/component/fluid/fluid_comp = T.GetComponent(/datum/component/fluid)
-		if (!fluid_comp || fluid_comp.fluid_amount <= FLUID_DELETING || fluid_comp.fluid_type != simulated_fluid_type)
+		if (!fluid_comp || fluid_comp.fluid_amount <= FLUID_DELETING || fluid_comp.fluid_type_instance.type != simulated_fluid_type)
 			remove_active_fluid_turf(T)
 			continue
 
@@ -140,15 +144,15 @@ SUBSYSTEM_DEF(component_fluid_simulation)
 		if (turf_below && T.CanFluidPass(DOWN))
 			var/datum/component/fluid/fluid_comp_below = turf_below.GetComponent(/datum/component/fluid)
 			if (!fluid_comp_below)
-				fluid_comp_below = turf_below.AddComponent(/datum/component/fluid, fluid_type = simulated_fluid_type)
+				fluid_comp_below = turf_below.AddComponent(/datum/component/fluid, fluid_type_instance = new simulated_fluid_type)
 				message_admins(span_notice("ComponentFluidSimulation ([simulated_fluid_type]): Added FluidComponent to turf below [turf_below]"))
-			else if (fluid_comp_below.fluid_type != simulated_fluid_type)
+			else if (fluid_comp_below.fluid_type_instance.type != simulated_fluid_type)
 				// Cannot transfer to a turf with a different fluid type
 				message_admins(span_notice("ComponentFluidSimulation ([simulated_fluid_type]): Cannot transfer fluid to turf below [turf_below] due to different fluid type."))
 				turf_below = null // Prevent further processing for this direction
 
 			if (fluid_comp_below)
-				var/datum/fluid/temp_fluid_viscosity_down = new fluid_comp.fluid_type
+				var/datum/fluid/temp_fluid_viscosity_down = new fluid_comp.fluid_type_instance.type
 				var/viscosity_multiplier = 1 / temp_fluid_viscosity_down.viscosity // Higher viscosity = lower multiplier
 				qdel(temp_fluid_viscosity_down)
 				var/transfer_amount = min(fluid_comp.fluid_amount * 0.1 * viscosity_multiplier, (FLUID_MAX_DEPTH - fluid_comp_below.fluid_amount)) // Transfer 10% or until full below
@@ -169,9 +173,9 @@ SUBSYSTEM_DEF(component_fluid_simulation)
 
 				var/datum/component/fluid/neighbor_fluid_comp = neighbor_turf.GetComponent(/datum/component/fluid)
 				if (!neighbor_fluid_comp)
-					neighbor_fluid_comp = neighbor_turf.AddComponent(/datum/component/fluid, fluid_type = simulated_fluid_type)
+					neighbor_fluid_comp = neighbor_turf.AddComponent(/datum/component/fluid, fluid_type_instance = new simulated_fluid_type)
 					message_admins(span_notice("ComponentFluidSimulation ([simulated_fluid_type]): Added FluidComponent to neighbor turf [neighbor_turf]"))
-				else if (neighbor_fluid_comp.fluid_type != simulated_fluid_type)
+				else if (neighbor_fluid_comp.fluid_type_instance.type != simulated_fluid_type)
 					// Cannot transfer to a turf with a different fluid type
 					message_admins(span_notice("ComponentFluidSimulation ([simulated_fluid_type]): Cannot transfer fluid to neighbor [neighbor_turf] due to different fluid type."))
 					continue
@@ -179,7 +183,8 @@ SUBSYSTEM_DEF(component_fluid_simulation)
 				if (neighbor_fluid_comp)
 					var/diff = fluid_comp.fluid_amount - neighbor_fluid_comp.fluid_amount
 					if (diff > FLUID_EVAPORATION_POINT) // Only flow if significant difference
-						var/datum/fluid/temp_fluid_viscosity_lateral = new fluid_comp.fluid_type
+						message_admins(span_notice("ComponentFluidSimulation ([simulated_fluid_type]): DEBUG: Lateral flow condition met for [T] to [neighbor_turf]. Diff: [diff]"))
+						var/datum/fluid/temp_fluid_viscosity_lateral = new fluid_comp.fluid_type_instance.type
 						var/viscosity_multiplier = 1 / temp_fluid_viscosity_lateral.viscosity
 						qdel(temp_fluid_viscosity_lateral)
 						var/transfer_amount = diff * 0.1 * viscosity_multiplier // Transfer 10% of the difference
@@ -225,32 +230,11 @@ SUBSYSTEM_DEF(component_fluid_simulation)
 		simulation_bucket_index = 1
 	message_admins(span_notice("ComponentFluidSimulation ([simulated_fluid_type]): Finished processing bucket. Next bucket: [simulation_bucket_index]"))
 
-/datum/controller/subsystem/component_fluid_simulation/proc/queue_spread(obj/effect/particle_effect/fluid/node)
-	// This method is called by obj/effect/particle_effect/fluid to activate simulation for its turf.
-	var/turf/T = get_turf(node)
-	if (T)
-		var/datum/component/fluid/fluid_comp = T.GetComponent(/datum/component/fluid)
-		if (fluid_comp && fluid_comp.fluid_type == simulated_fluid_type)
-			add_active_fluid_turf(T)
-
-/datum/controller/subsystem/component_fluid_simulation/proc/cancel_spread(obj/effect/particle_effect/fluid/node)
-	var/turf/T = get_turf(node)
-	if (T)
-		var/datum/component/fluid/fluid_comp = T.GetComponent(/datum/component/fluid)
-		if (fluid_comp && fluid_comp.fluid_type == simulated_fluid_type)
-			remove_active_fluid_turf(T)
-
-/datum/controller/subsystem/component_fluid_simulation/proc/start_processing(obj/effect/particle_effect/fluid/node)
-	// Same as queue_spread for component-based system
-	queue_spread(node)
-
-/datum/controller/subsystem/component_fluid_simulation/proc/stop_processing(obj/effect/particle_effect/fluid/node)
-	// Same as cancel_spread for component-based system
-	cancel_spread(node)
 
 /datum/controller/subsystem/component_fluid_simulation/proc/onFluidComponentDirty(datum/component/fluid/fluid_comp, turf/T)
 	if (!dirty_turfs[T])
 		dirty_turfs += T
+		message_admins(span_notice("ComponentFluidSimulation ([simulated_fluid_type]): DEBUG: onFluidComponentDirty called for [T]. Total dirty turfs: [LAZYLEN(dirty_turfs)]"))
 
 #undef SS_PROCESSES_SPREADING
 #undef SS_PROCESSES_EFFECTS
@@ -259,7 +243,7 @@ SUBSYSTEM_DEF(component_fluid_simulation)
 COMPONENT_FLUID_SUBSYSTEM_DEF(water_simulation)
 	name = "Water Fluid Simulation"
 	simulated_fluid_type = /datum/fluid/water
-	wait = 0 // Let the base subsystem handle the wait, or set a specific one
+	wait = 1
 	flags = SS_KEEP_TIMING
 	runlevels = RUNLEVEL_GAME | RUNLEVEL_POSTGAME
 

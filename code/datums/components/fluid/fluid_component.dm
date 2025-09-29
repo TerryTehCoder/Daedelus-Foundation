@@ -1,9 +1,10 @@
 /datum/component/fluid
 	var/fluid_amount = 0 // Current depth/volume of fluid
-	var/fluid_type = /datum/fluid/water // Type of fluid (e.g., water, lava, chemicals)
+	var/datum/fluid/fluid_type_instance // Store an instance of the fluid datum
 	var/temperature = T20C // Default temperature
 	var/current_visual_state = "dry" // Current visual state (e.g., "dry", "shallow", "deep")
 	var/is_dirty = FALSE // Flag to indicate if this fluid component's turf needs re-evaluation for lateral diffusion
+	var/image/fluid_overlay // Direct reference to the visual overlay for this fluid component
 
 	// Configuration for visual thresholds and icon states
 	var/list/visual_thresholds = list(
@@ -15,11 +16,13 @@
 	)
 /datum/component/fluid/Initialize()
 	. = ..()
-	RegisterSignal(src, COMSIG_PARENT_FLUID_AMOUNT_CHANGED, .proc/onFluidAmountChanged)
+	if (!fluid_type_instance) // If fluid_type_instance is not set during component creation, default to water
+		fluid_type_instance = new /datum/fluid/water
+	SSfluid_visuals.registerFluidComponent(src) // Register with the FluidVisuals subsystem
 	updateVisuals()
 
 /datum/component/fluid/Destroy()
-	UnregisterSignal(src, COMSIG_PARENT_FLUID_AMOUNT_CHANGED)
+	SSfluid_visuals.unregisterFluidComponent(src) // Unregister from the FluidVisuals subsystem
 	. = ..()
 
 /datum/component/fluid/proc/addFluid(amount, new_temperature)
@@ -30,6 +33,7 @@
 		temperature = (temperature * (fluid_amount - amount) + new_temperature * amount) / fluid_amount
 	else
 		temperature = new_temperature
+	message_admins(span_notice("FluidComponent [src.parent]: Fluid amount after addFluid: [fluid_amount]"))
 	if (QDELETED(src))
 		return
 	SEND_SIGNAL(src, COMSIG_PARENT_FLUID_AMOUNT_CHANGED, fluid_amount)
@@ -40,6 +44,7 @@
 /datum/component/fluid/proc/removeFluid(amount)
 	message_admins(span_notice("FluidComponent [src.parent]: removeFluid([amount]) called. Current amount: [fluid_amount]"))
 	fluid_amount = max(FLUID_DELETING, fluid_amount - amount)
+	message_admins(span_notice("FluidComponent [src.parent]: Fluid amount after removeFluid: [fluid_amount]"))
 	if (QDELETED(src))
 		return
 	SEND_SIGNAL(src, COMSIG_PARENT_FLUID_AMOUNT_CHANGED, fluid_amount)
@@ -71,26 +76,19 @@
 	else
 		new_visual_state = "dry" // No fluid, or fluid is being deleted, dry icon doesn't really exist so..
 
-	message_admins(span_notice("FluidComponent [src.parent]: updateVisuals() - Determined new_visual_state: [new_visual_state]"))
-
 	if (new_visual_state != current_visual_state)
+		message_admins(span_notice("FluidComponent [src.parent]: updateVisuals() - Determined new_visual_state: [new_visual_state]"))
 		current_visual_state = new_visual_state
 		message_admins(span_notice("FluidComponent [src.parent]: Visual state changed to [current_visual_state]. Sending COMSIG_FLUID_VISUAL_STATE_CHANGED."))
 		if (QDELETED(src))
 			return
 		SEND_SIGNAL(src, COMSIG_FLUID_VISUAL_STATE_CHANGED, current_visual_state, fluid_amount)
-	else
-		message_admins(span_notice("FluidComponent [src.parent]: Visual state [current_visual_state] unchanged."))
 
-/datum/component/fluid/proc/onFluidAmountChanged(datum/component/fluid/source_component, new_amount)
-	message_admins(span_notice("FluidComponent [src.parent]: onFluidAmountChanged() called. New amount: [new_amount]"))
-	// This signal handler is primarily for internal component use to trigger visuals.
-	// Other systems will listen to COMSIG_FLUID_AMOUNT_CHANGED directly on the parent.
-	updateVisuals()
 
 /datum/component/fluid/proc/mark_dirty()
 	if (!is_dirty)
 		is_dirty = TRUE
+		message_admins(span_notice("FluidComponent [src.parent]: mark_dirty() called. Sending COMSIG_FLUID_COMPONENT_DIRTY."))
 		if (QDELETED(src))
 			return
 		SEND_SIGNAL(src, COMSIG_FLUID_COMPONENT_DIRTY, parent)
@@ -113,9 +111,19 @@
 /datum/fluid/water
 	density = 1000
 	viscosity = 1
-	color = "#0000FF"
+	color = COLOR_OCEAN
 
 /datum/fluid/oil
 	density = 800
 	viscosity = 5
 	color = "#333333"
+
+/datum/fluid/smoke
+	density = 100
+	viscosity = 0.5
+	color = "#808080" // Grey
+
+/datum/fluid/foam
+	density = 500
+	viscosity = 3
+	color = COLOR_WHITE

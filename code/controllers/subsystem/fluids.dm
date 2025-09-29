@@ -33,132 +33,204 @@ SUBSYSTEM_DEF(fluids)
 	var/list/spread_carousel
 	/// The index of the spread carousel bucket currently being processed.
 	var/spread_bucket_index
-	/// The set of turfs that have active fluid components and need processing.
-	var/list/active_fluid_turfs = list()
+	/// The set of fluid nodes we are currently processing spreading for.
+	var/list/currently_spreading
+
+	// Fluid effect processing:
+	/// The amount of time (in deciseconds) between effect processing ticks for each fluid node.
+	var/effect_wait = 1 SECONDS
+	/// The number of buckets in the effect carousel.
+	var/num_effect_buckets
+	/// The set of buckets containing fluid nodes to process effects for.
+	var/list/effect_carousel
+	/// The index of the currently processing bucket on the effect carousel.
+	var/effect_bucket_index
+	/// The set of fluid nodes we are currently processing effects for.
+	var/list/currently_processing
 
 /datum/controller/subsystem/fluids/Initialize()
-	. = ..()
-	RegisterSignal(src, COMSIG_BREACH_CREATED, .proc/onBreachCreated)
-	RegisterSignal(src, COMSIG_BREACH_REPAIRED, .proc/onBreachRepaired)
+	initialize_waits()
+	initialize_spread_carousel()
+	initialize_effect_carousel()
+	return ..()
 
-/datum/controller/subsystem/fluids/Destroy()
-	UnregisterSignal(src, COMSIG_BREACH_CREATED)
-	UnregisterSignal(src, COMSIG_BREACH_REPAIRED)
-	. = ..()
+/**
+ * Initializes the subsystem waits.
+ *
+ * Ensures that the subsystem's fire wait evenly splits the spread and effect waits.
+ */
+/datum/controller/subsystem/fluids/proc/initialize_waits()
+	if (spread_wait <= 0)
+		WARNING("[src] has the invalid spread wait [spread_wait].")
+		spread_wait = 1 SECONDS
+	if (effect_wait <= 0)
+		WARNING("[src] has the invalid effect wait [effect_wait].")
+		spread_wait = 1 SECONDS
 
-/datum/controller/subsystem/fluids/proc/onBreachCreated(datum/component/breach/breach_comp, turf/location, flow_rate)
-	var/datum/component/fluid/fluid_comp = location.GetComponent(/datum/component/fluid)
-	if (!fluid_comp)
-		fluid_comp = location.AddComponent(/datum/component/fluid)
-	if (fluid_comp)
-		fluid_comp.addFluid(flow_rate, T20C) // Add initial fluid from breach
-		add_active_fluid_turf(location)
+	// Sets the overall wait of the subsystem to evenly divide both the effect and spread waits.
+	var/max_wait = Gcd(spread_wait, effect_wait)
+	if (max_wait < wait || wait <= 0)
+		wait = max_wait
+	else
+		// If the wait of the subsystem overall is set to a valid value make the actual wait of the subsystem evenly divide that as well.
+		// Makes effect bubbling possible with identical spread and effect waits.
+		wait = Gcd(wait, max_wait)
 
-/datum/controller/subsystem/fluids/proc/onBreachRepaired(datum/component/breach/breach_comp, turf/location)
-	// When a breach is repaired, the fluid flow from that source stops.
-	// The existing fluid will still be processed until it evaporates or flows away.
-	return
 
-/datum/controller/subsystem/fluids/proc/add_active_fluid_turf(turf/T)
-	if (!active_fluid_turfs[T])
-		active_fluid_turfs[T] = TRUE
-		if (QDELETED(src))
-			return
-		SEND_SIGNAL(src, COMSIG_FLUID_SIMULATION_TURF_ACTIVE, T)
+/**
+ * Initializes the carousel used to process fluid spreading.
+ *
+ * Synchronizes the spread delta time with the actual target spread tick rate.
+ * Builds the carousel buckets used to queue spreads.
+ */
+/datum/controller/subsystem/fluids/proc/initialize_spread_carousel()
+	// Make absolutely certain that the spread wait is in sync with the target spread tick rate.
+	num_spread_buckets = round(spread_wait / wait)
+	spread_wait = wait * num_spread_buckets
 
-/datum/controller/subsystem/fluids/proc/remove_active_fluid_turf(turf/T)
-	if (active_fluid_turfs[T])
-		active_fluid_turfs -= T
-		if (QDELETED(src))
-			return
-		SEND_SIGNAL(src, COMSIG_FLUID_SIMULATION_TURF_INACTIVE, T)
+	spread_carousel = list()
+	spread_carousel.len = num_spread_buckets
+	for(var/i in 1 to num_spread_buckets)
+		spread_carousel[i] = list()
+	currently_spreading = list()
+	spread_bucket_index = 1
+
+/**
+ * Initializes the carousel used to process fluid effects.
+ *
+ * Synchronizes the spread delta time with the actual target spread tick rate.
+ * Builds the carousel buckets used to bubble processing.
+ */
+/datum/controller/subsystem/fluids/proc/initialize_effect_carousel()
+	// Make absolutely certain that the effect wait is in sync with the target effect tick rate.
+	num_effect_buckets = round(effect_wait / wait)
+	effect_wait = wait * num_effect_buckets
+
+	effect_carousel = list()
+	effect_carousel.len = num_effect_buckets
+	for(var/i in 1 to num_effect_buckets)
+		effect_carousel[i] = list()
+	currently_processing = list()
+	effect_bucket_index = 1
+
 
 /datum/controller/subsystem/fluids/fire(resumed)
-	var/delta_time = wait / (1 SECONDS) // Convert wait to seconds for consistent delta_time
+	var/seconds_per_tick
+	var/cached_bucket_index
+	var/list/obj/effect/particle_effect/fluid/currentrun
+	// Ok so like I get the lighting style splittick but why are we doing this churn thing
+	// It seems like a bad idea for processing to get out of step with spreading
+	MC_SPLIT_TICK_INIT(2)
 
-	var/list/turfs_to_process = active_fluid_turfs.Copy()
-	for(var/turf/T in turfs_to_process)
-		if (QDELETED(T))
-			remove_active_fluid_turf(T)
-			continue
+	MC_SPLIT_TICK // Start processing fluid spread (we take a lot of cpu for ourselves, spreading is more important after all)
+	if(!resumed)
+		spread_bucket_index = WRAP_UP(spread_bucket_index, num_spread_buckets)
+		currently_spreading = spread_carousel[spread_bucket_index]
+		spread_carousel[spread_bucket_index] = list() // Reset the bucket so we don't process an _entire station's worth of foam_ spreading every 2 ticks when the foam flood event happens.
 
-		var/datum/component/fluid/fluid_comp = T.GetComponent(/datum/component/fluid)
-		if (!fluid_comp || fluid_comp.fluid_amount <= FLUID_DELETING)
-			remove_active_fluid_turf(T)
-			continue
+	seconds_per_tick = spread_wait / (1 SECONDS)
+	currentrun = currently_spreading
+	while(currentrun.len)
+		var/obj/effect/particle_effect/fluid/to_spread = currentrun[currentrun.len]
+		currentrun.len--
 
-		// --- Fluid Spreading and Equalization ---
-		// This is a simplified model. A more complex one would involve pressure and height.
-		// For now, we'll simulate basic equalization and downward flow.
-
-		// Downward flow
-		var/turf/turf_below = GetBelow(T)
-		if (turf_below && T.CanFluidPass(DOWN))
-			var/datum/component/fluid/fluid_comp_below = turf_below.GetComponent(/datum/component/fluid)
-			if (!fluid_comp_below)
-				fluid_comp_below = turf_below.AddComponent(/datum/component/fluid)
-
-			if (fluid_comp_below)
-				var/transfer_amount = min(fluid_comp.fluid_amount * 0.1, (FLUID_MAX_DEPTH - fluid_comp_below.fluid_amount)) // Transfer 10% or until full below
-				if (transfer_amount > 0)
-					fluid_comp.removeFluid(transfer_amount)
-					fluid_comp_below.addFluid(transfer_amount, fluid_comp.temperature)
-					add_active_fluid_turf(turf_below)
-
-		// Lateral equalization
-		for(var/direction in GLOB.cardinals)
-			var/turf/neighbor_turf = get_step(T, direction)
-			if (!neighbor_turf || !T.CanFluidPass(direction))
-				continue
-
-			var/datum/component/fluid/neighbor_fluid_comp = neighbor_turf.GetComponent(/datum/component/fluid)
-			if (!neighbor_fluid_comp)
-				neighbor_fluid_comp = neighbor_turf.AddComponent(/datum/component/fluid)
-
-			if (neighbor_fluid_comp)
-				var/diff = fluid_comp.fluid_amount - neighbor_fluid_comp.fluid_amount
-				if (diff > FLUID_EVAPORATION_POINT) // Only flow if significant difference
-					var/transfer_amount = diff * 0.1 // Transfer 10% of the difference
-					fluid_comp.removeFluid(transfer_amount)
-					neighbor_fluid_comp.addFluid(transfer_amount, fluid_comp.temperature)
-					add_active_fluid_turf(neighbor_turf)
-
-		// --- Fluid Effects (Evaporation, Interactions) ---
-		// Evaporation in space
-		if (isspaceturf(T))
-			fluid_comp.removeFluid(max((FLUID_EVAPORATION_POINT-1), fluid_comp.fluid_amount * 0.05 * delta_time)) // 5% per second
-
-		// If fluid is still active, ensure it's in the active list
-		if (fluid_comp.fluid_amount > FLUID_DELETING)
-			add_active_fluid_turf(T)
-		else
-			remove_active_fluid_turf(T)
+		if(!QDELETED(to_spread))
+			to_spread.spread(seconds_per_tick)
+			to_spread.spread_bucket = null
 
 		if (MC_TICK_CHECK)
-			return
+			break
 
+	MC_SPLIT_TICK // Start processing fluid effects:
+	if(!resumed)
+		effect_bucket_index = WRAP_UP(effect_bucket_index, num_effect_buckets)
+		var/list/tmp_list = effect_carousel[effect_bucket_index]
+		currently_processing = tmp_list.Copy()
+
+	seconds_per_tick = effect_wait / (1 SECONDS)
+	cached_bucket_index = effect_bucket_index
+	currentrun = currently_processing
+	while(currentrun.len)
+		var/obj/effect/particle_effect/fluid/to_process = currentrun[currentrun.len]
+		currentrun.len--
+
+		if (QDELETED(to_process) || to_process.process(seconds_per_tick) == PROCESS_KILL)
+			effect_carousel[cached_bucket_index] -= to_process
+			to_process.effect_bucket = null
+			to_process.datum_flags &= ~DF_ISPROCESSING
+
+		if (MC_TICK_CHECK)
+			break
+
+/**
+ * Queues a fluid node to spread later after one full carousel rotation.
+ *
+ * Arguments:
+ * - [node][/obj/effect/particle_effect/fluid]: The node to queue to spread.
+ */
 /datum/controller/subsystem/fluids/proc/queue_spread(obj/effect/particle_effect/fluid/node)
-	// This method is no longer directly used for spreading logic,
-	// as fluid spread is now handled by the subsystem iterating over turfs.
-	// However, we might still use it to mark a turf as "active" for processing.
-	var/turf/T = get_turf(node)
-	if (T)
-		add_active_fluid_turf(T)
+	if (node.spread_bucket)
+		return
 
+	spread_carousel[spread_bucket_index] += node
+	node.spread_bucket = spread_bucket_index
+
+
+/**
+ * Cancels a queued spread of a fluid node.
+ *
+ * Arguments:
+ * - [node][/obj/effect/particle_effect/fluid]: The node to cancel the spread of.
+ */
 /datum/controller/subsystem/fluids/proc/cancel_spread(obj/effect/particle_effect/fluid/node)
-	// This method is no longer directly used.
-	return
+	if(!node.spread_bucket)
+		return
 
+	var/bucket_index = node.spread_bucket
+	spread_carousel[bucket_index] -= node
+	if (bucket_index == spread_bucket_index)
+		currently_spreading -= node
+
+	node.spread_bucket = null
+
+/**
+ * Starts processing the effects of a fluid node.
+ *
+ * The fluid node will next process after one full bucket rotation.
+ *
+ * Arguments:
+ * - [node][/obj/effect/particle_effect/fluid]: The node to start processing.
+ */
 /datum/controller/subsystem/fluids/proc/start_processing(obj/effect/particle_effect/fluid/node)
-	// This method is no longer directly used for effect processing logic.
-	// Effects are handled by the subsystem iterating over turfs.
-	var/turf/T = get_turf(node)
-	if (T)
-		add_active_fluid_turf(T)
+	if (node.datum_flags & DF_ISPROCESSING || node.effect_bucket)
+		return
 
+	// Edit this value to make all fluids process effects (at the same time|offset by when they started processing| -> offset by a random amount <- )
+	var/bucket_index = rand(1, num_effect_buckets)
+	effect_carousel[bucket_index] += node
+	node.effect_bucket = bucket_index
+	node.datum_flags |= DF_ISPROCESSING
+
+/**
+ * Stops processing the effects of a fluid node.
+ *
+ * Arguments:
+ * - [node][/obj/effect/particle_effect/fluid]: The node to stop processing.
+ */
 /datum/controller/subsystem/fluids/proc/stop_processing(obj/effect/particle_effect/fluid/node)
-	// This method is no longer directly used.
-	return
+	if(!(node.datum_flags & DF_ISPROCESSING))
+		return
+
+	var/bucket_index = node.effect_bucket
+	if(!bucket_index)
+		return
+
+	effect_carousel[bucket_index] -= node
+	if (bucket_index == effect_bucket_index)
+		currently_processing -= node
+
+	node.effect_bucket = null
+	node.datum_flags &= ~DF_ISPROCESSING
 
 #undef SS_PROCESSES_SPREADING
 #undef SS_PROCESSES_EFFECTS
@@ -170,9 +242,11 @@ SUBSYSTEM_DEF(fluids)
 FLUID_SUBSYSTEM_DEF(smoke)
 	name = "Smoke"
 	spread_wait = 0.1 SECONDS
+	effect_wait = 2.0 SECONDS
 
 /// The subsystem responsible for processing foam propagation and effects.
 FLUID_SUBSYSTEM_DEF(foam)
 	name = "Foam"
 	wait = 0.1 SECONDS // Makes effect bubbling work with foam.
 	spread_wait = 0.2 SECONDS
+	effect_wait = 0.2 SECONDS

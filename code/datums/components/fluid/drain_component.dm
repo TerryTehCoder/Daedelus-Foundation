@@ -19,7 +19,7 @@
 	if (!fluid_comp || fluid_comp.fluid_amount <= FLUID_DELETING)
 		return
 
-	if (drained_fluid_type && fluid_comp.fluid_type != drained_fluid_type)
+	if (drained_fluid_type && fluid_comp.fluid_type_instance.type != drained_fluid_type)
 		return
 
 	var/amount_to_drain = drain_rate * delta_time

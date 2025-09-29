@@ -270,3 +270,6 @@
 #define COLOR_MEDICAL_MISSING "#886666"
 
 #define COLORED_SQUARE(COLOR) "<span style='font-face: fixedsys; font-size: 14px; background-color: [COLOR]; color: [COLOR]'>___</span>"
+
+//Fluid System Colors - As Needed
+#define COLOR_OCEAN "#99f5ff"

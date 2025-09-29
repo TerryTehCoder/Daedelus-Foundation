@@ -16,9 +16,9 @@
 
 /datum/component/movable_fluid_interaction/Initialize()
 	. = ..()
-	RegisterSignal(src, COMSIG_PARENT_ENTERED_TURF, .proc/onEnteredTurf)
-	RegisterSignal(src, COMSIG_PARENT_EXITED_TURF, .proc/onExitedTurf)
-	RegisterSignal(src, COMSIG_PARENT_PROCESS, .proc/onProcess)
+	RegisterSignal(src, COMSIG_PARENT_ENTERED_TURF, PROC_REF(onEnteredTurf))
+	RegisterSignal(src, COMSIG_PARENT_EXITED_TURF, PROC_REF(onExitedTurf))
+	RegisterSignal(src, COMSIG_PARENT_PROCESS, PROC_REF(onProcess))
 	if (istype(parent, /mob))
 		var/mob/M = parent
 		base_pixel_y = M.pixel_y
@@ -35,8 +35,8 @@
 	if (fluid_comp && fluid_comp.fluid_amount > FLUID_EVAPORATION_POINT)
 		if (QDELETED(src))
 			return
-		SEND_SIGNAL(src, COMSIG_FLUID_INTERACTION_ENTERED_FLUID, fluid_comp.fluid_type, fluid_comp.fluid_amount)
-		checkFluidState(fluid_comp.fluid_amount, fluid_comp.fluid_type)
+		SEND_SIGNAL(src, COMSIG_FLUID_INTERACTION_ENTERED_FLUID, fluid_comp.fluid_type_instance.type, fluid_comp.fluid_amount)
+		checkFluidState(fluid_comp.fluid_amount, fluid_comp.fluid_type_instance.type)
 		updateMobVisuals(fluid_comp.fluid_amount)
 	else
 		stopSwimming()
@@ -48,7 +48,7 @@
 	if (fluid_comp && fluid_comp.fluid_amount > FLUID_EVAPORATION_POINT)
 		if (QDELETED(src))
 			return
-		SEND_SIGNAL(src, COMSIG_FLUID_INTERACTION_EXITED_FLUID, fluid_comp.fluid_type)
+		SEND_SIGNAL(src, COMSIG_FLUID_INTERACTION_EXITED_FLUID, fluid_comp.fluid_type_instance.type)
 	stopSwimming()
 	stopDrowning()
 	updateMobVisuals() // Reset visuals when exiting fluid
@@ -74,7 +74,7 @@
 
 	var/datum/component/fluid/fluid_comp = T.GetComponent(/datum/component/fluid)
 	if (fluid_comp)
-		checkFluidState(fluid_comp.fluid_amount, fluid_comp.fluid_type)
+		checkFluidState(fluid_comp.fluid_amount, fluid_comp.fluid_type_instance.type)
 		handleTemperatureEffects(fluid_comp.fluid_amount, fluid_comp.temperature, delta_time)
 		updateMobVisuals(fluid_comp.fluid_amount, delta_time)
 	else
