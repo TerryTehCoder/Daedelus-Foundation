@@ -1,18 +1,18 @@
 /datum/component/movable_fluid_interaction
-	name = "Movable Fluid Interaction Component"
 	var/can_swim = TRUE // Can this mob swim?
 	var/swim_speed_modifier = 0.7 // Multiplier for speed when swimming (e.g., 0.7 for 70% speed)
 	var/breath_timer = 0 // Time remaining before drowning damage
 	var/max_breath_time = 10 SECONDS // How long mob can hold breath
 	var/is_swimming = FALSE
 	var/is_drowning = FALSE
-	var/is_waist_deep = FALSE // New variable to track if mob is waist-deep in fluid
+	var/is_waist_deep = FALSE // Track if mob is waist-deep in fluid
 	var/base_pixel_y = 0 // Store original pixel_y for resetting
 	var/is_submerged_visually = FALSE // Track if visual submersion is active
 	var/float_offset_timer = 0 // Timer for floating animation
 	var/drowning_timer = 0 // Time spent drowning
 	var/cold_exposure_timer = 0 // Time spent in cold fluid
 	var/last_fluid_z = 0 // Store the Z-level where the mob entered fluid
+	var/image/submersion_overlay // Overlay for visual submersion effects
 
 /datum/component/movable_fluid_interaction/Initialize()
 	. = ..()
@@ -33,7 +33,8 @@
 /datum/component/movable_fluid_interaction/proc/onEnteredTurf(atom/movable/parent_atom, turf/old_loc, turf/new_loc)
 	var/datum/component/fluid/fluid_comp = new_loc.GetComponent(/datum/component/fluid)
 	if (fluid_comp && fluid_comp.fluid_amount > FLUID_EVAPORATION_POINT)
-		SIGNAL_HANDLER_RELEASE_IF_QDELETED(src)
+		if (QDELETED(src))
+			return
 		SEND_SIGNAL(src, COMSIG_FLUID_INTERACTION_ENTERED_FLUID, fluid_comp.fluid_type, fluid_comp.fluid_amount)
 		checkFluidState(fluid_comp.fluid_amount, fluid_comp.fluid_type)
 		updateMobVisuals(fluid_comp.fluid_amount)
@@ -45,7 +46,8 @@
 /datum/component/movable_fluid_interaction/proc/onExitedTurf(atom/movable/parent_atom, turf/old_loc, turf/new_loc)
 	var/datum/component/fluid/fluid_comp = old_loc.GetComponent(/datum/component/fluid)
 	if (fluid_comp && fluid_comp.fluid_amount > FLUID_EVAPORATION_POINT)
-		SIGNAL_HANDLER_RELEASE_IF_QDELETED(src)
+		if (QDELETED(src))
+			return
 		SEND_SIGNAL(src, COMSIG_FLUID_INTERACTION_EXITED_FLUID, fluid_comp.fluid_type)
 	stopSwimming()
 	stopDrowning()
@@ -73,7 +75,7 @@
 	var/datum/component/fluid/fluid_comp = T.GetComponent(/datum/component/fluid)
 	if (fluid_comp)
 		checkFluidState(fluid_comp.fluid_amount, fluid_comp.fluid_type)
-		handleTemperatureEffects(fluid_comp.fluid_amount, fluid_comp.temperature)
+		handleTemperatureEffects(fluid_comp.fluid_amount, fluid_comp.temperature, delta_time)
 		updateMobVisuals(fluid_comp.fluid_amount, delta_time)
 	else
 		stopSwimming()
@@ -118,7 +120,8 @@
 		is_waist_deep = FALSE
 
 	if (old_is_waist_deep != is_waist_deep)
-		SIGNAL_HANDLER_RELEASE_IF_QDELETED(src)
+		if (QDELETED(src))
+			return
 		SEND_SIGNAL(src, COMSIG_FLUID_INTERACTION_RESTRICTED_STATE_CHANGED, is_waist_deep, fluid_type)
 	updateMobVisuals(fluid_amount)
 
@@ -131,7 +134,8 @@
 
 	if (!is_swimming)
 		is_swimming = TRUE
-		SIGNAL_HANDLER_RELEASE_IF_QDELETED(src)
+		if (QDELETED(src))
+			return
 		SEND_SIGNAL(src, COMSIG_FLUID_INTERACTION_SWIMMING_STATE_CHANGED, TRUE)
 		// Apply speed modifier to parent mob
 		M.add_movespeed_modifier(new_speed_modifier)
@@ -141,7 +145,8 @@
 /datum/component/movable_fluid_interaction/proc/stopSwimming()
 	if (is_swimming)
 		is_swimming = FALSE
-		SIGNAL_HANDLER_RELEASE_IF_QDELETED(src)
+		if (QDELETED(src))
+			return
 		SEND_SIGNAL(src, COMSIG_FLUID_INTERACTION_SWIMMING_STATE_CHANGED, FALSE)
 		// Remove speed modifier from parent mob
 		if (istype(parent, /mob/living))
@@ -155,7 +160,8 @@
 	if (!is_drowning)
 		is_drowning = TRUE
 		breath_timer = max_breath_time
-		SIGNAL_HANDLER_RELEASE_IF_QDELETED(src)
+		if (QDELETED(src))
+			return
 		SEND_SIGNAL(src, COMSIG_FLUID_INTERACTION_DROWNING_STATE_CHANGED, TRUE)
 
 /datum/component/movable_fluid_interaction/proc/stopDrowning()
@@ -163,44 +169,36 @@
 		is_drowning = FALSE
 		breath_timer = max_breath_time // Reset breath timer
 		drowning_timer = 0 // Reset drowning timer
-		SIGNAL_HANDLER_RELEASE_IF_QDELETED(src)
+		if (QDELETED(src))
+			return
 		SEND_SIGNAL(src, COMSIG_FLUID_INTERACTION_DROWNING_STATE_CHANGED, FALSE)
 		// Remove drowning speed modifier if it was applied
 		if (istype(parent, /mob/living))
 			var/mob/living/M = parent
 			M.remove_movespeed_modifier(SWIM_SPEED_MODIFIER_DROWNING)
 
-/datum/component/movable_fluid_interaction/proc/handleTemperatureEffects(fluid_amount, fluid_temperature)
+/datum/component/movable_fluid_interaction/proc/handleTemperatureEffects(fluid_amount, fluid_temperature, delta_time)
 	if (!istype(parent, /mob/living))
 		return
 
 	var/mob/living/M = parent
 
-	var/has_cold_resistance = M.has_trait(TRAIT_RESISTCOLD)
-	var/has_heat_resistance = M.has_trait(TRAIT_RESISTHEAT)
+	var/has_cold_resistance = HAS_TRAIT(M, TRAIT_RESISTCOLD)
+	var/has_heat_resistance = HAS_TRAIT(M, TRAIT_RESISTHEAT)
 
-	// Handle continuous oxygen damage if underwater
-	if (M.z == GLOB.underwater_z_level) // Assuming GLOB.underwater_z_level is set
-		M.adjustOxyLoss(OXY_DAMAGE_UNDERWATER)
-		to_chat(M, span_danger("You are struggling to breathe underwater!"))
-
-	// Check for insulated clothing
-
-	// Check for insulated clothing
+	// Check for insulated clothing / Other heat/cold resistance; should probably be expanded once the weather framework is in based on clothing flags.(9.28.25)
 	if (istype(M, /mob/living/carbon))
 		var/mob/living/carbon/C = M
 		for (var/obj/item/I in C.get_all_gear())
 			if (istype(I, /obj/item/clothing))
-				var/obj/item/clothing/clothing_item = I
-				if (istype(c, obj/item/clothing/gloves/color/yellow))
+				if (istype(I, /obj/item/clothing/gloves/color/yellow))
 					has_cold_resistance = TRUE
 					has_heat_resistance = TRUE
 					break
 	else // For non-carbon mobs, check general equipped items
 		for (var/obj/item/I in M.get_equipped_items(TRUE))
 			if (istype(I, /obj/item/clothing))
-				var/obj/item/clothing/clothing_item = I
-				if (istype(c, obj/item/clothing/gloves/color/yellow))
+				if (istype(I, /obj/item/clothing/gloves/color/yellow))
 					has_cold_resistance = TRUE
 					has_heat_resistance = TRUE
 					break
@@ -239,11 +237,12 @@
 		var/mob/living/M = parent
 		M.adjustOxyLoss(5) // Apply oxygen loss
 		M.apply_damage(5, STAMINA) // Apply stamina damage for panic mechanics
-		if (M.get_stamina() <= 0) // If stamina runs out, become unconscious
+		if (M.stamina.current <= 0) // If stamina runs out, become unconscious
 			M.SetUnconscious(TRUE)
 			to_chat(M, span_danger("You are too exhausted to stay afloat and lose consciousness!"))
 		// Play drowning sound, show visual effects, etc.
-		SIGNAL_HANDLER_RELEASE_IF_QDELETED(src)
+		if (QDELETED(src))
+			return
 		SEND_SIGNAL(src, COMSIG_FLUID_INTERACTION_DROWNING_DAMAGE_TAKEN)
 
 /datum/component/movable_fluid_interaction/proc/teleportToUnderwaterZ()
@@ -252,7 +251,8 @@
 
 	var/mob/living/M = parent
 	last_fluid_z = M.z // Store current Z-level
-	var/turf/target_turf = findUnderwaterTurf()
+	var/target_z_level = M.z - 1 // Simulate sinking one Z-level down
+	var/turf/target_turf = findUnderwaterTurf(M.x, M.y, target_z_level)
 	if (target_turf)
 		M.forceMove(target_turf)
 		M.visible_message(span_warning("[M] sinks beneath the waves..."))
@@ -260,26 +260,23 @@
 		// Ensure visuals are updated for the new Z-level
 		updateMobVisuals(FLUID_MAX_DEPTH) // Assume max depth underwater
 	else
-		to_chat(M, span_danger("You would have sunk deeper, but there's no underwater zone defined!"))
+		to_chat(M, span_danger("Some unseen force holds you above the water's surface!"))
 
-/datum/component/movable_fluid_interaction/proc/findUnderwaterTurf()
-	// This proc needs to find a suitable turf on the underwater Z-level.
-	// For now, we'll assume a simple approach: find any turf on the underwater Z-level.
-	// In a real game, this might involve specific landmarks or pre-defined spawn points.
-	if (!GLOB.underwater_z_level)
-		return null
+/datum/component/movable_fluid_interaction/proc/findUnderwaterTurf(x, y, z_level)
+	// First, try to locate the exact turf
+	var/turf/T = locate(x, y, z_level)
+	if (istype(T))
+		return T
 
-	for (var/turf/T in world)
-		if (T.z == GLOB.underwater_z_level && istype(T, /turf/open/water/deep_ocean_underwater))
-			return T
-	return null // No suitable turf found
-
-// Signals for movable fluid interaction components
-#define COMSIG_FLUID_INTERACTION_ENTERED_FLUID "entered_fluid"
-#define COMSIG_FLUID_INTERACTION_EXITED_FLUID "exited_fluid"
-#define COMSIG_FLUID_INTERACTION_SWIMMING_STATE_CHANGED "swimming_state_changed"
-#define COMSIG_FLUID_INTERACTION_DROWNING_STATE_CHANGED "drowning_state_changed"
-#define COMSIG_FLUID_INTERACTION_DROWNING_DAMAGE_TAKEN "drowning_damage_taken"
+	// If not found, iterate randomly in a 3x3 area around the original coordinates
+	for (var/i = -1; i <= 1; i++)
+		for (var/j = -1; j <= 1; j++)
+			var/new_x = x + i
+			var/new_y = y + j
+			T = locate(new_x, new_y, z_level)
+			if (istype(T))
+				return T
+	return null // No suitable turf found in the 3x3 area.This seems unlikely to happen.
 
 /datum/component/movable_fluid_interaction/proc/updateMobVisuals(fluid_amount = 0, delta_time = 0)
 	if (!istype(parent, /mob))
@@ -287,23 +284,18 @@
 
 	var/mob/M = parent
 	var/new_pixel_y = base_pixel_y
-	var/new_cut_icon = null
 	var/should_be_submerged = FALSE
 
 	if (fluid_amount > FLUID_EVAPORATION_POINT)
 		should_be_submerged = TRUE
 		if (is_drowning)
 			new_pixel_y += FLUID_MOB_PIXEL_OFFSET_DROWNING
-			new_cut_icon = FLUID_MOB_CUT_ICON_DROWNING
 		else if (fluid_amount >= FLUID_OVER_MOB_HEAD)
 			new_pixel_y += FLUID_MOB_PIXEL_OFFSET_DEEP
-			new_cut_icon = FLUID_MOB_CUT_ICON_DEEP
 		else if (fluid_amount >= FLUID_WAIST_DEEP)
 			new_pixel_y += FLUID_MOB_PIXEL_OFFSET_WAIST_DEEP
-			new_cut_icon = FLUID_MOB_CUT_ICON_WAIST_DEEP
 		else if (fluid_amount >= FLUID_SHALLOW)
 			new_pixel_y += FLUID_MOB_PIXEL_OFFSET_SHALLOW
-			new_cut_icon = FLUID_MOB_CUT_ICON_SHALLOW
 
 		// Apply floating animation if swimming
 		if (is_swimming)
@@ -314,11 +306,21 @@
 	if (should_be_submerged != is_submerged_visually)
 		is_submerged_visually = should_be_submerged
 		if (is_submerged_visually)
-			M.pixel_y = new_pixel_y
-			M.cut_icon = new_cut_icon
+			if (!submersion_overlay)
+				submersion_overlay = image(M.icon, M.icon_state)
+				M.overlays += submersion_overlay
+			submersion_overlay.pixel_y = new_pixel_y
+			M.pixel_y = base_pixel_y // Reset base mob pixel_y
 		else
+			if (submersion_overlay)
+				M.overlays -= submersion_overlay
+				qdel(submersion_overlay)
 			M.pixel_y = base_pixel_y
-			M.cut_icon = null
 	else if (should_be_submerged) // Update continuously if already submerged
-		M.pixel_y = new_pixel_y
-		M.cut_icon = new_cut_icon
+		if (submersion_overlay)
+			submersion_overlay.pixel_y = new_pixel_y
+		else // Should not happen if logic is correct, but as a fallback
+			submersion_overlay = image(M.icon, M.icon_state)
+			M.overlays += submersion_overlay
+			submersion_overlay.pixel_y = new_pixel_y
+		M.pixel_y = base_pixel_y // Ensure base mob pixel_y is reset

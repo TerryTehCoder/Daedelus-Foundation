@@ -103,15 +103,6 @@
 	return ..()
 
 /**
- * Attempts to spread this fluid node to wherever it can spread.
- *
- * Exact results vary by subtype implementation.
- */
-/obj/effect/particle_effect/fluid/proc/spread()
-	CRASH("The base fluid spread proc is not implemented and should not be called. You called it.")
-
-
-/**
  * A factory which produces fluid groups.
  */
 /datum/effect_system/fluid_spread

@@ -62,13 +62,15 @@ SUBSYSTEM_DEF(fluids)
 /datum/controller/subsystem/fluids/proc/add_active_fluid_turf(turf/T)
 	if (!active_fluid_turfs[T])
 		active_fluid_turfs[T] = TRUE
-		SIGNAL_HANDLER_RELEASE_IF_QDELETED(src)
+		if (QDELETED(src))
+			return
 		SEND_SIGNAL(src, COMSIG_FLUID_SIMULATION_TURF_ACTIVE, T)
 
 /datum/controller/subsystem/fluids/proc/remove_active_fluid_turf(turf/T)
 	if (active_fluid_turfs[T])
 		active_fluid_turfs -= T
-		SIGNAL_HANDLER_RELEASE_IF_QDELETED(src)
+		if (QDELETED(src))
+			return
 		SEND_SIGNAL(src, COMSIG_FLUID_SIMULATION_TURF_INACTIVE, T)
 
 /datum/controller/subsystem/fluids/fire(resumed)
@@ -104,7 +106,7 @@ SUBSYSTEM_DEF(fluids)
 					add_active_fluid_turf(turf_below)
 
 		// Lateral equalization
-		for(var/direction in GLOB.cardinal)
+		for(var/direction in GLOB.cardinals)
 			var/turf/neighbor_turf = get_step(T, direction)
 			if (!neighbor_turf || !T.CanFluidPass(direction))
 				continue
@@ -168,11 +170,9 @@ SUBSYSTEM_DEF(fluids)
 FLUID_SUBSYSTEM_DEF(smoke)
 	name = "Smoke"
 	spread_wait = 0.1 SECONDS
-	effect_wait = 2.0 SECONDS
 
 /// The subsystem responsible for processing foam propagation and effects.
 FLUID_SUBSYSTEM_DEF(foam)
 	name = "Foam"
 	wait = 0.1 SECONDS // Makes effect bubbling work with foam.
 	spread_wait = 0.2 SECONDS
-	effect_wait = 0.2 SECONDS

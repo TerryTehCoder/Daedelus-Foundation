@@ -3,7 +3,6 @@
 	icon = 'icons/effects/liquids.dmi'
 	icon_state = "water_shallow" // Default visual state
 	anchored = TRUE
-	unacidable = TRUE
 	density = FALSE
 	layer = BELOW_MOB_LAYER
 	var/datum/fluid/fluid_type = /datum/fluid/water
@@ -12,7 +11,7 @@
 
 /obj/effect/particle_effect/fluid/Initialize()
 	. = ..()
-	AddComponent(/datum/component/fluid, .args = list(fluid_type = fluid_type, fluid_amount = fluid_amount, temperature = temperature))
+	AddComponent(/datum/component/fluid, fluid_type = fluid_type, fluid_amount = fluid_amount, temperature = temperature)
 	RegisterSignal(src, COMSIG_FLUID_VISUAL_STATE_CHANGED, .proc/onVisualStateChanged)
 	RegisterSignal(src, COMSIG_PARENT_FLUID_AMOUNT_CHANGED, .proc/onFluidAmountChanged)
 
@@ -22,7 +21,8 @@
 	. = ..()
 
 /obj/effect/particle_effect/fluid/proc/onVisualStateChanged(datum/component/fluid/fluid_comp, new_visual_state, current_fluid_amount)
-	icon_state = fluid_comp.icon_state_map[new_visual_state]
+	var/datum/fluid/fluid_type_casted = fluid_comp.fluid_type //Explict cast
+	icon_state = fluid_type_casted.icon_state_map[new_visual_state]
 	// Update overlay if needed, handled by FluidVisualsSystem
 
 /obj/effect/particle_effect/fluid/proc/onFluidAmountChanged(datum/component/fluid/fluid_comp, new_amount)
@@ -45,12 +45,8 @@
 	var/datum/controller/subsystem/component_fluid_simulation/fluid_sim_subsystem = get_component_fluid_simulation_subsystem()
 	if (fluid_sim_subsystem)
 		fluid_sim_subsystem.queue_spread(src)
-	else
-		// Fallback for non-component-based fluids (e.g., smoke/foam)
-		// This should ideally be handled by the original fluids subsystem.
-		. = ..()
 
-/obj/effect/particle_effect/fluid/proc/process(delta_time)
+/obj/effect/particle_effect/fluid/process(delta_time)
 	// For component-based fluids, this simply tells the relevant subsystem to activate the turf.
 	var/datum/controller/subsystem/component_fluid_simulation/fluid_sim_subsystem = get_component_fluid_simulation_subsystem()
 	if (fluid_sim_subsystem)

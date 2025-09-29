@@ -6,20 +6,26 @@ SUBSYSTEM_DEF(fluid_interaction)
 	priority = FIRE_PRIORITY_FLUIDS + 1 // Run after fluid simulation
 
 	var/list/active_fluid_interactions = list() // List of turfs with active fluid for interaction
+	var/datum/controller/subsystem/component_fluid_simulation/water_simulation_subsystem // Reference to the water simulation subsystem
 
 /datum/controller/subsystem/fluid_interaction/Initialize()
 	. = ..()
+	// Retrieve the water simulation subsystem instance
+	water_simulation_subsystem = SScomponent_fluid_simulation.all_fluid_simulations[/datum/fluid/water]
+
 	// Register to signals from specific component-based fluid simulation subsystems
-	RegisterSignal(SSwater_simulation, COMSIG_FLUID_SIMULATION_TURF_ACTIVE, .proc/onFluidTurfActive)
-	RegisterSignal(SSwater_simulation, COMSIG_FLUID_SIMULATION_TURF_INACTIVE, .proc/onFluidTurfInactive)
-	// Add registrations for other fluid types as needed, e.g.:
-	// RegisterSignal(SSlava_simulation, COMSIG_FLUID_SIMULATION_TURF_ACTIVE, .proc/onFluidTurfActive)
-	// RegisterSignal(SSlava_simulation, COMSIG_FLUID_SIMULATION_TURF_INACTIVE, .proc/onFluidTurfInactive)
+	if (water_simulation_subsystem)
+		RegisterSignal(water_simulation_subsystem, COMSIG_FLUID_SIMULATION_TURF_ACTIVE, .proc/onFluidTurfActive)
+		RegisterSignal(water_simulation_subsystem, COMSIG_FLUID_SIMULATION_TURF_INACTIVE, .proc/onFluidTurfInactive)
+	// You Could add registrations for other fluid types as needed, e.g.:
+	// RegisterSignal(lava_simulation_subsystem, COMSIG_FLUID_SIMULATION_TURF_ACTIVE, .proc/onFluidTurfActive)
+	// RegisterSignal(lava_simulation_subsystem, COMSIG_FLUID_SIMULATION_TURF_INACTIVE, .proc/onFluidTurfInactive)
 	RegisterSignal(SSdcs, COMSIG_GLOB_EXPLOSION, .proc/onGlobalExplosion)
 
 /datum/controller/subsystem/fluid_interaction/Destroy()
-	UnregisterSignal(SSwater_simulation, COMSIG_FLUID_SIMULATION_TURF_ACTIVE)
-	UnregisterSignal(SSwater_simulation, COMSIG_FLUID_SIMULATION_TURF_INACTIVE)
+	if (water_simulation_subsystem)
+		UnregisterSignal(water_simulation_subsystem, COMSIG_FLUID_SIMULATION_TURF_ACTIVE)
+		UnregisterSignal(water_simulation_subsystem, COMSIG_FLUID_SIMULATION_TURF_INACTIVE)
 	// Unregister for other fluid types as needed
 	. = ..()
 	UnregisterSignal(SSdcs, COMSIG_GLOB_EXPLOSION)
@@ -49,18 +55,23 @@ SUBSYSTEM_DEF(fluid_interaction)
 		if (fluid_comp.fluid_amount > FLUID_PUSH_THRESHOLD)
 			for(var/atom/movable/AM in T.contents)
 				if (AM.is_fluid_pushable(fluid_comp.fluid_amount))
-					var/viscosity_resistance = fluid_comp.fluid_type.viscosity // Higher viscosity means more resistance
-					var/density_factor = fluid_comp.fluid_type.density / AM.density // Denser fluid pushes lighter objects more effectively
+					// Work around for fetching viscosity/density
+					var/datum/fluid/temp_fluid = new fluid_comp.fluid_type
+					var/viscosity_resistance = temp_fluid.viscosity // Higher viscosity means more resistance
+					var/density_factor = temp_fluid.density / AM.float_density // Denser fluid pushes lighter objects more effectively
+					qdel(temp_fluid) // Clean up the temporary instance
 
 					// Simplified push: random direction, influenced by viscosity and density
 					var/push_strength = 1 / viscosity_resistance * density_factor // Adjust as needed
 					if (push_strength > 0.1) // Only push if strength is significant
-						step(AM, pick(GLOB.cardinal), round(push_strength))
+						step(AM, pick(GLOB.cardinals), round(push_strength))
 
 		// Handle buoyancy for movable atoms
 		for(var/atom/movable/AM in T.contents)
-			// Simplified buoyancy: if object is less dense than fluid, it floats (moves up)
-			if (AM.density < fluid_comp.fluid_type.density)
+			// Buoyancy: if object's float_density is less than fluid's density * threshold, it floats (moves up)
+			var/datum/fluid/temp_fluid_buoyancy = new fluid_comp.fluid_type
+			if (AM.float_density < temp_fluid_buoyancy.density * FLUID_BUOYANCY_THRESHOLD)
+				qdel(temp_fluid_buoyancy)
 				var/turf/turf_above = get_step(get_turf(AM), UP)
 				if (turf_above && !turf_above.density) // Check if turf above exists and is not dense/blocking
 					step(AM, UP)
@@ -87,8 +98,6 @@ SUBSYSTEM_DEF(fluid_interaction)
 		for (var/atom/movable/AM in T.contents)
 			if (AM.is_fluid_pushable(fluid_comp.fluid_amount))
 				// Calculate a directional force away from the epicenter
-				var/dx = AM.x - epicenter.x
-				var/dy = AM.y - epicenter.y
 				var/direction = get_dir(epicenter, AM)
 
 				// Amplify the knockback force based on fluid presence
@@ -97,9 +106,10 @@ SUBSYSTEM_DEF(fluid_interaction)
 					knockback_force *= 1.5 // Further amplification for deep water
 
 				// Incorporate fluid density and viscosity into knockback
-				var/fluid_density = fluid_comp.fluid_type.density
-				var/fluid_viscosity = fluid_comp.fluid_type.viscosity
-				var/atom_density = AM.density // Assuming atom/movable has a density var
+				var/datum/fluid/temp_fluid = new fluid_comp.fluid_type
+				var/fluid_density = temp_fluid.density
+				var/fluid_viscosity = temp_fluid.viscosity
+				del(temp_fluid) // Clean up the temporary instance
 
 				// Denser fluids might transfer more force, higher viscosity might dampen it
 				knockback_force *= (fluid_density / 1000) // Normalize density (e.g., water = 1)

@@ -12,9 +12,16 @@
 #define FLUID_MAX_ALPHA 160
 #define FLUID_MIN_ALPHA 45
 
+#define SWIM_SPEED_MODIFIER_SHALLOW 0.9    // Speed modifier when wading in shallow fluid
+#define SWIM_SPEED_MODIFIER_DEEP 0.7       // Speed modifier when fully swimming
+
 // Signals for fluid components
 #define COMSIG_PARENT_FLUID_AMOUNT_CHANGED "fluid_amount_changed" // Emitted by parent when fluid amount changes
 #define COMSIG_FLUID_VISUAL_STATE_CHANGED "fluid_visual_state_changed" // Emitted by FluidComponent when visual state changes
+#define COMSIG_PARENT_ENTERED_TURF "parent_entered_turf" // Emitted when an atom enters a new turf: (atom/movable/parent_atom, turf/old_loc, turf/new_loc)
+#define COMSIG_PARENT_EXITED_TURF "parent_exited_turf" // Emitted when an atom exits a turf: (atom/movable/parent_atom, turf/old_loc, turf/new_loc)
+#define COMSIG_PARENT_PROCESS "parent_process" // Emitted by parent during its process cycle: (datum/component/source_component, delta_time)
+#define COMSIG_FLUID_COMPONENT_DIRTY "fluid_component_dirty" // Emitted by FluidComponent when its fluid amount changes and needs re-evaluation
 
 // Signal for fluid source components
 #define COMSIG_FLUID_SOURCE_GENERATED "fluid_source_generated" // Emitted by FluidSourceComponent when fluid is generated
@@ -35,8 +42,6 @@
 #define COMSIG_FLUID_INTERACTION_EXITED_FLUID "exited_fluid"
 #define COMSIG_FLUID_INTERACTION_SWIMMING_STATE_CHANGED "swimming_state_changed"
 #define COMSIG_FLUID_INTERACTION_DROWNING_STATE_CHANGED "drowning_state_changed"
-#define SWIM_SPEED_MODIFIER_SHALLOW 0.9    // Speed modifier when wading in shallow fluid
-#define SWIM_SPEED_MODIFIER_DEEP 0.7       // Speed modifier when fully swimming
 
 #define COMSIG_FLUID_INTERACTION_DROWNING_DAMAGE_TAKEN "drowning_damage_taken"
 #define COMSIG_FLUID_INTERACTION_RESTRICTED_STATE_CHANGED "fluid_interaction_restricted_state_changed" // Emitted when waist-deep state changes
@@ -92,10 +97,3 @@
 
 // Z-level traits
 #define Z_TRAIT_UNDERWATER "underwater"
-
-// Fluid property multipliers
-#define FLUID_VISCOSITY_FLOW_DIVISOR 10 // Divisor for viscosity in flow calculations (e.g., 1 / viscosity * FLUID_VISCOSITY_FLOW_DIVISOR)
-#define FLUID_PUSH_VISCOSITY_DIVISOR 10 // Divisor for viscosity when pushing objects
-#define FLUID_PUSH_DENSITY_MULTIPLIER 1000 // Multiplier for density when pushing objects (e.g., fluid_density / atom_density * FLUID_PUSH_DENSITY_MULTIPLIER)
-#define FLUID_BUOYANCY_THRESHOLD 0.9 // If atom density is less than fluid density * this, it floats
-#define FLUID_EXPLOSION_DENSITY_NORMALIZER 1000 // Normalizes fluid density for explosion knockback (e.g., fluid_density / 1000)

@@ -84,6 +84,13 @@ GLOBAL_LIST_EMPTY(station_turfs)
 	/// WARNING: Currently to use a density shortcircuiting this does not support dense turfs with special allow through function
 	var/pathing_pass_method = TURF_PATHING_PASS_DENSITY
 
+	var/list/can_fluid_pass_var = list(NORTH, SOUTH, EAST, WEST) // Whether fluids can pass through this turf in any direction. Used by fluid simulation.
+
+/turf/proc/CanFluidPass(direction)
+	// For now, a simple check. More complex logic can be added here later if needed.
+	// Or you could override it if you wanted.
+	return (direction in can_fluid_pass_var)
+
 /turf/vv_edit_var(var_name, new_value)
 	var/static/list/banned_edits = list(
 		NAMEOF_STATIC(src, x),

@@ -43,6 +43,10 @@
 
 	var/tmp/datum/component/orbiter/orbiting
 
+	/// The density of the object for fluid interaction purposes. Lower values float, higher values sink.
+	/// Can be referenced for other things beyond liquid, it's a Float "as opposed to a boolean".
+	var/float_density = 1000
+
 	///Lazylist to keep track on the sources of illumination.
 	var/tmp/list/affected_dynamic_lights
 	///Highest-intensity light affecting us, which determines our visibility.

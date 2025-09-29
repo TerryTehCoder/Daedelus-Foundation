@@ -1,5 +1,8 @@
+// A component that drains fluid from its parent turf each tick.
+// You could attach it to something like your own drain, or get more creative,
+// up to you.
+
 /datum/component/drain
-	name = "Drain Component"
 	var/drain_rate = 100 // Amount of fluid drained per tick (or per second, depending on subsystem wait)
 	var/datum/fluid/drained_fluid_type // If specified, only drains this fluid type. Null drains any.
 

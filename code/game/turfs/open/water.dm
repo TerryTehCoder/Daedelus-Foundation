@@ -40,17 +40,28 @@
 
 /turf/open/water/ocean/Initialize()
 	. = ..()
+	message_admins(span_notice("ocean/Initialize() called for [src]"))
 	// Add FluidComponent
 	var/datum/component/fluid/fluid_comp = GetComponent(/datum/component/fluid)
 	if (!fluid_comp)
 		fluid_comp = AddComponent(/datum/component/fluid)
+		message_admins(span_notice("ocean/Initialize(): Added FluidComponent [fluid_comp] to [src]"))
+	else
+		message_admins(span_notice("ocean/Initialize(): FluidComponent [fluid_comp] already exists on [src]"))
+
 	fluid_comp.fluid_type = /datum/fluid/water
 	fluid_comp.addFluid(FLUID_MAX_DEPTH, 276.65) // Fill to max depth, 3.5C, or 38.3F for everyone else.
+	message_admins(span_notice("ocean/Initialize(): Called addFluid on [fluid_comp] with amount [FLUID_MAX_DEPTH]"))
 
 	// Add FluidSourceComponent to ensure continuous replenishment
 	var/datum/component/fluid_source/fluid_source_comp = GetComponent(/datum/component/fluid_source)
 	if (!fluid_source_comp)
 		fluid_source_comp = AddComponent(/datum/component/fluid_source)
+		message_admins(span_notice("ocean/Initialize(): Added FluidSourceComponent [fluid_source_comp] to [src]"))
+	else
+		message_admins(span_notice("ocean/Initialize(): FluidSourceComponent [fluid_source_comp] already exists on [src]"))
+
 	fluid_source_comp.generated_fluid_type = /datum/fluid/water
 	fluid_source_comp.flow_rate = FLUID_MAX_DEPTH / 5 // Replenish 20% of max depth per tick
 	fluid_source_comp.activate()
+	message_admins(span_notice("ocean/Initialize(): Activated FluidSourceComponent [fluid_source_comp]"))

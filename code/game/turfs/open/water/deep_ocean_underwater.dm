@@ -6,7 +6,7 @@
 	baseturfs = /turf/open/water/ocean // Inherit from ocean turf
 	initial_gas = OPENTURF_DEFAULT_ATMOS // Or a custom underwater atmosphere
 	slowdown = 2.5 // Clunk.. Clunk.. Movement is very slow here.
-	turf_flags = NO_RUST | IS_UNDERWATER // New flag for underwater turfs
+	turf_flags = NO_RUST | IS_UNDERWATER
 
 /turf/open/water/deep_ocean_underwater/Initialize()
 	. = ..()
