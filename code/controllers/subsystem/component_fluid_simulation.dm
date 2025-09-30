@@ -3,7 +3,7 @@
 
 SUBSYSTEM_DEF(component_fluid_simulation)
 	name = "Component Fluid Simulation"
-	wait = 10
+	wait = 2 SECONDS
 	flags = SS_KEEP_TIMING
 	runlevels = RUNLEVEL_GAME | RUNLEVEL_POSTGAME
 	priority = FIRE_PRIORITY_FLUIDS
@@ -63,7 +63,8 @@ SUBSYSTEM_DEF(component_fluid_simulation)
 	// This can be made dynamic based on `wait` or other factors if needed.
 	num_simulation_buckets = 10
 	message_admins(span_notice("ComponentFluidSimulation: Initializing carousel with [num_simulation_buckets] buckets."))
-	simulation_carousel = list(num_simulation_buckets)
+	simulation_carousel = list()
+	simulation_carousel.len = num_simulation_buckets
 	for(var/i in 1 to num_simulation_buckets)
 		simulation_carousel[i] = list()
 		message_admins(span_notice("ComponentFluidSimulation: Bucket [i] initialized as [simulation_carousel[i]]."))
@@ -100,9 +101,6 @@ SUBSYSTEM_DEF(component_fluid_simulation)
 		var/list/temp_bucket = simulation_carousel[bucket_index]
 		temp_bucket.Add(T)
 		turf_to_bucket_map[T] = bucket_index // Store the bucket index, not the list reference
-
-		// Mark turf as dirty to ensure lateral diffusion is re-evaluated
-		onFluidComponentDirty(T)
 
 		global_active_fluid_turfs[T] = TRUE
 		SEND_SIGNAL(src, COMSIG_FLUID_SIMULATION_TURF_ACTIVE, T)
@@ -154,8 +152,9 @@ SUBSYSTEM_DEF(component_fluid_simulation)
 		if (!fluid_comp)
 			continue
 
-		process_downward_flow(T, fluid_comp)
-		process_lateral_spreading(T, fluid_comp)
+		if(fluid_comp.is_dirty)
+			process_lateral_spreading(T, fluid_comp)
+			process_downward_flow(T, fluid_comp)
 		process_turf_effects(T, fluid_comp, delta_time)
 
 		if (MC_TICK_CHECK)
@@ -222,11 +221,23 @@ SUBSYSTEM_DEF(component_fluid_simulation)
 
 		var/datum/fluid/fluid_properties = fluid_comp.fluid_type_instance
 		var/viscosity_multiplier = 1 / fluid_properties.viscosity
-		var/transfer_amount = min(fluid_diff / 2, fluid_comp.fluid_amount * 0.25) * viscosity_multiplier
+
+		// Pressure factor: deeper fluids push harder
+		var/pressure_factor = 1 + (fluid_comp.fluid_amount / FLUID_MAX_DEPTH)
+
+		// Directional factor: diagonal flow is slower
+		var/spread_factor = (direction in GLOB.cardinals) ? 1 : (1 / sqrt(2))
+
+		// Momentum factor: fluid prefers to flow in its current direction
+		var/dir_x = (direction & 3) - 2 // EAST=1, WEST=-1, other=0
+		var/dir_y = (direction & 12) / 4 - 2 // NORTH=1, SOUTH=-1, other=0
+		var/momentum_factor = 1 + (fluid_comp.momentum_x * dir_x + fluid_comp.momentum_y * dir_y)
+
+		var/transfer_amount = min(fluid_diff / 2, fluid_comp.fluid_amount * 0.25) * viscosity_multiplier * pressure_factor * spread_factor * momentum_factor
 
 		if (transfer_amount > 0.1) // Minimum transfer threshold
 			fluid_comp.removeFluid(transfer_amount)
-			neighbor_fluid_comp.addFluid(transfer_amount, fluid_comp.temperature)
+			neighbor_fluid_comp.addFluid(transfer_amount, fluid_comp.temperature, fluid_comp.momentum_x, fluid_comp.momentum_y)
 			add_active_fluid_turf(neighbor_turf)
 			// The neighbor's addFluid will mark it as dirty, continuing the spread
 
@@ -245,6 +256,10 @@ SUBSYSTEM_DEF(component_fluid_simulation)
 	// Update active turf status
 	if (fluid_comp.fluid_amount <= FLUID_DELETING)
 		remove_active_fluid_turf(T)
+
+	// Decay momentum
+	fluid_comp.momentum_x *= (1 - fluid_comp.momentum_decay)
+	fluid_comp.momentum_y *= (1 - fluid_comp.momentum_decay)
 
 /datum/controller/subsystem/component_fluid_simulation/proc/process_fluid_sources(delta_time)
 	// Process all fluid sources from the dedicated list to ensure they are always active.
@@ -275,7 +290,7 @@ SUBSYSTEM_DEF(component_fluid_simulation)
 COMPONENT_FLUID_SUBSYSTEM_DEF(water_simulation)
 	name = "Water Fluid Simulation"
 	simulated_fluid_type = /datum/fluid/water
-	wait = 10
+	wait = 3 SECONDS
 	flags = SS_KEEP_TIMING
 	runlevels = RUNLEVEL_GAME | RUNLEVEL_POSTGAME
 

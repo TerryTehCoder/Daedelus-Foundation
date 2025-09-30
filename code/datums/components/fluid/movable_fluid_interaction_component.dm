@@ -32,6 +32,28 @@
 /datum/component/movable_fluid_interaction/proc/onEnteredTurf(atom/movable/parent_atom, turf/old_loc, turf/new_loc)
 	var/datum/component/fluid/fluid_comp = new_loc.GetComponent(/datum/component/fluid)
 	if (fluid_comp && fluid_comp.fluid_amount > FLUID_EVAPORATION_POINT)
+		// Directional push for mobs moving against the current
+		if(fluid_comp.fluid_amount > FLUID_PUSH_THRESHOLD)
+			var/move_dir = get_dir(old_loc, new_loc)
+			if(move_dir)
+				var/dx = (move_dir & 3) - 2
+				var/dy = (move_dir & 12) / 4 - 2
+				var/dot_product = dx * fluid_comp.momentum_x + dy * fluid_comp.momentum_y
+
+				if (dot_product < 0) // Moving against the current
+					var/push_strength = sqrt(fluid_comp.momentum_x**2 + fluid_comp.momentum_y**2)
+					var/flow_dir = 0
+					var/abs_mom_x = abs(fluid_comp.momentum_x)
+					var/abs_mom_y = abs(fluid_comp.momentum_y)
+
+					if (abs_mom_x > abs_mom_y)
+						flow_dir = (fluid_comp.momentum_x > 0) ? EAST : WEST
+					else if (abs_mom_y > 0)
+						flow_dir = (fluid_comp.momentum_y > 0) ? NORTH : SOUTH
+
+					if(flow_dir)
+						step(parent_atom, flow_dir, round(push_strength))
+
 		if (QDELETED(src))
 			return
 		SEND_SIGNAL(src, COMSIG_FLUID_INTERACTION_ENTERED_FLUID, fluid_comp.fluid_type_instance.type, fluid_comp.fluid_amount)

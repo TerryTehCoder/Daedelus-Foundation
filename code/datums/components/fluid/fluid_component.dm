@@ -6,6 +6,11 @@
 	var/is_dirty = FALSE // Flag to indicate if this fluid component's turf needs re-evaluation for lateral diffusion
 	var/image/fluid_overlay // Direct reference to the visual overlay for this fluid component
 
+	// Momentum variables for more dynamic flow
+	var/momentum_x = 0
+	var/momentum_y = 0
+	var/momentum_decay = 0.5 // Amount of momentum lost each tick
+
 	// Configuration for visual thresholds and icon states
 	var/list/visual_thresholds = list(
 		FLUID_EVAPORATION_POINT = "evaporation_still",
@@ -28,10 +33,16 @@
 	SSfluid_visuals.unregisterFluidComponent(src) // Unregister from the FluidVisuals subsystem
 	. = ..()
 
-/datum/component/fluid/proc/addFluid(amount, new_temperature)
+/datum/component/fluid/proc/addFluid(amount, new_temperature, incoming_momentum_x = 0, incoming_momentum_y = 0)
 	var/old_amount = fluid_amount
 	message_admins(span_notice("FluidComponent [src.parent]: addFluid([amount], [new_temperature]) called. Current amount: [fluid_amount]"))
 	fluid_amount = min(FLUID_MAX_DEPTH, fluid_amount + amount)
+
+	// Update momentum
+	var/total_amount = old_amount + amount
+	if (total_amount > 0)
+		momentum_x = (momentum_x * old_amount + incoming_momentum_x * amount) / total_amount
+		momentum_y = (momentum_y * old_amount + incoming_momentum_y * amount) / total_amount
 	// Simple temperature mixing for now
 	if(fluid_amount > 0)
 		temperature = (temperature * (fluid_amount - amount) + new_temperature * amount) / fluid_amount

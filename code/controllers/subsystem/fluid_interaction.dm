@@ -1,6 +1,6 @@
 SUBSYSTEM_DEF(fluid_interaction)
 	name = "Fluid Interaction"
-	wait = 1 SECONDS // Process interactions every second
+	wait = 3 SECONDS // Process interactions every second
 	flags = SS_KEEP_TIMING
 	runlevels = RUNLEVEL_GAME
 	priority = FIRE_PRIORITY_FLUIDS + 1 // Run after fluid simulation
@@ -29,15 +29,18 @@ SUBSYSTEM_DEF(fluid_interaction)
 		// Handle pushing of movable atoms
 		if (fluid_comp.fluid_amount > FLUID_PUSH_THRESHOLD)
 			for(var/atom/movable/AM in T.contents)
+				if (AM.anchored || AM.layer == WALL_OBJ_LAYER)
+					continue
 				if (AM.is_fluid_pushable(fluid_comp.fluid_amount))
-					var/datum/fluid/fluid_properties = fluid_comp.fluid_type_instance
-					var/viscosity_resistance = fluid_properties.viscosity // Higher viscosity means more resistance
-					var/density_factor = fluid_properties.density / AM.float_density // Denser fluid pushes lighter objects more effectively
+					// Weak, infrequent ambient push
+					if(prob(5)) // 5% chance each call
+						var/datum/fluid/fluid_properties = fluid_comp.fluid_type_instance
+						var/viscosity_resistance = fluid_properties.viscosity
+						var/density_factor = fluid_properties.density / AM.float_density
 
-					// Simplified push: random direction, influenced by viscosity and density
-					var/push_strength = 1 / viscosity_resistance * density_factor // Adjust as needed
-					if (push_strength > 0.1) // Only push if strength is significant
-						step(AM, pick(GLOB.cardinals), round(push_strength))
+						var/push_strength = (1 / viscosity_resistance * density_factor) / 2 // Weak push
+						if (push_strength > 0.1)
+							step(AM, pick(GLOB.cardinals), round(push_strength))
 
 		// Handle buoyancy for movable atoms
 		for(var/atom/movable/AM in T.contents)
