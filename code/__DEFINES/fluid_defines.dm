@@ -3,7 +3,7 @@
 #define FLUID_SHALLOW 100            // Depth shallow icon is used
 #define FLUID_WAIST_DEEP 250               // Depth for waist-deep fluid
 #define FLUID_OVER_MOB_HEAD 300
-#define FLUID_MID_STILL 300                // Depth for mid-deep fluid
+#define FLUID_MID_STILL 350                // Depth for mid-deep fluid
 #define FLUID_DEEP 500               // Depth for deep fluid
 #define FLUID_DEEPEST 800           // Depth for deepest fluid
 #define FLUID_MAX_DEPTH (FLUID_DEEPEST *4) // Arbitrary max value for flooding.
@@ -12,8 +12,8 @@
 #define FLUID_MAX_ALPHA 160
 #define FLUID_MIN_ALPHA 45
 
-#define SWIM_SPEED_MODIFIER_SHALLOW 0.9    // Speed modifier when wading in shallow fluid
-#define SWIM_SPEED_MODIFIER_DEEP 0.7       // Speed modifier when fully swimming
+#define SWIM_SPEED_MODIFIER_SHALLOW 0.8    // Speed modifier when wading in shallow fluid
+#define SWIM_SPEED_MODIFIER_DEEP 0.4       // Speed modifier when fully swimming
 
 // Signals for fluid components
 #define COMSIG_PARENT_FLUID_AMOUNT_CHANGED "fluid_amount_changed" // Emitted by parent when fluid amount changes
@@ -65,8 +65,8 @@
 #define COMSIG_FLUID_SIMULATION_TURF_INACTIVE "fluid_simulation_turf_inactive"
 
 // Fluid visual layers
-#define SHALLOW_FLUID_LAYER (BELOW_MOB_LAYER + 0.1) // Slightly above mobs for shallow fluid
-#define DEEP_FLUID_LAYER (BELOW_MOB_LAYER + 0.2)    // Higher layer for deep fluid
+#define SHALLOW_FLUID_LAYER (MOB_LAYER - 0.1) // Slightly below mobs for shallow fluid
+#define DEEP_FLUID_LAYER (MOB_LAYER + 0.1)    // Higher layer for deep fluid
 
 // Fluid property multipliers
 #define FLUID_VISCOSITY_FLOW_DIVISOR 10 // Divisor for viscosity in flow calculations (e.g., 1 / viscosity * FLUID_VISCOSITY_FLOW_DIVISOR)

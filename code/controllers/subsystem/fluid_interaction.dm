@@ -41,7 +41,18 @@ SUBSYSTEM_DEF(fluid_interaction)
 
 						var/push_strength = (1 / viscosity_resistance * density_factor) / 2 // Weak push
 						if (push_strength > 0.1)
-							step(AM, pick(GLOB.cardinals), round(push_strength))
+							var/push_dir = 0
+							var/abs_mom_x = abs(fluid_comp.momentum_x)
+							var/abs_mom_y = abs(fluid_comp.momentum_y)
+
+							if(abs_mom_x > 0.1 || abs_mom_y > 0.1) // Only push if there's significant momentum
+								if (abs_mom_x > abs_mom_y)
+									push_dir = (fluid_comp.momentum_x > 0) ? EAST : WEST
+								else
+									push_dir = (fluid_comp.momentum_y > 0) ? NORTH : SOUTH
+
+							if(push_dir)
+								step(AM, push_dir, round(push_strength))
 
 		// Handle buoyancy for movable atoms
 		for(var/atom/movable/AM in T.contents)

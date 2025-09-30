@@ -87,6 +87,18 @@ GLOBAL_LIST_EMPTY(station_turfs)
 	var/list/can_fluid_pass_var = list(NORTH, SOUTH, EAST, WEST) // Whether fluids can pass through this turf in any direction. Used by fluid simulation.
 
 /turf/proc/CanFluidPass(direction)
+
+	for(var/obj/machinery/door/airlock/A in src)
+		if(A.density) // Closed airlocks are dense
+			return FALSE
+
+	for(var/obj/structure/low_wall/lw in src)
+		return FALSE
+
+	for(var/obj/structure/window/W in src)
+		if(W.anchored && W.density)
+			return FALSE
+
 	// For now, a simple check. More complex logic can be added here later if needed.
 	// Or you could override it if you wanted.
 	return (direction in can_fluid_pass_var)

@@ -24,6 +24,8 @@
 	mob_mood = new(src)
 
 	AddElement(/datum/element/movetype_handler)
+	AddComponent(/datum/component/movable_fluid_interaction)
+
 	gravity_setup()
 
 /mob/living/prepare_huds()

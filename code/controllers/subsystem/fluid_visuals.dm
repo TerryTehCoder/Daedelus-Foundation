@@ -114,6 +114,7 @@ SUBSYSTEM_DEF(fluid_visuals)
 	// Create a copy to apply dynamic properties
 	var/image/new_image = image(base_image)
 	new_image.name = "fluid_overlay" // Tag for easy identification
+	new_image.plane = GAME_PLANE
 	if(GLOB.fluid_debug_enabled)
 		message_admins(span_notice("FluidVisuals: Created new image with icon_state [icon_state_name]"))
 

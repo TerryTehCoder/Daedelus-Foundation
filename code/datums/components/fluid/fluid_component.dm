@@ -1,5 +1,6 @@
 /datum/component/fluid
 	var/fluid_amount = 0 // Current depth/volume of fluid
+	var/original_footstep = null // The original footstep sound of the turf
 	var/datum/fluid/fluid_type_instance // Store an instance of the fluid datum
 	var/temperature = T20C // Default temperature
 	var/current_visual_state = "dry" // Current visual state (e.g., "dry", "shallow", "deep")
@@ -35,6 +36,11 @@
 
 /datum/component/fluid/proc/addFluid(amount, new_temperature, incoming_momentum_x = 0, incoming_momentum_y = 0)
 	var/old_amount = fluid_amount
+	if (old_amount < FLUID_SHALLOW && (fluid_amount + amount) >= FLUID_SHALLOW)
+		var/turf/open/T = parent
+		if (istype(T) && T.footstep != FOOTSTEP_WATER)
+			original_footstep = T.footstep
+			T.footstep = FOOTSTEP_WATER
 	if(GLOB.fluid_debug_enabled)
 		message_admins(span_notice("FluidComponent [src.parent]: addFluid([amount], [new_temperature]) called. Current amount: [fluid_amount]"))
 	fluid_amount = min(FLUID_MAX_DEPTH, fluid_amount + amount)
@@ -64,6 +70,11 @@
 
 /datum/component/fluid/proc/removeFluid(amount)
 	var/old_amount = fluid_amount
+	if (old_amount >= FLUID_SHALLOW && (fluid_amount - amount) < FLUID_SHALLOW)
+		var/turf/open/T = parent
+		if (istype(T) && !isnull(original_footstep))
+			T.footstep = original_footstep
+			original_footstep = null
 	if(GLOB.fluid_debug_enabled)
 		message_admins(span_notice("FluidComponent [src.parent]: removeFluid([amount]) called. Current amount: [fluid_amount]"))
 	fluid_amount = max(FLUID_DELETING, fluid_amount - amount)

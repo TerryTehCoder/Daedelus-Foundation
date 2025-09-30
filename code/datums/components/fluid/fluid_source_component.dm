@@ -1,3 +1,10 @@
+/*
+ * I cannot understate how cool this concept is to me, fluid_sources are essentially a infinite source of whatever fluid you want.
+ * You could use it to flood a room with water from a broken pipe, or chemicals, etc
+ * You could make some sort of machinery leak fuel or coolant.
+ *
+ */
+
 /datum/component/fluid_source
 	var/flow_rate = 10 // Amount of fluid generated per tick
 	var/generated_fluid_type = /datum/fluid/water // Type of fluid generated

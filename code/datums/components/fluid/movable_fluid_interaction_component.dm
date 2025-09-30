@@ -32,6 +32,12 @@
 /datum/component/movable_fluid_interaction/proc/onEnteredTurf(atom/movable/parent_atom, turf/old_loc, turf/new_loc)
 	var/datum/component/fluid/fluid_comp = new_loc.GetComponent(/datum/component/fluid)
 	if (fluid_comp && fluid_comp.fluid_amount > FLUID_EVAPORATION_POINT)
+		// Play splash sound based on depth
+		if (fluid_comp.fluid_amount > FLUID_WAIST_DEEP)
+			play_fluid_sound(parent_atom, 'sound/effects/water/splash.ogg', 50, 1)
+		else
+			play_fluid_sound(parent_atom, 'sound/effects/water/splash.ogg', 30, 1)
+
 		// Directional push for mobs moving against the current
 		if(fluid_comp.fluid_amount > FLUID_PUSH_THRESHOLD)
 			var/move_dir = get_dir(old_loc, new_loc)
@@ -70,6 +76,8 @@
 		if (QDELETED(src))
 			return
 		SEND_SIGNAL(src, COMSIG_FLUID_INTERACTION_EXITED_FLUID, fluid_comp.fluid_type_instance.type)
+		// Play splash sound on exit
+		play_fluid_sound(parent_atom, 'sound/effects/water/splash.ogg', 30, 1)
 	stopSwimming()
 	stopDrowning()
 	updateMobVisuals() // Reset visuals when exiting fluid
@@ -183,6 +191,7 @@
 	if (!is_drowning)
 		is_drowning = TRUE
 		breath_timer = max_breath_time
+		play_fluid_sound(parent, 'sound/emotes/male/gasp_m1.ogg', 50, 1) // Gasp for air
 		if (QDELETED(src))
 			return
 		SEND_SIGNAL(src, COMSIG_FLUID_INTERACTION_DROWNING_STATE_CHANGED, TRUE)
@@ -192,6 +201,7 @@
 		is_drowning = FALSE
 		breath_timer = max_breath_time // Reset breath timer
 		drowning_timer = 0 // Reset drowning timer
+		play_fluid_sound(parent, 'sound/emotes/male/gasp_m1.ogg', 50, 1)
 		if (QDELETED(src))
 			return
 		SEND_SIGNAL(src, COMSIG_FLUID_INTERACTION_DROWNING_STATE_CHANGED, FALSE)
@@ -260,9 +270,17 @@
 		var/mob/living/M = parent
 		M.adjustOxyLoss(5) // Apply oxygen loss
 		M.apply_damage(5, STAMINA) // Apply stamina damage for panic mechanics
+
+		// Play gurgling sound
+		play_fluid_sound(M, "sound/effects/gurgle[rand(1,4)].ogg", 50, 1)
+
+		if (M.stamina.current <= BASIC_MOB_MAX_STAMINALOSS / 2)
+			to_chat(M, span_warning("You're struggling to stay afloat!"))
+
 		if (M.stamina.current <= 0) // If stamina runs out, become unconscious
 			M.SetUnconscious(TRUE)
 			to_chat(M, span_danger("You are too exhausted to stay afloat and lose consciousness!"))
+
 		// Play drowning sound, show visual effects, etc.
 		if (QDELETED(src))
 			return
@@ -300,6 +318,10 @@
 			if (istype(T))
 				return T
 	return null // No suitable turf found in the 3x3 area.This seems unlikely to happen.
+
+/datum/component/movable_fluid_interaction/proc/play_fluid_sound(atom/target, sound_path, volume, vary = TRUE)
+	if (target && sound_path)
+		playsound(target, sound_path, volume, vary)
 
 /datum/component/movable_fluid_interaction/proc/updateMobVisuals(fluid_amount = 0, delta_time = 0)
 	if (!istype(parent, /mob))

@@ -216,9 +216,9 @@ SUBSYSTEM_DEF(component_fluid_simulation)
 
 	fluid_comp.is_dirty = FALSE // Reset dirty flag for the origin turf
 
-	for (var/direction in GLOB.cardinals)
+	for (var/direction in GLOB.alldirs)
 		var/turf/neighbor_turf = get_step(T, direction)
-		if (!neighbor_turf || !T.CanFluidPass(direction))
+		if (!neighbor_turf || !T.CanFluidPass(direction) || !neighbor_turf.CanFluidPass(get_dir(neighbor_turf, T)))
 			continue
 
 		var/datum/component/fluid/neighbor_fluid_comp = neighbor_turf.GetComponent(/datum/component/fluid)
@@ -239,7 +239,7 @@ SUBSYSTEM_DEF(component_fluid_simulation)
 		var/pressure_factor = 1 + (fluid_comp.fluid_amount / FLUID_MAX_DEPTH)
 
 		// Directional factor: diagonal flow is slower
-		var/spread_factor = (direction in GLOB.cardinals) ? 1 : (1 / sqrt(2))
+		var/spread_factor = (direction in GLOB.alldirs) ? 1 : (1 / sqrt(2))
 
 		// Momentum factor: fluid prefers to flow in its current direction
 		var/dir_x = (direction & 3) - 2 // EAST=1, WEST=-1, other=0
@@ -257,7 +257,7 @@ SUBSYSTEM_DEF(component_fluid_simulation)
 /datum/controller/subsystem/component_fluid_simulation/proc/process_turf_effects(turf/T, datum/component/fluid/fluid_comp, delta_time)
 	// Evaporation in space
 	if (isspaceturf(T))
-		fluid_comp.removeFluid(max((FLUID_EVAPORATION_POINT-1), fluid_comp.fluid_amount * 0.05 * delta_time)) // 5% per second
+		fluid_comp.removeFluid(fluid_comp.fluid_amount) // Instant evaporation
 		if(GLOB.fluid_debug_enabled)
 			message_admins(span_notice("ComponentFluidSimulation ([simulated_fluid_type]): Evaporating fluid on space turf [T]"))
 
