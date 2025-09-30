@@ -1,6 +1,9 @@
 #define SS_PROCESSES_SPREADING (1<<0)
 #define SS_PROCESSES_EFFECTS (1<<1)
 
+/// If TRUE, the fluid simulation will show debug messages to admins.
+GLOBAL_VAR_INIT(fluid_debug_enabled, FALSE)
+
 SUBSYSTEM_DEF(component_fluid_simulation)
 	name = "Component Fluid Simulation"
 	wait = 2 SECONDS
@@ -62,12 +65,14 @@ SUBSYSTEM_DEF(component_fluid_simulation)
 	// We'll use a fixed number of buckets for now, e.g., 10, to distribute the load.
 	// This can be made dynamic based on `wait` or other factors if needed.
 	num_simulation_buckets = 10
-	message_admins(span_notice("ComponentFluidSimulation: Initializing carousel with [num_simulation_buckets] buckets."))
+	if(GLOB.fluid_debug_enabled)
+		message_admins(span_notice("ComponentFluidSimulation: Initializing carousel with [num_simulation_buckets] buckets."))
 	simulation_carousel = list()
 	simulation_carousel.len = num_simulation_buckets
 	for(var/i in 1 to num_simulation_buckets)
 		simulation_carousel[i] = list()
-		message_admins(span_notice("ComponentFluidSimulation: Bucket [i] initialized as [simulation_carousel[i]]."))
+		if(GLOB.fluid_debug_enabled)
+			message_admins(span_notice("ComponentFluidSimulation: Bucket [i] initialized as [simulation_carousel[i]]."))
 	simulation_bucket_index = 1
 
 /datum/controller/subsystem/component_fluid_simulation/proc/onBreachCreated(datum/component/breach/breach_comp, turf/location, flow_rate)
@@ -116,7 +121,8 @@ SUBSYSTEM_DEF(component_fluid_simulation)
 			bucket -= T
 		turf_to_bucket_map -= T
 		global_active_fluid_turfs -= T
-		message_admins(span_notice("ComponentFluidSimulation ([simulated_fluid_type]): Removed turf [T] from active list"))
+		if(GLOB.fluid_debug_enabled)
+			message_admins(span_notice("ComponentFluidSimulation ([simulated_fluid_type]): Removed turf [T] from active list"))
 
 		if (QDELETED(src))
 			return
@@ -137,15 +143,18 @@ SUBSYSTEM_DEF(component_fluid_simulation)
 	simulation_bucket_index++
 	if(simulation_bucket_index > num_simulation_buckets)
 		simulation_bucket_index = 1
-	message_admins(span_notice("ComponentFluidSimulation ([simulated_fluid_type]): Finished processing. Next bucket: [simulation_bucket_index]"))
+	if(GLOB.fluid_debug_enabled)
+		message_admins(span_notice("ComponentFluidSimulation ([simulated_fluid_type]): Finished processing. Next bucket: [simulation_bucket_index]"))
 
 /datum/controller/subsystem/component_fluid_simulation/proc/_process_simulation_logic()
 	var/delta_time = wait / (1 SECONDS) // Convert wait to seconds for consistent delta_time
-	message_admins(span_notice("ComponentFluidSimulation ([simulated_fluid_type]): fire() called. Processing bucket [simulation_bucket_index]"))
+	if(GLOB.fluid_debug_enabled)
+		message_admins(span_notice("ComponentFluidSimulation ([simulated_fluid_type]): fire() called. Processing bucket [simulation_bucket_index]"))
 
 	var/list/current_simulation_bucket = simulation_carousel[simulation_bucket_index]
 	var/list/turfs_to_process_in_bucket = current_simulation_bucket.Copy()
-	message_admins(span_notice("ComponentFluidSimulation ([simulated_fluid_type]): Processing [turfs_to_process_in_bucket.len] turfs in bucket [simulation_bucket_index]."))
+	if(GLOB.fluid_debug_enabled)
+		message_admins(span_notice("ComponentFluidSimulation ([simulated_fluid_type]): Processing [turfs_to_process_in_bucket.len] turfs in bucket [simulation_bucket_index]."))
 
 	for(var/turf/T in turfs_to_process_in_bucket)
 		var/datum/component/fluid/fluid_comp = process_turf_validation(T)
@@ -172,7 +181,8 @@ SUBSYSTEM_DEF(component_fluid_simulation)
 		remove_active_fluid_turf(T)
 		return null
 
-	message_admins(span_notice("ComponentFluidSimulation ([simulated_fluid_type]): Processing turf [T] (fluid amount: [fluid_comp.fluid_amount])"))
+	if(GLOB.fluid_debug_enabled)
+		message_admins(span_notice("ComponentFluidSimulation ([simulated_fluid_type]): Processing turf [T] (fluid amount: [fluid_comp.fluid_amount])"))
 	return fluid_comp
 
 /datum/controller/subsystem/component_fluid_simulation/proc/process_downward_flow(turf/T, datum/component/fluid/fluid_comp)
@@ -182,9 +192,11 @@ SUBSYSTEM_DEF(component_fluid_simulation)
 		if (!fluid_comp_below)
 			fluid_comp_below = turf_below.AddComponent(/datum/component/fluid)
 			fluid_comp_below.fluid_type_instance = new fluid_comp.fluid_type_instance.type
-			message_admins(span_notice("ComponentFluidSimulation ([simulated_fluid_type]): Added FluidComponent to turf below [turf_below]"))
+			if(GLOB.fluid_debug_enabled)
+				message_admins(span_notice("ComponentFluidSimulation ([simulated_fluid_type]): Added FluidComponent to turf below [turf_below]"))
 		else if (fluid_comp_below.fluid_type_instance.type != fluid_comp.fluid_type_instance.type)
-			message_admins(span_notice("ComponentFluidSimulation ([simulated_fluid_type]): Cannot transfer fluid to turf below [turf_below] due to different fluid type."))
+			if(GLOB.fluid_debug_enabled)
+				message_admins(span_notice("ComponentFluidSimulation ([simulated_fluid_type]): Cannot transfer fluid to turf below [turf_below] due to different fluid type."))
 			return
 
 		var/datum/fluid/temp_fluid_viscosity_down = new fluid_comp.fluid_type_instance.type
@@ -195,7 +207,8 @@ SUBSYSTEM_DEF(component_fluid_simulation)
 			fluid_comp.removeFluid(transfer_amount)
 			fluid_comp_below.addFluid(transfer_amount, fluid_comp.temperature)
 			add_active_fluid_turf(turf_below)
-			message_admins(span_notice("ComponentFluidSimulation ([simulated_fluid_type]): Transferred [transfer_amount] fluid from [T] to [turf_below] (downward flow)"))
+			if(GLOB.fluid_debug_enabled)
+				message_admins(span_notice("ComponentFluidSimulation ([simulated_fluid_type]): Transferred [transfer_amount] fluid from [T] to [turf_below] (downward flow)"))
 
 /datum/controller/subsystem/component_fluid_simulation/proc/process_lateral_spreading(turf/T, datum/component/fluid/fluid_comp)
 	if (!fluid_comp.is_dirty)
@@ -245,13 +258,15 @@ SUBSYSTEM_DEF(component_fluid_simulation)
 	// Evaporation in space
 	if (isspaceturf(T))
 		fluid_comp.removeFluid(max((FLUID_EVAPORATION_POINT-1), fluid_comp.fluid_amount * 0.05 * delta_time)) // 5% per second
-		message_admins(span_notice("ComponentFluidSimulation ([simulated_fluid_type]): Evaporating fluid on space turf [T]"))
+		if(GLOB.fluid_debug_enabled)
+			message_admins(span_notice("ComponentFluidSimulation ([simulated_fluid_type]): Evaporating fluid on space turf [T]"))
 
 	// Drain fluid if a DrainComponent is present
 	var/datum/component/drain/drain_comp = T.GetComponent(/datum/component/drain)
 	if (drain_comp)
 		drain_comp.drain_fluid(fluid_comp, delta_time)
-		message_admins(span_notice("ComponentFluidSimulation ([simulated_fluid_type]): Draining fluid on turf [T]"))
+		if(GLOB.fluid_debug_enabled)
+			message_admins(span_notice("ComponentFluidSimulation ([simulated_fluid_type]): Draining fluid on turf [T]"))
 
 	// Update active turf status
 	if (fluid_comp.fluid_amount <= FLUID_DELETING)
@@ -267,7 +282,8 @@ SUBSYSTEM_DEF(component_fluid_simulation)
 		var/datum/component/fluid_source/source_comp = T_source.GetComponent(/datum/component/fluid_source)
 		if (source_comp && source_comp.is_active && source_comp.generated_fluid_type == simulated_fluid_type)
 			source_comp.ProcessSource(delta_time)
-			message_admins(span_notice("ComponentFluidSimulation ([simulated_fluid_type]): Processing FluidSourceComponent on turf [T_source]"))
+			if(GLOB.fluid_debug_enabled)
+				message_admins(span_notice("ComponentFluidSimulation ([simulated_fluid_type]): Processing FluidSourceComponent on turf [T_source]"))
 
 
 /datum/controller/subsystem/component_fluid_simulation/proc/onFluidComponentDirty(turf/T)
@@ -290,7 +306,7 @@ SUBSYSTEM_DEF(component_fluid_simulation)
 COMPONENT_FLUID_SUBSYSTEM_DEF(water_simulation)
 	name = "Water Fluid Simulation"
 	simulated_fluid_type = /datum/fluid/water
-	wait = 3 SECONDS
+	wait = 2 SECONDS
 	flags = SS_KEEP_TIMING
 	runlevels = RUNLEVEL_GAME | RUNLEVEL_POSTGAME
 

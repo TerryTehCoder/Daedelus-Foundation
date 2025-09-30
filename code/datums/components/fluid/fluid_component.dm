@@ -35,7 +35,8 @@
 
 /datum/component/fluid/proc/addFluid(amount, new_temperature, incoming_momentum_x = 0, incoming_momentum_y = 0)
 	var/old_amount = fluid_amount
-	message_admins(span_notice("FluidComponent [src.parent]: addFluid([amount], [new_temperature]) called. Current amount: [fluid_amount]"))
+	if(GLOB.fluid_debug_enabled)
+		message_admins(span_notice("FluidComponent [src.parent]: addFluid([amount], [new_temperature]) called. Current amount: [fluid_amount]"))
 	fluid_amount = min(FLUID_MAX_DEPTH, fluid_amount + amount)
 
 	// Update momentum
@@ -51,26 +52,31 @@
 
 	if (old_amount <= FLUID_EVAPORATION_POINT && fluid_amount > FLUID_EVAPORATION_POINT)
 		SScomponent_fluid_simulation.global_active_fluid_turfs[parent] = TRUE
-	message_admins(span_notice("FluidComponent [src.parent]: Fluid amount after addFluid: [fluid_amount]"))
+	if(GLOB.fluid_debug_enabled)
+		message_admins(span_notice("FluidComponent [src.parent]: Fluid amount after addFluid: [fluid_amount]"))
 	if (QDELETED(src))
 		return
 	SEND_SIGNAL(src, COMSIG_PARENT_FLUID_AMOUNT_CHANGED, fluid_amount)
-	message_admins(span_notice("FluidComponent [src.parent]: Sent COMSIG_PARENT_FLUID_AMOUNT_CHANGED. New amount: [fluid_amount]"))
+	if(GLOB.fluid_debug_enabled)
+		message_admins(span_notice("FluidComponent [src.parent]: Sent COMSIG_PARENT_FLUID_AMOUNT_CHANGED. New amount: [fluid_amount]"))
 	mark_dirty()
 	updateVisuals()
 
 /datum/component/fluid/proc/removeFluid(amount)
 	var/old_amount = fluid_amount
-	message_admins(span_notice("FluidComponent [src.parent]: removeFluid([amount]) called. Current amount: [fluid_amount]"))
+	if(GLOB.fluid_debug_enabled)
+		message_admins(span_notice("FluidComponent [src.parent]: removeFluid([amount]) called. Current amount: [fluid_amount]"))
 	fluid_amount = max(FLUID_DELETING, fluid_amount - amount)
 
 	if (old_amount > FLUID_EVAPORATION_POINT && fluid_amount <= FLUID_EVAPORATION_POINT)
 		SScomponent_fluid_simulation.global_active_fluid_turfs -= parent
-	message_admins(span_notice("FluidComponent [src.parent]: Fluid amount after removeFluid: [fluid_amount]"))
+	if(GLOB.fluid_debug_enabled)
+		message_admins(span_notice("FluidComponent [src.parent]: Fluid amount after removeFluid: [fluid_amount]"))
 	if (QDELETED(src))
 		return
 	SEND_SIGNAL(src, COMSIG_PARENT_FLUID_AMOUNT_CHANGED, fluid_amount)
-	message_admins(span_notice("FluidComponent [src.parent]: Sent COMSIG_PARENT_FLUID_AMOUNT_CHANGED. New amount: [fluid_amount]"))
+	if(GLOB.fluid_debug_enabled)
+		message_admins(span_notice("FluidComponent [src.parent]: Sent COMSIG_PARENT_FLUID_AMOUNT_CHANGED. New amount: [fluid_amount]"))
 	mark_dirty()
 	updateVisuals()
 
@@ -98,9 +104,11 @@
 		new_visual_state = "dry" // No fluid, or fluid is being deleted, dry icon doesn't really exist so..
 
 	if (new_visual_state != current_visual_state)
-		message_admins(span_notice("FluidComponent [src.parent]: updateVisuals() - Determined new_visual_state: [new_visual_state]"))
+		if(GLOB.fluid_debug_enabled)
+			message_admins(span_notice("FluidComponent [src.parent]: updateVisuals() - Determined new_visual_state: [new_visual_state]"))
 		current_visual_state = new_visual_state
-		message_admins(span_notice("FluidComponent [src.parent]: Visual state changed to [current_visual_state]. Sending COMSIG_FLUID_VISUAL_STATE_CHANGED."))
+		if(GLOB.fluid_debug_enabled)
+			message_admins(span_notice("FluidComponent [src.parent]: Visual state changed to [current_visual_state]. Sending COMSIG_FLUID_VISUAL_STATE_CHANGED."))
 		if (QDELETED(src))
 			return
 		SEND_SIGNAL(src, COMSIG_FLUID_VISUAL_STATE_CHANGED, current_visual_state, fluid_amount)
@@ -109,7 +117,8 @@
 /datum/component/fluid/proc/mark_dirty()
 	if (!is_dirty)
 		is_dirty = TRUE
-		message_admins(span_notice("FluidComponent [src.parent]: mark_dirty() called. Sending COMSIG_GLOB_FLUID_COMPONENT_DIRTY."))
+		if(GLOB.fluid_debug_enabled)
+			message_admins(span_notice("FluidComponent [src.parent]: mark_dirty() called. Sending COMSIG_GLOB_FLUID_COMPONENT_DIRTY."))
 		if (QDELETED(src))
 			return
 		SEND_GLOBAL_SIGNAL(COMSIG_GLOB_FLUID_COMPONENT_DIRTY, parent)

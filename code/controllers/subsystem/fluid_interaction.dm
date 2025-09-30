@@ -16,7 +16,8 @@ SUBSYSTEM_DEF(fluid_interaction)
 /datum/controller/subsystem/fluid_interaction/fire(resumed)
 	var/delta_time = wait / (1 SECONDS) // Convert wait to seconds for consistent delta_time
 	var/list/active_turfs = SScomponent_fluid_simulation.global_active_fluid_turfs
-	message_admins(span_notice("FluidInteraction: fire() called. Active fluid interactions: [active_turfs.len]"))
+	if(GLOB.fluid_debug_enabled)
+		message_admins(span_notice("FluidInteraction: fire() called. Active fluid interactions: [active_turfs.len]"))
 
 	for(var/turf/T in active_turfs)
 		if (QDELETED(T))

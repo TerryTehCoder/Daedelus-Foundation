@@ -201,6 +201,7 @@ GLOBAL_PROTECT(admin_verbs_debug)
 	/client/proc/validate_cards,
 	/client/proc/test_cardpack_distribution,
 	/client/proc/print_cards,
+	/client/proc/toggle_fluid_debug,
 	#ifdef TESTING
 	/client/proc/check_missing_sprites,
 	/client/proc/run_dynamic_simulations,
@@ -1050,3 +1051,14 @@ GLOBAL_PROTECT(admin_verbs_hideable)
 		to_chat(world, span_boldannounce("The gamemode is now: [fake_name ? SSticker.mode_display_name : SSticker.mode.name]."))
 
 	message_admins("[key_name_admin(usr)] has set the gamemode to [SSticker.mode.type].")
+
+/client/proc/toggle_fluid_debug()
+	set name = "Toggle Fluid Debug"
+	set category = "Debug"
+
+	if(!check_rights(R_DEBUG))
+		return
+
+	GLOB.fluid_debug_enabled = !GLOB.fluid_debug_enabled
+	to_chat(usr, "Fluid debug messages are now [GLOB.fluid_debug_enabled ? "enabled" : "disabled"].")
+	message_admins("[key_name_admin(usr)] has [GLOB.fluid_debug_enabled ? "enabled" : "disabled"] fluid debug messages.")

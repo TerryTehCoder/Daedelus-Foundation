@@ -72,6 +72,8 @@ GLOBAL_REAL_VAR(wall_overlays_cache) = list()
 	///Appearance cache key. This is very touchy.
 	VAR_PRIVATE/cache_key
 
+	can_fluid_pass_var = list() // Fluids don't /Usually/ go through walls, but.. I guess you never know.
+
 // DMEd Specific Simplified wall icons
 #if defined(SIMPLE_MAPHELPERS)
 /turf/closed/wall

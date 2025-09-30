@@ -259,6 +259,7 @@ MAPPING_DIRECTIONAL_HELPERS(/obj/structure/urinal, 32)
 	icon_state = "rubberducky"
 	inhand_icon_state = "rubberducky"
 	worn_icon_state = "duck"
+	float_density = 150
 
 /obj/structure/sink
 	name = "sink"
