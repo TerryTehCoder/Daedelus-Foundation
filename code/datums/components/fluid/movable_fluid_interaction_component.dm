@@ -6,6 +6,7 @@
 	var/is_swimming = FALSE
 	var/is_drowning = FALSE
 	var/is_waist_deep = FALSE // Track if mob is waist-deep in fluid
+	var/active_swim_modifier_key // The key for the currently active swim speed modifier
 	var/base_pixel_y = 0 // Store original pixel_y for resetting
 	var/is_submerged_visually = FALSE // Track if visual submersion is active
 	var/float_offset_timer = 0 // Timer for floating animation
@@ -18,7 +19,6 @@
 	. = ..()
 	RegisterSignal(src, COMSIG_PARENT_ENTERED_TURF, PROC_REF(onEnteredTurf))
 	RegisterSignal(src, COMSIG_PARENT_EXITED_TURF, PROC_REF(onExitedTurf))
-	RegisterSignal(src, COMSIG_PARENT_PROCESS, PROC_REF(onProcess))
 	if (istype(parent, /mob))
 		var/mob/M = parent
 		base_pixel_y = M.pixel_y
@@ -27,7 +27,6 @@
 /datum/component/movable_fluid_interaction/Destroy()
 	UnregisterSignal(src, COMSIG_PARENT_ENTERED_TURF)
 	UnregisterSignal(src, COMSIG_PARENT_EXITED_TURF)
-	UnregisterSignal(src, COMSIG_PARENT_PROCESS)
 	. = ..()
 
 /datum/component/movable_fluid_interaction/proc/onEnteredTurf(atom/movable/parent_atom, turf/old_loc, turf/new_loc)
@@ -138,9 +137,12 @@
 			return
 		SEND_SIGNAL(src, COMSIG_FLUID_INTERACTION_SWIMMING_STATE_CHANGED, TRUE)
 		// Apply speed modifier to parent mob
-		M.add_movespeed_modifier(new_speed_modifier)
+		if (active_swim_modifier_key)
+			M.remove_movespeed_modifier(active_swim_modifier_key) // Remove old one before applying new
+		active_swim_modifier_key = "swimming_[src]" // Unique key
+		M.add_movespeed_modifier(active_swim_modifier_key, new_speed_modifier)
 		if (is_drowning) // Apply additional modifier if drowning
-			M.add_movespeed_modifier(SWIM_SPEED_MODIFIER_DROWNING)
+			M.add_movespeed_modifier("drowning_[src]", SWIM_SPEED_MODIFIER_DROWNING)
 
 /datum/component/movable_fluid_interaction/proc/stopSwimming()
 	if (is_swimming)
@@ -151,10 +153,9 @@
 		// Remove speed modifier from parent mob
 		if (istype(parent, /mob/living))
 			var/mob/living/M = parent
-			// We need to know which modifier to remove. This implies storing the active modifier.
-			// For now, we'll remove the default one, but this needs refinement if multiple modifiers are active.
-			M.remove_movespeed_modifier(SWIM_SPEED_MODIFIER_DEEP) // Assuming deep is the most impactful
-			M.remove_movespeed_modifier(SWIM_SPEED_MODIFIER_SHALLOW) // Remove shallow as well, just in case
+			if (active_swim_modifier_key)
+				M.remove_movespeed_modifier(active_swim_modifier_key)
+				active_swim_modifier_key = null
 
 /datum/component/movable_fluid_interaction/proc/startDrowning()
 	if (!is_drowning)
@@ -175,7 +176,7 @@
 		// Remove drowning speed modifier if it was applied
 		if (istype(parent, /mob/living))
 			var/mob/living/M = parent
-			M.remove_movespeed_modifier(SWIM_SPEED_MODIFIER_DROWNING)
+			M.remove_movespeed_modifier("drowning_[src]")
 
 /datum/component/movable_fluid_interaction/proc/handleTemperatureEffects(fluid_amount, fluid_temperature, delta_time)
 	if (!istype(parent, /mob/living))

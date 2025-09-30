@@ -20,8 +20,9 @@
 #define COMSIG_FLUID_VISUAL_STATE_CHANGED "fluid_visual_state_changed" // Emitted by FluidComponent when visual state changes
 #define COMSIG_PARENT_ENTERED_TURF "parent_entered_turf" // Emitted when an atom enters a new turf: (atom/movable/parent_atom, turf/old_loc, turf/new_loc)
 #define COMSIG_PARENT_EXITED_TURF "parent_exited_turf" // Emitted when an atom exits a turf: (atom/movable/parent_atom, turf/old_loc, turf/new_loc)
-#define COMSIG_PARENT_PROCESS "parent_process" // Emitted by parent during its process cycle: (datum/component/source_component, delta_time)
 #define COMSIG_FLUID_COMPONENT_DIRTY "fluid_component_dirty" // Emitted by FluidComponent when its fluid amount changes and needs re-evaluation
+#define COMSIG_GLOB_FLUID_COMPONENT_DIRTY "glob_fluid_component_dirty" // Emitted globally when any fluid component becomes dirty (needing re-evaluation)
+#define COMSIG_FLUID_SIMULATION_READY "fluid_simulation_ready" // Emitted by FluidSimulationSubsystem when initialized
 
 // Signal for fluid source components
 #define COMSIG_FLUID_SOURCE_GENERATED "fluid_source_generated" // Emitted by FluidSourceComponent when fluid is generated

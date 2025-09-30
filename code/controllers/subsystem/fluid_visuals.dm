@@ -80,17 +80,26 @@ SUBSYSTEM_DEF(fluid_visuals)
 
 /datum/controller/subsystem/fluid_visuals/proc/get_fluid_overlay(datum/fluid/fluid_type, visual_state, current_fluid_amount)
 	message_admins(span_notice("FluidVisuals: get_fluid_overlay([fluid_type.type], [visual_state], [current_fluid_amount]) called."))
-	var/cache_key = "[fluid_type.type]_[visual_state]_[current_fluid_amount]" // Include fluid amount in cache key for dynamic visuals
-	if (fluid_image_cache[cache_key])
-		message_admins(span_notice("FluidVisuals: Returning cached image for key [cache_key]"))
-		return fluid_image_cache[cache_key]
-
+	var/cache_key = "[fluid_type.type]_[visual_state]" // Cache based on type and state
+	var/image/base_image = fluid_image_cache[cache_key]
 	var/icon_state_name = fluid_type.icon_state_map[visual_state]
+
+	if (!base_image)
+		if (!icon_state_name)
+			message_admins(span_notice("FluidVisuals: No icon_state_name found for visual_state [visual_state]. Returning null."))
+			return null
+
+		base_image = image('icons/effects/liquids.dmi', icon_state_name)
+		base_image.name = "fluid_overlay_base" // Tag for easy identification
+		fluid_image_cache[cache_key] = base_image
+		message_admins(span_notice("FluidVisuals: Created and cached new base image with icon_state [icon_state_name]"))
+
 	if (!icon_state_name)
 		message_admins(span_notice("FluidVisuals: No icon_state_name found for visual_state [visual_state]. Returning null."))
 		return null
 
-	var/image/new_image = image('icons/effects/liquids.dmi', icon_state_name)
+	// Create a copy to apply dynamic properties
+	var/image/new_image = image(base_image)
 	new_image.name = "fluid_overlay" // Tag for easy identification
 	message_admins(span_notice("FluidVisuals: Created new image with icon_state [icon_state_name]"))
 
@@ -119,6 +128,4 @@ SUBSYSTEM_DEF(fluid_visuals)
 		new_image.color = fluid_type.color
 		message_admins(span_notice("FluidVisuals: Setting color to [fluid_type.color]"))
 
-	fluid_image_cache[cache_key] = new_image
-	message_admins(span_notice("FluidVisuals: Cached new image for key [cache_key]"))
 	return new_image

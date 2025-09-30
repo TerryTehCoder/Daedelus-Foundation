@@ -19,6 +19,9 @@
 	if (!fluid_type_instance) // If fluid_type_instance is not set during component creation, default to water
 		fluid_type_instance = new /datum/fluid/water
 	SSfluid_visuals.registerFluidComponent(src) // Register with the FluidVisuals subsystem
+	if (fluid_amount > FLUID_EVAPORATION_POINT) // We need to flag for an update if it's being made with Fluid.
+		SScomponent_fluid_simulation.global_active_fluid_turfs[parent] = TRUE
+		mark_dirty()
 	updateVisuals()
 
 /datum/component/fluid/Destroy()
@@ -26,6 +29,7 @@
 	. = ..()
 
 /datum/component/fluid/proc/addFluid(amount, new_temperature)
+	var/old_amount = fluid_amount
 	message_admins(span_notice("FluidComponent [src.parent]: addFluid([amount], [new_temperature]) called. Current amount: [fluid_amount]"))
 	fluid_amount = min(FLUID_MAX_DEPTH, fluid_amount + amount)
 	// Simple temperature mixing for now
@@ -33,6 +37,9 @@
 		temperature = (temperature * (fluid_amount - amount) + new_temperature * amount) / fluid_amount
 	else
 		temperature = new_temperature
+
+	if (old_amount <= FLUID_EVAPORATION_POINT && fluid_amount > FLUID_EVAPORATION_POINT)
+		SScomponent_fluid_simulation.global_active_fluid_turfs[parent] = TRUE
 	message_admins(span_notice("FluidComponent [src.parent]: Fluid amount after addFluid: [fluid_amount]"))
 	if (QDELETED(src))
 		return
@@ -42,8 +49,12 @@
 	updateVisuals()
 
 /datum/component/fluid/proc/removeFluid(amount)
+	var/old_amount = fluid_amount
 	message_admins(span_notice("FluidComponent [src.parent]: removeFluid([amount]) called. Current amount: [fluid_amount]"))
 	fluid_amount = max(FLUID_DELETING, fluid_amount - amount)
+
+	if (old_amount > FLUID_EVAPORATION_POINT && fluid_amount <= FLUID_EVAPORATION_POINT)
+		SScomponent_fluid_simulation.global_active_fluid_turfs -= parent
 	message_admins(span_notice("FluidComponent [src.parent]: Fluid amount after removeFluid: [fluid_amount]"))
 	if (QDELETED(src))
 		return
@@ -59,7 +70,6 @@
 	return temperature
 
 /datum/component/fluid/proc/updateVisuals()
-	message_admins(span_notice("FluidComponent [src.parent]: updateVisuals() called. Fluid amount: [fluid_amount], Current visual state: [current_visual_state]"))
 	var/new_visual_state = "dry"
 	if (fluid_amount >= FLUID_DEEPEST)
 		new_visual_state = "fluid_deepest_still"
@@ -88,10 +98,10 @@
 /datum/component/fluid/proc/mark_dirty()
 	if (!is_dirty)
 		is_dirty = TRUE
-		message_admins(span_notice("FluidComponent [src.parent]: mark_dirty() called. Sending COMSIG_FLUID_COMPONENT_DIRTY."))
+		message_admins(span_notice("FluidComponent [src.parent]: mark_dirty() called. Sending COMSIG_GLOB_FLUID_COMPONENT_DIRTY."))
 		if (QDELETED(src))
 			return
-		SEND_SIGNAL(src, COMSIG_FLUID_COMPONENT_DIRTY, parent)
+		SEND_GLOBAL_SIGNAL(COMSIG_GLOB_FLUID_COMPONENT_DIRTY, parent)
 
 // Define fluid types (simple datums for now)
 /datum/fluid

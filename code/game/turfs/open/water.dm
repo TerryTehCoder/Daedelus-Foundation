@@ -65,3 +65,9 @@
 	fluid_source_comp.flow_rate = FLUID_MAX_DEPTH / 5 // Replenish 20% of max depth per tick
 	fluid_source_comp.activate()
 	message_admins(span_notice("ocean/Initialize(): Activated FluidSourceComponent [fluid_source_comp]"))
+
+	// Register the turf with the appropriate fluid simulation subsystem
+	var/datum/controller/subsystem/component_fluid_simulation/water_sim = SScomponent_fluid_simulation.get_fluid_simulation_subsystem(/datum/fluid/water)
+	if (water_sim)
+		water_sim.add_active_fluid_turf(src)
+		message_admins(span_notice("ocean/Initialize(): Registered [src] with the water simulation subsystem."))
