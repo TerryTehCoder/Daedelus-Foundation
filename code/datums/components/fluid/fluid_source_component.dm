@@ -10,6 +10,7 @@
 	var/generated_fluid_type = /datum/fluid/water // Type of fluid generated
 	var/temperature = T20C // Temperature of generated fluid
 	var/is_active = FALSE // Whether the source is currently active
+	var/list/initial_reagents // List of reagents to generate
 	var/list/deferred_turfs // List to hold turfs that couldn't be registered immediately
 
 /datum/component/fluid_source/Initialize()
@@ -96,6 +97,10 @@
 		if(GLOB.fluid_debug_enabled)
 			message_admins(span_notice("FluidSourceComponent [src.parent]: Calling addFluid([amount_to_add], [temperature]) on [T]'s FluidComponent."))
 		fluid_comp.addFluid(amount_to_add, temperature)
+
+		if (initial_reagents)
+			fluid_comp.reagents.add_reagent_list(initial_reagents)
+
 		fluid_comp.mark_dirty() // Explicitly mark as dirty to trigger simulation
 		if(GLOB.fluid_debug_enabled)
 			message_admins(span_notice("FluidSourceComponent [src.parent]: Fluid amount on [T] after addFluid: [fluid_comp.getFluidAmount()]."))

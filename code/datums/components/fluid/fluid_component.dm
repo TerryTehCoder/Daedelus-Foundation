@@ -2,6 +2,7 @@
 	var/fluid_amount = 0 // Current depth/volume of fluid
 	var/original_footstep = null // The original footstep sound of the turf
 	var/datum/fluid/fluid_type_instance // Store an instance of the fluid datum
+	var/datum/reagents/reagents = null // Reagent holder for the fluid
 	var/temperature = T20C // Default temperature
 	var/current_visual_state = "dry" // Current visual state (e.g., "dry", "shallow", "deep")
 	var/is_dirty = FALSE // Flag to indicate if this fluid component's turf needs re-evaluation for lateral diffusion
@@ -24,6 +25,8 @@
 	. = ..()
 	if (!fluid_type_instance) // If fluid_type_instance is not set during component creation, default to water
 		fluid_type_instance = new /datum/fluid/water
+	reagents = new(FLUID_MAX_DEPTH) // Initialize the reagent holder
+	reagents.my_atom = parent
 	SSfluid_visuals.registerFluidComponent(src) // Register with the FluidVisuals subsystem
 	if (fluid_amount > FLUID_EVAPORATION_POINT) // We need to flag for an update if it's being made with Fluid.
 		SScomponent_fluid_simulation.global_active_fluid_turfs[parent] = TRUE
@@ -32,9 +35,10 @@
 
 /datum/component/fluid/Destroy()
 	SSfluid_visuals.unregisterFluidComponent(src) // Unregister from the FluidVisuals subsystem
+	qdel(reagents)
 	. = ..()
 
-/datum/component/fluid/proc/addFluid(amount, new_temperature, incoming_momentum_x = 0, incoming_momentum_y = 0)
+/datum/component/fluid/proc/addFluid(amount, new_temperature, incoming_momentum_x = 0, incoming_momentum_y = 0, datum/reagents/source_reagents = null)
 	var/old_amount = fluid_amount
 	if (old_amount < FLUID_SHALLOW && (fluid_amount + amount) >= FLUID_SHALLOW)
 		var/turf/open/T = parent
@@ -55,6 +59,10 @@
 		temperature = (temperature * (fluid_amount - amount) + new_temperature * amount) / fluid_amount
 	else
 		temperature = new_temperature
+
+	// Transfer reagents
+	if (source_reagents)
+		source_reagents.trans_to(src, amount)
 
 	if (old_amount <= FLUID_EVAPORATION_POINT && fluid_amount > FLUID_EVAPORATION_POINT)
 		SScomponent_fluid_simulation.global_active_fluid_turfs[parent] = TRUE
@@ -78,6 +86,10 @@
 	if(GLOB.fluid_debug_enabled)
 		message_admins(span_notice("FluidComponent [src.parent]: removeFluid([amount]) called. Current amount: [fluid_amount]"))
 	fluid_amount = max(FLUID_DELETING, fluid_amount - amount)
+
+	// Remove a proportional amount of reagents
+	if (reagents && old_amount > 0)
+		reagents.remove_reagent(reagents, amount)
 
 	if (old_amount > FLUID_EVAPORATION_POINT && fluid_amount <= FLUID_EVAPORATION_POINT)
 		SScomponent_fluid_simulation.global_active_fluid_turfs -= parent

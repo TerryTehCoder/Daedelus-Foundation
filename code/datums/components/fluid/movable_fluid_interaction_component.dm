@@ -9,7 +9,6 @@
 	var/active_swim_modifier_key // The key for the currently active swim speed modifier
 	var/base_pixel_y = 0 // Store original pixel_y for resetting
 	var/is_submerged_visually = FALSE // Track if visual submersion is active
-	var/float_offset_timer = 0 // Timer for floating animation
 	var/drowning_timer = 0 // Time spent drowning
 	var/cold_exposure_timer = 0 // Time spent in cold fluid
 	var/last_fluid_z = 0 // Store the Z-level where the mob entered fluid
@@ -105,6 +104,7 @@
 	if (fluid_comp)
 		checkFluidState(fluid_comp.fluid_amount, fluid_comp.fluid_type_instance.type)
 		handleTemperatureEffects(fluid_comp.fluid_amount, fluid_comp.temperature, delta_time)
+		handleReagentEffects(fluid_comp, delta_time)
 		updateMobVisuals(fluid_comp.fluid_amount, delta_time)
 	else
 		stopSwimming()
@@ -163,6 +163,7 @@
 
 	if (!is_swimming)
 		is_swimming = TRUE
+		ADD_TRAIT(parent, TRAIT_MOVE_FLOATING, "swimming") // Add floating trait
 		if (QDELETED(src))
 			return
 		SEND_SIGNAL(src, COMSIG_FLUID_INTERACTION_SWIMMING_STATE_CHANGED, TRUE)
@@ -177,6 +178,7 @@
 /datum/component/movable_fluid_interaction/proc/stopSwimming()
 	if (is_swimming)
 		is_swimming = FALSE
+		REMOVE_TRAIT(parent, TRAIT_MOVE_FLOATING, "swimming") // Remove floating trait
 		if (QDELETED(src))
 			return
 		SEND_SIGNAL(src, COMSIG_FLUID_INTERACTION_SWIMMING_STATE_CHANGED, FALSE)
@@ -265,6 +267,15 @@
 	// For now, since damage is applied per tick, no explicit "clear" is needed beyond stopping the `handleTemperatureEffects` calls.
 	return
 
+/datum/component/movable_fluid_interaction/proc/handleReagentEffects(datum/component/fluid/fluid_comp, delta_time)
+	if (!istype(parent, /mob/living))
+		return
+
+	if (fluid_comp.reagents && fluid_comp.reagents.total_volume > 0)
+		// Apply reagent effects through skin contact
+		var/transfer_amount = fluid_comp.fluid_amount / 100
+		fluid_comp.reagents.trans_to(parent, transfer_amount * delta_time, methods = TOUCH)
+
 /datum/component/movable_fluid_interaction/proc/takeDrowningDamage()
 	if (istype(parent, /mob/living))
 		var/mob/living/M = parent
@@ -341,12 +352,6 @@
 			new_pixel_y += FLUID_MOB_PIXEL_OFFSET_WAIST_DEEP
 		else if (fluid_amount >= FLUID_SHALLOW)
 			new_pixel_y += FLUID_MOB_PIXEL_OFFSET_SHALLOW
-
-		// Apply floating animation if swimming
-		if (is_swimming)
-			float_offset_timer += delta_time * FLUID_MOB_FLOAT_SPEED
-			var/float_y = sin(float_offset_timer) * FLUID_MOB_FLOAT_AMPLITUDE
-			new_pixel_y += round(float_y)
 
 	if (should_be_submerged != is_submerged_visually)
 		is_submerged_visually = should_be_submerged

@@ -61,7 +61,7 @@ SUBSYSTEM_DEF(fluid_visuals)
 			message_admins(span_notice("FluidVisuals: Parent atom is not of type atom. Returning."))
 		return
 
-	var/image/new_fluid_overlay_data = get_fluid_overlay(fluid_comp.fluid_type_instance, new_visual_state, current_fluid_amount)
+	var/image/new_fluid_overlay_data = get_fluid_overlay(fluid_comp, new_visual_state, current_fluid_amount)
 	if(GLOB.fluid_debug_enabled)
 		message_admins(span_notice("FluidVisuals: get_fluid_overlay returned [new_fluid_overlay_data ? "an image" : "null"] for [parent_atom]"))
 
@@ -87,7 +87,8 @@ SUBSYSTEM_DEF(fluid_visuals)
 		if(GLOB.fluid_debug_enabled)
 			message_admins(span_notice("FluidVisuals: Removed fluid overlay from [parent_atom] as fluid amount <= FLUID_EVAPORATION_POINT"))
 
-/datum/controller/subsystem/fluid_visuals/proc/get_fluid_overlay(datum/fluid/fluid_type, visual_state, current_fluid_amount)
+/datum/controller/subsystem/fluid_visuals/proc/get_fluid_overlay(datum/component/fluid/fluid_comp, visual_state, current_fluid_amount)
+	var/datum/fluid/fluid_type = fluid_comp.fluid_type_instance
 	if(GLOB.fluid_debug_enabled)
 		message_admins(span_notice("FluidVisuals: get_fluid_overlay([fluid_type.type], [visual_state], [current_fluid_amount]) called."))
 	var/cache_key = "[fluid_type.type]_[visual_state]" // Cache based on type and state
@@ -144,9 +145,12 @@ SUBSYSTEM_DEF(fluid_visuals)
 			message_admins(span_notice("FluidVisuals: Setting alpha to 0"))
 
 	// Apply fluid-specific color
-	if (fluid_type.color)
+	if (fluid_comp.reagents && fluid_comp.reagents.total_volume > 0)
+		new_image.color = mix_color_from_reagents(fluid_comp.reagents.reagent_list)
+	else if (fluid_type.color)
 		new_image.color = fluid_type.color
-		if(GLOB.fluid_debug_enabled)
-			message_admins(span_notice("FluidVisuals: Setting color to [fluid_type.color]"))
+
+	if(GLOB.fluid_debug_enabled)
+		message_admins(span_notice("FluidVisuals: Setting color to [new_image.color]"))
 
 	return new_image

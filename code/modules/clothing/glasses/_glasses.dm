@@ -139,6 +139,10 @@
 	clothing_traits = list(TRAIT_REAGENT_SCANNER, TRAIT_RESEARCH_SCANNER)
 	supports_variations_flags = CLOTHING_TESHARI_VARIATION | CLOTHING_VOX_VARIATION
 
+/obj/item/clothing/glasses/science/Initialize(mapload)
+	. = ..()
+	AddComponent(/datum/component/examine_reagent_scanner)
+
 /obj/item/clothing/glasses/science/item_action_slot_check(slot)
 	if(slot == ITEM_SLOT_EYES)
 		return 1
@@ -312,12 +316,21 @@
 	clothing_traits = list(TRAIT_BOOZE_SLIDER, TRAIT_REAGENT_SCANNER)
 	supports_variations_flags = NONE
 
+/obj/item/clothing/glasses/sunglasses/reagent/Initialize(mapload)
+	. = ..()
+	AddComponent(/datum/component/examine_reagent_scanner)
+
+/obj/item/clothing/glasses/sunglasses/chemical
 /obj/item/clothing/glasses/sunglasses/chemical
 	name = "science glasses"
 	icon_state = "sunhudsci"
 	desc = "A pair of tacky purple sunglasses that allow the wearer to recognize various chemical compounds with only a glance."
 	clothing_traits = list(TRAIT_REAGENT_SCANNER, TRAIT_RESEARCH_SCANNER)
 	supports_variations_flags = NONE
+
+/obj/item/clothing/glasses/sunglasses/chemical/Initialize(mapload)
+	. = ..()
+	AddComponent(/datum/component/examine_reagent_scanner)
 
 /obj/item/clothing/glasses/sunglasses/gar
 	name = "black gar glasses"

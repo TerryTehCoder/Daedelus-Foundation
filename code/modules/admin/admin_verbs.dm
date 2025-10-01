@@ -202,6 +202,7 @@ GLOBAL_PROTECT(admin_verbs_debug)
 	/client/proc/test_cardpack_distribution,
 	/client/proc/print_cards,
 	/client/proc/toggle_fluid_debug,
+	/client/proc/spawn_fluid_source,
 	#ifdef TESTING
 	/client/proc/check_missing_sprites,
 	/client/proc/run_dynamic_simulations,
@@ -1052,6 +1053,8 @@ GLOBAL_PROTECT(admin_verbs_hideable)
 
 	message_admins("[key_name_admin(usr)] has set the gamemode to [SSticker.mode.type].")
 
+// Liquid Fluid System Verbs
+
 /client/proc/toggle_fluid_debug()
 	set name = "Toggle Fluid Debug"
 	set category = "Debug"
@@ -1062,3 +1065,47 @@ GLOBAL_PROTECT(admin_verbs_hideable)
 	GLOB.fluid_debug_enabled = !GLOB.fluid_debug_enabled
 	to_chat(usr, "Fluid debug messages are now [GLOB.fluid_debug_enabled ? "enabled" : "disabled"].")
 	message_admins("[key_name_admin(usr)] has [GLOB.fluid_debug_enabled ? "enabled" : "disabled"] fluid debug messages.")
+
+// I will not be held liable for crashing the server because you decided to spawn in 300 fluid sources.
+// I have tried to optimize my fluid code, but I can't out optimize admin shenanigans.
+/client/proc/spawn_fluid_source()
+	set name = "Spawn Fluid Source"
+	set category = "Debug"
+
+	if(!check_rights(R_DEBUG))
+		return
+
+	var/turf/T = get_turf(usr.loc)
+	if(!T)
+		return
+
+	var/fluid_type = input("Select a fluid type", "Spawn Fluid Source") as null|anything in typesof(/datum/fluid)
+	if(!fluid_type)
+		return
+
+	var/flow_rate = input("Enter flow rate", "Spawn Fluid Source", 10) as num
+	if(!flow_rate)
+		return
+
+	var/list/reagents_to_add = list()
+	if(tgui_alert(usr, "Add reagents?", "Spawn Fluid Source", list("Yes", "No")) == "Yes")
+		while(TRUE)
+			var/reagent_id = input("Select a reagent", "Spawn Fluid Source") as null|anything in subtypesof(/datum/reagent)
+			if(!reagent_id)
+				break
+			var/reagent_amount = input("Enter amount", "Spawn Fluid Source", 10) as num
+			if(!reagent_amount)
+				continue
+			reagents_to_add[reagent_id] = reagent_amount
+			if(tgui_alert(usr, "Add another reagent?", "Spawn Fluid Source", list("Yes", "No")) == "No")
+				break
+
+	var/datum/component/fluid_source/source = T.AddComponent(/datum/component/fluid_source)
+	source.generated_fluid_type = fluid_type
+	source.flow_rate = flow_rate
+	if(reagents_to_add.len)
+		source.initial_reagents = reagents_to_add
+	source.register_source()
+
+	log_admin("[key_name(usr)] spawned a fluid source at [AREACOORD(T)]")
+	message_admins("[key_name_admin(usr)] spawned a fluid source at [AREACOORD(T)]")

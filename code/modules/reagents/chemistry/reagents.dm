@@ -53,6 +53,10 @@ GLOBAL_LIST_INIT(name2reagent, build_name2reagent())
 	/// color it looks in containers etc
 	var/color = "#000000" // rgb: 0, 0, 0
 
+	// Physical properties for fluid simulation
+	var/density = 1000 // Default density (e.g., water)
+	var/viscosity = 1  // Default viscosity (e.g., water)
+
 	///how fast the reagent is metabolized by the mob
 	var/metabolization_rate = 0.2
 	/// How fast the reagent metabolizes on touch
@@ -289,5 +293,3 @@ Primarily used in reagents/reaction_agents
 		rs += "[R.name], [R.volume]"
 
 	return rs.Join(" | ")
-
-

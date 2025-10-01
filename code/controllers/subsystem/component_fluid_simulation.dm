@@ -1,3 +1,14 @@
+/*
+* Component-Based Fluid Simulation Subsystem (As opposed to stuff like Foam/Smoke which are "technically" fluids, but not really)
+* Handles fluid dynamics for specific fluid types using components attached to turfs.
+*
+* Ideas for later; move_floating - no_gravity trait, use for swimming effect?
+* Hydrostatic Leveling for fluid (equalization pass), and/or pressure-based directionality for spread.
+* Big puddles level quickly, but a sheen of water/oil keeps crawling outward for a long time. (Capillary Action Idea)
+* Electricity, shorting out machines water touches, being more conductive/damaging (maybe poor for saltwater?). I forget the rule for fluid conductivity,
+* all I remember is Wiedemann-Franz.
+*/
+
 #define SS_PROCESSES_SPREADING (1<<0)
 #define SS_PROCESSES_EFFECTS (1<<1)
 
@@ -6,7 +17,7 @@ GLOBAL_VAR_INIT(fluid_debug_enabled, FALSE)
 
 SUBSYSTEM_DEF(component_fluid_simulation)
 	name = "Component Fluid Simulation"
-	wait = 2 SECONDS
+	wait = 5
 	flags = SS_KEEP_TIMING
 	runlevels = RUNLEVEL_GAME | RUNLEVEL_POSTGAME
 	priority = FIRE_PRIORITY_FLUIDS
@@ -235,8 +246,9 @@ SUBSYSTEM_DEF(component_fluid_simulation)
 		var/datum/fluid/fluid_properties = fluid_comp.fluid_type_instance
 		var/viscosity_multiplier = 1 / fluid_properties.viscosity
 
-		// Pressure factor: deeper fluids push harder
-		var/pressure_factor = 1 + (fluid_comp.fluid_amount / FLUID_MAX_DEPTH)
+		// Pressure-Based Flow & Hydrostatic Leveling for deeper fluids
+		// Pressure is proportional to the difference in fluid levels (fluid_diff)
+		var/pressure_factor = 1 + (fluid_diff / FLUID_MAX_DEPTH)
 
 		// Directional factor: diagonal flow is slower
 		var/spread_factor = (direction in GLOB.alldirs) ? 1 : (1 / sqrt(2))
@@ -246,7 +258,7 @@ SUBSYSTEM_DEF(component_fluid_simulation)
 		var/dir_y = (direction & 12) / 4 - 2 // NORTH=1, SOUTH=-1, other=0
 		var/momentum_factor = 1 + (fluid_comp.momentum_x * dir_x + fluid_comp.momentum_y * dir_y)
 
-		var/transfer_amount = min(fluid_diff / 2, fluid_comp.fluid_amount * 0.25) * viscosity_multiplier * pressure_factor * spread_factor * momentum_factor
+		var/transfer_amount = min(fluid_diff / 2, fluid_comp.fluid_amount * 0.5) * viscosity_multiplier * pressure_factor * spread_factor * momentum_factor
 
 		if (transfer_amount > 0.1) // Minimum transfer threshold
 			fluid_comp.removeFluid(transfer_amount)
@@ -306,7 +318,7 @@ SUBSYSTEM_DEF(component_fluid_simulation)
 COMPONENT_FLUID_SUBSYSTEM_DEF(water_simulation)
 	name = "Water Fluid Simulation"
 	simulated_fluid_type = /datum/fluid/water
-	wait = 2 SECONDS
+	wait = 5
 	flags = SS_KEEP_TIMING
 	runlevels = RUNLEVEL_GAME | RUNLEVEL_POSTGAME
 
