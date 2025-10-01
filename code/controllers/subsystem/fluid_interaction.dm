@@ -35,9 +35,8 @@ SUBSYSTEM_DEF(fluid_interaction)
 				if (AM.is_fluid_pushable(fluid_comp.fluid_amount))
 					// Weak, infrequent ambient push
 					if(prob(5)) // 5% chance each call
-						var/datum/fluid/fluid_properties = fluid_comp.fluid_type_instance
-						var/viscosity_resistance = fluid_properties.viscosity
-						var/density_factor = fluid_properties.density / AM.float_density
+						var/viscosity_resistance = fluid_comp.get_viscosity()
+						var/density_factor = fluid_comp.get_density() / AM.float_density
 
 						var/push_strength = (1 / viscosity_resistance * density_factor) / 2 // Weak push
 						if (push_strength > 0.1)
@@ -57,8 +56,7 @@ SUBSYSTEM_DEF(fluid_interaction)
 		// Handle buoyancy for movable atoms
 		for(var/atom/movable/AM in T.contents)
 			// Buoyancy: if object's float_density is less than fluid's density * threshold, it floats (moves up)
-			var/datum/fluid/fluid_properties_buoyancy = fluid_comp.fluid_type_instance
-			if (AM.float_density < fluid_properties_buoyancy.density * FLUID_BUOYANCY_THRESHOLD)
+			if (AM.float_density < fluid_comp.get_density() * FLUID_BUOYANCY_THRESHOLD)
 				var/turf/turf_above = get_step(get_turf(AM), UP)
 				if (turf_above && !turf_above.density) // Check if turf above exists and is not dense/blocking
 					step(AM, UP)
@@ -93,9 +91,8 @@ SUBSYSTEM_DEF(fluid_interaction)
 					knockback_force *= 1.5 // Further amplification for deep water
 
 				// Incorporate fluid density and viscosity into knockback
-				var/datum/fluid/fluid_properties_explosion = fluid_comp.fluid_type_instance
-				var/fluid_density = fluid_properties_explosion.density
-				var/fluid_viscosity = fluid_properties_explosion.viscosity
+				var/fluid_density = fluid_comp.get_density()
+				var/fluid_viscosity = fluid_comp.get_viscosity()
 
 				// Denser fluids might transfer more force, higher viscosity might dampen it
 				knockback_force *= (fluid_density / 1000) // Normalize density (e.g., water = 1)

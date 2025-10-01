@@ -26,7 +26,7 @@
 	else if (current_fluid_level > FLUID_EVAPORATION_POINT && current_fluid_level - new_amount < 0) // If fluid was added and it's above evaporation point
 		if (QDELETED(src))
 			return
-		SEND_SIGNAL(src, COMSIG_FLOODING_STARTED, fluid_comp.fluid_type_instance.type)
+		SEND_SIGNAL(src, COMSIG_FLOODING_STARTED)
 
 /datum/component/floodable/proc/onBreachStateChanged(datum/component/breach/breach_comp, new_state)
 	is_breached = new_state

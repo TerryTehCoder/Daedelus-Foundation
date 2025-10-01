@@ -61,8 +61,8 @@
 
 		if (QDELETED(src))
 			return
-		SEND_SIGNAL(src, COMSIG_FLUID_INTERACTION_ENTERED_FLUID, fluid_comp.fluid_type_instance.type, fluid_comp.fluid_amount)
-		checkFluidState(fluid_comp.fluid_amount, fluid_comp.fluid_type_instance.type)
+		SEND_SIGNAL(src, COMSIG_FLUID_INTERACTION_ENTERED_FLUID, fluid_comp.reagents, fluid_comp.fluid_amount)
+		checkFluidState(fluid_comp.fluid_amount)
 		updateMobVisuals(fluid_comp.fluid_amount)
 	else
 		stopSwimming()
@@ -74,7 +74,7 @@
 	if (fluid_comp && fluid_comp.fluid_amount > FLUID_EVAPORATION_POINT)
 		if (QDELETED(src))
 			return
-		SEND_SIGNAL(src, COMSIG_FLUID_INTERACTION_EXITED_FLUID, fluid_comp.fluid_type_instance.type)
+		SEND_SIGNAL(src, COMSIG_FLUID_INTERACTION_EXITED_FLUID, fluid_comp.reagents)
 		// Play splash sound on exit
 		play_fluid_sound(parent_atom, 'sound/effects/water/splash.ogg', 30, 1)
 	stopSwimming()
@@ -102,7 +102,7 @@
 
 	var/datum/component/fluid/fluid_comp = T.GetComponent(/datum/component/fluid)
 	if (fluid_comp)
-		checkFluidState(fluid_comp.fluid_amount, fluid_comp.fluid_type_instance.type)
+		checkFluidState(fluid_comp.fluid_amount)
 		handleTemperatureEffects(fluid_comp.fluid_amount, fluid_comp.temperature, delta_time)
 		handleReagentEffects(fluid_comp, delta_time)
 		updateMobVisuals(fluid_comp.fluid_amount, delta_time)
@@ -112,7 +112,7 @@
 		clearTemperatureEffects()
 		updateMobVisuals() // Reset visuals when not in fluid
 
-/datum/component/movable_fluid_interaction/proc/checkFluidState(fluid_amount, fluid_type)
+/datum/component/movable_fluid_interaction/proc/checkFluidState(fluid_amount)
 	var/old_is_waist_deep = is_waist_deep
 
 	if (istype(parent, /mob/living))
@@ -151,7 +151,7 @@
 	if (old_is_waist_deep != is_waist_deep)
 		if (QDELETED(src))
 			return
-		SEND_SIGNAL(src, COMSIG_FLUID_INTERACTION_RESTRICTED_STATE_CHANGED, is_waist_deep, fluid_type)
+		SEND_SIGNAL(src, COMSIG_FLUID_INTERACTION_RESTRICTED_STATE_CHANGED, is_waist_deep)
 	updateMobVisuals(fluid_amount)
 
 /datum/component/movable_fluid_interaction/proc/startSwimming(new_speed_modifier)

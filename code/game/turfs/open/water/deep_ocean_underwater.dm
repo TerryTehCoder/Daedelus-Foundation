@@ -14,13 +14,13 @@
 	var/datum/component/fluid/fluid_comp = GetComponent(/datum/component/fluid)
 	if (!fluid_comp)
 		fluid_comp = AddComponent(/datum/component/fluid)
-	fluid_comp.fluid_type = /datum/fluid/water
+	fluid_comp.reagents.add_reagent(/datum/reagent/water, FLUID_MAX_DEPTH)
 	fluid_comp.addFluid(FLUID_MAX_DEPTH, 276.65) // Fill to max depth, 3.5C
 
 	// Add FluidSourceComponent, but keep it inactive to prevent unnecessary generation
 	var/datum/component/fluid_source/fluid_source_comp = GetComponent(/datum/component/fluid_source)
 	if (!fluid_source_comp)
 		fluid_source_comp = AddComponent(/datum/component/fluid_source)
-	fluid_source_comp.generated_fluid_type = /datum/fluid/water
+	fluid_source_comp.initial_reagents = list(/datum/reagent/water = 1)
 	fluid_source_comp.flow_rate = 0 // No flow, it's already full
 	fluid_source_comp.deactivate() // Ensure it's inactive

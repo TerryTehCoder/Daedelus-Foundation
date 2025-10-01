@@ -1079,16 +1079,12 @@ GLOBAL_PROTECT(admin_verbs_hideable)
 	if(!T)
 		return
 
-	var/fluid_type = input("Select a fluid type", "Spawn Fluid Source") as null|anything in typesof(/datum/fluid)
-	if(!fluid_type)
-		return
-
-	var/flow_rate = input("Enter flow rate", "Spawn Fluid Source", 10) as num
+	var/flow_rate = input("Enter flow rate", "Spawn Fluid Source", FLUID_MAX_DEPTH / 5) as num
 	if(!flow_rate)
 		return
 
 	var/list/reagents_to_add = list()
-	if(tgui_alert(usr, "Add reagents?", "Spawn Fluid Source", list("Yes", "No")) == "Yes")
+	if(tgui_alert(usr, "Add specific reagents? (Defaults to water if no)", "Spawn Fluid Source", list("Yes", "No")) == "Yes")
 		while(TRUE)
 			var/reagent_id = input("Select a reagent", "Spawn Fluid Source") as null|anything in subtypesof(/datum/reagent)
 			if(!reagent_id)
@@ -1101,10 +1097,10 @@ GLOBAL_PROTECT(admin_verbs_hideable)
 				break
 
 	var/datum/component/fluid_source/source = T.AddComponent(/datum/component/fluid_source)
-	source.generated_fluid_type = fluid_type
 	source.flow_rate = flow_rate
 	if(reagents_to_add.len)
 		source.initial_reagents = reagents_to_add
+	// If no reagents are specified, it will default to water in the component logic.
 	source.register_source()
 
 	log_admin("[key_name(usr)] spawned a fluid source at [AREACOORD(T)]")

@@ -1,11 +1,10 @@
 /datum/component/fluid
 	var/fluid_amount = 0 // Current depth/volume of fluid
 	var/original_footstep = null // The original footstep sound of the turf
-	var/datum/fluid/fluid_type_instance // Store an instance of the fluid datum
 	var/datum/reagents/reagents = null // Reagent holder for the fluid
 	var/temperature = T20C // Default temperature
+	var/list/reagent_color_overrides
 	var/current_visual_state = "dry" // Current visual state (e.g., "dry", "shallow", "deep")
-	var/is_dirty = FALSE // Flag to indicate if this fluid component's turf needs re-evaluation for lateral diffusion
 	var/image/fluid_overlay // Direct reference to the visual overlay for this fluid component
 
 	// Momentum variables for more dynamic flow
@@ -23,14 +22,11 @@
 	)
 /datum/component/fluid/Initialize()
 	. = ..()
-	if (!fluid_type_instance) // If fluid_type_instance is not set during component creation, default to water
-		fluid_type_instance = new /datum/fluid/water
 	reagents = new(FLUID_MAX_DEPTH) // Initialize the reagent holder
 	reagents.my_atom = parent
 	SSfluid_visuals.registerFluidComponent(src) // Register with the FluidVisuals subsystem
 	if (fluid_amount > FLUID_EVAPORATION_POINT) // We need to flag for an update if it's being made with Fluid.
 		SScomponent_fluid_simulation.global_active_fluid_turfs[parent] = TRUE
-		mark_dirty()
 	updateVisuals()
 
 /datum/component/fluid/Destroy()
@@ -47,22 +43,25 @@
 			T.footstep = FOOTSTEP_WATER
 	if(GLOB.fluid_debug_enabled)
 		message_admins(span_notice("FluidComponent [src.parent]: addFluid([amount], [new_temperature]) called. Current amount: [fluid_amount]"))
-	fluid_amount = min(FLUID_MAX_DEPTH, fluid_amount + amount)
+
+	// Transfer reagents
+	if (source_reagents)
+		source_reagents.trans_to(src, amount)
+	else
+		reagents.add_reagent(/datum/reagent/water, amount) // Default to water if no source is provided
+
+	fluid_amount = reagents.total_volume
 
 	// Update momentum
-	var/total_amount = old_amount + amount
+	var/total_amount = fluid_amount
 	if (total_amount > 0)
 		momentum_x = (momentum_x * old_amount + incoming_momentum_x * amount) / total_amount
 		momentum_y = (momentum_y * old_amount + incoming_momentum_y * amount) / total_amount
 	// Simple temperature mixing for now
 	if(fluid_amount > 0)
-		temperature = (temperature * (fluid_amount - amount) + new_temperature * amount) / fluid_amount
+		temperature = (temperature * old_amount + new_temperature * amount) / fluid_amount
 	else
 		temperature = new_temperature
-
-	// Transfer reagents
-	if (source_reagents)
-		source_reagents.trans_to(src, amount)
 
 	if (old_amount <= FLUID_EVAPORATION_POINT && fluid_amount > FLUID_EVAPORATION_POINT)
 		SScomponent_fluid_simulation.global_active_fluid_turfs[parent] = TRUE
@@ -73,7 +72,6 @@
 	SEND_SIGNAL(src, COMSIG_PARENT_FLUID_AMOUNT_CHANGED, fluid_amount)
 	if(GLOB.fluid_debug_enabled)
 		message_admins(span_notice("FluidComponent [src.parent]: Sent COMSIG_PARENT_FLUID_AMOUNT_CHANGED. New amount: [fluid_amount]"))
-	mark_dirty()
 	updateVisuals()
 
 /datum/component/fluid/proc/removeFluid(amount)
@@ -85,11 +83,17 @@
 			original_footstep = null
 	if(GLOB.fluid_debug_enabled)
 		message_admins(span_notice("FluidComponent [src.parent]: removeFluid([amount]) called. Current amount: [fluid_amount]"))
-	fluid_amount = max(FLUID_DELETING, fluid_amount - amount)
 
 	// Remove a proportional amount of reagents
 	if (reagents && old_amount > 0)
-		reagents.remove_reagent(reagents, amount)
+		var/fraction_to_remove = amount / old_amount
+		if (fraction_to_remove > 0)
+			var/list/reagents_to_process = reagents.reagent_list.Copy()
+			for (var/datum/reagent/R in reagents_to_process)
+				reagents.remove_reagent(R.type, R.volume * fraction_to_remove)
+
+	// Update fluid amount after reagent removal
+	fluid_amount = reagents.total_volume
 
 	if (old_amount > FLUID_EVAPORATION_POINT && fluid_amount <= FLUID_EVAPORATION_POINT)
 		SScomponent_fluid_simulation.global_active_fluid_turfs -= parent
@@ -100,7 +104,6 @@
 	SEND_SIGNAL(src, COMSIG_PARENT_FLUID_AMOUNT_CHANGED, fluid_amount)
 	if(GLOB.fluid_debug_enabled)
 		message_admins(span_notice("FluidComponent [src.parent]: Sent COMSIG_PARENT_FLUID_AMOUNT_CHANGED. New amount: [fluid_amount]"))
-	mark_dirty()
 	updateVisuals()
 
 /datum/component/fluid/proc/getFluidAmount()
@@ -108,6 +111,26 @@
 
 /datum/component/fluid/proc/getTemperature()
 	return temperature
+
+/datum/component/fluid/proc/get_viscosity()
+	if (!reagents || reagents.total_volume == 0)
+		return 1 // Default viscosity
+
+	var/total_viscosity = 0
+	for (var/datum/reagent/R in reagents.reagent_list)
+		total_viscosity += R.viscosity * R.volume
+
+	return total_viscosity / reagents.total_volume
+
+/datum/component/fluid/proc/get_density()
+	if (!reagents || reagents.total_volume == 0)
+		return 1000 // Default density
+
+	var/total_density = 0
+	for (var/datum/reagent/R in reagents.reagent_list)
+		total_density += R.density * R.volume
+
+	return total_density / reagents.total_volume
 
 /datum/component/fluid/proc/updateVisuals()
 	var/new_visual_state = "dry"
@@ -135,48 +158,3 @@
 		if (QDELETED(src))
 			return
 		SEND_SIGNAL(src, COMSIG_FLUID_VISUAL_STATE_CHANGED, current_visual_state, fluid_amount)
-
-
-/datum/component/fluid/proc/mark_dirty()
-	if (!is_dirty)
-		is_dirty = TRUE
-		if(GLOB.fluid_debug_enabled)
-			message_admins(span_notice("FluidComponent [src.parent]: mark_dirty() called. Sending COMSIG_GLOB_FLUID_COMPONENT_DIRTY."))
-		if (QDELETED(src))
-			return
-		SEND_GLOBAL_SIGNAL(COMSIG_GLOB_FLUID_COMPONENT_DIRTY, parent)
-
-// Define fluid types (simple datums for now)
-/datum/fluid
-	var/density = 1000 // Default density (e.g., water)
-	var/viscosity = 1  // Default viscosity (e.g., water)
-	var/color
-
-	// Base Fluid Overlays; If you want you can override these for unique fluid appearances.
-	var/list/icon_state_map = list(
-		"evaporation_still" = "evaporation_still",
-		"fluid_shallow_still" = "fluid_shallow_still",
-		"fluid_mid_still" = "fluid_mid_still",
-		"fluid_deep_still" = "fluid_deep_still",
-		"fluid_deepest_still" = "fluid_deepest_still"
-	)
-
-/datum/fluid/water
-	density = 1000
-	viscosity = 1
-	color = COLOR_OCEAN
-
-/datum/fluid/oil
-	density = 800
-	viscosity = 5
-	color = "#333333"
-
-/datum/fluid/smoke
-	density = 100
-	viscosity = 0.5
-	color = "#808080" // Grey
-
-/datum/fluid/foam
-	density = 500
-	viscosity = 3
-	color = COLOR_WHITE

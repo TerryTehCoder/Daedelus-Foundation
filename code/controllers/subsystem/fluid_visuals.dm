@@ -88,12 +88,21 @@ SUBSYSTEM_DEF(fluid_visuals)
 			message_admins(span_notice("FluidVisuals: Removed fluid overlay from [parent_atom] as fluid amount <= FLUID_EVAPORATION_POINT"))
 
 /datum/controller/subsystem/fluid_visuals/proc/get_fluid_overlay(datum/component/fluid/fluid_comp, visual_state, current_fluid_amount)
-	var/datum/fluid/fluid_type = fluid_comp.fluid_type_instance
 	if(GLOB.fluid_debug_enabled)
-		message_admins(span_notice("FluidVisuals: get_fluid_overlay([fluid_type.type], [visual_state], [current_fluid_amount]) called."))
-	var/cache_key = "[fluid_type.type]_[visual_state]" // Cache based on type and state
+		message_admins(span_notice("FluidVisuals: get_fluid_overlay([visual_state], [current_fluid_amount]) called."))
+	var/cache_key = "fluid_[visual_state]" // Cache based on state only
 	var/image/base_image = fluid_image_cache[cache_key]
-	var/icon_state_name = fluid_type.icon_state_map[visual_state]
+	var/icon_state_name = "fluid_[visual_state]" // Generic icon state name
+
+	// A simple mapping for the base icon states
+	var/list/icon_state_map = list(
+		"evaporation_still" = "evaporation_still",
+		"fluid_shallow_still" = "fluid_shallow_still",
+		"fluid_mid_still" = "fluid_mid_still",
+		"fluid_deep_still" = "fluid_deep_still",
+		"fluid_deepest_still" = "fluid_deepest_still"
+	)
+	icon_state_name = icon_state_map[visual_state]
 
 	if (!base_image)
 		if (!icon_state_name)
@@ -146,9 +155,23 @@ SUBSYSTEM_DEF(fluid_visuals)
 
 	// Apply fluid-specific color
 	if (fluid_comp.reagents && fluid_comp.reagents.total_volume > 0)
-		new_image.color = mix_color_from_reagents(fluid_comp.reagents.reagent_list)
-	else if (fluid_type.color)
-		new_image.color = fluid_type.color
+		var/total_r = 0
+		var/total_g = 0
+		var/total_b = 0
+		var/total_volume = fluid_comp.reagents.total_volume
+		if (total_volume > 0)
+			for (var/datum/reagent/R in fluid_comp.reagents.reagent_list)
+				var/reagent_color = R.color
+				if (fluid_comp.reagent_color_overrides && fluid_comp.reagent_color_overrides[R.type]) //Fluid source attached to turf which specifies color overrides.
+					reagent_color = fluid_comp.reagent_color_overrides[R.type] // Source hands information to fluid component, which uses it here.
+				var/list/rgb = rgb2num(reagent_color) // See Water.dm for example of override, it's a list so you can have as many as you want on a source.
+				total_r += rgb[1] * R.volume
+				total_g += rgb[2] * R.volume
+				total_b += rgb[3] * R.volume
+			var/avg_r = round(total_r / total_volume)
+			var/avg_g = round(total_g / total_volume)
+			var/avg_b = round(total_b / total_volume)
+			new_image.color = rgb(avg_r, avg_g, avg_b)
 
 	if(GLOB.fluid_debug_enabled)
 		message_admins(span_notice("FluidVisuals: Setting color to [new_image.color]"))
