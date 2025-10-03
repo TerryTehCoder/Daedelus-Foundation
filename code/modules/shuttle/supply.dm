@@ -154,6 +154,10 @@ GLOBAL_LIST_INIT(blacklisted_cargo_types, typecacheof(list(
 			SSeconomy.track_purchase(paying_for_this, price, spawning_order.pack.name)
 			var/datum/bank_account/department/cargo = SSeconomy.department_accounts_by_id[ACCOUNT_CAR]
 			cargo.adjust_money(price - spawning_order.pack.get_cost()) //Cargo gets the handling fee
+
+			// Track budget for successful purchases
+			if(SSbudget_system && SSbudget_system.manager)
+				track_cargo_expense(price, "Supply order #[spawning_order.id] delivered: [spawning_order.pack.name]")
 		value += spawning_order.pack.get_cost()
 		SSshuttle.shopping_list -= spawning_order
 		SSshuttle.order_history += spawning_order
@@ -242,6 +246,10 @@ GLOBAL_LIST_INIT(blacklisted_cargo_types, typecacheof(list(
 	var/cargo_split = round(total/2)
 	cargo_account.adjust_money(cargo_split)
 	master_account.adjust_money(total - cargo_split)
+
+	// Track budget for cargo exports
+	if(SSbudget_system && SSbudget_system.manager && total > 0)
+		track_cargo_export(total, "Cargo shuttle exports: [ex.exported_atoms ? ex.exported_atoms.Join(",") : "various items"]")
 
 	SSshuttle.centcom_message = msg
 	investigate_log("Shuttle contents sold for [total] credits. Contents: [ex.exported_atoms ? ex.exported_atoms.Join(",") + "." : "none."] Message: [SSshuttle.centcom_message || "none."]", INVESTIGATE_CARGO)

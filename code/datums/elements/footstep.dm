@@ -152,14 +152,14 @@
 	//cache for sanic speed (lists are references anyways)
 	var/footstep_sounds = GLOB.footstep
 	///list returned by playsound() filled by client mobs who heard the footstep. given to play_fov_effect()
-	var/list/heard_clients
+	// var/list/heard_clients
 
 	if((source.wear_suit?.body_parts_covered | source.w_uniform?.body_parts_covered | source.shoes?.body_parts_covered) & FEET)
 		// we are wearing shoes
 
 		var/shoestep_type = prepared_steps[FOOTSTEP_MOB_SHOE]
 		if(!isnull(shoestep_type) && footstep_sounds[shoestep_type]) // shoestep type can be null
-			heard_clients = playsound(
+			playsound(
 				source.loc,
 				pick(footstep_sounds[shoestep_type][1]),
 				footstep_sounds[shoestep_type][2] * volume * volume_multiplier,
@@ -172,7 +172,7 @@
 		// we are barefoot
 
 		if(source.dna.species.special_step_sounds)
-			heard_clients = playsound(
+			playsound(
 				source.loc,
 				pick(source.dna.species.special_step_sounds),
 				50,
@@ -200,7 +200,7 @@
 					sound_pool = GLOB.footstep
 
 			if(!isnull(sound_pool) && !isnull(barefoot_type) && sound_pool[turf_sound_type])
-				heard_clients = playsound(
+				playsound(
 					source.loc,
 					pick(sound_pool[turf_sound_type][1]),
 					sound_pool[turf_sound_type][2] * volume * volume_multiplier,
@@ -210,8 +210,8 @@
 					vary = sound_vary
 				)
 
-	if(heard_clients)
-		play_fov_effect(source, 5, "footstep", direction, ignore_self = TRUE, override_list = heard_clients)
+	// if(heard_clients)
+	// 	play_fov_effect(source, 5, "footstep", direction, ignore_self = TRUE, override_list = heard_clients)
 
 ///Prepares a footstep for machine walking
 /datum/element/footstep/proc/play_simplestep_machine(atom/movable/source, atom/oldloc, direction, forced, list/old_locs, momentum_change)

@@ -86,7 +86,7 @@
 	var/obj/item/computer_hardware/card_slot/card_slot = computer.all_components[MC_CARD]
 	var/obj/item/card/id/id_card = card_slot?.GetID()
 	if(id_card?.registered_account)
-		if((ACCESS_MANAGEMENT in id_card.access) || (ACCESS_QM in id_card.access))
+		if((ACCESS_ADMIN_LVL3 in id_card.access) || (ACCESS_LOGISTICS_LVL5 in id_card.access))
 			requestonly = FALSE
 			buyer = SSeconomy.department_accounts_by_id[id_card.registered_account.account_job.paycheck_department]
 			can_approve_requests = TRUE
@@ -210,6 +210,36 @@
 			if(!can_purchase_pack(pack))
 				return
 
+			// Check budget constraints for department orders
+			if(!self_paid && SSbudget_system && SSbudget_system.manager)
+				var/department_id = "supply" // Default to supply department
+				var/amount = pack.get_cost()
+
+				// Determine department based on inserted ID card
+				var/obj/item/card/id/id_card = card_slot?.GetID()
+				if(id_card && id_card.registered_account && id_card.registered_account.account_job)
+					var/datum/job/job = id_card.registered_account.account_job
+					switch(job.paycheck_department)
+						if(ACCOUNT_SEC)
+							department_id = "security"
+						if(ACCOUNT_MED)
+							department_id = "medical"
+						if(ACCOUNT_SCI)
+							department_id = "research"
+						if(ACCOUNT_ENG)
+							department_id = "engineering"
+						if(ACCOUNT_CAR)
+							department_id = "supply"
+						if(ACCOUNT_SRV)
+							department_id = "service"
+						if(ACCOUNT_STATION_MASTER)
+							department_id = "command"
+
+				var/datum/budget_data/dept_budget = SSbudget_system.manager.department_budgets[department_id]
+				if(dept_budget && dept_budget.remaining_budget < amount)
+					computer.say("ERROR: Insufficient budget in [dept_budget.department_name]. Required: [amount] credits, Available: [dept_budget.remaining_budget] credits.")
+					return
+
 			var/name = "*None Provided*"
 			var/rank = "*None Provided*"
 			var/ckey = usr.ckey
@@ -254,6 +284,11 @@
 			var/turf/T = get_turf(src)
 			var/datum/supply_order/SO = new(pack, name, rank, ckey, reason, account)
 			SO.generateRequisition(T)
+
+			// Track budget for budget orders
+			if(SSbudget_system && SSbudget_system.manager)
+				track_supply_order(SO)
+
 			if((requestonly && !self_paid) || !(card_slot?.GetID()))
 				SSshuttle.request_list += SO
 			else

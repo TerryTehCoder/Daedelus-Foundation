@@ -1,17 +1,273 @@
+/* LateChoices Panel - Uniform Modal Styling */
+body {
+  background: rgba(0, 0, 0, 0.7);
+  color: #ffffff;
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+  margin: 0;
+  padding: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 5px;
+  max-width: 100%;
+  width: 100%;
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
+
+* {
+  box-sizing: border-box;
+  max-width: 100%;
+}
+
+/* Header Section */
+.header {
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.title {
+  font-size: 22px;
+  font-weight: bold;
+  margin-bottom: 3px;
+  color: #ffffff;
+}
+
+.subtitle {
+  font-size: 14px;
+  opacity: 0.8;
+  margin-bottom: 10px;
+}
+
+/* Status Notices */
+.notice {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 5px;
+  padding: 8px;
+  margin-bottom: 10px;
+  text-align: center;
+  font-size: 13px;
+}
+
+.notice.red {
+  background: rgba(255, 0, 0, 0.2);
+  border-color: rgba(255, 0, 0, 0.5);
+  color: #ff6666;
+}
+
+/* Round Duration */
+.round-duration {
+  background: rgba(0, 255, 255, 0.1);
+  border: 1px solid rgba(0, 255, 255, 0.3);
+  border-radius: 5px;
+  padding: 8px;
+  margin-bottom: 15px;
+  text-align: center;
+  color: #66ffff;
+  font-weight: bold;
+  font-size: 13px;
+}
+
+/* Department Fieldsets */
+fieldset {
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px solid;
+  border-radius: 5px;
+  display: block;
+  width: 100%;
+  max-width: 280px;
+  margin: 0;
+  padding: 6px;
+  min-height: 100px;
+  box-sizing: border-box;
+  flex: 0 0 280px;
+}
+
+legend {
+  color: inherit;
+  font-weight: bold;
+  text-align: center;
+  padding: 0 8px;
+  font-size: 13px;
+  margin-bottom: 5px;
+}
+
+/* Job Links */
 .job {
   display: block;
-  width: 173px;
+  width: 100%;
+  padding: 2px 3px;
+  margin: 1px 0;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 3px;
+  color: #ffffff;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  font-size: 9px;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  box-sizing: border-box;
+  max-width: 100%;
 }
 
-.command {
+.job:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.4);
+  transform: translateY(-1px);
+}
+
+.job.command {
   font-weight: bold;
+  background: rgba(255, 165, 0, 0.2);
+  border-color: rgba(255, 165, 0, 0.4);
+  color: #ffaa66;
 }
 
-.priority {
-  color: #00ff00;
+.job.command:hover {
+  background: rgba(255, 165, 0, 0.3);
+  border-color: rgba(255, 165, 0, 0.6);
+}
+
+/* Priority Jobs */
+.job.priority {
+  color: #66ff66 !important;
   font-weight: bold;
+  background: rgba(0, 255, 0, 0.1) !important;
+  border-color: rgba(0, 255, 0, 0.3) !important;
 }
 
+.job.priority:hover {
+  background: rgba(0, 255, 0, 0.2) !important;
+  border-color: rgba(0, 255, 0, 0.5) !important;
+}
+
+/* No Positions */
 .nopositions {
   font-style: italic;
+  color: #888888;
+  text-align: center;
+  padding: 6px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 3px;
+  font-size: 10px;
+}
+
+/* Job Grid Container */
+.job-grid {
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 4px;
+  padding: 4px 0;
+}
+
+/* Department Cards */
+.department-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px solid;
+  border-radius: 5px;
+  padding: 4px;
+  min-height: 60px;
+  box-sizing: border-box;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.department-header {
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 4px;
+  font-size: 10px;
+  padding: 2px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Department Colors */
+.department-security {
+  border-color: #ff6666;
+}
+
+.department-security legend {
+  color: #ff6666;
+}
+
+.department-medical {
+  border-color: #66ff66;
+}
+
+.department-medical legend {
+  color: #66ff66;
+}
+
+.department-science {
+  border-color: #6666ff;
+}
+
+.department-science legend {
+  color: #6666ff;
+}
+
+.department-engineering {
+  border-color: #ffaa66;
+}
+
+.department-engineering legend {
+  color: #ffaa66;
+}
+
+.department-supply {
+  border-color: #aa66ff;
+}
+
+.department-supply legend {
+  color: #aa66ff;
+}
+
+.department-service {
+  border-color: #66ffff;
+}
+
+.department-service legend {
+  color: #66ffff;
+}
+
+.department-command {
+  border-color: #ffff66;
+}
+
+.department-command legend {
+  color: #ffff66;
+}
+
+/* Responsive Design */
+@media (max-width: 1000px) {
+  .job-grid {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  }
+}
+
+@media (max-width: 800px) {
+  .job-grid {
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  .job-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .department-card {
+    min-height: auto;
+  }
 }

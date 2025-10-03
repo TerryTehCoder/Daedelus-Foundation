@@ -1,6 +1,8 @@
 /obj/item/paper/scp012
 	name = "On Mount Golgotha"
-	icon = 'icons/scp/scp-012.dmi'
+	icon = 'icons/scp/scpstructures(32x32).dmi'
+	icon_state = "scp012"
+
 	desc = "An old paper of handwritten sheet music, titled \"On Mount Golgotha\". The writing is in a conspicuous blood red."
 
 	w_class = WEIGHT_CLASS_GIGANTIC
