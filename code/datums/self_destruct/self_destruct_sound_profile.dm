@@ -15,8 +15,6 @@
 
 /datum/self_destruct_profile/self_destruct_sound_profile/proc/on_start_signal(datum/self_destruct_controller/controller_instance, data = null)
 	SIGNAL_HANDLER
-	// This could maybe be given its own channel (concern about overlapping with relative milestones), but for now I think this is okay.
-	sound_to_playing_players('sound/ai/default/delta.ogg', 30, FALSE, null, CHANNEL_SELF_DESTRUCT_ALARM)
 	log_game("Self-destruct Sound Profile: On Start Signal received.")
 	stop_all_siren_sounds() // Stop all siren-related sounds and timers
 
@@ -31,13 +29,13 @@
 /datum/self_destruct_profile/self_destruct_sound_profile/proc/on_resume_signal(datum/self_destruct_controller/controller_instance, data = null)
 	SIGNAL_HANDLER
 	log_game("Self-destruct Sound Profile: On Resume Signal received.")
-	stop_all_siren_sounds() // Ensure a clean start
+	stop_all_siren_sounds()
 	sound_to_playing_players(siren_loop_sound_path, 30, FALSE, null, CHANNEL_SELF_DESTRUCT_AMBIENCE, loop = TRUE)
 
 /datum/self_destruct_profile/self_destruct_sound_profile/proc/on_final_destruction_signal(datum/self_destruct_controller/controller_instance, data = null)
 	SIGNAL_HANDLER
 	log_game("Self-destruct Sound Profile: On Final Destruction Signal received.")
-	stop_all_siren_sounds() // Stop all siren-related sounds and timers
+	stop_all_siren_sounds()
 	stop_alarm_sound()
 	// Play final destruction sound
 	sound_to_playing_players('sound/machines/alarm.ogg', 30, FALSE, null, CHANNEL_SELF_DESTRUCT_DETONATION) // Play alarm.ogg for final destruction
@@ -47,6 +45,8 @@
 	log_game("Self-destruct Sound Profile: On Milestone Signal received for effect type: [effect_type].")
 	// Handle specific effects directly
 	switch(effect_type)
+		if(SD_EFFECT_DELTAALERT)
+			sound_to_playing_players('sound/ai/default/delta.ogg', 40, FALSE, null, CHANNEL_SELF_DESTRUCT_ALARM)
 		if(SD_EFFECT_ALARM_5)
 			sound_to_playing_players('sound/effects/selfdestruct/SelfDestructAlarm5Tone.ogg', 25, FALSE, null, CHANNEL_SELF_DESTRUCT_ALARM)
 		if(SD_EFFECT_ALARM_4)

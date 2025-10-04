@@ -189,11 +189,8 @@
 			log_game("Self-destruct (ID: [instance_id], Ref: [src]): Countdown finished. Time remaining: [time_remaining].")
 		return // Exit to prevent further processing or negative numbers
 
-	// Decrement time by 1 second
-	time_remaining = time_remaining - 1
-
-	// Check for milestones at the new time_remaining
-	// Iterate through active milestones and trigger those whose trigger_time is less than or equal to current time_remaining
+	// Check for milestones at the current time_remaining BEFORE decrementing
+	// Iterate through active milestones and trigger those whose trigger_time is the current time_remaining
 	// Process in reverse to safely remove elements while iterating
 	for(var/i = active_milestones.len, i >= 1, i--)
 		var/datum/self_destruct_milestone/M = active_milestones[i]
@@ -203,7 +200,9 @@
 				SEND_SIGNAL(src, SD_SIGNAL_MILESTONE, effect_type, time_remaining) // Pass each effect type
 				log_game("Self-destruct (ID: [instance_id], Ref: [src]): SENT SD_SIGNAL_MILESTONE for effect type [effect_type] at [time_remaining] seconds.")
 			active_milestones.Remove(M) // Remove triggered milestone
-		// The list is sorted, so we iterate through all of them to find exact matches.
+
+	// Decrement time by 1 second
+	time_remaining = time_remaining - 1
 
 	SEND_SIGNAL(src, SD_SIGNAL_TICK, time_remaining)
 	log_game("Self-destruct (ID: [instance_id], Ref: [src]): Tick - [time_remaining] seconds remaining.")

@@ -4,6 +4,7 @@
 #define NUKERANGE 127
 
 // Self-destruct effect defines
+#define SD_EFFECT_DELTAALERT "sd_effect_deltaalert"
 #define SD_EFFECT_ALARM_5 "sd_effect_alarm_5"
 #define SD_EFFECT_ALARM_4 "sd_effect_alarm_4"
 #define SD_EFFECT_ALARM_3 "sd_effect_alarm_3"
