@@ -732,6 +732,26 @@ INITIALIZE_IMMEDIATE(/obj/effect/mapping_helpers/no_lava)
 	query_in_progress = FALSE
 	return json_data
 
+/obj/effect/mapping_helpers/flag_height_setter
+	name = "Flag Height Setter"
+	icon = 'icons/effects/mapping_helpers.dmi'
+	icon_state = "flag_height_setter" // Assuming you have or will create this icon state
+	late = TRUE
+	var/target_height = 48 // Default height, can be changed by mappers
+
+/obj/effect/mapping_helpers/flag_height_setter/LateInitialize()
+	var/obj/structure/flag_base/flag = locate() in loc
+	if(flag)
+		if(target_height < flag.min_pole_height || target_height > flag.max_pole_height || (target_height - flag.min_pole_height) % flag.pole_height_step != 0)
+			WARNING("Flag Height Setter at [x],[y],[z] has an invalid target_height ([target_height]). Setting to default min_pole_height ([flag.min_pole_height]).")
+			flag.current_pole_height = flag.min_pole_height
+		else
+			flag.current_pole_height = target_height
+		flag.update_flag_overlay()
+	else
+		WARNING("Flag Height Setter at [x],[y],[z] could not find a flag_base to modify.")
+	qdel(src)
+
 //DM Editor 'simplified' maphelpers.
 #if defined(SIMPLE_MAPHELPERS)
 #define PAINT_PREFIX "s_"
