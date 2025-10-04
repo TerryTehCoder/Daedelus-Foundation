@@ -174,7 +174,7 @@
 /obj/structure/flag_base/victor
 	name = "Victor Flag"
 	flag_icon_state = "flag_victor"
-	desc = "Generally used to indicate that a ship or facility is in need of assistance, or that is is in distress."
+	desc = "Generally used to indicate that a ship or facility is in need of assistance, or that it is in distress."
 
 
 /obj/structure/flag_base/xray
