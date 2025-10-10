@@ -34,7 +34,7 @@
 	qdel(reagents)
 	. = ..()
 
-/datum/component/fluid/proc/addFluid(amount, new_temperature, incoming_momentum_x = 0, incoming_momentum_y = 0, datum/reagents/source_reagents = null)
+/datum/component/fluid/proc/addFluid(amount, new_temperature, incoming_momentum_x = 0, incoming_momentum_y = 0, datum/reagents/source_reagents = null, list/source_color_overrides = null)
 	var/old_amount = fluid_amount
 	if (old_amount < FLUID_SHALLOW && (fluid_amount + amount) >= FLUID_SHALLOW)
 		var/turf/open/T = parent
@@ -49,6 +49,12 @@
 		source_reagents.trans_to(src, amount)
 	else
 		reagents.add_reagent(/datum/reagent/water, amount) // Default to water if no source is provided
+
+	if (source_color_overrides)
+		if (!reagent_color_overrides)
+			reagent_color_overrides = list()
+		for(var/reagent_type in source_color_overrides)
+			reagent_color_overrides[reagent_type] = source_color_overrides[reagent_type]
 
 	fluid_amount = reagents.total_volume
 

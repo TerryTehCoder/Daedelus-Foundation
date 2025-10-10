@@ -29,9 +29,7 @@
 				var/total_initial_volume = get_total_reagent_volume()
 				if (total_initial_volume > 0)
 					source_reagents.add_reagent_list(initial_reagents, initial_fluid_amount / total_initial_volume)
-			fluid_comp.addFluid(initial_fluid_amount, temperature, 0, 0, source_reagents)
-			if (reagent_color_overrides)
-				fluid_comp.reagent_color_overrides = reagent_color_overrides
+			fluid_comp.addFluid(initial_fluid_amount, temperature, 0, 0, source_reagents, reagent_color_overrides)
 			qdel(source_reagents)
 
 	// Defer registration to avoid race conditions during initialization
@@ -116,14 +114,10 @@
 			if (total_initial_volume > 0)
 				var/datum/reagents/source_reagents = new()
 				source_reagents.add_reagent_list(initial_reagents, amount_to_add / total_initial_volume)
-				fluid_comp.addFluid(amount_to_add, temperature, 0, 0, source_reagents)
-				if (reagent_color_overrides)
-					fluid_comp.reagent_color_overrides = reagent_color_overrides
+				fluid_comp.addFluid(amount_to_add, temperature, 0, 0, source_reagents, reagent_color_overrides)
 				qdel(source_reagents)
 		else
-			fluid_comp.addFluid(amount_to_add, temperature)
-			if (reagent_color_overrides)
-				fluid_comp.reagent_color_overrides = reagent_color_overrides
+			fluid_comp.addFluid(amount_to_add, temperature, 0, 0, null, reagent_color_overrides)
 
 		if(GLOB.fluid_debug_enabled)
 			message_admins(span_notice("FluidSourceComponent [src.parent]: Fluid amount on [T] after addFluid: [fluid_comp.getFluidAmount()]."))

@@ -201,13 +201,17 @@ SUBSYSTEM_DEF(component_fluid_simulation)
 		var/viscosity_multiplier = 1 / fluid_comp.get_viscosity()
 		var/transfer_amount = min(fluid_comp.getFluidAmount() * 0.1 * viscosity_multiplier, (FLUID_MAX_DEPTH - fluid_comp_below.getFluidAmount()))
 		if (transfer_amount > 0)
-		{
-			fluid_comp.reagents.copy_to(fluid_comp_below, transfer_amount)
+			var/datum/reagents/transfer_reagents = new()
+			var/fraction = min(1, transfer_amount / fluid_comp.getFluidAmount())
+			for(var/datum/reagent/R in fluid_comp.reagents.reagent_list)
+				transfer_reagents.add_reagent(R.type, R.volume * fraction)
+
+			fluid_comp_below.addFluid(transfer_amount, fluid_comp.getTemperature(), 0, 0, transfer_reagents, fluid_comp.reagent_color_overrides)
 			fluid_comp.removeFluid(transfer_amount)
+			qdel(transfer_reagents)
 			add_active_fluid_turf(turf_below)
 			if(GLOB.fluid_debug_enabled)
 				message_admins(span_notice("ComponentFluidSimulation: Transferred [transfer_amount] fluid from [T] to [turf_below] (downward flow)"))
-		}
 
 /datum/controller/subsystem/component_fluid_simulation/proc/process_lateral_spreading(turf/T, datum/component/fluid/fluid_comp)
 	for (var/direction in GLOB.alldirs)
@@ -226,12 +230,18 @@ SUBSYSTEM_DEF(component_fluid_simulation)
 		var/viscosity_multiplier = 1 / fluid_comp.get_viscosity()
 
 		// Pressure-Based Flow & Hydrostatic Leveling for deeper fluids
-
-		// Pressure is proportional to the difference in fluid levels (fluid_diff)
 		var/pressure_factor = 1 + (fluid_diff / FLUID_MAX_DEPTH)
 
+		// Pressure Gradient: Check for a deeper body of fluid "behind" the current turf to create a wave-like push
+		var/turf/behind_turf = get_step(T, turn(direction, 180))
+		var/pressure_gradient_factor = 1
+		if (behind_turf)
+			var/datum/component/fluid/behind_fluid_comp = behind_turf.GetComponent(/datum/component/fluid)
+			if (behind_fluid_comp && behind_fluid_comp.getFluidAmount() > fluid_comp.getFluidAmount())
+				pressure_gradient_factor = 1 + (behind_fluid_comp.getFluidAmount() - fluid_comp.getFluidAmount()) / FLUID_MAX_DEPTH
+
 		// Directional factor: diagonal flow is slower
-		var/spread_factor = (direction in GLOB.alldirs) ? 1 : (1 / sqrt(2))
+		var/spread_factor = (direction in GLOB.cardinals) ? 1 : (1 / sqrt(2))
 
 		// Momentum factor: fluid prefers to flow in its current direction
 		var/dir_x = (direction & 3) - 2 // EAST=1, WEST=-1, other=0
@@ -239,16 +249,16 @@ SUBSYSTEM_DEF(component_fluid_simulation)
 		var/momentum_factor = 1 + (fluid_comp.momentum_x * dir_x + fluid_comp.momentum_y * dir_y)
 		momentum_factor = max(0.1, momentum_factor) // Ensure momentum doesn't completely stop the flow
 
-		var/transfer_amount = min(fluid_diff / 2, fluid_comp.getFluidAmount() * 0.5) * viscosity_multiplier * pressure_factor * spread_factor * momentum_factor
+		var/transfer_amount = min(fluid_diff / 2, fluid_comp.getFluidAmount() * 0.5) * viscosity_multiplier * pressure_factor * pressure_gradient_factor * spread_factor * momentum_factor
 
-		if (transfer_amount > 0.1) // Minimum transfer threshold
+		if (transfer_amount > 0.01) // Minimum transfer threshold
 		{
 			var/datum/reagents/transfer_reagents = new()
-			var/fraction = transfer_amount / fluid_comp.getFluidAmount()
+			var/fraction = min(1, transfer_amount / fluid_comp.getFluidAmount())
 			for(var/datum/reagent/R in fluid_comp.reagents.reagent_list)
 				transfer_reagents.add_reagent(R.type, R.volume * fraction)
 
-			neighbor_fluid_comp.addFluid(transfer_amount, fluid_comp.getTemperature(), fluid_comp.momentum_x, fluid_comp.momentum_y, transfer_reagents)
+			neighbor_fluid_comp.addFluid(transfer_amount, fluid_comp.getTemperature(), fluid_comp.momentum_x, fluid_comp.momentum_y, transfer_reagents, fluid_comp.reagent_color_overrides)
 			fluid_comp.removeFluid(transfer_amount)
 			qdel(transfer_reagents)
 			add_active_fluid_turf(neighbor_turf)
