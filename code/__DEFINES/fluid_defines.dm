@@ -1,6 +1,6 @@
 #define FLUID_EVAPORATION_POINT 3          // Depth a fluid begins self-deleting
 #define FLUID_DELETING -1                  // Depth a fluid counts as qdel'd
-#define FLUID_SHALLOW 100            // Depth shallow icon is used
+#define FLUID_SHALLOW 4            // Depth shallow icon is used
 #define FLUID_WAIST_DEEP 250               // Depth for waist-deep fluid
 #define FLUID_OVER_MOB_HEAD 300
 #define FLUID_MID_STILL 350                // Depth for mid-deep fluid
@@ -98,3 +98,7 @@
 
 // Z-level traits
 #define Z_TRAIT_UNDERWATER "underwater"
+
+// Physics constants, does this exist somewhere else?
+#define FLUID_GRAVITY 9.8
+#define FLUID_PRESSURE_NORMALIZATION 10000

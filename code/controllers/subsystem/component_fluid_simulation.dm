@@ -34,6 +34,8 @@ SUBSYSTEM_DEF(component_fluid_simulation)
 	var/simulation_bucket_index
 	/// Whether the simulation carousel is currently being processed.
 	var/currently_simulating
+	/// A counter to occasionally run expensive pressure calculations.
+	var/pressure_calculation_tick = 0
 
 	/// A map to quickly find which bucket a turf belongs to.
 	var/list/turf_to_bucket_map = list()
@@ -139,6 +141,11 @@ SUBSYSTEM_DEF(component_fluid_simulation)
 	if(GLOB.fluid_debug_enabled)
 		message_admins(span_notice("ComponentFluidSimulation: fire() called. Processing bucket [simulation_bucket_index]"))
 
+	pressure_calculation_tick++
+	if(pressure_calculation_tick > 10) // Run every 10 ticks of this subsystem
+		_process_pressure_calculation()
+		pressure_calculation_tick = 0
+
 	// Process fluid sources first to ensure they always generate fluid.
 	process_fluid_sources(delta_time)
 
@@ -214,6 +221,10 @@ SUBSYSTEM_DEF(component_fluid_simulation)
 				message_admins(span_notice("ComponentFluidSimulation: Transferred [transfer_amount] fluid from [T] to [turf_below] (downward flow)"))
 
 /datum/controller/subsystem/component_fluid_simulation/proc/process_lateral_spreading(turf/T, datum/component/fluid/fluid_comp)
+	var/list/potential_transfers = list()
+	var/total_outflow = 0
+
+	// Step 1: Calculate Potential Flow for All Neighbors
 	for (var/direction in GLOB.alldirs)
 		var/turf/neighbor_turf = get_step(T, direction)
 		if (!neighbor_turf || !T.CanFluidPass(direction) || !neighbor_turf.CanFluidPass(get_dir(neighbor_turf, T)))
@@ -230,15 +241,7 @@ SUBSYSTEM_DEF(component_fluid_simulation)
 		var/viscosity_multiplier = 1 / fluid_comp.get_viscosity()
 
 		// Pressure-Based Flow & Hydrostatic Leveling for deeper fluids
-		var/pressure_factor = 1 + (fluid_diff / FLUID_MAX_DEPTH)
-
-		// Pressure Gradient: Check for a deeper body of fluid "behind" the current turf to create a wave-like push
-		var/turf/behind_turf = get_step(T, turn(direction, 180))
-		var/pressure_gradient_factor = 1
-		if (behind_turf)
-			var/datum/component/fluid/behind_fluid_comp = behind_turf.GetComponent(/datum/component/fluid)
-			if (behind_fluid_comp && behind_fluid_comp.getFluidAmount() > fluid_comp.getFluidAmount())
-				pressure_gradient_factor = 1 + (behind_fluid_comp.getFluidAmount() - fluid_comp.getFluidAmount()) / FLUID_MAX_DEPTH
+		var/pressure_factor = 1 + (fluid_comp.pressure / FLUID_MAX_DEPTH)
 
 		// Directional factor: diagonal flow is slower
 		var/spread_factor = (direction in GLOB.cardinals) ? 1 : (1 / sqrt(2))
@@ -249,21 +252,41 @@ SUBSYSTEM_DEF(component_fluid_simulation)
 		var/momentum_factor = 1 + (fluid_comp.momentum_x * dir_x + fluid_comp.momentum_y * dir_y)
 		momentum_factor = max(0.1, momentum_factor) // Ensure momentum doesn't completely stop the flow
 
-		var/transfer_amount = min(fluid_diff / 2, fluid_comp.getFluidAmount() * 0.5) * viscosity_multiplier * pressure_factor * pressure_gradient_factor * spread_factor * momentum_factor
+		var/transfer_amount = min(fluid_diff / 2, fluid_comp.getFluidAmount() * 0.5) * viscosity_multiplier * pressure_factor * spread_factor * momentum_factor
 
-		if (transfer_amount > 0.01) // Minimum transfer threshold
-		{
-			var/datum/reagents/transfer_reagents = new()
-			var/fraction = min(1, transfer_amount / fluid_comp.getFluidAmount())
-			for(var/datum/reagent/R in fluid_comp.reagents.reagent_list)
-				transfer_reagents.add_reagent(R.type, R.volume * fraction)
+		if (transfer_amount > 0)
+			potential_transfers[neighbor_turf] = transfer_amount
+			total_outflow += transfer_amount
 
-			neighbor_fluid_comp.addFluid(transfer_amount, fluid_comp.getTemperature(), fluid_comp.momentum_x, fluid_comp.momentum_y, transfer_reagents, fluid_comp.reagent_color_overrides)
-			fluid_comp.removeFluid(transfer_amount)
-			qdel(transfer_reagents)
-			add_active_fluid_turf(neighbor_turf)
-			// The neighbor's addFluid will mark it as dirty, continuing the spread
-		}
+	if (total_outflow < 0.001) // Minimum transfer threshold
+		return
+
+	// Step 2: Sum and Cap the Total Outflow
+	var/scaling_factor = 1
+	if (total_outflow > fluid_comp.getFluidAmount())
+		scaling_factor = fluid_comp.getFluidAmount() / total_outflow
+
+	// Step 3: Execute All Transfers
+	var/total_fluid_removed = 0
+	for (var/turf/neighbor_turf in potential_transfers)
+		var/transfer_amount = potential_transfers[neighbor_turf] * scaling_factor
+		if (transfer_amount <= 0)
+			continue
+
+		var/datum/component/fluid/neighbor_fluid_comp = neighbor_turf.GetComponent(/datum/component/fluid)
+		if (neighbor_fluid_comp.getFluidAmount() + transfer_amount < FLUID_SHALLOW)
+			continue
+		var/datum/reagents/transfer_reagents = new()
+		var/fraction = min(1, transfer_amount / fluid_comp.getFluidAmount())
+		for(var/datum/reagent/R in fluid_comp.reagents.reagent_list)
+			transfer_reagents.add_reagent(R.type, R.volume * fraction)
+
+		neighbor_fluid_comp.addFluid(transfer_amount, fluid_comp.getTemperature(), fluid_comp.momentum_x, fluid_comp.momentum_y, transfer_reagents, fluid_comp.reagent_color_overrides)
+		qdel(transfer_reagents)
+		add_active_fluid_turf(neighbor_turf)
+		total_fluid_removed += transfer_amount
+
+	fluid_comp.removeFluid(total_fluid_removed)
 
 /datum/controller/subsystem/component_fluid_simulation/proc/process_turf_effects(turf/T, datum/component/fluid/fluid_comp, delta_time)
 
@@ -287,6 +310,54 @@ SUBSYSTEM_DEF(component_fluid_simulation)
 	// Decay momentum
 	fluid_comp.momentum_x *= (1 - fluid_comp.momentum_decay)
 	fluid_comp.momentum_y *= (1 - fluid_comp.momentum_decay)
+
+/datum/controller/subsystem/component_fluid_simulation/proc/_process_pressure_calculation()
+	var/list/processed_turfs = list()
+
+	for(var/turf/T in global_active_fluid_turfs)
+		if(T in processed_turfs)
+			continue
+
+		var/list/fluid_body = list()
+		var/list/queue = list(T)
+		processed_turfs[T] = TRUE
+		var/total_fluid = 0
+		var/total_density = 0
+
+		while(queue.len > 0)
+			var/turf/current_turf = queue[1]
+			queue.Remove(current_turf)
+			fluid_body += current_turf
+
+			var/datum/component/fluid/fluid_comp = current_turf.GetComponent(/datum/component/fluid)
+			if(fluid_comp)
+				var/fluid_amount = fluid_comp.getFluidAmount()
+				total_fluid += fluid_amount
+				total_density += fluid_comp.get_density() * fluid_amount
+
+			for(var/direction in GLOB.alldirs)
+				var/turf/neighbor_turf = get_step(current_turf, direction)
+				if(neighbor_turf && !(neighbor_turf in processed_turfs))
+					var/datum/component/fluid/neighbor_fluid_comp = neighbor_turf.GetComponent(/datum/component/fluid)
+					if(neighbor_fluid_comp && neighbor_fluid_comp.getFluidAmount() > FLUID_EVAPORATION_POINT)
+						processed_turfs[neighbor_turf] = TRUE
+						queue += neighbor_turf
+
+		// Now we have the whole fluid body and the total fluid amount.
+		// We model pressure by P = pgh (density * gravity * height)
+		var/pressure = 0
+		if(fluid_body.len > 0 && total_fluid > 0)
+			var/average_density = total_density / total_fluid
+			var/average_height = total_fluid / fluid_body.len
+			pressure = (average_density * FLUID_GRAVITY * average_height) / FLUID_PRESSURE_NORMALIZATION
+
+		for(var/turf/body_turf in fluid_body)
+			var/datum/component/fluid/body_fluid_comp = body_turf.GetComponent(/datum/component/fluid)
+			if(body_fluid_comp)
+				body_fluid_comp.pressure = pressure
+
+		if(MC_TICK_CHECK)
+			return
 
 /datum/controller/subsystem/component_fluid_simulation/proc/process_fluid_sources(delta_time)
 	// Process all fluid sources from the dedicated list to ensure they are always active.

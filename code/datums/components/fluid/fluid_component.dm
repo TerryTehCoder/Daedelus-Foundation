@@ -11,6 +11,7 @@
 	var/momentum_x = 0
 	var/momentum_y = 0
 	var/momentum_decay = 0.5 // Amount of momentum lost each tick
+	var/pressure = 0 // Used for pressure calculations.
 
 	// Configuration for visual thresholds and icon states
 	var/list/visual_thresholds = list(
@@ -149,7 +150,12 @@
 	else if (fluid_amount >= FLUID_SHALLOW)
 		new_visual_state = "fluid_shallow_still"
 	else if (fluid_amount > FLUID_EVAPORATION_POINT)
-		new_visual_state = "evaporation_still"
+		// If we still have some fluid but it's below shallow, show shallow still unless we were already showing fluid
+		// This helps us avoid flickering between dry and fluid shallow, creating awkward looking bubbles in the fluid pool.
+		if (current_visual_state != "dry" && current_visual_state != "evaporation_still")
+			new_visual_state = "fluid_shallow_still"
+		else
+			new_visual_state = "evaporation_still"
 	else if (fluid_amount > FLUID_DELETING)
 		new_visual_state = "evaporation_still" // This state is for when fluid is barely present but not yet evaporated
 	else
