@@ -1096,10 +1096,25 @@ GLOBAL_PROTECT(admin_verbs_hideable)
 			if(tgui_alert(usr, "Add another reagent?", "Spawn Fluid Source", list("Yes", "No")) == "No")
 				break
 
+	var/list/color_overrides = list()
+	if(tgui_alert(usr, "Add color overrides?", "Spawn Fluid Source", list("Yes", "No")) == "Yes")
+		while(TRUE)
+			var/reagent_id = input("Select a reagent to override", "Spawn Fluid Source") as null|anything in reagents_to_add
+			if(!reagent_id)
+				break
+			var/color = input("Enter color hex (e.g., #FF0000)", "Spawn Fluid Source") as text
+			if(!color)
+				continue
+			color_overrides[reagent_id] = color
+			if(tgui_alert(usr, "Add another color override?", "Spawn Fluid Source", list("Yes", "No")) == "No")
+				break
+
 	var/datum/component/fluid_source/source = T.AddComponent(/datum/component/fluid_source)
 	source.flow_rate = flow_rate
 	if(reagents_to_add.len)
 		source.initial_reagents = reagents_to_add
+	if(color_overrides.len)
+		source.reagent_color_overrides = color_overrides
 	// If no reagents are specified, it will default to water in the component logic.
 	source.register_source()
 

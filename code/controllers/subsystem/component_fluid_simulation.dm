@@ -25,7 +25,7 @@ SUBSYSTEM_DEF(component_fluid_simulation)
 	/// A static, global list of all turfs with any active fluid, managed by all simulation subsystems.
 	var/static/list/global_active_fluid_turfs = list()
 
-	// Carousel system for distributing processing
+	// Carousel system for distributing processing (Idea Stolen from the base fluid system)
 	/// The number of buckets in the simulation carousel.
 	var/num_simulation_buckets
 	/// The set of buckets containing turfs to simulate.
@@ -139,12 +139,31 @@ SUBSYSTEM_DEF(component_fluid_simulation)
 	if(GLOB.fluid_debug_enabled)
 		message_admins(span_notice("ComponentFluidSimulation: fire() called. Processing bucket [simulation_bucket_index]"))
 
+	// Process fluid sources first to ensure they always generate fluid.
+	process_fluid_sources(delta_time)
+
+	// Immediately process the spread for source turfs to avoid delays from the bucket system.
+	var/list/sources_to_process = active_fluid_sources.Copy()
+	for(var/turf/T_source in sources_to_process)
+		var/datum/component/fluid/fluid_comp = process_turf_validation(T_source)
+		if (!fluid_comp)
+			continue
+		process_lateral_spreading(T_source, fluid_comp)
+		process_downward_flow(T_source, fluid_comp)
+		process_turf_effects(T_source, fluid_comp, delta_time)
+		if (MC_TICK_CHECK)
+			return
+
 	var/list/current_simulation_bucket = simulation_carousel[simulation_bucket_index]
 	var/list/turfs_to_process_in_bucket = current_simulation_bucket.Copy()
 	if(GLOB.fluid_debug_enabled)
 		message_admins(span_notice("ComponentFluidSimulation: Processing [turfs_to_process_in_bucket.len] turfs in bucket [simulation_bucket_index]."))
 
 	for(var/turf/T in turfs_to_process_in_bucket)
+		// Skip processing source turfs again if they are in the current bucket
+		if (T in active_fluid_sources)
+			continue
+
 		var/datum/component/fluid/fluid_comp = process_turf_validation(T)
 		if (!fluid_comp)
 			continue
@@ -155,8 +174,6 @@ SUBSYSTEM_DEF(component_fluid_simulation)
 
 		if (MC_TICK_CHECK)
 			return // We use return to exit early, the wrapper will handle the flag
-
-	process_fluid_sources(delta_time)
 
 /datum/controller/subsystem/component_fluid_simulation/proc/process_turf_validation(turf/T)
 	if (QDELETED(T))
