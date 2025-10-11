@@ -43,6 +43,9 @@ SUBSYSTEM_DEF(component_fluid_simulation)
 	/// A dedicated list of turfs with active FluidSourceComponents to ensure they are always processed.
 	var/list/active_fluid_sources = list()
 
+	/// A list of turfs that are on the edge of a fluid body, to be processed with higher priority.
+	var/list/priority_fluid_turfs = list()
+
 /datum/controller/subsystem/component_fluid_simulation/Initialize()
 	. = ..()
 	if (!global_active_fluid_turfs)
@@ -149,9 +152,24 @@ SUBSYSTEM_DEF(component_fluid_simulation)
 	// Process fluid sources first to ensure they always generate fluid.
 	process_fluid_sources(delta_time)
 
+	// Process priority turfs (edges of fluid bodies) every tick for smoother visuals.
+	var/list/priority_turfs_to_process = priority_fluid_turfs
+	priority_fluid_turfs = list() // Reset for the next tick
+	for(var/turf/T_priority in priority_turfs_to_process)
+		var/datum/component/fluid/fluid_comp = process_turf_validation(T_priority)
+		if (!fluid_comp)
+			continue
+		process_lateral_spreading(T_priority, fluid_comp)
+		process_downward_flow(T_priority, fluid_comp)
+		process_turf_effects(T_priority, fluid_comp, delta_time)
+		if (MC_TICK_CHECK)
+			return
+
 	// Immediately process the spread for source turfs to avoid delays from the bucket system.
 	var/list/sources_to_process = active_fluid_sources.Copy()
 	for(var/turf/T_source in sources_to_process)
+		if (T_source in priority_turfs_to_process) // Don't process twice
+			continue
 		var/datum/component/fluid/fluid_comp = process_turf_validation(T_source)
 		if (!fluid_comp)
 			continue
@@ -167,8 +185,8 @@ SUBSYSTEM_DEF(component_fluid_simulation)
 		message_admins(span_notice("ComponentFluidSimulation: Processing [turfs_to_process_in_bucket.len] turfs in bucket [simulation_bucket_index]."))
 
 	for(var/turf/T in turfs_to_process_in_bucket)
-		// Skip processing source turfs again if they are in the current bucket
-		if (T in active_fluid_sources)
+		// Skip processing source turfs and priority turfs again
+		if ((T in active_fluid_sources) || (T in priority_turfs_to_process))
 			continue
 
 		var/datum/component/fluid/fluid_comp = process_turf_validation(T)
@@ -238,6 +256,11 @@ SUBSYSTEM_DEF(component_fluid_simulation)
 		if (fluid_diff <= 0)
 			continue
 
+		// If a fluid turf is next to a dry turf, it's an edge. Prioritize it.
+		if (neighbor_fluid_comp.getFluidAmount() <= FLUID_EVAPORATION_POINT)
+			priority_fluid_turfs[T] = TRUE
+			priority_fluid_turfs[neighbor_turf] = TRUE
+
 		var/viscosity_multiplier = 1 / fluid_comp.get_viscosity()
 
 		// Pressure-Based Flow & Hydrostatic Leveling for deeper fluids
@@ -252,7 +275,9 @@ SUBSYSTEM_DEF(component_fluid_simulation)
 		var/momentum_factor = 1 + (fluid_comp.momentum_x * dir_x + fluid_comp.momentum_y * dir_y)
 		momentum_factor = max(0.1, momentum_factor) // Ensure momentum doesn't completely stop the flow
 
-		var/transfer_amount = min(fluid_diff / 2, fluid_comp.getFluidAmount() * 0.5) * viscosity_multiplier * pressure_factor * spread_factor * momentum_factor
+		var/flow_rate_multiplier = 0.1 * pressure_factor // Increased flow rate based on pressure
+		var/base_transfer_amount = fluid_comp.getFluidAmount() * flow_rate_multiplier
+		var/transfer_amount = min(fluid_diff, base_transfer_amount) * viscosity_multiplier * spread_factor * momentum_factor
 
 		if (transfer_amount > 0)
 			potential_transfers[neighbor_turf] = transfer_amount

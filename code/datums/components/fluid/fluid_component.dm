@@ -10,7 +10,7 @@
 	// Momentum variables for more dynamic flow
 	var/momentum_x = 0
 	var/momentum_y = 0
-	var/momentum_decay = 0.5 // Amount of momentum lost each tick
+	var/momentum_decay = 0.25 // Amount of momentum lost each tick
 	var/pressure = 0 // Used for pressure calculations.
 
 	// Configuration for visual thresholds and icon states
@@ -35,7 +35,7 @@
 	qdel(reagents)
 	. = ..()
 
-/datum/component/fluid/proc/addFluid(amount, new_temperature, incoming_momentum_x = 0, incoming_momentum_y = 0, datum/reagents/source_reagents = null, list/source_color_overrides = null)
+/datum/component/fluid/proc/addFluid(amount, new_temperature, incoming_momentum_x = 0, incoming_momentum_y = 0, datum/reagents/source_reagents, list/source_color_overrides)
 	var/old_amount = fluid_amount
 	if (old_amount < FLUID_SHALLOW && (fluid_amount + amount) >= FLUID_SHALLOW)
 		var/turf/open/T = parent

@@ -44,7 +44,7 @@
 		initial_fluid_amount = FLUID_MAX_DEPTH,
 		temperature = 276.65, // 3.5C, or 38.3F || Around the avg ocean temp
 		initial_reagents = list(/datum/reagent/water = FLUID_MAX_DEPTH),
-		flow_rate = FLUID_MAX_DEPTH / 5, // Replenish 20% of max depth per tick
+		flow_rate = FLUID_MAX_DEPTH / 3, // Replenish 33% of max depth per tick
 		is_active = TRUE,
 		reagent_color_overrides = list(
 			/datum/reagent/water = "#0B3D91"

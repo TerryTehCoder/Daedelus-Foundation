@@ -14,8 +14,10 @@
 	var/initial_fluid_amount = 0 // If greater than 0, this amount of fluid will be added to the turf on initialization
 	var/list/deferred_turfs // List to hold turfs that couldn't be registered immediately
 
-/datum/component/fluid_source/Initialize()
-	. = ..()
+/datum/component/fluid_source/Initialize(list/args)
+	if(args)
+		for(var/arg_name in args)
+			src.vars[arg_name] = args[arg_name]
 	// Activate the fluid source by default upon initialization.
 	activate()
 
