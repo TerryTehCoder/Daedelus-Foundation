@@ -25,20 +25,10 @@ SUBSYSTEM_DEF(component_fluid_simulation)
 	/// A static, global list of all turfs with any active fluid, managed by all simulation subsystems.
 	var/static/list/global_active_fluid_turfs = list()
 
-	// Carousel system for distributing processing (Idea Stolen from the base fluid system)
-	/// The number of buckets in the simulation carousel.
-	var/num_simulation_buckets
-	/// The set of buckets containing turfs to simulate.
-	var/list/simulation_carousel
-	/// The index of the simulation carousel bucket currently being processed.
-	var/simulation_bucket_index
 	/// Whether the simulation carousel is currently being processed.
 	var/currently_simulating
 	/// A counter to occasionally run expensive pressure calculations.
 	var/pressure_calculation_tick = 0
-
-	/// A map to quickly find which bucket a turf belongs to.
-	var/list/turf_to_bucket_map = list()
 
 	/// A dedicated list of turfs with active FluidSourceComponents to ensure they are always processed.
 	var/list/active_fluid_sources = list()
@@ -50,7 +40,6 @@ SUBSYSTEM_DEF(component_fluid_simulation)
 	. = ..()
 	if (!global_active_fluid_turfs)
 		global_active_fluid_turfs = list()
-	initialize_simulation_carousel()
 	RegisterSignal(src, COMSIG_BREACH_CREATED, PROC_REF(onBreachCreated))
 	RegisterSignal(src, COMSIG_BREACH_REPAIRED, PROC_REF(onBreachRepaired))
 	SEND_SIGNAL(src, COMSIG_FLUID_SIMULATION_READY, src) // Signal that this simulation subsystem is ready
@@ -58,23 +47,7 @@ SUBSYSTEM_DEF(component_fluid_simulation)
 /datum/controller/subsystem/component_fluid_simulation/Destroy()
 	UnregisterSignal(src, COMSIG_BREACH_CREATED)
 	UnregisterSignal(src, COMSIG_BREACH_REPAIRED)
-	qdel(simulation_carousel)
-	qdel(turf_to_bucket_map)
 	. = ..()
-
-/datum/controller/subsystem/component_fluid_simulation/proc/initialize_simulation_carousel()
-	// We'll use a fixed number of buckets for now, e.g., 10, to distribute the load.
-	// This can be made dynamic based on `wait` or other factors if needed.
-	num_simulation_buckets = 10
-	if(GLOB.fluid_debug_enabled)
-		message_admins(span_notice("ComponentFluidSimulation: Initializing carousel with [num_simulation_buckets] buckets."))
-	simulation_carousel = list()
-	simulation_carousel.len = num_simulation_buckets
-	for(var/i in 1 to num_simulation_buckets)
-		simulation_carousel[i] = list()
-		if(GLOB.fluid_debug_enabled)
-			message_admins(span_notice("ComponentFluidSimulation: Bucket [i] initialized as [simulation_carousel[i]]."))
-	simulation_bucket_index = 1
 
 /datum/controller/subsystem/component_fluid_simulation/proc/onBreachCreated(datum/component/breach/breach_comp, turf/location, flow_rate)
 	var/datum/component/fluid/fluid_comp = location.GetComponent(/datum/component/fluid)
@@ -91,34 +64,17 @@ SUBSYSTEM_DEF(component_fluid_simulation)
 	return
 
 /datum/controller/subsystem/component_fluid_simulation/proc/add_active_fluid_turf(turf/T)
-	if (!turf_to_bucket_map[T]) // Check if turf is already active
-		var/bucket_index = rand(1, num_simulation_buckets)
-
-		// Ensure the target bucket is a list before adding.
-		if (!istype(simulation_carousel[bucket_index], /list))
-			simulation_carousel[bucket_index] = list()
-
-		var/list/temp_bucket = simulation_carousel[bucket_index]
-		temp_bucket.Add(T)
-		turf_to_bucket_map[T] = bucket_index // Store the bucket index, not the list reference
-
+	if (!global_active_fluid_turfs[T])
 		global_active_fluid_turfs[T] = TRUE
 		SEND_SIGNAL(src, COMSIG_FLUID_SIMULATION_TURF_ACTIVE, T)
-
 		if (QDELETED(src))
 			return
 
 /datum/controller/subsystem/component_fluid_simulation/proc/remove_active_fluid_turf(turf/T)
-	var/bucket_index = turf_to_bucket_map[T]
-	if (isnum(bucket_index)) // Check if a bucket index was stored
-		var/list/bucket = simulation_carousel[bucket_index]
-		if (bucket)
-			bucket -= T
-		turf_to_bucket_map -= T
+	if (global_active_fluid_turfs[T])
 		global_active_fluid_turfs -= T
 		if(GLOB.fluid_debug_enabled)
 			message_admins(span_notice("ComponentFluidSimulation: Removed turf [T] from active list"))
-
 		if (QDELETED(src))
 			return
 		SEND_SIGNAL(src, COMSIG_FLUID_SIMULATION_TURF_INACTIVE, T)
@@ -132,17 +88,10 @@ SUBSYSTEM_DEF(component_fluid_simulation)
 	_process_simulation_logic()
 	currently_simulating = FALSE
 
-	// Always advance the carousel, even if the simulation logic was cut short by MC_TICK_CHECK
-	simulation_bucket_index++
-	if(simulation_bucket_index > num_simulation_buckets)
-		simulation_bucket_index = 1
-	if(GLOB.fluid_debug_enabled)
-		message_admins(span_notice("ComponentFluidSimulation: Finished processing. Next bucket: [simulation_bucket_index]"))
-
 /datum/controller/subsystem/component_fluid_simulation/proc/_process_simulation_logic()
 	var/delta_time = wait / (1 SECONDS) // Convert wait to seconds for consistent delta_time
 	if(GLOB.fluid_debug_enabled)
-		message_admins(span_notice("ComponentFluidSimulation: fire() called. Processing bucket [simulation_bucket_index]"))
+		message_admins(span_notice("ComponentFluidSimulation: fire() called."))
 
 	pressure_calculation_tick++
 	if(pressure_calculation_tick > 10) // Run every 10 ticks of this subsystem
@@ -165,30 +114,14 @@ SUBSYSTEM_DEF(component_fluid_simulation)
 		if (MC_TICK_CHECK)
 			return
 
-	// Immediately process the spread for source turfs to avoid delays from the bucket system.
-	var/list/sources_to_process = active_fluid_sources.Copy()
-	for(var/turf/T_source in sources_to_process)
-		if (T_source in priority_turfs_to_process) // Don't process twice
-			continue
-		var/datum/component/fluid/fluid_comp = process_turf_validation(T_source)
-		if (!fluid_comp)
-			continue
-		process_lateral_spreading(T_source, fluid_comp)
-		process_downward_flow(T_source, fluid_comp)
-		process_turf_effects(T_source, fluid_comp, delta_time)
-		if (MC_TICK_CHECK)
-			return
+	// Create a copy of the active turfs list and sort it by fluid amount in descending order.
+	var/list/turfs_to_process = global_active_fluid_turfs.Copy()
+	sortTim(turfs_to_process, GLOBAL_PROC_REF(cmp_turf_fluid_amount_desc))
 
-	var/list/current_simulation_bucket = simulation_carousel[simulation_bucket_index]
-	var/list/turfs_to_process_in_bucket = current_simulation_bucket.Copy()
 	if(GLOB.fluid_debug_enabled)
-		message_admins(span_notice("ComponentFluidSimulation: Processing [turfs_to_process_in_bucket.len] turfs in bucket [simulation_bucket_index]."))
+		message_admins(span_notice("ComponentFluidSimulation: Processing [turfs_to_process.len] sorted turfs."))
 
-	for(var/turf/T in turfs_to_process_in_bucket)
-		// Skip processing source turfs and priority turfs again
-		if ((T in active_fluid_sources) || (T in priority_turfs_to_process))
-			continue
-
+	for(var/turf/T in turfs_to_process)
 		var/datum/component/fluid/fluid_comp = process_turf_validation(T)
 		if (!fluid_comp)
 			continue
@@ -278,6 +211,11 @@ SUBSYSTEM_DEF(component_fluid_simulation)
 		var/flow_rate_multiplier = 0.1 * pressure_factor // Increased flow rate based on pressure
 		var/base_transfer_amount = fluid_comp.getFluidAmount() * flow_rate_multiplier
 		var/transfer_amount = min(fluid_diff, base_transfer_amount) * viscosity_multiplier * spread_factor * momentum_factor
+
+		// Gradual equalization logic
+		if (fluid_comp.body_average_amount > neighbor_fluid_comp.getFluidAmount())
+			var/equalization_cap = (fluid_comp.body_average_amount - neighbor_fluid_comp.getFluidAmount()) * FLUID_EQUALIZATION_FACTOR
+			transfer_amount = min(transfer_amount, equalization_cap)
 
 		if (transfer_amount > 0)
 			potential_transfers[neighbor_turf] = transfer_amount
@@ -369,17 +307,19 @@ SUBSYSTEM_DEF(component_fluid_simulation)
 						queue += neighbor_turf
 
 		// Now we have the whole fluid body and the total fluid amount.
-		// We model pressure by P = pgh (density * gravity * height)
 		var/pressure = 0
+		var/average_fluid_amount = 0
 		if(fluid_body.len > 0 && total_fluid > 0)
+			// We model pressure by P = pgh (density * gravity * height)
 			var/average_density = total_density / total_fluid
-			var/average_height = total_fluid / fluid_body.len
-			pressure = (average_density * FLUID_GRAVITY * average_height) / FLUID_PRESSURE_NORMALIZATION
+			average_fluid_amount = total_fluid / fluid_body.len
+			pressure = (average_density * FLUID_GRAVITY * average_fluid_amount) / FLUID_PRESSURE_NORMALIZATION
 
 		for(var/turf/body_turf in fluid_body)
 			var/datum/component/fluid/body_fluid_comp = body_turf.GetComponent(/datum/component/fluid)
 			if(body_fluid_comp)
 				body_fluid_comp.pressure = pressure
+				body_fluid_comp.body_average_amount = average_fluid_amount
 
 		if(MC_TICK_CHECK)
 			return
@@ -392,6 +332,16 @@ SUBSYSTEM_DEF(component_fluid_simulation)
 			source_comp.ProcessSource(delta_time)
 			if(GLOB.fluid_debug_enabled)
 				message_admins(span_notice("ComponentFluidSimulation: Processing FluidSourceComponent on turf [T_source]"))
+
+// Comparator proc for sorting turfs by fluid amount in descending order.
+/proc/cmp_turf_fluid_amount_desc(turf/A, turf/B)
+	var/datum/component/fluid/fluid_A = A.GetComponent(/datum/component/fluid)
+	var/datum/component/fluid/fluid_B = B.GetComponent(/datum/component/fluid)
+	if (!fluid_A)
+		return 1
+	if (!fluid_B)
+		return -1
+	return fluid_B.getFluidAmount() - fluid_A.getFluidAmount()
 
 #undef SS_PROCESSES_SPREADING
 #undef SS_PROCESSES_EFFECTS

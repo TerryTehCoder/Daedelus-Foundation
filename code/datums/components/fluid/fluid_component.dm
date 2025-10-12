@@ -12,6 +12,7 @@
 	var/momentum_y = 0
 	var/momentum_decay = 0.25 // Amount of momentum lost each tick
 	var/pressure = 0 // Used for pressure calculations.
+	var/body_average_amount = 0 // The average fluid amount for the contiguous body of fluid this turf is a part of.
 
 	// Configuration for visual thresholds and icon states
 	var/list/visual_thresholds = list(

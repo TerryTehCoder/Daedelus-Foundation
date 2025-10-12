@@ -102,3 +102,4 @@
 // Physics constants, does this exist somewhere else?
 #define FLUID_GRAVITY 9.8
 #define FLUID_PRESSURE_NORMALIZATION 10000
+#define FLUID_EQUALIZATION_FACTOR 0.5 // Multiplier for how quickly fluid equalizes. 1 is instant, 0 is never.
