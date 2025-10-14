@@ -54,7 +54,7 @@
 	if (istype(T))
 		if (SScomponent_fluid_simulation)
 			SScomponent_fluid_simulation.active_fluid_sources += T
-			SScomponent_fluid_simulation.add_active_fluid_turf(T)
+			SScomponent_fluid_simulation.add_dirty_turf(T)
 
 			if(GLOB.fluid_debug_enabled)
 				message_admins(span_notice("FluidSourceComponent [src.parent]: Registered source on turf [T] with fluid simulation."))

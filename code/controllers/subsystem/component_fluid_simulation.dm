@@ -22,10 +22,17 @@ SUBSYSTEM_DEF(component_fluid_simulation)
 	runlevels = RUNLEVEL_GAME | RUNLEVEL_POSTGAME
 	priority = FIRE_PRIORITY_FLUIDS
 
-	/// A static, global list of all turfs with any active fluid, managed by all simulation subsystems.
+	/// A static, global list of all turfs with any active fluid. Other subsystems may reference this.
 	var/static/list/global_active_fluid_turfs = list()
+	/// The queue of turfs whose fluid levels have changed and need to be processed.
+	var/static/list/dirty_turfs_queue = list()
+	/// An associative list for fast checking of whether a turf is already in the dirty queue.
+	var/static/list/is_dirty_turf = list()
 
-	/// Whether the simulation carousel is currently being processed.
+	/// The maximum number of turfs to process in a single simulation tick.
+	var/turfs_to_process_per_tick = 200
+
+	/// Whether the simulation is currently processing.
 	var/currently_simulating
 	/// A counter to occasionally run expensive pressure calculations.
 	var/pressure_calculation_tick = 0
@@ -54,23 +61,29 @@ SUBSYSTEM_DEF(component_fluid_simulation)
 
 	if (fluid_comp)
 		fluid_comp.reagents.add_reagent(/datum/reagent/water, flow_rate) // Breaches create water by default for now
-		add_active_fluid_turf(location)
+		add_dirty_turf(location)
 
 /datum/controller/subsystem/component_fluid_simulation/proc/onBreachRepaired(datum/component/breach/breach_comp, turf/location)
 	// When a breach is repaired, the fluid flow from that source stops.
 	// The existing fluid will still be processed until it evaporates or flows away.
 	return
 
-/datum/controller/subsystem/component_fluid_simulation/proc/add_active_fluid_turf(turf/T)
-	if (!global_active_fluid_turfs[T])
-		global_active_fluid_turfs[T] = TRUE
-		SEND_SIGNAL(src, COMSIG_FLUID_SIMULATION_TURF_ACTIVE, T)
-		if (QDELETED(src))
-			return
+/datum/controller/subsystem/component_fluid_simulation/proc/add_dirty_turf(turf/T)
+	if(!is_dirty_turf[T])
+		is_dirty_turf[T] = TRUE
+		dirty_turfs_queue.Add(T)
+
+		// Also manage the global list for any other systems that might rely on it.
+		if (!global_active_fluid_turfs[T])
+			global_active_fluid_turfs[T] = TRUE
+			SEND_SIGNAL(src, COMSIG_FLUID_SIMULATION_TURF_ACTIVE, T)
+			if (QDELETED(src))
+				return
 
 /datum/controller/subsystem/component_fluid_simulation/proc/remove_active_fluid_turf(turf/T)
 	if (global_active_fluid_turfs[T])
 		global_active_fluid_turfs -= T
+		is_dirty_turf -= T // Ensure it's marked as not dirty if it's being forcefully removed.
 		if(GLOB.fluid_debug_enabled)
 			message_admins(span_notice("ComponentFluidSimulation: Removed turf [T] from active list"))
 		if (QDELETED(src))
@@ -100,14 +113,13 @@ SUBSYSTEM_DEF(component_fluid_simulation)
 	process_fluid_sources(delta_time)
 
 
-	// Create a copy of the active turfs list and sort it by fluid amount in descending order.
-	var/list/turfs_to_process = global_active_fluid_turfs.Copy()
-	sortTim(turfs_to_process, GLOBAL_PROC_REF(cmp_turf_fluid_amount_desc))
+	// Process a chunk of turfs from the dirty queue.
+	var/turfs_processed = 0
+	while(turfs_processed < turfs_to_process_per_tick && dirty_turfs_queue.len)
+		var/turf/T = dirty_turfs_queue[1]
+		dirty_turfs_queue.Cut(1, 2) // Efficiently remove the first element
+		is_dirty_turf -= T // Mark as clean now that we are processing it.
 
-	if(GLOB.fluid_debug_enabled)
-		message_admins(span_notice("ComponentFluidSimulation: Processing [turfs_to_process.len] sorted turfs."))
-
-	for(var/turf/T in turfs_to_process)
 		var/datum/component/fluid/fluid_comp = process_turf_validation(T)
 		if (!fluid_comp)
 			continue
@@ -116,8 +128,9 @@ SUBSYSTEM_DEF(component_fluid_simulation)
 		process_downward_flow(T, fluid_comp)
 		process_turf_effects(T, fluid_comp, delta_time)
 
+		turfs_processed++
 		if (MC_TICK_CHECK)
-			return // We use return to exit early, the wrapper will handle the flag
+			return
 
 /datum/controller/subsystem/component_fluid_simulation/proc/process_turf_validation(turf/T)
 	if (QDELETED(T))
@@ -153,7 +166,7 @@ SUBSYSTEM_DEF(component_fluid_simulation)
 			fluid_comp_below.addFluid(transfer_amount, fluid_comp.getTemperature(), 0, 0, transfer_reagents, fluid_comp.reagent_color_overrides)
 			fluid_comp.removeFluid(transfer_amount)
 			qdel(transfer_reagents)
-			add_active_fluid_turf(turf_below)
+			add_dirty_turf(turf_below)
 			if(GLOB.fluid_debug_enabled)
 				message_admins(span_notice("ComponentFluidSimulation: Transferred [transfer_amount] fluid from [T] to [turf_below] (downward flow)"))
 
@@ -216,7 +229,7 @@ SUBSYSTEM_DEF(component_fluid_simulation)
 			potential_transfers[neighbor_turf] = transfer_amount
 			total_outflow += transfer_amount
 
-	if (total_outflow < 0.00001) // Minimum transfer threshold
+	if (total_outflow < 0.001) // Minimum transfer threshold
 		return
 
 	// Step 2: Sum and Cap the Total Outflow
@@ -240,7 +253,7 @@ SUBSYSTEM_DEF(component_fluid_simulation)
 
 		neighbor_fluid_comp.addFluid(transfer_amount, fluid_comp.getTemperature(), fluid_comp.momentum_x, fluid_comp.momentum_y, transfer_reagents, fluid_comp.reagent_color_overrides)
 		qdel(transfer_reagents)
-		add_active_fluid_turf(neighbor_turf)
+		add_dirty_turf(neighbor_turf)
 		total_fluid_removed += transfer_amount
 
 	fluid_comp.removeFluid(total_fluid_removed)
@@ -326,16 +339,6 @@ SUBSYSTEM_DEF(component_fluid_simulation)
 			source_comp.ProcessSource(delta_time)
 			if(GLOB.fluid_debug_enabled)
 				message_admins(span_notice("ComponentFluidSimulation: Processing FluidSourceComponent on turf [T_source]"))
-
-// Comparator proc for sorting turfs by fluid amount in descending order.
-/proc/cmp_turf_fluid_amount_desc(turf/A, turf/B)
-	var/datum/component/fluid/fluid_A = A.GetComponent(/datum/component/fluid)
-	var/datum/component/fluid/fluid_B = B.GetComponent(/datum/component/fluid)
-	if (!fluid_A)
-		return 1
-	if (!fluid_B)
-		return -1
-	return fluid_B.getFluidAmount() - fluid_A.getFluidAmount()
 
 #undef SS_PROCESSES_SPREADING
 #undef SS_PROCESSES_EFFECTS

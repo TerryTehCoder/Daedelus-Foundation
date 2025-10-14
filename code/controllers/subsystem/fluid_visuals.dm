@@ -90,6 +90,15 @@ SUBSYSTEM_DEF(fluid_visuals)
 /datum/controller/subsystem/fluid_visuals/proc/get_fluid_overlay(datum/component/fluid/fluid_comp, visual_state, current_fluid_amount)
 	if(GLOB.fluid_debug_enabled)
 		message_admins(span_notice("FluidVisuals: get_fluid_overlay([visual_state], [current_fluid_amount]) called."))
+
+	// Check for a fluid source component to override visuals
+	var/turf/parent_turf = get_turf(fluid_comp.parent)
+	if (istype(parent_turf) && parent_turf.GetComponent(/datum/component/fluid_source))
+		visual_state = "fluid_deepest_still"
+		current_fluid_amount = FLUID_DEEPEST // Force to max for consistent visuals
+		if(GLOB.fluid_debug_enabled)
+			message_admins(span_notice("FluidVisuals: Overriding visual state for fluid source at [parent_turf]."))
+
 	var/cache_key = "fluid_[visual_state]" // Cache based on state only
 	var/image/base_image = fluid_image_cache[cache_key]
 	var/icon_state_name = "fluid_[visual_state]" // Generic icon state name

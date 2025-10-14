@@ -1079,7 +1079,7 @@ GLOBAL_PROTECT(admin_verbs_hideable)
 	if(!T)
 		return
 
-	var/flow_rate = input("Enter flow rate", "Spawn Fluid Source", FLUID_MAX_DEPTH / 5) as num
+	var/flow_rate = input("Enter flow rate", "Spawn Fluid Source", FLUID_MAX_DEPTH / 3) as num
 	if(!flow_rate)
 		return
 

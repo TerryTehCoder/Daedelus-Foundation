@@ -72,7 +72,7 @@
 		temperature = new_temperature
 
 	if (old_amount <= FLUID_EVAPORATION_POINT && fluid_amount > FLUID_EVAPORATION_POINT)
-		SScomponent_fluid_simulation.global_active_fluid_turfs[parent] = TRUE
+		SScomponent_fluid_simulation.add_dirty_turf(parent)
 	if(GLOB.fluid_debug_enabled)
 		message_admins(span_notice("FluidComponent [src.parent]: Fluid amount after addFluid: [fluid_amount]"))
 	if (QDELETED(src))
@@ -104,7 +104,7 @@
 	fluid_amount = reagents.total_volume
 
 	if (old_amount > FLUID_EVAPORATION_POINT && fluid_amount <= FLUID_EVAPORATION_POINT)
-		SScomponent_fluid_simulation.global_active_fluid_turfs -= parent
+		SScomponent_fluid_simulation.remove_active_fluid_turf(parent)
 	if(GLOB.fluid_debug_enabled)
 		message_admins(span_notice("FluidComponent [src.parent]: Fluid amount after removeFluid: [fluid_amount]"))
 	if (QDELETED(src))
