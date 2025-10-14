@@ -33,8 +33,6 @@ SUBSYSTEM_DEF(component_fluid_simulation)
 	/// A dedicated list of turfs with active FluidSourceComponents to ensure they are always processed.
 	var/list/active_fluid_sources = list()
 
-	/// A list of turfs that are on the edge of a fluid body, to be processed with higher priority.
-	var/list/priority_fluid_turfs = list()
 
 /datum/controller/subsystem/component_fluid_simulation/Initialize()
 	. = ..()
@@ -101,18 +99,6 @@ SUBSYSTEM_DEF(component_fluid_simulation)
 	// Process fluid sources first to ensure they always generate fluid.
 	process_fluid_sources(delta_time)
 
-	// Process priority turfs (edges of fluid bodies) every tick for smoother visuals.
-	var/list/priority_turfs_to_process = priority_fluid_turfs
-	priority_fluid_turfs = list() // Reset for the next tick
-	for(var/turf/T_priority in priority_turfs_to_process)
-		var/datum/component/fluid/fluid_comp = process_turf_validation(T_priority)
-		if (!fluid_comp)
-			continue
-		process_lateral_spreading(T_priority, fluid_comp)
-		process_downward_flow(T_priority, fluid_comp)
-		process_turf_effects(T_priority, fluid_comp, delta_time)
-		if (MC_TICK_CHECK)
-			return
 
 	// Create a copy of the active turfs list and sort it by fluid amount in descending order.
 	var/list/turfs_to_process = global_active_fluid_turfs.Copy()
@@ -189,10 +175,6 @@ SUBSYSTEM_DEF(component_fluid_simulation)
 		if (fluid_diff <= 0)
 			continue
 
-		// If a fluid turf is next to a dry turf, it's an edge. Prioritize it.
-		if (neighbor_fluid_comp.getFluidAmount() <= FLUID_EVAPORATION_POINT)
-			priority_fluid_turfs[T] = TRUE
-			priority_fluid_turfs[neighbor_turf] = TRUE
 
 		var/viscosity_multiplier = 1 / fluid_comp.get_viscosity()
 
@@ -208,26 +190,40 @@ SUBSYSTEM_DEF(component_fluid_simulation)
 		var/momentum_factor = 1 + (fluid_comp.momentum_x * dir_x + fluid_comp.momentum_y * dir_y)
 		momentum_factor = max(0.1, momentum_factor) // Ensure momentum doesn't completely stop the flow
 
-		var/flow_rate_multiplier = 0.1 * pressure_factor // Increased flow rate based on pressure
-		var/base_transfer_amount = fluid_comp.getFluidAmount() * flow_rate_multiplier
-		var/transfer_amount = min(fluid_diff, base_transfer_amount) * viscosity_multiplier * spread_factor * momentum_factor
+		// We calculate two types of flow potential and use the greater of the two.
+		// 1. Equalization: How much fluid to share to level out the pool. This can be zero if the turf is at/below the average.
+		var/outflow_potential_equalization = (fluid_comp.getFluidAmount() - fluid_comp.body_average_amount) * FLUID_EQUALIZATION_FACTOR
 
-		// Gradual equalization logic
-		if (fluid_comp.body_average_amount > neighbor_fluid_comp.getFluidAmount())
-			var/equalization_cap = (fluid_comp.body_average_amount - neighbor_fluid_comp.getFluidAmount()) * FLUID_EQUALIZATION_FACTOR
-			transfer_amount = min(transfer_amount, equalization_cap)
+		// 2. Spreading: A baseline outward pressure to ensure fluid always tries to expand into empty space.
+		var/outflow_potential_spread = fluid_comp.getFluidAmount() * FLUID_SPREAD_FACTOR
+
+		// The actual potential is the greater of the two. This ensures equalization happens when needed, but spreading never completely stops.
+		var/outflow_potential = max(outflow_potential_equalization, outflow_potential_spread)
+
+		// Sources are a special case and should always be able to push fluid out aggressively.
+		var/datum/component/fluid_source/source_comp = T.GetComponent(/datum/component/fluid_source)
+		if (source_comp && source_comp.is_active)
+			outflow_potential = max(outflow_potential, fluid_comp.getFluidAmount() * FLUID_EQUALIZATION_FACTOR)
+
+		if (outflow_potential <= 0)
+			continue
+
+		var/flow_rate_multiplier = pressure_factor // Increased flow rate based on pressure
+		var/base_transfer_amount = outflow_potential * flow_rate_multiplier
+		var/transfer_amount = min(fluid_diff, base_transfer_amount) * viscosity_multiplier * spread_factor * momentum_factor
 
 		if (transfer_amount > 0)
 			potential_transfers[neighbor_turf] = transfer_amount
 			total_outflow += transfer_amount
 
-	if (total_outflow < 0.001) // Minimum transfer threshold
+	if (total_outflow < 0.00001) // Minimum transfer threshold
 		return
 
 	// Step 2: Sum and Cap the Total Outflow
 	var/scaling_factor = 1
-	if (total_outflow > fluid_comp.getFluidAmount())
-		scaling_factor = fluid_comp.getFluidAmount() / total_outflow
+	var/max_outflow = fluid_comp.getFluidAmount()
+	if (total_outflow > max_outflow)
+		scaling_factor = max_outflow / total_outflow
 
 	// Step 3: Execute All Transfers
 	var/total_fluid_removed = 0
@@ -237,8 +233,6 @@ SUBSYSTEM_DEF(component_fluid_simulation)
 			continue
 
 		var/datum/component/fluid/neighbor_fluid_comp = neighbor_turf.GetComponent(/datum/component/fluid)
-		if (neighbor_fluid_comp.getFluidAmount() + transfer_amount < FLUID_SHALLOW)
-			continue
 		var/datum/reagents/transfer_reagents = new()
 		var/fraction = min(1, transfer_amount / fluid_comp.getFluidAmount())
 		for(var/datum/reagent/R in fluid_comp.reagents.reagent_list)
