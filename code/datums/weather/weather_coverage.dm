@@ -131,12 +131,13 @@
 			if (!current_turf) // No turf at this Z-level
 				// If we're at the highest relevant Z-level and there's no turf, then the turf below it might be exposed.
 				if(z == max_z_level) // If the very top is empty, the turf below it might be exposed
-					var/turf/turf_to_expose = GetBelow(locate(column_x, column_y, z))
-					if(turf_to_expose) // Ensure it exists
-						if(turf_to_expose.z in initialized_relevant_z_levels) // Only expose if the Z-level is relevant
-							set_exposed(turf_to_expose, TRUE)
-							if(debug_verbose_coverage_messages)
-								message_admins(span_adminnotice("Weather Coverage: Exposed turf [turf_to_expose.loc] due to empty space at max_z_level."))
+					if (z - 1 >= 1) // Ensure z-1 is a valid Z-level
+						var/turf/turf_to_expose = locate(column_x, column_y, z - 1)
+						if(turf_to_expose) // Ensure it exists
+							if(turf_to_expose.z in initialized_relevant_z_levels) // Only expose if the Z-level is relevant
+								set_exposed(turf_to_expose, TRUE)
+								if(debug_verbose_coverage_messages)
+									message_admins(span_adminnotice("Weather Coverage: Exposed turf [turf_to_expose.loc] due to empty space at max_z_level."))
 				continue // Always continue to the next lower Z-level, let the main logic handle subsequent turfs
 
 			// If we are at the highest Z-level and this turf exists, it is exposed.

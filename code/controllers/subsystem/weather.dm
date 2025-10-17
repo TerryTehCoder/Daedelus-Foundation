@@ -397,7 +397,7 @@ SUBSYSTEM_DEF(weather)
 		return FALSE
 
 	var/list/cache_data = json_decode(json_data)
-	if(!cache_data || !cache_data["map_hash"] || !cache_data["exposed_turfs"])
+	if(!cache_data || !cache_data["map_hash"] || !cache_data["exposed_turfs_by_z"])
 		message_admins(span_adminnotice("Weather Subsystem: Cache file '[cache_file_path]' is corrupted or invalid."))
 		return FALSE
 
@@ -406,28 +406,16 @@ SUBSYSTEM_DEF(weather)
 		return FALSE
 
 	message_admins(span_adminnotice("Weather Subsystem: Loading weather coverage from cache for map '[current_map_config.map_name]'."))
-	var/list/exposed_turfs_data = cache_data["exposed_turfs"]
+	var/list/exposed_turfs_by_z = cache_data["exposed_turfs_by_z"]
 
-	if(!exposed_turfs_data || !exposed_turfs_data.len)
+	if(!exposed_turfs_by_z || !exposed_turfs_by_z.len)
 		return TRUE // Nothing to load
 
-	// Check if the data is in the new (list of lists) or old (flat list) format.
-	if(islist(exposed_turfs_data[1]))
-		// New format: list of lists
-		for(var/list/coords in exposed_turfs_data)
-			var/turf/T = locate(coords[1], coords[2], coords[3])
-			if(T)
-				T.cover_cache = FALSE
-				SSweather.weather_chunking.register_exposed_turf(T)
-				T.needs_weather_update = TRUE
-	else
-		// Old format: flat list
-		for(var/i = 1, i <= exposed_turfs_data.len, i += 3)
-			if(i + 2 > exposed_turfs_data.len) break // Avoid out of bounds
-			var/x = exposed_turfs_data[i]
-			var/y = exposed_turfs_data[i+1]
-			var/z = exposed_turfs_data[i+2]
-			var/turf/T = locate(x, y, z)
+	for(var/z_key in exposed_turfs_by_z)
+		var/z = text2num(z_key)
+		var/list/turfs_on_z = exposed_turfs_by_z[z_key]
+		for(var/list/coords in turfs_on_z)
+			var/turf/T = locate(coords[1], coords[2], z)
 			if(T)
 				T.cover_cache = FALSE
 				SSweather.weather_chunking.register_exposed_turf(T)
@@ -609,12 +597,15 @@ SUBSYSTEM_DEF(weather)
 		is_baking = FALSE
 		return FALSE
 
-	var/list/exposed_turfs_coords = list()
+	var/list/exposed_turfs_by_z = list()
 	var/list/exposed_turfs = weather_chunking.get_turfs_in_chunks(weather_chunking.get_all_turf_chunk_keys())
 	for(var/turf/T in exposed_turfs)
-		exposed_turfs_coords.Add(list(T.x, T.y, T.z))
+		var/z_key = "[T.z]"
+		if(!exposed_turfs_by_z[z_key])
+			exposed_turfs_by_z[z_key] = list()
+		exposed_turfs_by_z[z_key] += list(list(T.x, T.y))
 
-	var/list/cache_data = list("map_hash" = map_hash, "exposed_turfs" = exposed_turfs_coords)
+	var/list/cache_data = list("map_hash" = map_hash, "exposed_turfs_by_z" = exposed_turfs_by_z)
 	var/json_data = json_encode(cache_data)
 
 	var/cache_dir = "data/weather_cache/[current_map_config.map_name]"
