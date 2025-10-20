@@ -82,6 +82,19 @@ GLOBAL_PROTECT(admin_verbs_admin)
 	/datum/admins/proc/paintings_manager,
 	/datum/admins/proc/display_tags,
 	/proc/browse_messages,
+	/client/proc/award_experience,
+	/client/proc/set_player_rank,
+	/client/proc/reset_player_progress,
+	/client/proc/view_player_progress,
+	/client/proc/persistent_progression_panel,
+	/client/proc/master_persistence_panel,
+	/client/proc/facility_persistence_panel,
+	/client/proc/scp_persistence_panel,
+	/client/proc/technology_persistence_panel,
+	/client/proc/medical_persistence_panel,
+	/client/proc/security_persistence_panel,
+	/client/proc/research_persistence_panel,
+	/client/proc/personnel_persistence_panel,
 	)
 GLOBAL_LIST_INIT(admin_verbs_ban, list(/client/proc/unban_panel, /client/proc/ban_panel, /client/proc/stickybanpanel))
 GLOBAL_PROTECT(admin_verbs_ban)

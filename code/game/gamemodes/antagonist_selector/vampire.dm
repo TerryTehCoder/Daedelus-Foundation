@@ -1,9 +1,9 @@
 /datum/antagonist_selector/vampire
 	restricted_jobs = list(JOB_CYBORG, JOB_AI)
 	protected_jobs = list(
-		JOB_SECURITY_MARSHAL,
-		JOB_CAPTAIN,
-		JOB_AUGUR,
+		JOB_SECURITY_DIRECTOR,
+		JOB_SITE_DIRECTOR,
+		JOB_MEDICAL_DIRECTOR,
 	)
 
 	antag_datum = /datum/antagonist/vampire

@@ -3,6 +3,10 @@
 	stamina = new(src)
 	stats = new(src)
 
+	// Add persistent progression verbs for all living mobs
+	add_verb(src, /mob/living/proc/show_persistent_progress)
+	add_verb(src, /mob/living/proc/debug_persistent_data)
+
 	register_init_signals()
 	if(unique_name)
 		give_unique_name()

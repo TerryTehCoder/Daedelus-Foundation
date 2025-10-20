@@ -262,6 +262,36 @@
 			if(!can_purchase_pack(pack))
 				return
 
+			// Check budget constraints for department orders
+			if(!self_paid && SSbudget_system && SSbudget_system.manager)
+				var/department_id = "supply" // Default to supply department
+				var/amount = pack.get_cost()
+
+				// Try to determine which department is ordering based on user's job
+				if(ishuman(usr))
+					var/mob/living/carbon/human/H = usr
+					var/job_title = H.get_assignment(hand_first = TRUE)
+					switch(job_title)
+						if("Security Officer", "Head of Security", "Warden")
+							department_id = "security"
+						if("Medical Doctor", "Chief Medical Officer", "Chemist", "Virologist")
+							department_id = "medical"
+						if("Scientist", "Research Director")
+							department_id = "research"
+						if("Station Engineer", "Chief Engineer")
+							department_id = "engineering"
+						if("Cargo Technician", "Quartermaster")
+							department_id = "supply"
+						if("Assistant", "Bartender", "Chef", "Janitor")
+							department_id = "service"
+						if("Captain", "Head of Personnel")
+							department_id = "command"
+
+				var/datum/budget_data/dept_budget = SSbudget_system.manager.department_budgets[department_id]
+				if(dept_budget && dept_budget.remaining_budget < amount)
+					say("ERROR: Insufficient budget in [dept_budget.department_name]. Required: [amount] credits, Available: [dept_budget.remaining_budget] credits.")
+					return
+
 			var/name = "*None Provided*"
 			var/rank = "*None Provided*"
 			var/ckey = usr.ckey
@@ -314,6 +344,11 @@
 			var/turf/T = get_turf(src)
 			var/datum/supply_order/SO = new(pack, name, rank, ckey, reason, account, null, applied_coupon)
 			SO.generateRequisition(T)
+
+			// Track budget for supply orders
+			if(SSbudget_system && SSbudget_system.manager)
+				track_supply_order(SO)
+
 			if(requestonly && !self_paid)
 				SSshuttle.request_list += SO
 			else

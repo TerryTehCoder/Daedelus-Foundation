@@ -25,6 +25,12 @@ GLOBAL_LIST_INIT(hallucination_list, list(
 	/datum/hallucination/oh_yeah = 1
 	))
 
+GLOBAL_LIST_INIT(hallucination_list_water_related, list(
+	/datum/hallucination/water_message = 60,
+	/datum/hallucination/water_sounds = 50,
+	/datum/hallucination/water_hudscrew = 12,
+	/datum/hallucination/water_fake_alert = 12,
+	))
 
 /mob/living/carbon/proc/handle_hallucinations(delta_time, times_fired)
 	if(!hallucination)
@@ -1638,3 +1644,70 @@ GLOBAL_LIST_INIT(hallucination_list, list(
 	H.preparePixelProjectile(target, start)
 	H.fire()
 	qdel(src)
+
+/datum/hallucination/water_message
+/datum/hallucination/water_message/New(mob/living/carbon/C, forced = TRUE)
+	set waitfor = FALSE
+	..()
+	var/list/message_pool = list(
+		span_notice("You feel a drop of water land on your head."),
+		span_notice("You hear a faint splash nearby."),
+		span_warning("Your clothes feel damp."),
+		span_warning("You feel a sudden chill, as if submerged in cold water."),
+		span_warning("The air tastes of salt."),
+		span_warning("You feel a strange pressure, like being deep underwater."),
+		span_warning("You see a ripple in your peripheral vision."),
+		span_warning("A faint, distant gurgle echoes in your ears.")
+	)
+	var/chosen = pick(message_pool)
+	feedback_details += "Message: [chosen]"
+	to_chat(target, chosen)
+	qdel(src)
+
+/datum/hallucination/water_sounds
+/datum/hallucination/water_sounds/New(mob/living/carbon/C, forced = TRUE)
+	set waitfor = FALSE
+	..()
+	var/turf/source = random_far_turf()
+	var/sound_type = pick("drip", "wave", "splash")
+	feedback_details += "Type: [sound_type]"
+	switch(sound_type)
+		if("drip")
+			target.playsound_local(source, 'sound/effects/water/drip.ogg', 30, 1)
+		if("wave")
+			target.playsound_local(source, 'sound/effects/water/waves.ogg', 50, 1)
+		if("splash")
+			target.playsound_local(source, 'sound/effects/water/splash.ogg', 40, 1)
+	qdel(src)
+
+/datum/hallucination/water_hudscrew
+/datum/hallucination/water_hudscrew/New(mob/living/carbon/C, forced = TRUE)
+	set waitfor = FALSE
+	..()
+	target.set_screwyhud(SCREWYHUD_CRIT) // Using crit to simulate blurry vision/water effect
+	feedback_details += "Type: Water HUD"
+	QDEL_IN(src, rand(100, 250))
+
+/datum/hallucination/water_hudscrew/Destroy()
+	target?.set_screwyhud(SCREWYHUD_NONE)
+	return ..()
+
+/datum/hallucination/water_fake_alert
+	var/alert_type
+
+/datum/hallucination/water_fake_alert/New(mob/living/carbon/C, forced = TRUE)
+	set waitfor = FALSE
+	..()
+	alert_type = pick(ALERT_NOT_ENOUGH_OXYGEN, ALERT_PRESSURE)
+	feedback_details += "Type: [alert_type]"
+	switch(alert_type)
+		if(ALERT_NOT_ENOUGH_OXYGEN)
+			target.throw_alert(alert_type, /atom/movable/screen/alert/not_enough_oxy, override = TRUE)
+		if(ALERT_PRESSURE)
+			target.throw_alert(alert_type, /atom/movable/screen/alert/highpressure, 2, override = TRUE)
+	addtimer(CALLBACK(src, PROC_REF(cleanup)), 150)
+
+/datum/hallucination/water_fake_alert/proc/cleanup()
+	target.clear_alert(alert_type, clear_override = TRUE)
+	qdel(src)
+

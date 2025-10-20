@@ -9,7 +9,7 @@
 	return
 
 /datum/preference/choiced/employer/create_default_value()
-	return /datum/employer/none
+	return /datum/employer/scp
 
 /datum/preference/choiced/employer/init_possible_values()
 	return subtypesof(/datum/employer)
@@ -29,7 +29,7 @@
 	return create_default_value()
 
 /datum/preference/choiced/employer/create_default_value()
-	return /datum/employer/none
+	return /datum/employer/scp
 
 /datum/preference/choiced/employer/button_act(mob/user, datum/preferences/prefs, list/params)
 	if(params["info"])

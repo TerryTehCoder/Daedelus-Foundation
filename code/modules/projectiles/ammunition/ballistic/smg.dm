@@ -33,3 +33,8 @@
 	name = ".45 incendiary bullet casing"
 	desc = "A .45 bullet casing."
 	projectile_type = /obj/projectile/bullet/incendiary/c45
+
+/obj/item/ammo_casing/c45/rubber
+	desc = "A .45 rubber bullet casing."
+	projectile_type = /obj/projectile/bullet/c9mm/rubber
+	icon_state = "pistol-brass-rubber"

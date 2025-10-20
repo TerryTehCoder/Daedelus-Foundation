@@ -1973,6 +1973,34 @@
 			return
 		return display_tags()
 
+	else if(href_list["clarity_admin_prompt"])
+		if(!check_rights(R_ADMIN))
+			return
+
+		var/mob/living/player = locate(href_list["player_ref"])
+		var/obj/machinery/scp294/machine = locate(href_list["scp_ref"])
+
+		if(!player || !machine)
+			to_chat(usr, span_warning("Error: Player or SCP-294 machine not found."), confidential = TRUE)
+			return
+
+		var/timer_id = text2num(href_list["timer_id"])
+		var/prompt_id = href_list["prompt_id"]
+
+		// Cancel the pending fallback message and remove from tracking
+		if(timer_id)
+			deltimer(timer_id)
+		if(GLOB.pending_clarity_prompts && GLOB.pending_clarity_prompts[prompt_id])
+			GLOB.pending_clarity_prompts -= prompt_id
+
+		var/admin_message = input("Provide a custom response for [player.ckey]/[player.real_name] who drank Clarity from [machine.name].", "Clarity Admin Response", "") as message|null
+		if(admin_message)
+			to_chat(player, span_admin(admin_message))
+			message_admins(span_adminnotice("[key_name_admin(usr)] provided a custom Clarity response for [key_name_admin(player)]: \"[admin_message]\""))
+		else
+			to_chat(usr, span_notice("No custom response provided."), confidential = TRUE)
+		return
+
 	else if(href_list["mark_datum"])
 		if(!check_rights(R_ADMIN))
 			return
