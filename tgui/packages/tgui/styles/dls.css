@@ -1,0 +1,15 @@
+.DLS-status-bad {
+  color: #ff4136;
+}
+
+.DLS-status-average {
+  color: #ff851b;
+}
+
+.DLS-status-warning {
+  color: #ffdc00;
+}
+
+.DLS-status-good {
+  color: #2ecc40;
+}

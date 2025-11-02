@@ -5,3 +5,7 @@
 #define COMSIG_HOLOMAP_VIEWER_GAINED "comsig_holomap_add_viewer"
 ///from base of [/datum/holomap_holder/proc/remove_viewer]: (mob/viewer)
 #define COMSIG_HOLOMAP_VIEWER_REMOVED "comsig_holomap_remove_viewer"
+
+// Power Grid Signals
+#define COMSIG_MACHINERY_POWER_FAILURE "machinery_power_failure"
+#define COMSIG_APC_POWER_STATE_CHANGE "apc_power_state_change"

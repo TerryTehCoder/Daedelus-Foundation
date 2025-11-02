@@ -134,6 +134,8 @@ GLOBAL_LIST_INIT(bitflags, list(1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 204
 #define PERSISTENT_ENGRAVINGS (1<<14)
 /// Display this area's name to mobs upon entering the area.
 #define SHOW_NAME (1<<15)
+/// Is this a security area? Considered for AIC DLS (Data-Listening System) interactions.
+#define SECURITY_AREA (1<<16)
 
 /*
 	These defines are used specifically with the atom/pass_flags bitmask

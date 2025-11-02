@@ -231,6 +231,7 @@ SUBSYSTEM_DEF(datacore)
 	//General Record
 	var/datum/data/record/general/G = new()
 	G.fields[DATACORE_ID] = id
+	G.fields["mob_ref"] = H
 
 	G.fields[DATACORE_NAME] = H.real_name
 	G.fields[DATACORE_RANK] = chosen_assignment //PARIAH EDIT

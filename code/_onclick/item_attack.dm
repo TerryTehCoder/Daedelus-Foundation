@@ -121,7 +121,11 @@
  * See: [/obj/item/proc/melee_attack_chain]
  */
 /atom/proc/attackby(obj/item/attacking_item, mob/user, params)
-	if(SEND_SIGNAL(src, COMSIG_PARENT_ATTACKBY, attacking_item, user, params) & COMPONENT_NO_AFTERATTACK)
+	var/list/signal_params = list(
+		"weapon" = attacking_item,
+		"location" = get_area(src)
+	)
+	if(SEND_SIGNAL(src, COMSIG_PARENT_ATTACKBY, attacking_item, user, params, signal_params) & COMPONENT_NO_AFTERATTACK)
 		return TRUE
 	return FALSE
 

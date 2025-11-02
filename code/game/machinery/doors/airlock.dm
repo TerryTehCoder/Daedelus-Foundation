@@ -539,7 +539,7 @@
 					floorlight.pixel_y = 0
 			. += floorlight
 
-/obj/machinery/door/airlock/do_animate(animation)
+/obj/machinery/door/airlock/do_animate(animation, mob/user = null)
 	switch(animation)
 		if("opening")
 			update_icon(ALL, AIRLOCK_OPENING)
@@ -552,6 +552,15 @@
 					playsound(src, 'sound/machines/access_denied_hl.ogg', 50, FALSE, 3)
 				else
 					playsound(src,doorDeni,50,FALSE,3)
+				if(user)
+					if(!ishuman(user))
+						return
+					var/mob/living/carbon/human/H = user
+					var/list/signal_params = list(
+						"req_access" = req_access,
+						"user_job" = H.job
+					)
+					SEND_SIGNAL(src, COMSIG_AIRLOCK_ACCESS_DENIED, H, signal_params)
 				addtimer(CALLBACK(src, TYPE_PROC_REF(/atom, update_icon), ALL, AIRLOCK_CLOSED), AIRLOCK_DENY_ANIMATION_TIME)
 
 /obj/machinery/door/airlock/examine(mob/user)

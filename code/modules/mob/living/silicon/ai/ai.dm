@@ -116,6 +116,9 @@
 	/// An image to add to client.images so the AI player can see their own eye sprite.
 	var/image/sense_of_self
 
+	//DLS - Data Listening System - Some animals are more equal than others.
+	var/datum/dls_ui/dls_ui_instance
+
 /mob/living/silicon/ai/Initialize(mapload, datum/ai_laws/L, mob/target_ai)
 	. = ..()
 	if(!target_ai) //If there is no player/brain inside.
@@ -181,6 +184,7 @@
 			/mob/living/silicon/ai/proc/botcall,
 			/mob/living/silicon/ai/proc/control_integrated_radio,
 			/mob/living/silicon/ai/proc/set_automatic_say_channel,
+			/mob/living/silicon/ai/proc/open_dls_panel
 		))
 
 	GLOB.ai_list += src
@@ -230,6 +234,7 @@
 	QDEL_NULL(robot_control)
 	QDEL_NULL(aiMulti)
 	QDEL_NULL(alert_control)
+	QDEL_NULL(dls_ui_instance)
 	malfhack = null
 	current = null
 	bot_ref = null
@@ -496,6 +501,29 @@
 		else
 			to_chat(src, "Target is not on or near any active cameras on the station.")
 		return
+	if(href_list["dls_action"])
+		var/datum/component/dls_manager/dls = src.GetComponent(/datum/component/dls_manager)
+		if(dls)
+			var/whisper_ref = href_list["whisper_ref"]
+			var/datum/dls_whisper/whisper = locate(whisper_ref)
+			if(whisper)
+				switch(href_list["dls_action"])
+					if("validate")
+						whisper.status = DLS_STATUS_VALIDATED
+						// TODO: Logic to make provisional scores permanent.
+						to_chat(src, "Whisper validated.")
+					if("ignore")
+						whisper.status = DLS_STATUS_INVALIDATED
+						// TODO: Logic to clear provisional scores.
+						to_chat(src, "Whisper invalidated.")
+					if("view")
+						var/obj/machinery/camera/C = whisper.target.get_nearest_camera()
+						if(C)
+							switchCamera(C)
+				dls.active_whispers -= whisper // Remove from active list after interaction
+				dls_show_whisper_feed() // Refresh the feed
+		return
+
 	if (href_list["ai_take_control"]) //Mech domination
 		var/obj/vehicle/sealed/mecha/M = locate(href_list["ai_take_control"]) in INSTANCES_OF(/obj/vehicle/sealed/mecha)
 		if (!M)
@@ -1151,3 +1179,19 @@
 		priority_announce(message, "Station Announcement By [me.name] (AI)", do_not_modify = TRUE)
 
 	COOLDOWN_START(me, command_report_cd, 120 SECONDS)
+
+/mob/living/silicon/ai/proc/open_dls_panel()
+	set name = "Open DLS Panel"
+	set category = "AI Commands"
+
+	if(incapacitated())
+		return
+
+	if(!dls_ui_instance)
+		dls_ui_instance = new(src)
+
+	dls_ui_instance.ui_interact(src)
+
+/mob/living/silicon/ai/proc/dls_show_whisper_feed()
+	if(dls_ui_instance)
+		dls_ui_instance.ui_interact(src)

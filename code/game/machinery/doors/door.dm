@@ -298,7 +298,7 @@ DEFINE_INTERACTABLE(/obj/machinery/door)
 	if(requiresID() && allowed(user))
 		open()
 	else
-		do_animate("deny")
+		do_animate("deny", user)
 
 /obj/machinery/door/attack_hand(mob/user, list/modifiers)
 	. = ..()
@@ -337,7 +337,7 @@ DEFINE_INTERACTABLE(/obj/machinery/door)
 			close()
 		return .
 	if(density)
-		do_animate("deny")
+		do_animate("deny", user)
 
 /obj/machinery/door/allowed(mob/M)
 	if(emergency)
@@ -441,7 +441,7 @@ DEFINE_INTERACTABLE(/obj/machinery/door)
 	icon_state = "[base_icon_state][density]"
 	return ..()
 
-/obj/machinery/door/proc/do_animate(animation)
+/obj/machinery/door/proc/do_animate(animation, mob/user = null)
 	switch(animation)
 		if("opening")
 			if(panel_open)

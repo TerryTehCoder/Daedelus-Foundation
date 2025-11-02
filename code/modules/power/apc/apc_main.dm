@@ -105,6 +105,10 @@ DEFINE_INTERACTABLE(/obj/machinery/power/apc)
 	var/update_overlay = -1
 	///Used to stop process from updating the icons too much
 	var/icon_update_needed = FALSE
+	///Previous state of the APC's power metrics, for state change detection
+	var/prev_cell_percent
+	var/prev_lastused_total
+	var/prev_charging
 	///Reference to our remote control
 	var/obj/machinery/computer/apc_control/remote_control = null
 	///Represents a signel source of power alarms for this apc
@@ -527,6 +531,13 @@ GLOBAL_REAL_VAR(default_apc_armor) = list(BLUNT = 20, PUNCTURE = 20, SLASH = 0, 
 		update()
 	else if(last_ch != charging)
 		queue_icon_update()
+
+	var/cell_percent = cell ? cell.percent() : 0
+	if(cell_percent != prev_cell_percent || lastused_total != prev_lastused_total || charging != prev_charging)
+		SEND_SIGNAL(src, COMSIG_APC_POWER_STATE_CHANGE, cell_percent, lastused_total, charging)
+		prev_cell_percent = cell_percent
+		prev_lastused_total = lastused_total
+		prev_charging = charging
 
 /obj/machinery/power/apc/proc/reset(wire)
 	switch(wire)

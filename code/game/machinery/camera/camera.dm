@@ -123,10 +123,21 @@ MAPPING_DIRECTIONAL_HELPERS(/obj/machinery/camera/xray, 0)
 	area_motion = A
 	create_prox_monitor()
 
+// Cache used for the AIC Data Listening System camera coverage
+/// Destroys the cache entry for this camera's area in the DLS manager component, forcing a refresh of coverage data.
+/obj/machinery/camera/proc/invalidate_dls_cache()
+	var/list/ais = active_ais()
+	for(var/mob/living/silicon/ai/ai in ais)
+		if(ai && myarea)
+			var/datum/component/dls_manager/dls = ai.GetComponent(/datum/component/dls_manager)
+			if(dls)
+				dls.invalidate_area_cache(myarea)
+
 /obj/machinery/camera/Destroy()
 	UNSET_TRACKING(__TYPE__)
 	if(can_use())
 		toggle_cam(null, 0) //kick anyone viewing out and remove from the camera chunks
+	invalidate_dls_cache()
 	GLOB.cameranet.removeCamera(src)
 	GLOB.cameranet.cameras -= src
 	cancelCameraAlarm()
@@ -143,6 +154,7 @@ MAPPING_DIRECTIONAL_HELPERS(/obj/machinery/camera/xray, 0)
 
 /obj/machinery/camera/setDir(newdir)
 	. = ..()
+	invalidate_dls_cache()
 	var/turf/T = get_step(get_turf(src), newdir)
 	if(iswallturf(T))
 		if(dir == NORTH)
@@ -185,6 +197,7 @@ MAPPING_DIRECTIONAL_HELPERS(/obj/machinery/camera/xray, 0)
 		return
 	if(!(. & EMP_PROTECT_SELF))
 		if(prob(150/severity))
+			invalidate_dls_cache()
 			update_appearance()
 			network = list()
 			GLOB.cameranet.removeCamera(src)
@@ -208,6 +221,7 @@ MAPPING_DIRECTIONAL_HELPERS(/obj/machinery/camera/xray, 0)
 		return
 	network = previous_network
 	set_machine_stat(machine_stat & ~EMPED)
+	invalidate_dls_cache()
 	update_appearance()
 	if(can_use())
 		GLOB.cameranet.addCamera(src)
@@ -458,6 +472,7 @@ MAPPING_DIRECTIONAL_HELPERS(/obj/machinery/camera/xray, 0)
 
 /obj/machinery/camera/proc/toggle_cam(mob/user, displaymessage = TRUE)
 	status = !status
+	invalidate_dls_cache()
 	if(can_use())
 		GLOB.cameranet.addCamera(src)
 		if (isturf(loc))
@@ -541,3 +556,17 @@ MAPPING_DIRECTIONAL_HELPERS(/obj/machinery/camera/xray, 0)
 		user.sight = 0
 		user.see_in_dark = 2
 	return 1
+
+/// For when we need to find the nearest usable camera to an atom
+/// such as for AI stalking, or tracking, etc.
+/atom/proc/get_nearest_camera()
+	var/obj/machinery/camera/nearest_camera = null
+	var/min_dist = INFINITY
+	for(var/obj/machinery/camera/C in GLOB.cameranet.cameras)
+		if(!C.can_use())
+			continue
+		var/dist = get_dist(src, C)
+		if(dist < min_dist)
+			min_dist = dist
+			nearest_camera = C
+	return nearest_camera

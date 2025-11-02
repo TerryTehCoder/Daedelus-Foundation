@@ -93,6 +93,8 @@
 #define COMSIG_AIRLOCK_CLOSE "airlock_close"
 ///from /obj/machinery/door/airlock/set_bolt():
 #define COMSIG_AIRLOCK_SET_BOLT "airlock_set_bolt"
+
+#define COMSIG_AIRLOCK_ACCESS_DENIED "door_access_denied"
 // /obj/item signals
 
 ///from base of obj/item/equipped(): (/mob/equipper, slot)
