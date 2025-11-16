@@ -175,10 +175,10 @@
 		/obj/item/stack/cable_coil = 2,
 		/obj/item/stock_parts/subspace/filter = 1)
 
-/obj/item/circuitboard/machine/pacman
-	name = "PACMAN-type Generator (Machine Board)"
+/obj/item/circuitboard/machine/portgen/falcon
+	name = "Falcon-Grade Generator (Machine Board)"
 	greyscale_colors = CIRCUIT_COLOR_ENGINEERING
-	build_path = /obj/machinery/power/port_gen/pacman
+	build_path = /obj/machinery/power/port_gen/coal/falcon
 	req_components = list(
 		/obj/item/stock_parts/matter_bin = 1,
 		/obj/item/stock_parts/micro_laser = 1,
@@ -186,10 +186,24 @@
 		/obj/item/stock_parts/capacitor = 1)
 	needs_anchored = FALSE
 
-/obj/item/circuitboard/machine/pacman/super
-	name = "SUPERPACMAN-type Generator (Machine Board)"
+/obj/item/circuitboard/machine/portgen/condor
+	name = "Condor-Grade Generator (Machine Board)"
 	greyscale_colors = CIRCUIT_COLOR_ENGINEERING
-	build_path = /obj/machinery/power/port_gen/pacman/super
+	build_path = /obj/machinery/power/port_gen/coal/condor
+	req_components = list(
+		/obj/item/stock_parts/matter_bin = 2,
+		/obj/item/stock_parts/micro_laser = 2,
+		/obj/item/stack/cable_coil = 3,
+		/obj/item/stock_parts/capacitor = 2)
+	needs_anchored = FALSE
+
+/obj/item/circuitboard/machine/portgen/sparrow
+	name = "Sparrow-Grade Generator (Machine Board)"
+	greyscale_colors = CIRCUIT_COLOR_ENGINEERING
+	build_path = /obj/machinery/power/port_gen/welding
+	req_components = list(
+		/obj/item/stack/cable_coil = 2,
+		/obj/item/stock_parts/capacitor = 1)
 
 /obj/item/circuitboard/machine/fabricator/department/engineering
 	name = "Departmental Fabricator - Engineering (Machine Board)"

@@ -727,13 +727,13 @@
 	crate_name = "inducer crate"
 	crate_type = /obj/structure/closet/crate/engineering/electrical
 
-/datum/supply_pack/engineering/pacman
-	name = "P.A.C.M.A.N Generator Crate"
-	desc = "Engineers can't set up the engine? Not an issue for you, once you get your hands on this P.A.C.M.A.N. Generator! Takes in plasma and spits out sweet sweet energy."
+/datum/supply_pack/engineering/falcon_generator
+	name = "Falcon Generator Crate"
+	desc = "Experiencing multiple power fluctuations across the site? Never fear, the Falcon Coal Generator is here! This compact yet powerful generator can provide a steady supply of power for hours on end, all from a single load of coal. Requires Engineering access to open."
 	cost = CARGO_CRATE_VALUE * 5
 	access_view = ACCESS_ENGINEERING
-	contains = list(/obj/machinery/power/port_gen/pacman)
-	crate_name = "\improper PACMAN generator crate"
+	contains = list(/obj/machinery/power/port_gen/coal/falcon)
+	crate_name = "\improper Falcon Coal generator crate"
 	crate_type = /obj/structure/closet/crate/engineering/electrical
 
 /datum/supply_pack/engineering/power

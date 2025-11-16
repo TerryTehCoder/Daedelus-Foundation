@@ -3,7 +3,7 @@
 	name = "portable generator"
 	desc = "A portable generator for emergency backup power."
 	icon = 'icons/obj/power.dmi'
-	icon_state = "portgen0_0"
+	icon_state = "portgen0"
 	density = TRUE
 	anchored = FALSE
 	use_power = NO_POWER_USE
@@ -14,6 +14,8 @@
 	var/consumption = 0
 	var/base_icon = "portgen0"
 	var/datum/looping_sound/generator/soundloop
+	var/start_up_time = 2 SECONDS
+	var/start_up_chance = 60 //Percentage chance of successful startup.
 
 	interaction_flags_atom = INTERACT_ATOM_ATTACK_HAND | INTERACT_ATOM_UI_INTERACT | INTERACT_ATOM_REQUIRES_ANCHORED
 
@@ -45,19 +47,40 @@
 /obj/machinery/power/port_gen/proc/handleInactive()
 	return
 
-/obj/machinery/power/port_gen/proc/TogglePower()
+/obj/machinery/power/port_gen/proc/TogglePower(mob/user)
 	if(active)
 		active = FALSE
 		update_appearance()
 		soundloop.stop()
+
+		/* We shouldn't have to do this because of the soundloop system, but sound_end has been broken since forever (11.16.25)
+		// Workaround
+		SEND_SOUND(src, sound(null, repeat = 0, wait = 0, channel = CHANNEL_GENERATOR))
+		playsound(src, 'sound/machines/generator/generator_end.ogg', 50, TRUE, channel = CHANNEL_GENERATOR)
+		*/
+
 	else if(HasFuel())
-		active = TRUE
-		START_PROCESSING(SSmachines, src)
-		update_appearance()
-		soundloop.start()
+		if(!anchored)
+			to_chat(user, span_warning("You try to start the [src], but it won't stay in place! You need to anchor it first."))
+			playsound(src, 'sound/machines/generator/gen_pull.ogg', 50, TRUE)
+			return
+
+		if(do_after(user, src, start_up_time))
+			if(prob(start_up_chance))
+				to_chat(user, span_notice("You manage to start the [src]'s engine."))
+				active = TRUE
+				START_PROCESSING(SSmachines, src)
+				update_appearance()
+				soundloop.start()
+			else
+				to_chat(user, span_warning("You tug at the starter cord, but the [src]'s engine sputters and dies."))
+				playsound(src, 'sound/machines/generator/gen_pull.ogg', 50, TRUE)
 
 /obj/machinery/power/port_gen/update_icon_state()
-	icon_state = "[base_icon]_[active]"
+	if(active)
+		icon_state = "[base_icon]_[active]"
+	else
+		icon_state = base_icon
 	return ..()
 
 /obj/machinery/power/port_gen/process()
@@ -76,20 +99,42 @@
 	. += "It is[!active?"n't":""] running."
 
 /////////////////
-// P.A.C.M.A.N //
+// Coal Generators //
 /////////////////
-/obj/machinery/power/port_gen/pacman
-	name = "\improper P.A.C.M.A.N.-type portable generator"
-	circuit = /obj/item/circuitboard/machine/pacman
+/obj/machinery/power/port_gen/coal
+	name = "portable coal generator"
 	var/sheets = 0
 	var/max_sheets = 100
 	var/sheet_name = ""
-	var/sheet_path = /obj/item/stack/sheet/mineral/plasma
+	var/sheet_path = /obj/item/stack/sheet/mineral/coal
 	var/sheet_left = 0 // How much is left of the sheet
 	var/time_per_sheet = 260
 	var/current_heat = 0
 
-/obj/machinery/power/port_gen/pacman/Initialize(mapload)
+/obj/machinery/power/port_gen/coal/falcon
+	name = "C-60 \"Falcon\" Generator"
+	desc = "A rugged mid-tier coal generator built for remote research sites and outposts by Prometheus Heavy Industries. Reliable, durable, and forgiving of poor-quality fuel."
+	base_icon = "portgen0"
+	power_gen = 10000
+	time_per_sheet = 130
+	circuit = /obj/item/circuitboard/machine/portgen/falcon
+
+/obj/machinery/power/port_gen/coal/condor
+	name = "C-120 \"Condor\" Field Generator"
+	desc = "A high-output generator intended for long-duration, high-demand operations. Overbuilt, loud, and infamous for its voracious appetite."
+	base_icon = "portgen1"
+	power_gen = 20000
+	time_per_sheet = 260
+	circuit = /obj/item/circuitboard/machine/portgen/falcon
+
+/obj/machinery/power/port_gen/coal/process()
+	..()
+	// The coal flung into the maw of hell
+	if(HasFuel() && anchored && active)
+		if(prob(40) + current_heat / 4)
+			new /obj/effect/temp_visual/coal_gen_smoke(get_turf(src))
+
+/obj/machinery/power/port_gen/coal/Initialize(mapload)
 	. = ..()
 	if(anchored)
 		connect_to_network()
@@ -97,11 +142,11 @@
 	var/obj/S = sheet_path
 	sheet_name = initial(S.name)
 
-/obj/machinery/power/port_gen/pacman/Destroy()
+/obj/machinery/power/port_gen/coal/Destroy()
 	DropFuel()
 	return ..()
 
-/obj/machinery/power/port_gen/pacman/RefreshParts()
+/obj/machinery/power/port_gen/coal/RefreshParts()
 	. = ..()
 	var/temp_rating = 0
 	var/consumption_coeff = 0
@@ -115,7 +160,7 @@
 	power_gen = round(initial(power_gen) * temp_rating * 2)
 	consumption = consumption_coeff
 
-/obj/machinery/power/port_gen/pacman/examine(mob/user)
+/obj/machinery/power/port_gen/coal/examine(mob/user)
 	. = ..()
 	. += span_notice("The generator has [sheets] units of [sheet_name] fuel left, producing [display_power(power_gen)] per cycle.")
 	if(anchored)
@@ -123,17 +168,17 @@
 	if(in_range(user, src) || isobserver(user))
 		. += span_notice("The status display reads: Fuel efficiency increased by <b>[(consumption*100)-100]%</b>.")
 
-/obj/machinery/power/port_gen/pacman/HasFuel()
+/obj/machinery/power/port_gen/coal/HasFuel()
 	if(sheets >= 1 / (time_per_sheet / power_output) - sheet_left)
 		return TRUE
 	return FALSE
 
-/obj/machinery/power/port_gen/pacman/DropFuel()
+/obj/machinery/power/port_gen/coal/DropFuel()
 	if(sheets)
 		new sheet_path(drop_location(), sheets)
 		sheets = 0
 
-/obj/machinery/power/port_gen/pacman/UseFuel()
+/obj/machinery/power/port_gen/coal/UseFuel()
 	var/needed_sheets = 1 / (time_per_sheet * consumption / power_output)
 	var/temp = min(needed_sheets, sheet_left)
 	needed_sheets -= temp
@@ -163,15 +208,15 @@
 		overheat()
 		qdel(src)
 
-/obj/machinery/power/port_gen/pacman/handleInactive()
+/obj/machinery/power/port_gen/coal/handleInactive()
 	current_heat = max(current_heat - 2, 0)
 	if(current_heat == 0)
 		STOP_PROCESSING(SSmachines, src)
 
-/obj/machinery/power/port_gen/pacman/proc/overheat()
+/obj/machinery/power/port_gen/coal/proc/overheat()
 	explosion(src, devastation_range = 2, heavy_impact_range = 5, light_impact_range = 2, flash_range = -1)
 
-/obj/machinery/power/port_gen/pacman/set_anchored(anchorvalue)
+/obj/machinery/power/port_gen/coal/set_anchored(anchorvalue)
 	. = ..()
 	if(isnull(.))
 		return //no need to process if we didn't change anything.
@@ -180,7 +225,7 @@
 	else
 		disconnect_from_network()
 
-/obj/machinery/power/port_gen/pacman/attackby(obj/item/O, mob/user, params)
+/obj/machinery/power/port_gen/coal/attackby(obj/item/O, mob/user, params)
 	if(istype(O, sheet_path))
 		var/obj/item/stack/addstack = O
 		var/amount = min((max_sheets - sheets), addstack.amount)
@@ -214,26 +259,26 @@
 			return
 	return ..()
 
-/obj/machinery/power/port_gen/pacman/emag_act(mob/user)
+/obj/machinery/power/port_gen/coal/emag_act(mob/user)
 	if(obj_flags & EMAGGED)
 		return
 	obj_flags |= EMAGGED
 	to_chat(user, span_notice("You hear a hefty clunk from inside the generator."))
 	emp_act(EMP_HEAVY)
 
-/obj/machinery/power/port_gen/pacman/attack_ai(mob/user)
+/obj/machinery/power/port_gen/coal/attack_ai(mob/user)
 	interact(user)
 
-/obj/machinery/power/port_gen/pacman/attack_paw(mob/user, list/modifiers)
+/obj/machinery/power/port_gen/coal/attack_paw(mob/user, list/modifiers)
 	interact(user)
 
-/obj/machinery/power/port_gen/pacman/ui_interact(mob/user, datum/tgui/ui)
+/obj/machinery/power/port_gen/coal/ui_interact(mob/user, datum/tgui/ui)
 	ui = SStgui.try_update_ui(user, src, ui)
 	if(!ui)
 		ui = new(user, src, "PortableGenerator", name)
 		ui.open()
 
-/obj/machinery/power/port_gen/pacman/ui_data()
+/obj/machinery/power/port_gen/coal/ui_data()
 	var/data = list()
 
 	data["active"] = active
@@ -250,13 +295,13 @@
 	data["current_heat"] = current_heat
 	. = data
 
-/obj/machinery/power/port_gen/pacman/ui_act(action, params)
+/obj/machinery/power/port_gen/coal/ui_act(action, params)
 	. = ..()
 	if(.)
 		return
 	switch(action)
 		if("toggle_power")
-			TogglePower()
+			TogglePower(usr)
 			. = TRUE
 
 		if("eject")
@@ -274,14 +319,42 @@
 				power_output++
 				. = TRUE
 
-/obj/machinery/power/port_gen/pacman/super
-	name = "\improper S.U.P.E.R.P.A.C.M.A.N.-type portable generator"
-	icon_state = "portgen1_0"
-	base_icon = "portgen1"
-	circuit = /obj/item/circuitboard/machine/pacman/super
-	sheet_path = /obj/item/stack/sheet/mineral/uranium
-	power_gen = 15000
-	time_per_sheet = 85
+/obj/machinery/power/port_gen/coal/condor/overheat()
+	explosion(src, devastation_range = 4, heavy_impact_range = 4, light_impact_range = 4, flash_range = -1)
 
-/obj/machinery/power/port_gen/pacman/super/overheat()
-	explosion(src, devastation_range = 3, heavy_impact_range = 3, light_impact_range = 3, flash_range = -1)
+/////////////////
+// Welding Fuel//
+/////////////////
+
+/obj/machinery/power/port_gen/welding
+	name = "C-20 \"Sparrow\" Field Generator"
+	desc = "A compact utility generator designed for quick deployment in the field and emergency setups. Runs on welding fuel."
+	base_icon = "portgen3"
+	power_gen = 5000
+	var/fuel_consumption = 1
+
+/obj/machinery/power/port_gen/welding/Initialize(mapload)
+	. = ..()
+	create_reagents(100)
+
+/obj/machinery/power/port_gen/welding/HasFuel()
+	if(reagents.get_reagent_amount(/datum/reagent/fuel) > 0)
+		return TRUE
+	return FALSE
+
+/obj/machinery/power/port_gen/welding/UseFuel()
+	reagents.remove_reagent(/datum/reagent/fuel, fuel_consumption)
+
+/obj/machinery/power/port_gen/welding/ui_data()
+	var/list/data = ..()
+	data["fuel_name"] = "Welding Fuel"
+	data["fuel_amount"] = reagents.get_reagent_amount(/datum/reagent/fuel)
+	data["fuel_capacity"] = reagents.maximum_volume
+	return data
+
+/obj/machinery/power/port_gen/welding/attackby(obj/item/O, mob/user, params)
+	if(O.is_refillable(src))
+		var/obj/item/refillable = O
+		refillable.reagents.trans_to(src)
+		return
+	return ..()

@@ -559,6 +559,18 @@
 	pixel_y = rand(0, 13)
 	animate(src, alpha = 0, duration, easing = EASE_IN)
 
+/obj/effect/temp_visual/coal_gen_smoke
+	icon_state = "smoke"
+	duration = 5 SECONDS
+	color = COLOR_ALMOST_BLACK
+
+/obj/effect/temp_visual/coal_gen_smoke/Initialize(mapload)
+	. = ..()
+	setDir(pick(GLOB.cardinals))
+	pixel_x = rand(-10, 10)
+	pixel_y = rand(-10, 10)
+	animate(src, alpha = 0, duration, easing = EASE_IN)
+
 /obj/effect/temp_visual/mook_dust
 	name = "dust"
 	desc = "It's just a dust cloud!"

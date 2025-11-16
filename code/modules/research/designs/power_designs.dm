@@ -65,15 +65,21 @@
 	category = list(DCAT_POWER)
 	mapload_design_flags = DESIGN_FAB_OMNI | DESIGN_FAB_ENGINEERING
 
-/datum/design/board/pacman
-	name = "Machine Board (PACMAN-type Generator Board)"
-	desc = "The circuit board that for a PACMAN-type portable generator."
-	id = "pacman"
-	build_path = /obj/item/circuitboard/machine/pacman
+/datum/design/board/port_gen/welding/sparrow
+	name = "Machine Board (Sparrow-Grade Generator Board)"
+	desc = "The circuit board for a Sparrow-Grade portable welding fuel powered generator."
+	id = "sparrow"
+	build_path = /obj/item/circuitboard/machine/portgen/sparrow
 
-/datum/design/board/pacman/super
-	name = "Machine Board (SUPERPACMAN-type Generator Board)"
-	desc = "The circuit board that for a SUPERPACMAN-type portable generator."
-	id = "superpacman"
-	build_path = /obj/item/circuitboard/machine/pacman/super
+/datum/design/board/port_gen/coal/falcon
+	name = "Machine Board (Falcon-Grade Generator Board)"
+	desc = "The circuit board for a Falcon-Grade portable coal generator. Produces toxic fumes!"
+	id = "falcon"
+	build_path = /obj/item/circuitboard/machine/portgen/falcon
+
+/datum/design/board/port_gen/coal/condor
+	name = "Machine Board (Condor-Grade Generator Board)"
+	desc = "The circuit board for a Condor-Grade portable coal generator. Twice the power output of a Falcon!"
+	id = "condor"
+	build_path = /obj/item/circuitboard/machine/portgen/condor
 
