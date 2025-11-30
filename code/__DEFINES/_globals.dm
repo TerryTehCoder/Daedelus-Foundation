@@ -50,7 +50,7 @@
 /// Create an alist global with an initializer expression
 #define GLOBAL_ALIST_INIT(X, InitValue) GLOBAL_RAW(/alist/##X); GLOBAL_MANAGED(X, InitValue)
 
-// Create an alist global that is initialized as an empty list
+/// Create an alist global that is initialized as an empty list
 #define GLOBAL_ALIST_EMPTY(X) GLOBAL_ALIST_INIT(X, alist())
 
 /// Create a typed global with an initializer expression
