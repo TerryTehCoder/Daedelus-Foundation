@@ -530,7 +530,7 @@ SUBSYSTEM_DEF(timer)
 	)
 #else
 	// Generate a debuggable name for the timer, simpler but wayyyy cheaper, string generation is a bitch and this saves a LOT of time
-	timer_info = list(
+	timer_info = alist(
 		1 = id,
 		2 = timeToRun,
 		3 = wait,
