@@ -1149,6 +1149,84 @@
 	return canister_packs
 
 //////////////////////////////////////////////////////////////////////////////
+							//Coffee Related Packs
+//////////////////////////////////////////////////////////////////////////////
+
+/datum/supply_pack/service/coffee_kit
+	name = "Emergency Coffee Resupply Kit"
+	desc = "Did the D-Class drink the last of the site's coffee and are now rioting? Did an SCP destroy your coffee mugs while a minor containment breach knocked the coffee pot onto the floor, making it shatter? Fear not, this crate contains everything you might need to get that liquid stimulant flowing again!"
+	cost = 1000 //It's a starter pack, so we're not completely greedy, unlike the grill.
+	contains = list(/obj/item/reagent_containers/glass/mug,
+					/obj/item/reagent_containers/glass/mug,
+					/obj/item/reagent_containers/glass/mug,
+					/obj/item/reagent_containers/glass/coffeepot,
+					/obj/item/coffee_cartridge,
+					/obj/item/coffee_cartridge)
+	crate_type = /obj/structure/closet/crate/secure // We don't mess around when it comes to those desperate for coffee.
+	crate_name = "Emergency Coffee Supply Crate"
+
+/datum/supply_pack/service/coffee_cartridge
+	name = "Foundation Standard Issue Cartridge Resupply"
+	desc = "Five cartridges containing our finest Foundation-grade coffee beans for the coffeemaker."
+	cost = 3000 //Two thousand more than the Emergency kit, because it's a refill.
+	contains = list(/obj/item/coffee_cartridge,
+					/obj/item/coffee_cartridge,
+					/obj/item/coffee_cartridge,
+					/obj/item/coffee_cartridge,
+					/obj/item/coffee_cartridge)
+	crate_type = /obj/structure/closet/crate/secure // We still don't mess around with our coffee supply, this thing is getting to that machine one way or another
+	crate_name = "Coffee Cartridge Supply Crate"
+
+/datum/supply_pack/service/coffee_cartridge_fancy
+	name = "Fancy Coffee Cartridge Resupply"
+	desc = "A crate of premium coffee cartridges for when the standard issue just won't cut it. Contains 5 cartridges."
+	cost = 5000 //It's fancy coffee, so it's pretty expensive.
+	contains = list(/obj/item/coffee_cartridge/fancy,
+					/obj/item/coffee_cartridge/fancy,
+					/obj/item/coffee_cartridge/fancy,
+					/obj/item/coffee_cartridge/fancy,
+					/obj/item/coffee_cartridge/fancy)
+	crate_type = /obj/structure/closet/crate/secure
+	crate_name = "Garbage Coffee Supply Crate"
+
+/datum/supply_pack/service/coffeekit
+	name = "Coffee Equippment Crate"
+	desc = "A complete kit to setup your own cozy coffee shop. For some reason, the coffeemaker is not included."
+	cost = 2000
+	contains = list(/obj/item/storage/box/coffeepack/amallo,
+					/obj/item/storage/box/coffeepack/arabica,
+					/obj/item/reagent_containers/glass/coffeepot,
+					/obj/item/storage/fancy/coffee_condi_display,
+					/obj/item/reagent_containers/food/drinks/bottle/cream,
+					/obj/item/reagent_containers/food/condiment/milk,
+					/obj/item/reagent_containers/food/condiment/soymilk,
+					/obj/item/reagent_containers/food/condiment/sugar,
+					/obj/item/reagent_containers/glass/bottle/syrup_bottle/caramel)
+	crate_name = "coffee equpment crate"
+
+/datum/supply_pack/service/coffeemaker
+	name = "Kestrel Coffeemaker Crate"
+	desc = "An assembled Kestrel model coffeemaker."
+	cost = 4000
+	contains = list(/obj/machinery/coffeemaker/kestrel)
+	crate_name = "coffeemaker crate"
+	crate_type = /obj/structure/closet/crate/large
+
+/datum/supply_pack/organic/syrup
+	name = "Coffee Syrups Box"
+	desc = "A packaged box of various syrups, perfect to make your delicious coffee even more diabetic."
+	cost = 3000
+	contains = list(/obj/item/reagent_containers/glass/bottle/syrup_bottle/caramel,
+					/obj/item/reagent_containers/glass/bottle/syrup_bottle/liqueur,
+					/obj/item/reagent_containers/glass/bottle/syrup_bottle/honey,
+					/obj/item/reagent_containers/glass/bottle/syrup_bottle/vanilla,
+					/obj/item/reagent_containers/glass/bottle/syrup_bottle/tea,
+					/obj/item/reagent_containers/glass/bottle/syrup_bottle/creme_de_cacao,
+					/obj/item/reagent_containers/glass/bottle/syrup_bottle/creme_de_menthe)
+	crate_name = "coffee syrups box"
+	crate_type = /obj/structure/closet/cardboard
+
+//////////////////////////////////////////////////////////////////////////////
 //////////////////////////// Medical /////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
 

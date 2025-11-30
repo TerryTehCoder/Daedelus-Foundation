@@ -81,7 +81,7 @@
 	product_path = /obj/item/food/grown/coffee
 
 	reagents_per_potency = list(/datum/reagent/consumable/nutriment/vitamin = 0.04, /datum/reagent/toxin/coffeepowder = 0.1, /datum/reagent/nitrogen = 0.05)
-	possible_mutations = list(/datum/plant_mutation/coffee_robusta)
+	possible_mutations = list(/datum/plant_mutation/coffee_amallo)
 
 /obj/item/seeds/coffee
 	name = "pack of coffee arabica seeds"
@@ -99,31 +99,31 @@
 	grind_results = list(/datum/reagent/toxin/coffeepowder = 0)
 	distill_reagent = /datum/reagent/consumable/ethanol/kahlua
 
-// Coffee Robusta
-/datum/plant_mutation/coffee_robusta
-	plant_type = /datum/plant/coffee/robusta
+// Coffee amallo
+/datum/plant_mutation/coffee_amallo
+	plant_type = /datum/plant/coffee/amallo
 
-/datum/plant/coffee/robusta
+/datum/plant/coffee/amallo
 	species = "coffeer"
-	name = "coffee robusta bush"
+	name = "coffee amallo bush"
 
-	seed_path = /obj/item/seeds/coffee/robusta
-	product_path = /obj/item/food/grown/coffee/robusta
+	seed_path = /obj/item/seeds/coffee/amallo
+	product_path = /obj/item/food/grown/coffee/amallo
 
 	reagents_per_potency = list(/datum/reagent/medicine/ephedrine = 0.1, /datum/reagent/consumable/nutriment/vitamin = 0.04, /datum/reagent/toxin/coffeepowder = 0.1)
 	possible_mutations = null
 	rarity = 20
 
-/obj/item/seeds/coffee/robusta
-	name = "pack of coffee robusta seeds"
-	desc = "These seeds grow into coffee robusta bushes."
+/obj/item/seeds/coffee/amallo
+	name = "pack of coffee amallo seeds"
+	desc = "These seeds grow into coffee amallo bushes."
 	icon_state = "seed-coffeer"
 
-	plant_type =/datum/plant/coffee/robusta
+	plant_type =/datum/plant/coffee/amallo
 
-/obj/item/food/grown/coffee/robusta
-	plant_datum = /datum/plant/coffee/robusta
-	name = "coffee robusta beans"
-	desc = "Increases robustness by 37 percent!"
-	icon_state = "coffee_robusta"
+/obj/item/food/grown/coffee/amallo
+	plant_datum = /datum/plant/coffee/amallo
+	name = "coffee amallo beans"
+	desc = "Not guarenteed to produce anomalies; but definitely still useful."
+	icon_state = "coffee_amallo"
 	grind_results = list(/datum/reagent/toxin/coffeepowder = 0, /datum/reagent/medicine/morphine = 0)

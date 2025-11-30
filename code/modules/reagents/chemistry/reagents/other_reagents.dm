@@ -1163,3 +1163,29 @@
 		return
 	if(reac_volume >= 1)
 		exposed_turf.MakeSlippery(TURF_WET_WATER, 15 SECONDS, min(reac_volume * 1 SECONDS, 40 SECONDS))
+
+/datum/reagent/consumable/creamer
+	name = "Coffee Creamer"
+	description = "Powdered milk for cheap coffee. How delightful."
+	taste_description = "milk"
+	color = "#efeff0"
+	nutriment_factor = 1.5 * REAGENTS_METABOLISM
+
+/datum/reagent/consumable/foundation_coffee
+    name = "Utility Brew Coffee"
+    description = "A standard-issue caffeinated solution provided to Foundation security and maintenance personnel. Formulated for rapid alertness, prolonged wakefulness, and minimal palatability. Consumption may result in temporary cardiac overstimulation."
+    color = "#241000"
+    nutriment_factor = 0
+    overdose_threshold = 40 // Two consecutive servings may result in a dependency.
+    taste_description = "an aggressively bitter, petroleum-adjacent heaviness"
+    glass_icon_state = "glass_brown"
+    glass_name = "cup of utility brew"
+    glass_desc = "A cup of Foundation-standard coffee. Classified as non-hazardous, though opinions vary."
+
+/datum/reagent/consumable/foundation_coffee/affect_blood(mob/living/carbon/M, removed)
+	..()
+	M.adjust_dizzy(-5 SECONDS)
+	M.drowsyness = max(0,M.drowsyness-3)
+	M.AdjustSleeping(-40, FALSE)
+// This is a Todo perhaps; since the mood system here works a bit differently.
+//	SEND_SIGNAL(M, COMSIG_ADD_MOOD_EVENT, "drink_coffee", /datum/mood_event/drink_coffee)

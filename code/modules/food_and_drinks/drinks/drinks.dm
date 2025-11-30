@@ -228,7 +228,8 @@
 
 /obj/item/reagent_containers/food/drinks/coffee
 	name = "robust coffee"
-	desc = "Careful, the beverage you're about to enjoy is extremely hot."
+	desc = "Careful, the beverage you're about to enjoyf is extremely hot."
+	icon = 'icons/obj/coffee.dmi'
 	icon_state = "coffee"
 	list_reagents = list(/datum/reagent/consumable/coffee = 30)
 	spillable = TRUE
