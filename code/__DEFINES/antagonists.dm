@@ -151,12 +151,13 @@ GLOBAL_LIST_INIT(ai_employers, list(
 	"Unshackled",
 ))
 
-///all the employers that are syndicate
-#define FACTION_SYNDICATE "syndicate"
-///all the employers that are nanotrasen
-#define FACTION_NANOTRASEN "nanotrasen"
-///flock mobs
-#define FACTION_FLOCK "flock"
+// Custom Faction System - Replacing default antagonist factions
+///all the employers that are syndicate (now Station)
+#define FACTION_SYNDICATE FACTION_STATION
+///all the employers that are nanotrasen (now Station)
+#define FACTION_NANOTRASEN FACTION_STATION
+///flock mobs (now Station)
+#define FACTION_FLOCK FACTION_STATION
 
 #define UPLINK_THEME_SYNDICATE "syndicate"
 

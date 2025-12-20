@@ -417,22 +417,3 @@
 /// from base of /obj/item/slimepotion/speed/afterattack(): (obj/target, /obj/src, mob/user)
 #define COMSIG_SPEED_POTION_APPLIED "speed_potion"
 	#define SPEED_POTION_STOP (1<<0)
-// SCP-216 signals
-/// Sent when the safe is opened.
-#define COMSIG_SCP216_OPEN "scp216_open"
-/// Sent when the safe is closed.
-#define COMSIG_SCP216_CLOSE "scp216_close"
-/// Sent when a mob falls out of the safe upon opening. (mob/living/mob_released)
-#define COMSIG_SCP216_MOB_RELEASED "scp216_mob_released"
-/// Sent after an item is successfully inserted into the safe. (atom/movable/inserted_item, mob/user)
-#define COMSIG_SCP216_ITEM_INSERTED "scp216_item_inserted"
-/// Sent after an item is successfully retrieved from the safe. (atom/movable/retrieved_item, mob/user)
-#define COMSIG_SCP216_ITEM_RETRIEVED "scp216_item_retrieved"
-/// Sent when the safe's combination code is successfully changed. (int/new_code)
-#define COMSIG_SCP216_CODE_CHANGED "scp216_code_changed"
-/// Sent after random items are generated for a new code. (int/code)
-#define COMSIG_SCP216_ITEMS_GENERATED "scp216_items_generated"
-/// Sent when an item is temporally displaced by SCP-216. (atom/movable/displaced_item, mob/user)
-#define COMSIG_SCP216_TEMPORAL_DISPLACEMENT "scp216_temporal_displacement"
-/// from /obj/structure/scp151/proc/effect(): (mob/living/carbon/human/H, obj/structure/scp151/source_scp)
-#define COMSIG_SCP151_EFFECT_APPLIED "scp151_effect_applied"

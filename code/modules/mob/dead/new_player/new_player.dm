@@ -6,6 +6,7 @@
 	hud_possible = list()
 
 	var/datum/new_player_panel/npp
+	var/list/data = list()
 
 	var/ready = FALSE
 	/// Referenced when you want to delete the new_player later on in the code.
@@ -33,6 +34,67 @@
 
 /mob/dead/new_player/prepare_huds()
 	return
+
+
+
+/mob/dead/new_player/ui_interact(mob/user, datum/tgui/ui)
+	world.log << "ui_interact called for LateChoices"
+	world.log << "User: [user], Src: [src], UI: [ui]"
+	ui = SStgui.try_update_ui(user, src, ui)
+	world.log << "try_update_ui result: [ui]"
+	if(!ui)
+		world.log << "Creating new TGUI interface"
+		world.log << "Attempting to create interface: Vote"
+		ui = new(user, src, "Vote")
+		world.log << "TGUI interface created with name: Vote"
+		world.log << "UI object: [ui]"
+		ui.open()
+		world.log << "TGUI interface opened successfully"
+	else
+		world.log << "Updating existing TGUI interface"
+
+/mob/dead/new_player/ui_data(mob/user)
+	world.log << "ui_data called, returning: [data]"
+	return data
+
+/mob/dead/new_player/ui_act(action, list/params)
+	world.log << "TGUI: ui_act called with action: [action], params: [params]"
+	. = ..()
+	if(.)
+		return
+
+	switch(action)
+		if("select_job")
+			world.log << "TGUI: select_job action received with params: [params]"
+			var/job_title = params["job"]
+			if(job_title)
+				// Check if round is in progress
+				if(!SSticker?.IsRoundInProgress())
+					to_chat(usr, span_danger("The round is either not ready, or has already finished..."))
+					return TRUE
+
+				// Check for observer lock
+				if(SSlag_switch.measures[DISABLE_NON_OBSJOBS])
+					to_chat(usr, span_notice("There is an administrative lock on entering the game!"))
+					return TRUE
+
+				// Check population cap
+				var/relevant_cap
+				var/hpc = CONFIG_GET(number/hard_popcap)
+				var/epc = CONFIG_GET(number/extreme_popcap)
+				if(hpc && epc)
+					relevant_cap = min(hpc, epc)
+				else
+					relevant_cap = max(hpc, epc)
+
+				if(SSticker.queued_players.len && !(ckey(key) in GLOB.admin_datums))
+					if((living_player_count() >= relevant_cap) || (src != SSticker.queued_players[1]))
+						to_chat(usr, span_warning("Server is full."))
+						return TRUE
+
+				// Attempt to spawn
+				AttemptLateSpawn(job_title)
+			return TRUE
 
 /mob/dead/new_player/Topic(href, href_list)
 	if(usr != src)
@@ -173,7 +235,7 @@
 		is_captain = IS_FULL_CAPTAIN
 
 	// If we don't have an assigned cap yet, check if this person qualifies for some from of captaincy.
-	else if(!SSjob.assigned_captain && ishuman(character) && SSjob.chain_of_command[rank] && !is_banned_from(ckey, list(JOB_CAPTAIN)))
+	else if(!SSjob.assigned_captain && ishuman(character) && SSjob.chain_of_command[rank] && !is_banned_from(ckey, list(JOB_SITE_DIRECTOR)))
 		is_captain = IS_ACTING_CAPTAIN
 
 	if(is_captain != IS_NOT_CAPTAIN)

@@ -1,0 +1,216 @@
+/* LateChoices Panel - Uniform Modal Styling */
+body {
+  background: rgba(0, 0, 0, 0.7);
+  color: #ffffff;
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+  margin: 0;
+  padding: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 5px;
+}
+
+/* Header Section */
+.header {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: #ffffff;
+}
+
+.subtitle {
+  font-size: 16px;
+  opacity: 0.8;
+  margin-bottom: 15px;
+}
+
+/* Status Notices */
+.notice {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.notice.red {
+  background: rgba(255, 0, 0, 0.2);
+  border-color: rgba(255, 0, 0, 0.5);
+  color: #ff6666;
+}
+
+/* Round Duration */
+.round-duration {
+  background: rgba(0, 255, 255, 0.1);
+  border: 1px solid rgba(0, 255, 255, 0.3);
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 20px;
+  text-align: center;
+  color: #66ffff;
+  font-weight: bold;
+}
+
+/* Department Fieldsets */
+fieldset {
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px solid;
+  border-radius: 5px;
+  display: inline-block;
+  width: 185px;
+  margin: 5px;
+  padding: 10px;
+  vertical-align: top;
+}
+
+legend {
+  color: inherit;
+  font-weight: bold;
+  text-align: center;
+  padding: 0 10px;
+  font-size: 14px;
+}
+
+/* Job Links */
+.job {
+  display: block;
+  width: 100%;
+  padding: 5px 8px;
+  margin: 2px 0;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 3px;
+  color: #ffffff;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  font-size: 12px;
+}
+
+.job:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.4);
+  transform: translateY(-1px);
+}
+
+.job.command {
+  font-weight: bold;
+  background: rgba(255, 165, 0, 0.2);
+  border-color: rgba(255, 165, 0, 0.4);
+  color: #ffaa66;
+}
+
+.job.command:hover {
+  background: rgba(255, 165, 0, 0.3);
+  border-color: rgba(255, 165, 0, 0.6);
+}
+
+/* Priority Jobs */
+.priority {
+  color: #66ff66 !important;
+  font-weight: bold;
+  background: rgba(0, 255, 0, 0.1) !important;
+  border-color: rgba(0, 255, 0, 0.3) !important;
+}
+
+.priority:hover {
+  background: rgba(0, 255, 0, 0.2) !important;
+  border-color: rgba(0, 255, 0, 0.5) !important;
+}
+
+/* No Positions */
+.nopositions {
+  font-style: italic;
+  color: #888888;
+  text-align: center;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 3px;
+}
+
+/* Table Layout */
+.job-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 10px;
+}
+
+.job-table td {
+  vertical-align: top;
+  padding: 0;
+}
+
+/* Responsive Design */
+@media (max-width: 800px) {
+  fieldset {
+    width: 100%;
+    margin: 5px 0;
+  }
+
+  .job-table td {
+    display: block;
+    width: 100%;
+  }
+}
+
+/* Department Colors */
+.department-security {
+  border-color: #ff6666;
+}
+
+.department-security legend {
+  color: #ff6666;
+}
+
+.department-medical {
+  border-color: #66ff66;
+}
+
+.department-medical legend {
+  color: #66ff66;
+}
+
+.department-science {
+  border-color: #6666ff;
+}
+
+.department-science legend {
+  color: #6666ff;
+}
+
+.department-engineering {
+  border-color: #ffaa66;
+}
+
+.department-engineering legend {
+  color: #ffaa66;
+}
+
+.department-supply {
+  border-color: #aa66ff;
+}
+
+.department-supply legend {
+  color: #aa66ff;
+}
+
+.department-service {
+  border-color: #66ffff;
+}
+
+.department-service legend {
+  color: #66ffff;
+}
+
+.department-command {
+  border-color: #ffff66;
+}
+
+.department-command legend {
+  color: #ffff66;
+}

@@ -243,6 +243,10 @@
 
 	D.adjust_money(-real_cost)
 
+	// Track budget for express orders
+	if(SSbudget_system && SSbudget_system.manager)
+		track_cargo_expense(real_cost, "Express supply order: [SO.pack.name] - [SO.orderer]")
+
 	var/emagged = obj_flags & EMAGGED
 	var/location = get_landing_loc_or_locs()
 	if(!location || QDELETED(src))

@@ -429,65 +429,66 @@
 	return .
 
 /datum/new_player_panel/proc/LateChoices()
+	world.log << "LateChoices function called"
 	var/list/dat = list()
+
+	// Simple, compact layout with inline styles only
+	dat += "<div style='background: #000; color: #fff; font-family: monospace; padding: 10px; width: 100%; max-width: 100%; overflow-x: hidden;'>"
+	dat += "<div style='font-size: 18px; font-weight: bold; margin-bottom: 10px; text-align: center;'>LATE JOIN SELECTION</div>"
+	dat += "<div style='font-size: 12px; margin-bottom: 10px; text-align: center;'>Round Duration: [DisplayTimeText(world.time - SSticker.round_start_time)]</div>"
+
+	// Status Notices
 	if(SSlag_switch.measures[DISABLE_NON_OBSJOBS])
-		dat += "<div class='notice red' style='font-size: 125%'>Only Observers may join at this time.</div><br>"
+		dat += "<div style='background: #600; border: 1px solid #f00; padding: 5px; text-align: center; margin-bottom: 10px;'>Only Observers may join at this time.</div>"
 
-	dat += "<div class='notice'>Round Duration: [DisplayTimeText(world.time - SSticker.round_start_time)]</div>"
-
+	// Emergency Status Notices
 	if(SSshuttle.emergency)
 		switch(SSshuttle.emergency.mode)
 			if(SHUTTLE_ESCAPE)
-				dat += "<div class='notice red'>The station has been evacuated.</div><br>"
+				dat += "<div style='background: #600; border: 1px solid #f00; padding: 5px; text-align: center; margin-bottom: 10px;'>The station has been evacuated.</div>"
 			if(SHUTTLE_CALL)
 				if(!SSshuttle.canRecall())
-					dat += "<div class='notice red'>The station is currently undergoing evacuation procedures.</div><br>"
+					dat += "<div style='background: #600; border: 1px solid #f00; padding: 5px; text-align: center; margin-bottom: 10px;'>The station is currently undergoing evacuation procedures.</div>"
 
+	// Clean up prioritized jobs
 	for(var/datum/job/prioritized_job in SSjob.prioritized_jobs)
 		if(prioritized_job.current_positions >= prioritized_job.total_positions)
 			SSjob.prioritized_jobs -= prioritized_job
 
-	dat += "<table><tr><td valign='top'>"
-	var/column_counter = 0
+	// Simple table layout
+	dat += "<table style='width: 100%; border-collapse: collapse;'>"
 
 	for(var/datum/job_department/department as anything in SSjob.departments)
 		if(department.exclude_from_latejoin)
 			continue
 
-		var/department_color = department.latejoin_color
-		dat += "<fieldset style='width: 185px; border: 2px solid [department_color]; display: inline'>"
-		dat += "<legend align='center' style='color: [department_color]'>[department.department_name]</legend>"
+		dat += "<tr><td colspan='2' style='background: #333; color: [department.latejoin_color]; font-weight: bold; padding: 5px; text-align: center; border: 1px solid #555;'>[department.department_name]</td></tr>"
 
 		var/list/dept_data = list()
 		for(var/datum/job/job_datum as anything in department.department_jobs)
 			if(parent.IsJobUnavailable(job_datum.title, TRUE) != JOB_AVAILABLE)
 				continue
 
-			var/command_bold = ""
-			if(job_datum.departments_bitflags & DEPARTMENT_BITFLAG_COMPANY_LEADER)
-				command_bold = " command"
-
+			var/job_color = "#fff"
 			if(job_datum in SSjob.prioritized_jobs)
-				dept_data += "<a class='genericLink job[command_bold]' href='byond://?src=[REF(src)];SelectedJob=[job_datum.title]'><span class='priority'>[job_datum.title] ([job_datum.current_positions])</span></a>"
-			else
-				dept_data += "<a class='genericLink job[command_bold]' href='byond://?src=[REF(src)];SelectedJob=[job_datum.title]'>[job_datum.title] ([job_datum.current_positions])</a>"
+				job_color = "#0f0"
+			else if(job_datum.departments_bitflags & DEPARTMENT_BITFLAG_COMPANY_LEADER)
+				job_color = "#ff0"
+
+			dept_data += "<tr><td style='padding: 2px 5px; border: 1px solid #555;'><a href='byond://?src=[REF(src)];SelectedJob=[job_datum.title]' style='color: [job_color]; text-decoration: none; font-size: 11px;'>[job_datum.title]</a></td><td style='padding: 2px 5px; border: 1px solid #555; text-align: center; font-size: 11px;'>([job_datum.current_positions])</td></tr>"
+
 		if(!length(dept_data))
-			dept_data += "<span class='nopositions'>No positions open.</span>"
+			dept_data += "<tr><td colspan='2' style='padding: 5px; text-align: center; font-style: italic; color: #888;'>No positions open.</td></tr>"
 
 		dat += dept_data.Join()
-		dat += "</fieldset><br>"
 
-		column_counter++
-		if(column_counter > 0 && (column_counter % 3 == 0))
-			dat += "</td><td valign='top'>"
+	dat += "</table>"
+	dat += "</div>"
 
-	dat += "</td></tr></table></center>"
-	dat += "</div></div>"
-
-	var/datum/browser/popup = new(parent, "latechoices", "Choose Profession", 680, 580)
-	popup.add_stylesheet("playeroptions", 'html/browser/playeroptions.css')
+	world.log << "Simple browser interface prepared"
+	var/datum/browser/popup = new(parent, "latechoices", "Choose Profession", 500, 400)
 	popup.set_content(jointext(dat, ""))
-	popup.open(FALSE) // 0 is passed to open so that it doesn't use the onclose() proc
+	popup.open(FALSE)
 
 #undef LINKIFY_CONSOLE_OPTION
 #undef NPP_TAB_MAIN

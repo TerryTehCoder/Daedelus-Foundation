@@ -174,29 +174,29 @@
   return ..()
 
 /mob/living/simple_animal/hostile/retaliate/scp066/proc/handle_attack_target_signal(datum/source, atom/A)
-	// Original LoudNoise() logic
-	playsound(src, 'sound/scp/scp066/BeethovenLOUD.ogg', 40)
-	play_fov_effect(loc, 7, "talk", ignore_self = TRUE)
+        // Original LoudNoise() logic
+        playsound(src, 'sound/scp/scp066/BeethovenLOUD.ogg', 40)
+        // play_fov_effect(loc, 7, "talk", ignore_self = TRUE)
 
 /mob/living/simple_animal/hostile/retaliate/scp066/proc/handle_autohiss_signal(datum/source, message, datum/language/L)
-	// Original Eric() logic
-	var/sound = pick('sound/scp/scp066/Eric1.ogg', 'sound/scp/scp066/Eric2.ogg', 'sound/scp/scp066/Eric3.ogg')
-	playsound(src, sound, 25)
-	play_fov_effect(loc, 7, "talk", ignore_self = TRUE)
+        // Original Eric() logic
+        var/sound = pick('sound/scp/scp066/Eric1.ogg', 'sound/scp/scp066/Eric2.ogg', 'sound/scp/scp066/Eric3.ogg')
+        playsound(src, sound, 25)
+        // play_fov_effect(loc, 7, "talk", ignore_self = TRUE)
 
 /mob/living/simple_animal/hostile/retaliate/scp066/proc/handle_noise_emote_signal(datum/source)
-	// Original Noise() logic
-	var/sound = pick('sound/scp/scp066/Notes1.ogg', 'sound/scp/scp066/Notes2.ogg', 'sound/scp/scp066/Notes3.ogg', 'sound/scp/scp066/Notes4.ogg', 'sound/scp/scp066/Notes5.ogg', 'sound/scp/scp066/Notes6.ogg')
-	playsound(src, sound, 25)
-	play_fov_effect(loc, 7, "talk", ignore_self = TRUE)
+        // Original Noise() logic
+        var/sound = pick('sound/scp/scp066/Notes1.ogg', 'sound/scp/scp066/Notes2.ogg', 'sound/scp/scp066/Notes3.ogg', 'sound/scp/scp066/Notes4.ogg', 'sound/scp/scp066/Notes5.ogg', 'sound/scp/scp066/Notes6.ogg')
+        playsound(src, sound, 25)
+        // play_fov_effect(loc, 7, "talk", ignore_self = TRUE)
 
 /mob/living/simple_animal/hostile/retaliate/scp066/proc/handle_eric_emote_signal(datum/source)
-	// Original Eric() logic (duplicate, but kept for clarity of signal handling)
-	var/sound = pick('sound/scp/scp066/Eric1.ogg', 'sound/scp/scp066/Eric2.ogg', 'sound/scp/scp066/Eric3.ogg')
-	playsound(src, sound, 25)
-	play_fov_effect(loc, 7, "talk", ignore_self = TRUE)
+        // Original Eric() logic (duplicate, but kept for clarity of signal handling)
+        var/sound = pick('sound/scp/scp066/Eric1.ogg', 'sound/scp/scp066/Eric2.ogg', 'sound/scp/scp066/Eric3.ogg')
+        playsound(src, sound, 25)
+        // play_fov_effect(loc, 7, "talk", ignore_self = TRUE)
 
 /mob/living/simple_animal/hostile/retaliate/scp066/proc/handle_loud_noise_emote_signal(datum/source)
-	// Original LoudNoise() logic (duplicate, but kept for clarity of signal handling)
-	playsound(src, 'sound/scp/scp066/BeethovenLOUD.ogg', 40)
-	play_fov_effect(loc, 7, "talk", ignore_self = TRUE)
+        // Original LoudNoise() logic (duplicate, but kept for clarity of signal handling)
+        playsound(src, 'sound/scp/scp066/BeethovenLOUD.ogg', 40)
+        // play_fov_effect(loc, 7, "talk", ignore_self = TRUE)
