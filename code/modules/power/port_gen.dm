@@ -131,6 +131,13 @@
 /obj/machinery/power/port_gen/coal/roc
 	name = "C-480 \"Roc\" Stationary Generator"
 	desc = "A massive noisy, stationary coal-fired generator designed to serve as the primary power source for Site-scale installations."
+	icon = 'icons/obj/power(Big Gens).dmi'
+	icon_state = "portgen0"
+	base_icon = "portgen2"
+	power_gen = 60000
+	time_per_sheet = 50
+	circuit = /obj/item/circuitboard/machine/portgen/roc
+	stationary = TRUE
 
 
 /obj/machinery/power/port_gen/coal/process()
