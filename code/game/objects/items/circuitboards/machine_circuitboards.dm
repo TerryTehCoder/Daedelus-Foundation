@@ -197,6 +197,17 @@
 		/obj/item/stock_parts/capacitor = 2)
 	needs_anchored = FALSE
 
+/obj/item/circuitboard/machine/portgen/roc
+	name = "Roc-Grade Generator (Machine Board)"
+	greyscale_colors = CIRCUIT_COLOR_ENGINEERING
+	build_path = /obj/machinery/power/port_gen/coal/roc
+	req_components = list(
+		/obj/item/stock_parts/matter_bin = 3,
+		/obj/item/stock_parts/micro_laser = 4,
+		/obj/item/stack/cable_coil = 15,
+		/obj/item/stock_parts/capacitor = 3)
+	needs_anchored = TRUE
+
 /obj/item/circuitboard/machine/portgen/sparrow
 	name = "Sparrow-Grade Generator (Machine Board)"
 	greyscale_colors = CIRCUIT_COLOR_ENGINEERING

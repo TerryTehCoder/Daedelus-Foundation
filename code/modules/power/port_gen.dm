@@ -110,6 +110,7 @@
 	var/sheet_left = 0 // How much is left of the sheet
 	var/time_per_sheet = 260
 	var/current_heat = 0
+	var/stationary = FALSE
 
 /obj/machinery/power/port_gen/coal/falcon
 	name = "C-60 \"Falcon\" Generator"
@@ -124,8 +125,13 @@
 	desc = "A high-output generator intended for long-duration, high-demand operations. Overbuilt, loud, and infamous for its voracious appetite."
 	base_icon = "portgen1"
 	power_gen = 20000
-	time_per_sheet = 260
+	time_per_sheet = 70
 	circuit = /obj/item/circuitboard/machine/portgen/falcon
+
+/obj/machinery/power/port_gen/coal/roc
+	name = "C-480 \"Roc\" Stationary Generator"
+	desc = "A massive noisy, stationary coal-fired generator designed to serve as the primary power source for Site-scale installations."
+
 
 /obj/machinery/power/port_gen/coal/process()
 	..()
@@ -241,9 +247,11 @@
 			if(!anchored && !isinspace())
 				set_anchored(TRUE)
 				to_chat(user, span_notice("You secure the generator to the floor."))
-			else if(anchored)
+			else if(anchored && !stationary)
 				set_anchored(FALSE)
 				to_chat(user, span_notice("You unsecure the generator from the floor."))
+			else if(stationary)
+				to_chat(user, span_notice("The generator is stationary and cannot be moved without disassembly!"))
 
 			playsound(src, 'sound/items/deconstruct.ogg', 50, TRUE)
 			return
