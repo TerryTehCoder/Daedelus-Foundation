@@ -779,7 +779,8 @@ GLOBAL_LIST_EMPTY(station_turfs)
 
 /turf/var/current_daylight_color
 
-///
+/// Updates a turfs ambient light color based on the current daycycle period.
+/// Called when the daycycle period changes in order to synchronize turf lighting with the time of day.
 /turf/proc/update_ambient_light()
 	var/datum/daycycle/dc = SSdaycycle.get_daycycle(src.z)
 	if(!dc || !dc.current_period) return

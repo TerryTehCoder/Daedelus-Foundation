@@ -9,9 +9,6 @@ SUBSYSTEM_DEF(daycycle)
 	var/list/daycycles = list()
 	var/list/current_run
 
-/datum/controller/subsystem/daycycle/Initialize()
-	return ..()
-
 /datum/controller/subsystem/daycycle/proc/remove_level(level_z, daycycle_id)
 	var/datum/daycycle/daycycle = get_daycycle(daycycle_id)
 	if(!daycycle)
@@ -24,6 +21,8 @@ SUBSYSTEM_DEF(daycycle)
 
 /datum/controller/subsystem/daycycle/proc/register_level(level_z, daycycle_id, daycycle_type = /datum/daycycle)
 	var/datum/daycycle/daycycle = get_daycycle(daycycle_id, daycycle_type, create_if_missing = TRUE)
+		if(!daycycle)
+			return
 	if(islist(level_z))
 		for(var/linked_level in level_z)
 			daycycle.add_level(linked_level)

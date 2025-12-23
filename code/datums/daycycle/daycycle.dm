@@ -45,6 +45,7 @@
 
 	var/datum/daycycle_period/last_period = current_period
 	var/progression_percentage = time_in_cycle / cycle_duration
+	current_period = cycle_periods[length(cycle_periods)] // Default to last period
 	for(var/datum/daycycle_period/period in cycle_periods)
 		if(progression_percentage <= period.period)
 			current_period = period
@@ -68,6 +69,6 @@
 		for(var/y = 1 to world.maxy)
 			var/turf/T = locate(x, y, z)
 			var/area/A = get_area(T)
-			if(T && A.outdoors) //I tried to just do get_area(T).outdoors like *every other time*, but for some UNGODLY reason this one is PICKY.
+			if(T && A && A.outdoors) //I tried to just do get_area(T).outdoors like *every other time*, but for some UNGODLY reason this one is PICKY.
 				T.update_ambient_light()
 
