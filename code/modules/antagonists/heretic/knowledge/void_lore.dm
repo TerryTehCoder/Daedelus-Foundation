@@ -181,7 +181,7 @@
 	///soundloop for the void theme
 	var/datum/looping_sound/void_loop/sound_loop
 	///Reference to the ongoing voidstrom that surrounds the heretic
-	var/datum/weather/void_storm/storm
+	var/datum/weather/weather_types/void_storm/storm
 
 /datum/heretic_knowledge/final/void_final/recipe_snowflake_check(mob/living/user, list/atoms, list/selected_atoms, turf/loc)
 	if(!isopenturf(loc))
@@ -232,7 +232,7 @@
 	source_turf.TakeTemperature(-20)
 
 	if(!storm)
-		storm = new /datum/weather/void_storm(list(source_turf.z))
+		storm = new /datum/weather/weather_types/void_storm(list(source_turf.z))
 		storm.telegraph()
 
 

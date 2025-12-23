@@ -110,7 +110,6 @@ GLOBAL_LIST_EMPTY(station_turfs)
  */
 /turf/Initialize(mapload)
 	SHOULD_CALL_PARENT(FALSE)
-	SEND_SIGNAL(src, COMSIG_TURF_CREATED)
 
 	if(initialized)
 		stack_trace("Warning: [src]([type]) initialized multiple times!")
@@ -132,6 +131,7 @@ GLOBAL_LIST_EMPTY(station_turfs)
 	ASSERT_SORTED_SMOOTHING_GROUPS(smoothing_groups)
 	ASSERT_SORTED_SMOOTHING_GROUPS(canSmoothWith)
 	#endif
+	SEND_SIGNAL(src, COMSIG_TURF_CREATED)
 
 	SETUP_SMOOTHING()
 
@@ -425,7 +425,7 @@ GLOBAL_LIST_EMPTY(station_turfs)
 
 	// Weather system: Check if the arrived atom entered an exposed turf
 	if(src.cover_cache == UNCOVERED)
-		SEND_GLOBAL_SIGNAL(COMSIG_OUTDOOR_ATOM_ADDED, src)
+		SEND_GLOBAL_SIGNAL(COMSIG_OUTDOOR_ATOM_ADDED, arrived, src)
 
 
 /turf/Exited(atom/movable/gone, direction)
@@ -441,8 +441,8 @@ GLOBAL_LIST_EMPTY(station_turfs)
 	. = ..()
 
 	// Weather system: Check if the exited atom left an exposed turf
-	if(src.cover_cache == UNCOVERED)
-		SEND_GLOBAL_SIGNAL(COMSIG_OUTDOOR_ATOM_REMOVED, src)
+	if(cover_cache == UNCOVERED)
+		SEND_GLOBAL_SIGNAL(COMSIG_OUTDOOR_ATOM_REMOVED, gone, src)
 
 // A proc in case it needs to be recreated or badmins want to change the baseturfs
 /turf/proc/assemble_baseturfs(turf/fake_baseturf_type)

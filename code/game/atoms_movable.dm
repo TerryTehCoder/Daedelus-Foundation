@@ -117,9 +117,8 @@
 	/// The last weather chunk this atom was placed in.
 	var/last_weather_chunk_key = null
 
-	//Dirty check updated when a mob moves into or out of a outside area.
+	//Dirty check updated when a mob moves into or out of an outside area.
 	var/tmp/needs_weather_update = FALSE
-
 
 /mutable_appearance/emissive_blocker
 

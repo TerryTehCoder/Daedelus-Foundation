@@ -21,7 +21,7 @@
 	immunity_type = TRAIT_LAVA_IMMUNE
 
 
-/datum/weather/floor_is_lava/can_weather_act(mob/living/mob_to_check)
+/datum/weather/weather_types/floor_is_lava/can_weather_act(mob/living/mob_to_check)
 	if(!mob_to_check.client) //Only sentient people are going along with it!
 		return FALSE
 	. = ..()
@@ -36,5 +36,5 @@
 	if(mob_to_check.movement_type & FLYING)
 		return FALSE
 
-/datum/weather/floor_is_lava/weather_act(mob/living/victim)
+/datum/weather/weather_types/floor_is_lava/weather_act(mob/living/victim)
 	victim.adjustFireLoss(3)

@@ -34,7 +34,7 @@
 	var/list/allowed_storms = list()
 
 
-	//For convienence in assignments
+	//For convenience in assignments
 	#define LOW_PRESSURE "LOW_PRESSURE"
 	#define MEDIUM_PRESSURE "MEDIUM_PRESSURE"
 	#define HIGH_PRESSURE "HIGH_PRESSURE"
@@ -87,12 +87,21 @@
 	// Pick a random pressure value from the range defined by pressure_type
 	if(pressure_pattern && pressure_pattern[pressure_type] && length(pressure_pattern[pressure_type]) == 3) // Ensure it's a min, mid, max list
 		current_pressure = rand(pressure_pattern[pressure_type][1], pressure_pattern[pressure_type][3])
+		var/min_p = pressure_pattern[pressure_type][1]
+		var/max_p = pressure_pattern[pressure_type][3]
+		current_pressure = min_p + rand() * (max_p - min_p)
 	else
-		current_pressure = pick(pressure_pattern[MEDIUM_PRESSURE]) // Fallback to picking from default medium range
+		// Fallback to medium pressure range
+		var/min_p = pressure_pattern[MEDIUM_PRESSURE][1]
+		var/max_p = pressure_pattern[MEDIUM_PRESSURE][3]
+		current_pressure = min_p + rand() * (max_p - min_p)
 
 	// Pick a random temperature value from the range defined by base_temperature_type
 	if(temperature_ranges && temperature_ranges[base_temperature_type] && length(temperature_ranges[base_temperature_type]) == 2)
-		base_temperature = rand(temperature_ranges[base_temperature_type][1], temperature_ranges[base_temperature_type][2])
+		var/min_t = temperature_ranges[base_temperature_type][1]
+		var/max_t = temperature_ranges[base_temperature_type][2]
+		base_temperature = min_t + rand() * (max_t - min_t)
+
 	else if(isnum(base_temperature_type)) // If base_temperature_type was set directly as a number
 		base_temperature = base_temperature_type
 	else
@@ -111,15 +120,13 @@
 			if(!isturf(T))
 				continue
 
-			else
-				var/selected_temp = base_temperature // Use the pre-calculated base_temperature
+			var/selected_temp = base_temperature // Use the pre-calculated base_temperature
 
-				// Apply night temperature reduction
-				if(is_night)
-					selected_temp = max(minimum_temperature, selected_temp - night_temp_reduction)
+			// Apply night temperature reduction
+			if(is_night)
+				selected_temp = max(minimum_temperature, selected_temp - night_temp_reduction)
 
-				T.temperature = selected_temp
-
+			T.temperature = selected_temp
 
 /// --- Nautical Weather Profiles ---
 
@@ -133,7 +140,7 @@
 	night_temp_reduction = 8.0
 	minimum_temperature = 268.15 // -5C
 	allowed_weather_effects = list(WEATHER_LIGHTNING_STRIKE = 10, WEATHER_WINDGUST = 10, WEATHER_TORNADO = 5)
-	allowed_storms = list(/datum/weather/weather_types/rain_storm, /datum/weather/weather_types/snow_storm)
+	allowed_storms = list(/datum/weather/weather_types/rain_storm)
 	weather_tag_whitelist = list("coastal", "stormy")
 	flavor_smells_short = list("salt air", "ocean spray", "seaweed", "briny wind", "stormy sea")
 	flavor_smells_long = list(
@@ -178,7 +185,7 @@
 	primary_wind_direction = NORTH
 	pressure_type = LOW_PRESSURE
 	night_temp_reduction = 10.0
-	minimum_temperature = 261 //-12C
+	minimum_temperature = 261.15 //-12C
 	allowed_weather_effects = list(WEATHER_LIGHTNING_STRIKE = 10, WEATHER_WINDGUST = 10, WEATHER_TORNADO = 10)
 	allowed_storms = list(/datum/weather/weather_types/rain_storm, /datum/weather/weather_types/snow_storm)
 	weather_tag_whitelist = list("windy", "cold", "freezing")
@@ -231,7 +238,7 @@
 		"You catch the acrid scent of something distant.. maybe burning.",
 		"The wind smells dry and sour, like old rust baking in the sun.",
 		"The breeze is thick with radiated dust and baked minerals.",
-		"A wave of hot, dry air carriest the faint tang of heated metal."
+		"A wave of hot, dry air carries the faint tang of heated metal."
 	)
 
 /datum/weather/profile/heathaze/apply_environment_settings()

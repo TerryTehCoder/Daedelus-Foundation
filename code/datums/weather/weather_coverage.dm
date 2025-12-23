@@ -35,7 +35,7 @@
 	else
 		max_z_level = world.maxz // Fallback if no relevant Z-levels (shouldn't happen for a valid map)
 
-	message_admins("Weather Coverage Debug: relevant_z_levels = [relevant_z_levels.Join(", ")]")
+	message_admins("Weather Coverage Debug: relevant_z_levels = [relevant_z_levels && relevant_z_levels.len ? relevant_z_levels.Join(", ") : "none"]")
 	initialize_weather_coverage(relevant_z_levels)
 
 /datum/weather/weather_coverage/proc/initialize_weather_coverage(list/relevant_z_levels)
@@ -177,14 +177,15 @@
 
 /// Utilities for Turf Creation/Destruction
 /datum/weather/weather_coverage/proc/on_turf_created(turf/T)
-	if(!T || !T.z) return
+	if(!T || !T.z || !(T.z in initialized_relevant_z_levels))
+		return
 
 	var/turf/below = GetBelow(T)
 
 	if(!below)
 		return
 
-	if(T.blocks_weather)
+	if(T.blocks_weather && (below.z in initialized_relevant_z_levels))
 		// Turf now blocks weather; below is no longer exposed
 		set_exposed(below, FALSE) //Set_exposed marks the turf as covered.
 
@@ -193,7 +194,7 @@
 		return
 
 	if(!T.blocks_weather)
-		// Turf that was destroyed didn't block weather, so no point in checking, since fundementally nothing should change.
+		// Turf that was destroyed didn't block weather, so no point in checking, since fundamentally nothing should change.
 		return
 
 	//Check the turf below the destroyed turf
@@ -222,6 +223,8 @@
 			SSweather.weather_chunking.exposed_turfs |= T
 			SSweather.weather_chunking.register_exposed_turf(T)
 			T.needs_weather_update = TRUE
+			for(var/atom/movable/AM in T.contents)
+				SEND_SIGNAL(SSweather.weather_chunking, COMSIG_OUTDOOR_ATOM_ADDED, AM)
 			if(debug_verbose_coverage_messages && debug_message_count < 100)
 				message_admins(span_adminnotice("Weather Coverage Debug: set_exposed called for [T.loc] as TRUE. Number of exposed turfs in chunking system: [SSweather.weather_chunking.turf_chunks.len]"))
 				debug_message_count++
@@ -231,6 +234,8 @@
 			SSweather.weather_chunking.exposed_turfs -= T // This line still uses exposed_turfs, but it's a temporary cache, so it's fine.
 			SSweather.weather_chunking.unregister_exposed_turf(T)
 			T.needs_weather_update = TRUE
+			for(var/atom/movable/AM in T.contents)
+				SEND_SIGNAL(SSweather.weather_chunking, COMSIG_OUTDOOR_ATOM_REMOVED, AM)
 			if(debug_verbose_coverage_messages)
 				message_admins(span_adminnotice("Weather Coverage: Turf [T.loc] became covered. Number of exposed turfs in chunking system: [SSweather.weather_chunking.turf_chunks.len]"))
 
@@ -239,4 +244,16 @@
 /datum/weather/weather_coverage/proc/finalize_exposed_turf_registration()
 	if(!SSweather.weather_chunking)
 		return
-	message_admins(span_adminnotice("Weather Coverage: Initial weather coverage calculation complete. Found [length(SSweather.weather_chunking.get_turfs_in_chunks(SSweather.weather_chunking.get_all_turf_chunk_keys()))] exposed turfs on map."))
+
+	var/list/all_exposed_turfs = SSweather.weather_chunking.get_turfs_in_chunks(SSweather.weather_chunking.get_all_turf_chunk_keys())
+	var/registered_atom_count = 0
+
+	for(var/turf/T in all_exposed_turfs)
+		if(!T)
+			continue
+		for(var/atom/movable/AM in T.contents) // Pass for mobs/objs that started spawned exposed.
+			if(AM)
+				SSweather.weather_chunking.register(AM)
+				registered_atom_count++
+
+	message_admins(span_adminnotice("Weather Coverage: Initial weather coverage calculation complete. Found [all_exposed_turfs.len] exposed turfs on map. Registered [registered_atom_count] pre-existing atoms."))

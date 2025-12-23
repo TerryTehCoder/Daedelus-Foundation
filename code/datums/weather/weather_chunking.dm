@@ -26,7 +26,6 @@
 
 	RegisterSignal(src, COMSIG_OUTDOOR_ATOM_ADDED, PROC_REF(outdoor_atom_added))
 	RegisterSignal(src, COMSIG_OUTDOOR_ATOM_REMOVED, PROC_REF(outdoor_atom_removed))
-	RegisterSignal(src, COMSIG_MOVABLE_MOVED, PROC_REF(outdoor_atom_moved))
 
 /datum/weather/chunking/proc/outdoor_atom_added(atom/movable/A)
 	if(!A) //How did it get moved here if it was anchored? I don't know.
@@ -48,7 +47,7 @@
 
 	SSweather.weather_chunking.update_atom_location(A)
 
-/// Actual Chunk handeling logic
+/// Actual Chunk handling logic
 
 /datum/weather/chunking/proc/register(atom/movable/Q)
 	if(!Q) //We only want outdoor atoms and atoms that exist.
@@ -56,7 +55,8 @@
 	var/key = get_chunk_key(Q) //What's the key for this atoms location?
 	if(!(key in src.chunks)) //If the key doesn't exist, we create the list and mark it.
 		src.chunks[key] = list()
-	src.chunks[key] += Q //Adding the atom to the list.
+	if(!(Q in src.chunks[key])) // Only add if not already present
+		src.chunks[key] += Q //Adding the atom to the list.
 
 //Similar to above but removing atoms from chunks, and deleting chunks from list if empty.
 /datum/weather/chunking/proc/unregister(atom/movable/Q) //Keep Q for clarity
@@ -64,7 +64,7 @@
 	if(key in src.chunks)
 		src.chunks[key] -= Q
 		if(!src.chunks[key])
-			src.chunks[key] = null
+			src.chunks.Remove(key)
 
 //Keys and Coords
 
@@ -121,7 +121,7 @@
 	for(var/key in chunk_keys)
 		if(key in src.chunks)
 			for(var/atom/movable/Q in src.chunks[key])
-				if(ismob(Q))
+				if(isliving(Q))
 					results += Q
 
 	return results
@@ -192,7 +192,7 @@
 	for (var/key in chunk_keys)
 		if (key in src.turf_chunks)
 			var/list/turfs_in_chunk = src.turf_chunks[key]
-			if (istype(turfs_in_chunk, /list)) // Ensure it's a list
+			if (islist(turfs_in_chunk)) // Ensure it's a list
 				results += turfs_in_chunk
 			else if (istype(turfs_in_chunk, /turf)) // Handle old format if any remain
 				results += turfs_in_chunk
@@ -212,7 +212,14 @@
 
 /datum/weather/chunking/proc/get_impacted_chunk_keys(datum/weather/storm)
 	. = list()
-	if(!storm || !storm.impacted_z_levels || !islist(storm.impacted_z_levels) || !length(storm.impacted_z_levels) || !istype(storm.center_turf, /turf))
+	if(!storm)
+		message_admins(span_adminnotice("Weather Chunking Debug: get_impacted_chunk_keys called with null storm."))
+		return
+	if(!storm.impacted_z_levels || !islist(storm.impacted_z_levels) || !length(storm.impacted_z_levels))
+		message_admins(span_adminnotice("Weather Chunking Debug: get_impacted_chunk_keys called with invalid or empty impacted_z_levels."))
+		return
+	if(!istype(storm.center_turf, /turf))
+		message_admins(span_adminnotice("Weather Chunking Debug: get_impacted_chunk_keys called with invalid center_turf."))
 		return
 
 	// Iterate through all impacted Z-levels specified by the storm
@@ -227,7 +234,7 @@
 				// No need to check area_type, as turf_chunks already contains only exposed turfs
 				. |= key
 
-		else if(storm.radius_in_chunks > 0) // Radius-based horizontally for this Z-level
+		else if(storm.radius_in_chunks >= 0) // Radius-based horizontally for this Z-level
 			var/list/center_chunk_coords = get_turf_chunk_coords(storm.center_turf)
 			var/center_x = center_chunk_coords[1]
 			var/center_y = center_chunk_coords[2]

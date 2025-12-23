@@ -124,32 +124,33 @@ GLOBAL_VAR_INIT(next_weather_sound_channel, 10000) // Start at a high number to 
 	*/
 
 	var/datum/map_config/current_map_config = SSmapping.config
-	var/overrides = current_map_config.weather_overrides[type]
-	if(overrides) //It's possible
-		if("desc" in overrides)
-			desc = overrides["desc"]
-		if("probability" in overrides)
-			probability = overrides["probability"]
-		if("telegraph_duration" in overrides)
-			telegraph_duration = overrides["telegraph_duration"]
-		if("weather_duration_lower" in overrides)
-			weather_duration_lower = overrides["weather_duration_lower"]
-		if("weather_duration_upper" in overrides)
-			weather_duration_upper = overrides["weather_duration_upper"]
-		if("end_duration" in overrides)
-			end_duration = overrides["end_duration"]
-		if("telegraph_message" in overrides)
-			telegraph_message = overrides["telegraph_message"]
-		if("weather_message" in overrides)
-			weather_message = overrides["weather_message"]
-		if("end_message" in overrides)
-			end_message = overrides["end_message"]
-		if("perpetual" in overrides)
-			perpetual = overrides["perpetual"]
-		if("barometer_predictable" in overrides)
-			barometer_predictable = overrides["barometer_predictable"]
-		if("aesthetic" in overrides)
-			aesthetic = overrides["aesthetic"]
+	if(current_map_config && current_map_config.weather_overrides)
+		var/overrides = current_map_config.weather_overrides[type]
+		if(overrides)
+			if("desc" in overrides)
+				desc = overrides["desc"]
+			if("probability" in overrides)
+				probability = overrides["probability"]
+			if("telegraph_duration" in overrides)
+				telegraph_duration = overrides["telegraph_duration"]
+			if("weather_duration_lower" in overrides)
+				weather_duration_lower = overrides["weather_duration_lower"]
+			if("weather_duration_upper" in overrides)
+				weather_duration_upper = overrides["weather_duration_upper"]
+			if("end_duration" in overrides)
+				end_duration = overrides["end_duration"]
+			if("telegraph_message" in overrides)
+				telegraph_message = overrides["telegraph_message"]
+			if("weather_message" in overrides)
+				weather_message = overrides["weather_message"]
+			if("end_message" in overrides)
+				end_message = overrides["end_message"]
+			if("perpetual" in overrides)
+				perpetual = overrides["perpetual"]
+			if("barometer_predictable" in overrides)
+				barometer_predictable = overrides["barometer_predictable"]
+			if("aesthetic" in overrides)
+				aesthetic = overrides["aesthetic"]
 
 
 
@@ -196,6 +197,18 @@ GLOBAL_VAR_INIT(next_weather_sound_channel, 10000) // Start at a high number to 
 	update_turf_overlays()
 
 	weather_effects = select_weather_effects()
+
+	//Instantiate the actual effects now
+	var/list/instanced_effects = list()
+	for(var/effect_type in weather_effects)
+		instanced_effects += new effect_type()
+	weather_effects = instanced_effects
+
+	if(weather_effects.len)
+		var/list/effect_names = list()
+		for(var/datum/weather/effect/E in weather_effects)
+			effect_names += E.name
+		message_admins(span_adminnotice("Weather Datum: [name] generated effects for this storm: [effect_names.Join(", ")]"))
 
 	send_alert(weather_message, weather_sound)
 	if(!perpetual)
@@ -278,7 +291,8 @@ GLOBAL_VAR_INIT(next_weather_sound_channel, 10000) // Start at a high number to 
 		return
 
 	// Check if this turf is covered by weather (turf-based coverage system)
-	if(!SSweather.weather_chunking.turf_chunks[SSweather.weather_chunking.get_turf_chunk_key(mob_turf)])
+	var/chunk_key = SSweather.weather_chunking.get_turf_chunk_key(mob_turf)
+	if(!chunk_key || !SSweather.weather_chunking.turf_chunks[chunk_key])
 		return
 
 	// Immunity checks for mob
@@ -341,7 +355,7 @@ GLOBAL_VAR_INIT(next_weather_sound_channel, 10000) // Start at a high number to 
 			mobs_with_ambient_sound -= M
 
 ///A hook for weather_types to apply specific effects that can't be captured in these generic effects.
-/datum/weather/proc/weather_act(mob/living/L, /obj/O)
+/datum/weather/proc/weather_act(mob/living/L, obj/O)
 	// This proc is a placeholder for child weather_types to add their specific effects.
 	// Generic weather effects (Wind Gusts, Lightning, Fog, etc) are applied by the SSweather subsystem directly.
 
@@ -419,9 +433,8 @@ GLOBAL_VAR_INIT(next_weather_sound_channel, 10000) // Start at a high number to 
 	if(!active_profile || !active_profile.allowed_weather_effects || !active_profile.allowed_weather_effects.len)
 		// If no active profile or no allowed effects, return empty list.
 		return selected_effects
-
 	var/num_effects = 3 //Arbitrary, but will be overridden by max_effects if set.
-	if(max_effects)
+	if(max_effects > 0)
 		num_effects = rand(1, max_effects) //If we have a max effects number, use that.
 	else
 		num_effects = rand(1, 5) //At least 1, at most 5.

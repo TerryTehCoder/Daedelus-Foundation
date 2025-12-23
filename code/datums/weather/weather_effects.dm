@@ -69,24 +69,26 @@
 
 /datum/weather/effect/New()
 	..()
+
 	src.severity = SSweather.current_profile.severity
 
 //Determines if a mob has protection (of a protection_flag type), if it does the child procs which called us will stop.
 /datum/weather/effect/proc/apply_effect(mob/living/L, obj/O, protection_flag)
 	var/protection_level = 0
+	var/effective_severity = src.severity
 	for (var/obj/item/clothing/equipped_item in L.contents)
 		if(equipped_item.weather_protection_flags & protection_flag)
 			protection_level = max(protection_level, equipped_item.weather_protection_level)
 
 	if (protection_level == PROTECTION_FULL) {
-		return TRUE
+		return 0 // No effect or greatly diminished (depending on how the child proc wants to handle it)
 	} else if (protection_level == PROTECTION_MODERATE) {
-		src.severity *= 0.5
+		effective_severity *= 0.5
 	} else if (protection_level == PROTECTION_LIGHT) {
-		src.severity *= 0.8
+		effective_severity *= 0.8
 	}
 
-	return FALSE
+	return effective_severity
 
 /datum/weather/effect/proc/tick()
 	if(cooldown > 0)
@@ -192,18 +194,17 @@
 			continue
 
 		if(O.w_class < WEIGHT_CLASS_NORMAL)
-			O.throw_at(get_step_away(O, direction), force = 3 * severity)
+			O.throw_at(get_step(O, direction), force = 3 * severity)
 			O.visible_message(span_warning("The wind pushes the [O.name] away!"))
 
 		else if((O.w_class > WEIGHT_CLASS_NORMAL) && (O.w_class < WEIGHT_CLASS_GIGANTIC))
 			var/probability = 25 * severity
 			if(prob(probability))
-				O.throw_at(get_step_away(O, direction), force = 2 * severity)
+				O.throw_at(get_step(O, direction), force = 2 * severity)
 				O.visible_message(span_warning("The intense wind displaces the [O.name]!"))
 
 		else if(O.w_class >= WEIGHT_CLASS_GIGANTIC)
 			continue
-
 ///Wind Gust logic for mobs
 /datum/weather/effect/wind_gust/proc/process_wind_gust_mobs(list/mobs_list, direction)
 	if(!mobs_list)
@@ -225,30 +226,33 @@
 
 		playsound(L, sound_path, volume)
 
-		if(src.apply_effect(L, null, CLOTHING_WINDPROOF)) // Pass null for obj, as this is a mob effect
-			continue
+		var/weather_influence = src.apply_effect(L, null, CLOTHING_WINDPROOF)
+		severity = weather_influence
 
 		//Moving the player in the wind direction gently if severity is high enough.
 		if(severity > 1)
 			L.forceMove(get_step(L, direction))
 		if(L.mob_size < MOB_SIZE_HUMAN)
-			L.throw_at(get_step_away(L, direction), force = 5 * severity)
+			L.throw_at(get_step(L, direction), force = 5 * severity)
 
 		to_chat(L, span_warning("A strong gust of wind pushes you!"))
 
 		//Speed boost/reduction based on wind direction
 		var/wind_alignment = get_wind_alignment(L, direction)
-		var/datum/movespeed_modifier/mm = 0
+		var/movespeed_value = 0
 
 		switch(wind_alignment)
 			if(WIND_ALIGNMENT_TAILWIND)
-				mm = 0.2
+				movespeed_value = 0.2
 			if(WIND_ALIGNMENT_HEADWIND)
-				mm = -0.1
+				movespeed_value = -0.1
 
-		if(mm != 0)
+		if(movespeed_value != 0)
+			var/datum/movespeed_modifier/mm = new()
+			mm.slowdown = movespeed_value
 			L.add_movespeed_modifier(mm)
-			addtimer(CALLBACK(src, /datum/weather/effect/wind_gust/proc/remove_speed, L, mm), 30)
+			addtimer(CALLBACK(src, PROC_REF(remove_speed), L, mm), 30)
+
 
 
 /*--- Lightning Strike Effect --- Rumble Rumble Crash!
@@ -300,11 +304,11 @@
 	L.take_damage(rand(20, 50) * severity, BURN, FIRE, 0)
 	var/turf/strike_turf = get_turf(L)
 	strike_turf.visible_message(span_warning("A jolt of lightning strikes [L.name]!"))
-	to_chat(L, span_warning("You feel an intense shock as lightning courses through you, overhwhelming your senses!"))
+	to_chat(L, span_warning("You feel an intense shock as lightning courses through you, overwhelming your senses!"))
 	L.emote("scream")
 	L.Stun(4, TRUE)
 	ADD_TRAIT(L, TRAIT_BLURRY_VISION, "weather_lightning")
-	addtimer(CALLBACK(L, GLOBAL_PROC_REF(___TraitRemove), L, TRAIT_BLURRY_VISION, "weather_lightning"), 3)
+	addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(___TraitRemove), L, TRAIT_BLURRY_VISION, "weather_lightning"), 3)
 	if(ishuman(L))
 		var/mob/living/carbon/human/human_target = L
 		human_target.electrocution_animation(LIGHTNING_BOLT_ELECTROCUTION_ANIMATION_LENGTH)
@@ -346,9 +350,9 @@
 
 /datum/weather/effect/lightning_strike/proc/short_machine(obj/machinery/M)
 	if(prob(30)) //30% chance we just Explode instead
+		M.visible_message(span_warning("The [M] explodes violently as lightning strikes it!"))
 		explosion(get_turf(M), 0, 0, 0)
 		qdel(M)
-		M.visible_message(span_warning("The [M] explodes violently as lightning strikes it!"))
 	else
 		M.set_machine_stat(M.machine_stat | BROKEN) //Bzzt, we shorted it out. Hope that wasn't Important!
 		M.visible_message(span_warning("The [M] sparks and shorts out from the lightning strike!"))
@@ -378,7 +382,7 @@
 		var/conductivity = 0
 		if(istype(O, /obj/item))
 			var/obj/item/I = O //Siemens Coefficient only exists on obj/item.
-			conductivity = clamp(I.siemens_coefficient, 0, 1) //Negative coefficients are right out, and we don't want over 1..r 1..
+			conductivity = clamp(I.siemens_coefficient, 0, 1) //Negative coefficients are right out, and we don't want over 1 or 1
 		var/weight = round(conductivity * 10) //Conductivity converted into a weight value (1.0 = 10 weight)
 
 		//Bonus weights for specific equipment/properties.
@@ -448,18 +452,17 @@
 		T.visible_message(span_warning("The power cable on [T] sparks and crackles with energy as the lightning strikes!"))
 
 		if(prob(70)) //70% chance to overload and destroy the cable.
-			T.visible_message(src, span_warning("The power cable violently explodes into a charred mess!"))
+			T.visible_message(span_warning("The power cable violently explodes into a charred mess!"))
 			new /obj/effect/decal/cleanable/burnt_wire(T)
 			qdel(C) //Delete the cable, since it has exploded.
 			playsound(T, 'sound/effects/explosion3.ogg', rand(30, 50), TRUE)
-
 	var/list/objects_on_turf = list()
 	for(var/atom/A in T)
 		if(istype(A, /obj))
 			objects_on_turf += A
 	for(var/obj/O in objects_on_turf)
 		if(O == C)
-			continue //We already handeled cables
+			continue //We already handled cables
 
 	//Shamelessly "Inspired" from inducer code.
 
@@ -496,11 +499,8 @@
 	// Brief light flashes at the strike location (Two flashes, one after the other)
 	T.set_light(l_power = 100, l_color = COLOR_WHITE, l_outer_range = 5, l_falloff_curve = 2, l_inner_range = 1) // First flash
 	addtimer(CALLBACK(T, TYPE_PROC_REF(/atom, set_light), 0, null, null, null, FALSE), 3) // Turn off after 3 deciseconds
-	T.set_light(l_power = 100, l_color = COLOR_WHITE, l_outer_range = 5, l_falloff_curve = 2, l_inner_range = 1) // Start second flash after 3 deciseconds
-	addtimer(CALLBACK(T, TYPE_PROC_REF(/atom, set_light), 0, null, null, null, FALSE), 3) // Turn off after 3 deciseconds
-
-	// Add a scorch mark/burnt decal to the struck turf
-	new /obj/effect/mapping_helpers/burnt_floor(T)
+	addtimer(CALLBACK(T, TYPE_PROC_REF(/atom, set_light), 100, COLOR_WHITE, 5, 2, 1), 3) // Start second flash after 3 deciseconds
+	addtimer(CALLBACK(T, TYPE_PROC_REF(/atom, set_light), 0, null, null, null, FALSE), 6) // Turn off after 6 deciseconds total
 
 	// Attempt to charge power receptors on the turf
 	charge_power_receptor(T)
@@ -550,70 +550,10 @@
 
 			if(effective_dist <= 5) // Close: Play immediately
 				playsound(mob_turf, profile_map["sound"], profile_map["volume"], TRUE)
-			else // Mid/Far: Delay for realism
 				var/pitch = rand(90, 110) / 100
 				var/delay = effective_dist * 3 // Calculate delay based on distance
-				addtimer(CALLBACK(null, PROC_REF(playsound), list(mob_turf, profile_map["sound"], profile_map["volume"], TRUE, 44100 * pitch)), delay)
+				addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(playsound), mob_turf, profile_map["sound"], profile_map["volume"], TRUE, 44100 * pitch), delay)
 			break // Found a match, stop checking profiles
-
-/datum/weather/effect/electrified_reagents
-	name = "Electrified Reagents"
-	var/turf/affected_turf
-	var/list/affected_mobs = list() // To prevent re-electrocution of the same mob repeatedly
-	var/reagent_tick_interval = 10 // Shock every 1 second (10 deciseconds)
-	var/shocks_processed = 0 // Counter for how many times process_shocks has run
-	var/max_shocks = 10 // Maximum number of shocks before the effect ends as a failsafe
-
-/datum/weather/effect/electrified_reagents/New(turf/T)
-	..()
-	affected_turf = T
-	RegisterSignal(affected_turf, COMSIG_ATOM_ENTERED, PROC_REF(on_atom_entered))
-	RegisterSignal(affected_turf, COMSIG_ATOM_EXITED, PROC_REF(on_atom_exited))
-
-/datum/weather/effect/electrified_reagents/proc/start_effect()
-	max_shocks = duration / reagent_tick_interval // Calculate max shocks based on duration and tick interval
-	shocks_processed = 0 // Reset counter when effect starts
-	addtimer(CALLBACK(src, PROC_REF(end_effect)), duration)
-	addtimer(CALLBACK(src, PROC_REF(process_shocks)), reagent_tick_interval) // Start periodic shocking
-
-/datum/weather/effect/electrified_reagents/proc/end_effect()
-	// When the effect ends, we need to ensure any pending process_shocks timers are stopped.
-	// Since process_shocks re-adds itself, we need to explicitly deltimer it.
-	deltimer(CALLBACK(src, PROC_REF(process_shocks)))
-	UnregisterSignal(affected_turf, COMSIG_ATOM_ENTERED)
-	UnregisterSignal(affected_turf, COMSIG_ATOM_EXITED)
-	qdel(src)
-
-/datum/weather/effect/electrified_reagents/proc/process_shocks()
-	shocks_processed++ // Increment the counter
-
-	if(!affected_turf || !affected_turf.reagents || affected_turf.reagents.total_volume == 0 || shocks_processed >= max_shocks)
-		end_effect() // No reagents left, or max shocks reached, end the effect
-		return
-
-	for(var/mob/living/L in affected_turf.contents)
-		if(L.loc == affected_turf) // Ensure mob is directly on the turf
-			L.electrocute_act(rand(5, 15) * severity, L, 0.2) // Weaker shock for continuous effect
-			L.visible_message(span_warning("The electrified reagents on [affected_turf] shock [L.name]!"))
-			to_chat(L, span_warning("You feel a continuous jolt from the electrified reagents!"))
-			L.Stun(1, TRUE)
-			ADD_TRAIT(L, TRAIT_BLURRY_VISION, "weather_lightning_liquid_continuous")
-			addtimer(CALLBACK(L, GLOBAL_PROC_REF(___TraitRemove), L, TRAIT_BLURRY_VISION, "weather_lightning_liquid_continuous"), reagent_tick_interval)
-
-	// Re-add the timer for the next shock
-	addtimer(CALLBACK(src, PROC_REF(process_shocks)), reagent_tick_interval)
-
-/datum/weather/effect/electrified_reagents/proc/on_atom_entered(atom/source, atom/movable/arrived, atom/old_loc, list/old_locs)
-	if(istype(arrived, /mob/living/))
-		var/mob/living/L = arrived
-		if(L.loc == affected_turf && !(L in affected_mobs)) // Ensure mob is on the turf and not already affected
-			affected_mobs += L // Add to affected list to be shocked by process_shocks
-
-/datum/weather/effect/electrified_reagents/proc/on_atom_exited(atom/source, atom/movable/gone, direction)
-	if(istype(gone, /mob/living/))
-		var/mob/living/L = gone
-		if(L in affected_mobs)
-			affected_mobs -= L // Remove from affected list when mob leaves the turf
 
 /*--- Fog Effect ---
 	  _
@@ -646,7 +586,7 @@
 	if(!active_visual_overlays.len)
 		var/icon/fog_icon = 'icons/obj/watercloset.dmi'
 		var/icon_state_name = "mist"
-		var/overlay_color = "//A0A0A0" // Light grey
+		var/overlay_color = "#A0A0A0" // Light grey
 
 		for(var/z_level in current_storm.impacted_z_levels)
 			var/list/z_chunk_keys = SSweather.weather_chunking.get_all_turf_chunk_keys_on_z(z_level)
@@ -716,8 +656,7 @@
 			for(var/turf/T in exposed_turfs_on_z)
 				if(!isturf(T))
 					continue
-				T.overlays -= active_visual_overlays
-	active_visual_overlays.Cut() // Clear the list
+				T.cut_overlays(active_visual_overlays)
 
 
 /// --- Admin Utilities --- For both testing/debugging and the... Other Things... admins get up to..
@@ -744,7 +683,7 @@
 /client/proc/debug_all_weather_effects()
 	set name = "Enable All Weather Effects"
 	set category = "Weather Debugging"
-	set desc = "Enables all known weather effects regardless of the active weather profile."
+	set desc = "Enables all known weather effects for any active storm, regardless of the active weather profile."
 
 	if(!check_rights(R_DEBUG))
 		return
@@ -753,20 +692,29 @@
 		to_chat(usr, span_warning("Weather subsystem not found."), confidential = TRUE)
 		return
 
-	// Clear existing weather effects
+	if(!SSweather.processing.len)
+		to_chat(usr, span_warning("No active storms to add effects to."), confidential = TRUE)
+		return
+
+	var/list/all_effect_types = subtypesof(/datum/weather/effect)
+	var/list/enabled_effect_names = list()
+
 	for(var/datum/weather/current_storm in SSweather.processing)
-		qdel(current_storm)
-	SSweather.processing.Cut()
+		// Clear any existing effects to avoid duplicates
+		for(var/datum/weather/effect/E in current_storm.weather_effects)
+			qdel(E)
+		current_storm.weather_effects.Cut()
 
-	var/list/enabled_effects = list()
-	for(var/effect_type in subtypesof(/datum/weather/effect))
-		var/datum/weather/effect/new_effect = new effect_type()
-		SSweather.processing += new_effect
-		enabled_effects += new_effect.name
+		// Add all new effects
+		for(var/effect_type in all_effect_types)
+			var/datum/weather/effect/new_effect = new effect_type()
+			current_storm.weather_effects += new_effect
+			if(!(new_effect.name in enabled_effect_names))
+				enabled_effect_names += new_effect.name
 
-	to_chat(usr, span_notice("All weather effects enabled: [enabled_effects.Join(", ")]"), confidential = TRUE)
-	log_admin("[key_name(usr)] enabled all weather effects: [enabled_effects.Join(", ")]")
-	message_admins("[key_name_admin(usr)] enabled all weather effects: [enabled_effects.Join(", ")]")
+	to_chat(usr, span_notice("All weather effects have been added to all active storms: [enabled_effect_names.Join(", ")]"), confidential = TRUE)
+	log_admin("[key_name(usr)] added all weather effects to active storms.")
+	message_admins("[key_name_admin(usr)] added all weather effects to all active storms.")
 	SSblackbox.record_feedback("tally", "admin_verb", 1, "Enable All Weather Effects")
 
 /client/proc/lightning_strike_test()
@@ -825,6 +773,7 @@
 	qdel(L)
 	SSblackbox.record_feedback("tally", "admin_verb", 1, "Test Lightning Strike")
 
+/*
 /datum/weather/effect/lightning_strike/proc/electrocute_in_liquid(turf/T)
 	if(!T)
 		return
@@ -854,6 +803,7 @@
 		E.duration = rand(300, 600) // Lasts 30 to 60 seconds
 		E.severity = src.severity // Inherit severity from the lightning strike
 		E.start_effect()
+*/
 
 /datum/weather/effect/tornado
 	name = "Tornado"
@@ -888,7 +838,10 @@
 			tornado_center_turf = pick(all_exposed_turfs)
 	src.severity = SSweather.current_profile.severity // Inherit severity from the current weather profile
 
-/datum/weather/effect/tornado/Del()
+/datum/weather/effect/tornado/Destroy()
+	lifted_mobs.Cut()
+	lifted_objects.Cut()
+	tornado_center_turf = null
 	. = ..()
 
 /datum/weather/effect/tornado/apply_global_effect()
@@ -988,8 +941,6 @@
 	if(eligible_turfs.len)
 		var/turf/new_center = pick(eligible_turfs)
 		tornado_center_turf = new_center
-		message_admins(span_adminnotice("Tornado center moved to [tornado_center_turf]"))
-
 /datum/weather/effect/tornado/proc/spawn_wind_gust_visuals()
 	if(!tornado_center_turf)
 		return
@@ -1004,7 +955,12 @@
 			new /obj/effect/temp_visual/wind_gust_visual(T, tornado_visual_icon, tornado_visual_state)
 
 /datum/weather/effect/tornado/proc/process_lifted_mob(mob/living/L)
-	if(!L || !L.loc || !(L in lifted_mobs))
+	if(!L || QDELETED(L) || !L.loc || !(L in lifted_mobs))
+		return
+
+	// Safety: if mob somehow ended up far from tornado center, remove from list
+	if(get_dist(L, tornado_center_turf) > tornado_radius_tiles * 3)
+		lifted_mobs -= L
 		return
 
 	// Keep mob within a certain range of the tornado center, or throw them out
@@ -1017,11 +973,12 @@
 		L.take_damage(rand(10, 30) * severity, BRUTE, 0, 0)
 	else // Keep them swirling
 		var/target_turf = get_step(L, pick(NORTH, SOUTH, EAST, WEST)) // Random swirl
-		L.forceMove(target_turf)
+		if(target_turf)
+			L.forceMove(target_turf)
 		L.Stun(1, TRUE) // Brief stun to simulate being tossed around
 
 /datum/weather/effect/tornado/proc/process_lifted_object(obj/O)
-	if(!O || !O.loc || !(O in lifted_objects))
+	if(!O || QDELETED(O) || !O.loc || !(O in lifted_objects))
 		return
 
 	// Keep object within a certain range of the tornado center, or throw them out
@@ -1031,7 +988,8 @@
 		O.visible_message(span_notice("The [O.name] is flung out of the tornado!"))
 	else // Keep them swirling
 		var/target_turf = get_step(O, pick(NORTH, SOUTH, EAST, WEST)) // Random swirl
-		O.forceMove(target_turf)
+		if(target_turf)
+			O.forceMove(target_turf)
 
 
 // New temporary visual effect for wind gusts

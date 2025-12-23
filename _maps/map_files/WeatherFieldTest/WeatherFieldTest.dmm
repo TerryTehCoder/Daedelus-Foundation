@@ -65,7 +65,6 @@
 /area/awaymission/cabin)
 "jU" = (
 /obj/structure/grille,
-/obj/structure/grille,
 /turf/open/misc/grass,
 /area/awaymission/cabin/snowforest)
 "kA" = (

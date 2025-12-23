@@ -87,7 +87,6 @@ SUBSYSTEM_DEF(mapping)
 			config = old_config
 	initialize_biomes()
 	loadWorld()
-	sleep(1) // Give the engine a tick to fully process z_list updates after map loading
 	require_area_resort()
 	process_teleport_locs() //Sets up the wizard teleport locations
 	preloadTemplates()
@@ -377,10 +376,18 @@ Used by the AI doomsday and the self-destruct nuke.
 		for (var/datum/parsed_map/pm in loaded_parsed_maps)
 			var/list/bounds = pm.bounds
 			if (bounds)
-				map_min_x = min(map_min_x, bounds[MAP_MINX])
-				map_max_x = max(map_max_x, bounds[MAP_MAXX])
-				map_min_y = min(map_min_y, bounds[MAP_MINY])
-				map_max_y = max(map_max_y, bounds[MAP_MAXY])
+				// Calculate the same offset that LoadGroup used when centering the map
+				var/x_offset = round(world.maxx / 2 - bounds[MAP_MAXX] / 2) + 1
+				var/y_offset = round(world.maxy / 2 - bounds[MAP_MAXY] / 2) + 1
+				// Apply offset to get actual world coordinates
+				var/actual_min_x = bounds[MAP_MINX] + x_offset - 1
+				var/actual_max_x = bounds[MAP_MAXX] + x_offset - 1
+				var/actual_min_y = bounds[MAP_MINY] + y_offset - 1
+				var/actual_max_y = bounds[MAP_MAXY] + y_offset - 1
+				map_min_x = min(map_min_x, actual_min_x)
+				map_max_x = max(map_max_x, actual_max_x)
+				map_min_y = min(map_min_y, actual_min_y)
+				map_max_y = max(map_max_y, actual_max_y)
 	else
 		// Fallback if no parsed maps were loaded (e.g., map loading failed)
 		map_min_x = 1

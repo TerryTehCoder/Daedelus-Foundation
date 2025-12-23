@@ -370,6 +370,10 @@
 	var/area/old_area = get_area(old_loc)
 	var/area/new_area = get_area(new_loc)
 
+	. = ..(new_loc, dir)
+	if(!.)
+		return FALSE
+
 	if(old_area && new_area)
 		var/moved_outdoors = old_area.outdoors != new_area.outdoors
 
@@ -379,4 +383,4 @@
 			else
 				SEND_SIGNAL(src, COMSIG_OUTDOOR_ATOM_REMOVED)
 
-	return ..(new_loc, dir)
+	return .

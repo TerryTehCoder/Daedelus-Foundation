@@ -23,12 +23,10 @@
 	barometer_predictable = TRUE
 	use_glow = FALSE
 
-/datum/weather/rain_storm/weather_act(mob/living/L)
+/datum/weather/weather_types/rain_storm/weather_act(mob/living/L)
 	..()
 
-/datum/weather/rain_storm/can_get_alert
-
-/datum/weather/rain_storm/start()
+/datum/weather/weather_types/rain_storm/start()
 	. = ..()
 
 	//Unique alerts for old people and SD's
@@ -40,5 +38,5 @@
 				if(prob(25))
 					to_chat(L, span_warning("You feel an ache in your knee...a storm is coming.."))
 					//Probably not my most efficient use of iterating a list, but.. it IS funny.
-			else if(is_captain_job(L.mind.assigned_role))
+			if(L.mind && is_captain_job(L.mind.assigned_role))
 				to_chat(L, span_warning("A storm is brewing out on the horizon.."))

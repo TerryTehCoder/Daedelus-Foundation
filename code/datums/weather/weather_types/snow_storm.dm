@@ -22,11 +22,11 @@
 	barometer_predictable = TRUE
 	use_glow = FALSE
 
-/datum/weather/snow_storm/weather_act(mob/living/L)
+/datum/weather/weather_types/snow_storm/weather_act(mob/living/L)
 	L.adjust_bodytemperature(-rand(5,15))
 
 // since snowstorm is on a station z level, add extra checks to not annoy everyone
-/datum/weather/snow_storm/can_get_alert(mob/player)
+/datum/weather/weather_types/snow_storm/can_get_alert(mob/player)
 	if(!..())
 		return FALSE
 
@@ -44,9 +44,10 @@
 
 	var/list/impacted_chunk_keys = SSweather.weather_chunking.get_impacted_chunk_keys(src)
 	var/list/impacted_turfs = SSweather.weather_chunking.get_turfs_in_chunks(impacted_chunk_keys)
+	var/list/player_view = view(player)
 
 	for(var/turf/snow_turf in impacted_turfs)
-		if(locate(snow_turf) in view(player))
+		if(snow_turf in player_view)
 			return TRUE
 
 	return FALSE

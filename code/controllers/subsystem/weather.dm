@@ -31,7 +31,7 @@ SUBSYSTEM_DEF(weather)
 	/// Dynamic batch size for initial turf coverage processing.
 	var/dynamic_turf_batch_size = 1500
 	var/batch_processing_target_tick_usage = 5 // Target tick usage in deciseconds
-	var/min_batch_size = 1500     //10
+	var/min_batch_size = 1500
 	var/max_batch_size = 5000
 	// PID controller variables - We're essentially doing calculus to optimize the batch size based on tick changes...
 	// Basically.. if you have a higher quality oven, you can cook more turf columns at once.. so, not my computer.
@@ -257,7 +257,7 @@ SUBSYSTEM_DEF(weather)
 				// Apply map-specific probability overrides
 				var/datum/map_config/current_map_config = SSmapping.config
 				var/overrides = current_map_config.weather_overrides[V]
-				if((overrides && "probability") in overrides)
+				if(overrides && ("probability" in overrides))
 					probability = overrides["probability"]
 
 				// Filter by allowed_storms in the current profile
@@ -321,7 +321,7 @@ SUBSYSTEM_DEF(weather)
 		// Applying map-specific probability overrides first
 		var/datum/map_config/current_map_config = SSmapping.config
 		var/overrides = current_map_config.weather_overrides[V]
-		if((overrides && "probability") in overrides)
+		if(overrides && ("probability" in overrides))
 			probability = overrides["probability"]
 
 		var/target_trait = initial(W.target_trait)
@@ -365,9 +365,14 @@ SUBSYSTEM_DEF(weather)
 		spawn(0)
 			BakeWeatherCoverage()
 
-	//Wrapped in a same obj function call because weather_coverage_handler. was throwing errors. *Shrug*
-	RegisterSignal(/turf, COMSIG_TURF_CREATED, PROC_REF(.handle_turf_created))
-	RegisterSignal(/turf, COMSIG_TURF_DESTROYED, PROC_REF(.handle_turf_destroyed))
+	var/list/exposed_turfs = weather_chunking.get_turfs_in_chunks(weather_chunking.get_all_turf_chunk_keys())
+	for(var/turf/T in exposed_turfs)
+		if(!T || !T.z || !(T.z in relevant_z_levels_for_coverage)) //Erroneous? Maybe. Probably best to be safe though.
+			continue
+		else
+			RegisterSignal(T, COMSIG_TURF_CREATED, PROC_REF(handle_turf_created))
+			RegisterSignal(T, COMSIG_TURF_DESTROYED, PROC_REF(handle_turf_destroyed))
+
 	return ..()
 
 /datum/controller/subsystem/weather/proc/TryLoadWeatherCache()
@@ -443,7 +448,7 @@ SUBSYSTEM_DEF(weather)
 		// Apply map-specific probability overrides
 		var/datum/map_config/current_map_config = SSmapping.config
 		var/overrides = current_map_config.weather_overrides[V]
-		if((overrides && "probability") in overrides)
+		if(overrides && ("probability" in overrides))
 			probability = overrides["probability"]
 
 		// Filter by allowed_storms in the current profile
@@ -467,7 +472,7 @@ SUBSYSTEM_DEF(weather)
 
 	if (istext(weather_datum_type))
 		message_admins(span_adminnotice("Weather Subsystem: Attempting to convert text path '[weather_datum_type]' to type."))
-		for (var/V in (/datum/weather/weather_types))
+		for (var/V in subtypesof(/datum/weather/weather_types))
 			var/datum/weather/W_temp = V // Use a temporary variable to avoid confusion with the outer W
 			if (W_temp.type == weather_datum_type)
 				weather_datum_type = V
@@ -697,12 +702,12 @@ SUBSYSTEM_DEF(weather)
 
 	if(z_levels_to_impact.len)
 		SSweather.run_weather(weather_type_path, z_levels_to_impact)
+
 		message_admins(span_adminnotice("[key_name_admin(usr)] forced weather event '[weather_types[weather_type_path]]' on Z-levels: [z_levels_to_impact.Join(", ")]"))
-		message_admins("[key_name(usr)] forced weather event '[weather_types[weather_type_path]]' on Z-levels: [z_levels_to_impact.Join(", ")]")
+		log_admin("[key_name(usr)] forced weather event '[weather_types[weather_type_path]]' on Z-levels: [z_levels_to_impact.Join(", ")]")
 	else
-		SSweather.run_weather(weather_type_path) // Let run_weather determine Z-levels based on target_trait
 		message_admins(span_adminnotice("[key_name_admin(usr)] forced weather event '[weather_types[weather_type_path]]' on default Z-levels (based on target trait)."))
-		message_admins("[key_name(usr)] forced weather event '[weather_types[weather_type_path]]' on default Z-levels (based on target trait).")
+		log_admin("[key_name(usr)] forced weather event '[weather_types[weather_type_path]]' on default Z-levels (based on target trait).")
 
 	to_chat(usr, span_notice("Forced weather event: [weather_types[weather_type_path]] initiated."), confidential = TRUE)
 	SSblackbox.record_feedback("tally", "admin_verb", 1, "Force Weather Event")

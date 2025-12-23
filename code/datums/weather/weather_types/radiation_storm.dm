@@ -19,12 +19,12 @@
 	target_trait = ZTRAIT_STATION
 	immunity_type = TRAIT_RADSTORM_IMMUNE
 
-/datum/weather/rad_storm/telegraph()
+/datum/weather/weather_types/rad_storm/telegraph()
 	..()
 	status_alarm(TRUE)
 
 
-/datum/weather/rad_storm/weather_act(mob/living/L)
+/datum/weather/weather_types/rad_storm/weather_act(mob/living/L)
 	if(!prob(40))
 		return
 
@@ -51,13 +51,13 @@
 			H.easy_random_mutate(POSITIVE)
 		H.domutcheck()
 
-/datum/weather/rad_storm/end()
+/datum/weather/weather_types/rad_storm/end()
 	if(..())
 		return
 	priority_announce("The radiation threat has passed. Please return to your workplaces.")
 	status_alarm(FALSE)
 
-/datum/weather/rad_storm/proc/status_alarm(active) //Makes the status displays show the radiation warning for those who missed the announcement.
+/datum/weather/weather_types/rad_storm/proc/status_alarm(active) //Makes the status displays show the radiation warning for those who missed the announcement.
 	var/datum/radio_frequency/frequency = SSpackets.return_frequency(FREQ_STATUS_DISPLAYS)
 	if(!frequency)
 		return

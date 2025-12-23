@@ -1,6 +1,6 @@
 /datum/weather/weather_types/void_storm
 	name = "void storm"
-	desc = "A rare and highly anomalous event often accompanied by unknown entities shredding spacetime continouum. We'd advise you to start running."
+	desc = "A rare and highly anomalous event often accompanied by unknown entities shredding spacetime continuum. We'd advise you to start running."
 
 	telegraph_duration = 2 SECONDS
 	telegraph_overlay = "light_snow"
@@ -22,12 +22,12 @@
 	perpetual = TRUE
 
 
-/datum/weather/void_storm/can_weather_act(mob/living/mob_to_check)
+/datum/weather/weather_types/void_storm/can_weather_act(mob/living/mob_to_check)
 	. = ..()
 	if(IS_HERETIC_OR_MONSTER(mob_to_check))
 		return FALSE
 
-/datum/weather/void_storm/weather_act(mob/living/victim)
+/datum/weather/weather_types/void_storm/weather_act(mob/living/victim)
 	victim.adjustOxyLoss(rand(1, 3))
 	victim.adjustFireLoss(rand(1, 3))
 	victim.adjust_blurriness(rand(0, 1))

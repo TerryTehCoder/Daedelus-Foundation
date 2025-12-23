@@ -188,7 +188,7 @@ GLOBAL_PROTECT(admin_verbs_debug)
 	/client/proc/test_cardpack_distribution,
 	/client/proc/print_cards,
 	/client/proc/toggle_weather_debug_admin_verbs,
-	//Weather Debug Verbs - Hidden by default, shown by toggle_weather_debug_verbs
+	//Weather Debug Verbs - Hidden by default, shown by toggle_weather_debug_admin_verbs
 	#ifdef TESTING
 	/client/proc/check_missing_sprites,
 	/client/proc/run_dynamic_simulations,
