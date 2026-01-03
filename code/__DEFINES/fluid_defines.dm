@@ -90,6 +90,15 @@
 #define FLUID_MOB_FLOAT_AMPLITUDE 1 // Max pixel offset for floating animation
 #define FLUID_MOB_FLOAT_SPEED 0.1 // Speed of floating animation (lower is slower)
 
+// Wave generation constants
+#define WAVE_CHUNK_SIZE 16 // Size of wave processing chunks for performance
+#define WAVE_DEFAULT_AMPLITUDE 0.8 // Default wave height
+#define WAVE_DEFAULT_FREQUENCY 0.05 // Default wave density
+#define WAVE_DEFAULT_SPEED 0.02 // Default wave animation speed
+#define WHITECAP_THRESHOLD 0.7 // Wave height threshold for whitecaps
+#define WHITECAP_DECAY_RATE 0.95 // Whitecap fade rate per tick
+#define MAX_WAVE_PROPAGATION_DEPTH 3 // Maximum depth for wave propagation to prevent exponential growth
+
 // Drowning and underwater mechanics
 #define SWIM_SPEED_MODIFIER_DROWNING 0.3 // Further reduced speed when drowning
 #define MAX_DROWNING_TIME 10 SECONDS // Time before unconscious mob teleports underwater

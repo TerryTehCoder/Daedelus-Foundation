@@ -95,8 +95,7 @@ SUBSYSTEM_DEF(component_fluid_simulation)
 		return
 
 	currently_simulating = TRUE
-	// We're essentially mimicking a Try Finally block.
-	_process_simulation_logic()
+	. = _process_simulation_logic()
 	currently_simulating = FALSE
 
 /datum/controller/subsystem/component_fluid_simulation/proc/_process_simulation_logic()
@@ -155,11 +154,13 @@ SUBSYSTEM_DEF(component_fluid_simulation)
 			if(GLOB.fluid_debug_enabled)
 				message_admins(span_notice("ComponentFluidSimulation: Added FluidComponent to turf below [turf_below]"))
 
-		var/viscosity_multiplier = 1 / fluid_comp.get_viscosity()
+		var/viscosity = max(0.01, fluid_comp.get_viscosity()) // Ensure minimum viscosity
+		var/viscosity_multiplier = 1 / viscosity
 		var/transfer_amount = min(fluid_comp.getFluidAmount() * 0.1 * viscosity_multiplier, (FLUID_MAX_DEPTH - fluid_comp_below.getFluidAmount()))
 		if (transfer_amount > 0)
 			var/datum/reagents/transfer_reagents = new()
-			var/fraction = min(1, transfer_amount / fluid_comp.getFluidAmount())
+			var/current_amount = fluid_comp.getFluidAmount()
+			var/fraction = current_amount > 0 ? min(1, transfer_amount / current_amount) : 0
 			for(var/datum/reagent/R in fluid_comp.reagents.reagent_list)
 				transfer_reagents.add_reagent(R.type, R.volume * fraction)
 

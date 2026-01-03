@@ -7,6 +7,11 @@ SUBSYSTEM_DEF(fluid_visuals)
 
 	var/static/list/fluid_image_cache = list() // Cache for image objects
 	var/list/active_fluid_components = list() // List of FluidComponent instances to manage visuals for
+	var/list/active_wave_components = list() // List of WaveComponent instances for wave processing
+
+	// Wave processing optimization
+	var/list/wave_chunks = list() // Track active wave chunks for spatial partitioning
+	var/last_wave_processing_time = 0
 
 /datum/controller/subsystem/fluid_visuals/Initialize()
 	. = ..()
@@ -37,6 +42,22 @@ SUBSYSTEM_DEF(fluid_visuals)
 			if(GLOB.fluid_debug_enabled)
 				message_admins(span_notice("FluidVisuals: Removed overlay from [parent_atom] during unregistration"))
 
+/datum/controller/subsystem/fluid_visuals/proc/registerWaveComponent(datum/component/wave/W)
+	if (!(W in active_wave_components))
+		active_wave_components += W
+		if(GLOB.fluid_debug_enabled)
+			message_admins(span_notice("FluidVisuals: Registered WaveComponent [W.parent] for wave processing."))
+		// Add to spatial partitioning
+		add_wave_to_chunk(W)
+
+/datum/controller/subsystem/fluid_visuals/proc/unregisterWaveComponent(datum/component/wave/W)
+	if (W in active_wave_components)
+		active_wave_components -= W
+		if(GLOB.fluid_debug_enabled)
+			message_admins(span_notice("FluidVisuals: Unregistered WaveComponent [W.parent] from wave processing."))
+		// Remove from spatial partitioning
+		remove_wave_from_chunk(W)
+
 /datum/controller/subsystem/fluid_visuals/fire(resumed)
 	var/list/components_to_process = active_fluid_components.Copy() // Iterate over a copy to allow modification
 	for(var/datum/component/fluid/fluid_comp in components_to_process)
@@ -51,6 +72,70 @@ SUBSYSTEM_DEF(fluid_visuals)
 
 		if (MC_TICK_CHECK)
 			break
+
+	// Process wave components
+	process_waves()
+
+/datum/controller/subsystem/fluid_visuals/proc/process_waves()
+	var/wave_components_to_process = active_wave_components.Copy()
+
+	// Clean up deleted components
+	for(var/datum/component/wave/wave_comp in wave_components_to_process)
+		if (QDELETED(wave_comp) || QDELETED(wave_comp.parent))
+			unregisterWaveComponent(wave_comp)
+			continue
+
+	// Process waves using spatial partitioning for performance
+	process_waves_by_chunks()
+
+/datum/controller/subsystem/fluid_visuals/proc/process_waves_by_chunks()
+	// Clear old chunks and rebuild active chunks
+	wave_chunks.Cut()
+
+	// Group waves by chunk
+	var/list/chunk_map = list()
+	for(var/datum/component/wave/wave_comp in active_wave_components)
+		var/chunk_key = "[wave_comp.wave_chunk_x],[wave_comp.wave_chunk_y]"
+		if (!chunk_map[chunk_key])
+			chunk_map[chunk_key] = list()
+		chunk_map[chunk_key] += wave_comp
+
+	// Process only chunks near players
+	for(var/chunk_key in chunk_map)
+		var/wave_list = chunk_map[chunk_key]
+		if (should_process_chunk(chunk_key))
+			for(var/datum/component/wave/wave_comp in wave_list)
+				wave_comp.UpdateWaves()
+
+/datum/controller/subsystem/fluid_visuals/proc/should_process_chunk(chunk_key)
+	// Extract chunk coordinates from key
+	var/list/coords = splittext(chunk_key, ",")
+	var/chunk_x = coords[1]
+	var/chunk_y = coords[2]
+
+	// Check if any players are near this chunk
+	for(var/mob/M in GLOB.player_list)
+		if (M.client)
+			var/player_chunk_x = floor(M.x / WAVE_CHUNK_SIZE)
+			var/player_chunk_y = floor(M.y / WAVE_CHUNK_SIZE)
+
+			// Process chunks within 2 chunks of players
+			if (abs(player_chunk_x - chunk_x) <= 2 && abs(player_chunk_y - chunk_y) <= 2)
+				return TRUE
+
+	return FALSE
+
+/datum/controller/subsystem/fluid_visuals/proc/add_wave_to_chunk(datum/component/wave/W)
+	// Will be handled by process_waves_by_chunks
+	// Just ensure the wave is in the active list
+	if (!(W in active_wave_components))
+		active_wave_components += W
+
+/datum/controller/subsystem/fluid_visuals/proc/remove_wave_from_chunk(datum/component/wave/W)
+	// Will be handled by process_waves_by_chunks
+	// Just ensure the wave is removed from active list
+	if (W in active_wave_components)
+		active_wave_components -= W
 
 /datum/controller/subsystem/fluid_visuals/proc/onFluidVisualStateChanged(datum/component/fluid/fluid_comp, new_visual_state, current_fluid_amount)
 	if(GLOB.fluid_debug_enabled)

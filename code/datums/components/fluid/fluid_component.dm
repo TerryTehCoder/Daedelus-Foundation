@@ -31,6 +31,29 @@
 		SScomponent_fluid_simulation.global_active_fluid_turfs[parent] = TRUE
 	updateVisuals()
 
+	// Auto-add wave component for deep ocean turfs
+	if (fluid_amount >= FLUID_DEEP && istype(parent, /turf/open/water/ocean))
+		add_wave_component()
+
+/datum/component/fluid/proc/add_wave_component()
+	// Only add wave component if one doesn't already exist
+	if (parent.GetComponent(/datum/component/wave))
+		return
+
+	// Create wave component with parameters based on fluid depth
+	var/datum/component/wave/wave_comp = parent.AddComponent(/datum/component/wave, list(
+		"wave_amplitude" = WAVE_DEFAULT_AMPLITUDE,
+		"wave_frequency" = WAVE_DEFAULT_FREQUENCY,
+		"wave_speed" = WAVE_DEFAULT_SPEED,
+		"whitecap_threshold" = WHITECAP_THRESHOLD
+	))
+
+	// Register with fluid visuals subsystem
+	SSfluid_visuals.registerWaveComponent(wave_comp)
+
+	if(GLOB.fluid_debug_enabled)
+		message_admins(span_notice("FluidComponent [src.parent]: Added WaveComponent for ocean waves"))
+
 /datum/component/fluid/Destroy()
 	SSfluid_visuals.unregisterFluidComponent(src) // Unregister from the FluidVisuals subsystem
 	qdel(reagents)

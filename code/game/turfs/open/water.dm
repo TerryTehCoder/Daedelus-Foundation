@@ -50,3 +50,9 @@
 			/datum/reagent/water = "#0B3D91"
 		)
 	))
+
+	// Add wave component for ocean waves
+	var/datum/component/fluid/fluid_comp = GetComponent(/datum/component/fluid)
+	if (!fluid_comp) //There should be one, but just in case let's double check.
+		fluid_comp = AddComponent(/datum/component/fluid)
+	fluid_comp.add_wave_component()

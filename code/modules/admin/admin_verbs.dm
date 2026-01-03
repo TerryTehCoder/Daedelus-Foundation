@@ -1064,7 +1064,9 @@ GLOBAL_PROTECT(admin_verbs_hideable)
 
 	GLOB.fluid_debug_enabled = !GLOB.fluid_debug_enabled
 	to_chat(usr, "Fluid debug messages are now [GLOB.fluid_debug_enabled ? "enabled" : "disabled"].")
+	log_admin("[key_name(usr)] has [GLOB.fluid_debug_enabled ? "enabled" : "disabled"] fluid debug messages.")
 	message_admins("[key_name_admin(usr)] has [GLOB.fluid_debug_enabled ? "enabled" : "disabled"] fluid debug messages.")
+	SSblackbox.record_feedback("tally", "admin_verb", 1, "Toggle Fluid Debug")
 
 // I will not be held liable for crashing the server because you decided to spawn in 300 fluid sources.
 // I have tried to optimize my fluid code, but I can't out optimize admin shenanigans.
@@ -1080,8 +1082,13 @@ GLOBAL_PROTECT(admin_verbs_hideable)
 		return
 
 	var/flow_rate = input("Enter flow rate", "Spawn Fluid Source", FLUID_MAX_DEPTH / 3) as num
-	if(!flow_rate)
+	if(!flow_rate || flow_rate <= 0)
+		to_chat(usr, span_warning("Invalid flow rate."))
 		return
+
+	if(flow_rate > FLUID_MAX_DEPTH)
+		if(tgui_alert(usr, "Flow rate exceeds FLUID_MAX_DEPTH ([FLUID_MAX_DEPTH]). This may cause performance issues. Continue?", "Spawn Fluid Source", list("Yes", "No")) != "Yes")
+			return
 
 	var/list/reagents_to_add = list()
 	if(tgui_alert(usr, "Add specific reagents? (Defaults to water if no)", "Spawn Fluid Source", list("Yes", "No")) == "Yes")
@@ -1090,12 +1097,8 @@ GLOBAL_PROTECT(admin_verbs_hideable)
 			if(!reagent_id)
 				break
 			var/reagent_amount = input("Enter amount", "Spawn Fluid Source", 10) as num
-			if(!reagent_amount)
+			if(!reagent_amount || reagent_amount <= 0)
 				continue
-			reagents_to_add[reagent_id] = reagent_amount
-			if(tgui_alert(usr, "Add another reagent?", "Spawn Fluid Source", list("Yes", "No")) == "No")
-				break
-
 	var/list/color_overrides = list()
 	if(tgui_alert(usr, "Add color overrides?", "Spawn Fluid Source", list("Yes", "No")) == "Yes")
 		while(TRUE)

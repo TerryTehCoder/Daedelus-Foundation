@@ -45,7 +45,7 @@
 			SScomponent_fluid_simulation.active_fluid_sources -= T
 			if(GLOB.fluid_debug_enabled)
 				message_admins(span_notice("FluidSourceComponent [src.parent]: Unregistered source on turf [T] from fluid simulation."))
-	qdel(deferred_turfs)
+	deferred_turfs = null
 	. = ..()
 
 /datum/component/fluid_source/proc/register_source()

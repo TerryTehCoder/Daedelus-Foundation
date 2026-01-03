@@ -20,16 +20,23 @@
 	if(WT.isOn())
 		welded = !welded
 		to_chat(user, span_notice("You weld \the [src] [welded ? "closed" : "open"]."))
+		if(welded)
+			visible_message(span_notice("\The [user] welds [src] shut."), src)
+		else
+			visible_message(span_notice("\The [user] opens [src] with a welder."), src)
 	else
 		to_chat(user, span_warning("Turn \the [tool] on, first."))
 	update_icon()
 	return TRUE
 
 /obj/structure/drain/wrench_act(mob/living/user, obj/item/tool)
-	. = ..()
+	if(welded)
+		to_chat(user, span_warning("\The [src] is welded shut!"))
+		return TRUE
 	new /obj/item/drain(src.loc)
 	tool.play_tool_sound(user)
-	to_chat(user, span_warning("[user] unwrenches the [src]."))
+	to_chat(user, span_notice("You unwrench \the [src]."))
+	visible_message(span_notice("\The [user] unwrenches [src], removing it from the floor."), src)
 	qdel(src)
 	return TRUE
 
@@ -40,7 +47,7 @@
 /obj/structure/drain/examine(mob/user)
 	. = ..()
 	if(welded)
-		to_chat(user, "It is welded shut.")
+		. += span_warning("It is welded shut.")
 
 //for construction.
 /obj/item/drain
@@ -51,6 +58,12 @@
 
 /obj/item/drain/wrench_act(mob/living/user, obj/item/tool)
 	. = ..()
+	var/turf/T = get_turf(src)
+
+	if(!isfloorturf(T))
+		to_chat(user, span_warning("You can only install this on a floor!"))
+		return TRUE
+
 	new /obj/structure/drain(src.loc)
 	tool.play_tool_sound(user)
 	to_chat(user, span_warning("[user] wrenches the [src] down."))

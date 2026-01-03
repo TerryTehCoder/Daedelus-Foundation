@@ -1,6 +1,6 @@
 SUBSYSTEM_DEF(fluid_interaction)
 	name = "Fluid Interaction"
-	wait = 3 SECONDS // Process interactions every second
+	wait = 3 SECONDS // Process interactions every 3 seconds
 	flags = SS_KEEP_TIMING
 	runlevels = RUNLEVEL_GAME
 	priority = FIRE_PRIORITY_FLUIDS + 1 // Run after fluid simulation
@@ -27,6 +27,9 @@ SUBSYSTEM_DEF(fluid_interaction)
 		if (!fluid_comp || fluid_comp.fluid_amount <= FLUID_EVAPORATION_POINT)
 			continue
 
+		// Process wave momentum transfer
+		process_wave_momentum(fluid_comp)
+
 		// Handle pushing of movable atoms
 		if (fluid_comp.fluid_amount > FLUID_PUSH_THRESHOLD)
 			for(var/atom/movable/AM in T.contents)
@@ -34,24 +37,26 @@ SUBSYSTEM_DEF(fluid_interaction)
 					continue
 				if (AM.is_fluid_pushable(fluid_comp.fluid_amount))
 					// Weak, infrequent ambient push
-					if(prob(5)) // 5% chance each call
-						var/viscosity_resistance = fluid_comp.get_viscosity()
-						var/density_factor = fluid_comp.get_density() / AM.float_density
+					var/viscosity_resistance = fluid_comp.get_viscosity()
 
-						var/push_strength = (1 / viscosity_resistance * density_factor) / 2 // Weak push
-						if (push_strength > 0.1)
-							var/push_dir = 0
-							var/abs_mom_x = abs(fluid_comp.momentum_x)
-							var/abs_mom_y = abs(fluid_comp.momentum_y)
+					if(!viscosity_resistance || !AM.float_density)
+						continue
+					var/density_factor = fluid_comp.get_density() / AM.float_density
 
-							if(abs_mom_x > 0.1 || abs_mom_y > 0.1) // Only push if there's significant momentum
-								if (abs_mom_x > abs_mom_y)
-									push_dir = (fluid_comp.momentum_x > 0) ? EAST : WEST
-								else
-									push_dir = (fluid_comp.momentum_y > 0) ? NORTH : SOUTH
+					var/push_strength = (density_factor / viscosity_resistance) / 2 // Weak push
+					if (push_strength > 0.1)
+						var/push_dir = 0
+						var/abs_mom_x = abs(fluid_comp.momentum_x)
+						var/abs_mom_y = abs(fluid_comp.momentum_y)
 
-							if(push_dir)
-								step(AM, push_dir, round(push_strength))
+						if(abs_mom_x > 0.1 || abs_mom_y > 0.1) // Only push if there's significant momentum
+							if (abs_mom_x > abs_mom_y)
+								push_dir = (fluid_comp.momentum_x > 0) ? EAST : WEST
+							else
+								push_dir = (fluid_comp.momentum_y > 0) ? NORTH : SOUTH
+
+						if(push_dir)
+							step(AM, push_dir, round(push_strength))
 
 		// Handle buoyancy for movable atoms
 		for(var/atom/movable/AM in T.contents)
@@ -69,6 +74,83 @@ SUBSYSTEM_DEF(fluid_interaction)
 
 		if (MC_TICK_CHECK)
 			return
+
+/datum/controller/subsystem/fluid_interaction/proc/process_wave_momentum(datum/component/fluid/fluid_comp)
+	// Get wave component if it exists
+	var/datum/component/wave/wave_comp = fluid_comp.parent.GetComponent(/datum/component/wave)
+	if (!wave_comp) return
+
+	// Transfer wave momentum to fluid momentum
+	var/wave_momentum_x = 0
+	var/wave_momentum_y = 0
+
+	// Calculate momentum based on wave direction and amplitude
+	var/turf/parent_turf = fluid_comp.parent
+	if (!istype(parent_turf))
+		return
+	var/wave_height = wave_comp.generate_wave_height(parent_turf.x, parent_turf.y, world.time)
+	var/momentum_factor = abs(wave_height) * 0.1 // Convert wave height to momentum
+
+	// Apply momentum in wave direction
+	switch(wave_comp.wave_direction)
+		if (NORTH) wave_momentum_y = -momentum_factor
+		if (SOUTH) wave_momentum_y = momentum_factor
+		if (EAST) wave_momentum_x = momentum_factor
+		if (WEST) wave_momentum_x = -momentum_factor
+		if (NORTHEAST)
+			wave_momentum_x = momentum_factor * 0.7
+			wave_momentum_y = -momentum_factor * 0.7
+		if (NORTHWEST)
+			wave_momentum_x = -momentum_factor * 0.7
+			wave_momentum_y = -momentum_factor * 0.7
+		if (SOUTHEAST)
+			wave_momentum_x = momentum_factor * 0.7
+			wave_momentum_y = momentum_factor * 0.7
+		if (SOUTHWEST)
+			wave_momentum_x = -momentum_factor * 0.7
+			wave_momentum_y = momentum_factor * 0.7
+
+	// Add wave momentum to fluid momentum
+	fluid_comp.momentum_x += wave_momentum_x
+	fluid_comp.momentum_y += wave_momentum_y
+
+	// Apply momentum decay
+	fluid_comp.momentum_x *= (1 - fluid_comp.momentum_decay)
+	fluid_comp.momentum_y *= (1 - fluid_comp.momentum_decay)
+
+	// Transfer momentum to adjacent turfs (wave propagation)
+	transfer_wave_momentum_to_adjacent(fluid_comp, wave_comp)
+
+/datum/controller/subsystem/fluid_interaction/proc/transfer_wave_momentum_to_adjacent(datum/component/fluid/fluid_comp, datum/component/wave/wave_comp)
+	var/momentum_to_transfer_x = fluid_comp.momentum_x * 0.3 // Transfer 30% of momentum
+	var/momentum_to_transfer_y = fluid_comp.momentum_y * 0.3
+
+	// Transfer momentum to adjacent fluid turfs
+	for(var/direction in list(NORTH, SOUTH, EAST, WEST))
+		var/turf/adjacent_turf = get_step(fluid_comp.parent, direction)
+		if (adjacent_turf)
+			var/datum/component/fluid/adjacent_fluid = adjacent_turf.GetComponent(/datum/component/fluid)
+			if (adjacent_fluid && adjacent_fluid.fluid_amount >= FLUID_SHALLOW)
+				// Calculate direction-based transfer
+				var/transfer_factor = 0
+				switch(direction)
+					if (NORTH) transfer_factor = -momentum_to_transfer_y
+					if (SOUTH) transfer_factor = momentum_to_transfer_y
+					if (EAST) transfer_factor = momentum_to_transfer_x
+					if (WEST) transfer_factor = -momentum_to_transfer_x
+
+
+				// Apply momentum transfer
+				if (direction == NORTH || direction == SOUTH)
+					adjacent_fluid.momentum_y += transfer_factor
+				else
+					adjacent_fluid.momentum_x += transfer_factor
+
+				// Reduce our own momentum
+				if (direction == NORTH || direction == SOUTH)
+					fluid_comp.momentum_y -= transfer_factor * 0.5 // Only reduce half to prevent complete loss
+				else
+					fluid_comp.momentum_x -= transfer_factor * 0.5
 
 /datum/controller/subsystem/fluid_interaction/proc/onGlobalExplosion(datum/source, turf/epicenter, devastation_range, heavy_impact_range, light_impact_range, took, orig_dev_range, orig_heavy_range, orig_light_range, explosion_cause, explosion_index)
 	SIGNAL_HANDLER
@@ -96,7 +178,8 @@ SUBSYSTEM_DEF(fluid_interaction)
 
 				// Denser fluids might transfer more force, higher viscosity might dampen it
 				knockback_force *= (fluid_density / 1000) // Normalize density (e.g., water = 1)
-				knockback_force /= fluid_viscosity // Higher viscosity reduces knockback
+				if(fluid_viscosity > 0)
+					knockback_force /= fluid_viscosity // Higher viscosity reduces knockback
 
 				// Apply the force (this is a simplified push, a more robust physics system would be better)
-				step(AM, direction, knockback_force) // Assuming step can take a force/distance
+				step(AM, direction, knockback_force)

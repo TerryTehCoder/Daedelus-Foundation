@@ -13,19 +13,26 @@
 	var/cold_exposure_timer = 0 // Time spent in cold fluid
 	var/last_fluid_z = 0 // Store the Z-level where the mob entered fluid
 	var/image/submersion_overlay // Overlay for visual submersion effects
+	var/process_timer // Timer for continuous processing
 
 /datum/component/movable_fluid_interaction/Initialize()
 	. = ..()
-	RegisterSignal(src, COMSIG_PARENT_ENTERED_TURF, PROC_REF(onEnteredTurf))
-	RegisterSignal(src, COMSIG_PARENT_EXITED_TURF, PROC_REF(onExitedTurf))
+	RegisterSignal(parent, COMSIG_MOVABLE_MOVED, PROC_REF(onEnteredTurf))
+	RegisterSignal(parent, COMSIG_MOVABLE_Z_CHANGED, PROC_REF(onZLevelChanged))
 	if (istype(parent, /mob))
 		var/mob/M = parent
 		base_pixel_y = M.pixel_y
+	// Start processing for drowning timer and temperature effects
+	startContinuousProcessing()
 	updateMobVisuals()
 
 /datum/component/movable_fluid_interaction/Destroy()
-	UnregisterSignal(src, COMSIG_PARENT_ENTERED_TURF)
-	UnregisterSignal(src, COMSIG_PARENT_EXITED_TURF)
+	UnregisterSignal(parent, COMSIG_MOVABLE_MOVED, PROC_REF(onEnteredTurf))
+	UnregisterSignal(parent, COMSIG_MOVABLE_Z_CHANGED, PROC_REF(onZLevelChanged))
+	stopContinuousProcessing()
+	stopSwimming()
+	stopDrowning()
+	updateMobVisuals()
 	. = ..()
 
 /datum/component/movable_fluid_interaction/proc/onEnteredTurf(atom/movable/parent_atom, turf/old_loc, turf/new_loc)
@@ -41,12 +48,19 @@
 		if(fluid_comp.fluid_amount > FLUID_PUSH_THRESHOLD)
 			var/move_dir = get_dir(old_loc, new_loc)
 			if(move_dir)
-				var/dx = (move_dir & 3) - 2
-				var/dy = (move_dir & 12) / 4 - 2
+				var/dx = 0
+				var/dy = 0
+				if(move_dir & EAST)
+					dx = 1
+				else if(move_dir & WEST)
+					dx = -1
+				if(move_dir & NORTH)
+					dy = 1
+				else if(move_dir & SOUTH)
+					dy = -1
 				var/dot_product = dx * fluid_comp.momentum_x + dy * fluid_comp.momentum_y
 
 				if (dot_product < 0) // Moving against the current
-					var/push_strength = sqrt(fluid_comp.momentum_x**2 + fluid_comp.momentum_y**2)
 					var/flow_dir = 0
 					var/abs_mom_x = abs(fluid_comp.momentum_x)
 					var/abs_mom_y = abs(fluid_comp.momentum_y)
@@ -57,13 +71,14 @@
 						flow_dir = (fluid_comp.momentum_y > 0) ? NORTH : SOUTH
 
 					if(flow_dir)
-						step(parent_atom, flow_dir, round(push_strength))
+						step(parent_atom, flow_dir)
 
 		if (QDELETED(src))
 			return
-		SEND_SIGNAL(src, COMSIG_FLUID_INTERACTION_ENTERED_FLUID, fluid_comp.reagents, fluid_comp.fluid_amount)
-		checkFluidState(fluid_comp.fluid_amount)
-		updateMobVisuals(fluid_comp.fluid_amount)
+		if (istype(fluid_comp))
+			SEND_SIGNAL(src, COMSIG_FLUID_INTERACTION_ENTERED_FLUID, fluid_comp.reagents, fluid_comp.fluid_amount)
+			checkFluidState(fluid_comp.fluid_amount)
+			updateMobVisuals(fluid_comp.fluid_amount)
 	else
 		stopSwimming()
 		stopDrowning()
@@ -74,12 +89,54 @@
 	if (fluid_comp && fluid_comp.fluid_amount > FLUID_EVAPORATION_POINT)
 		if (QDELETED(src))
 			return
-		SEND_SIGNAL(src, COMSIG_FLUID_INTERACTION_EXITED_FLUID, fluid_comp.reagents)
-		// Play splash sound on exit
-		play_fluid_sound(parent_atom, 'sound/effects/water/splash.ogg', 30, 1)
+		if (istype(fluid_comp))
+			SEND_SIGNAL(src, COMSIG_FLUID_INTERACTION_EXITED_FLUID, fluid_comp.reagents)
+			// Play splash sound on exit
+			play_fluid_sound(parent_atom, 'sound/effects/water/splash.ogg', 30, 1)
 	stopSwimming()
 	stopDrowning()
 	updateMobVisuals() // Reset visuals when exiting fluid
+
+/datum/component/movable_fluid_interaction/proc/onZLevelChanged(atom/movable/parent_atom, turf/old_loc, turf/new_loc)
+	// Handle Z-level changes which might indicate exiting fluid via teleportation or other means
+	// Check if we're moving from a fluid Z-level to a non-fluid Z-level
+	var/old_fluid_comp = old_loc.GetComponent(/datum/component/fluid)
+	var/new_fluid_comp = new_loc.GetComponent(/datum/component/fluid)
+
+	if (QDELETED(src))
+		return
+
+	// If moving from fluid to non-fluid, treat as exit
+	var/datum/component/fluid/old_fluid = old_fluid_comp
+	var/datum/component/fluid/new_fluid_check = new_fluid_comp
+	if (old_fluid && old_fluid.fluid_amount > FLUID_EVAPORATION_POINT && (!new_fluid_check || new_fluid_check.fluid_amount <= FLUID_EVAPORATION_POINT))
+		SEND_SIGNAL(src, COMSIG_FLUID_INTERACTION_EXITED_FLUID, old_fluid.reagents)
+		play_fluid_sound(parent_atom, 'sound/effects/water/splash.ogg', 30, 1)
+		stopSwimming()
+		stopDrowning()
+		updateMobVisuals()
+
+	// If moving from non-fluid to fluid, treat as entry
+	if ((!old_fluid || new_fluid_check.fluid_amount <= FLUID_EVAPORATION_POINT) && old_fluid && new_fluid_check.fluid_amount > FLUID_EVAPORATION_POINT)
+
+		SEND_SIGNAL(src, COMSIG_FLUID_INTERACTION_ENTERED_FLUID, new_fluid_check.reagents, new_fluid_check.fluid_amount)
+		play_fluid_sound(parent_atom, 'sound/effects/water/splash.ogg', 50, 1)
+		checkFluidState(new_fluid_check.fluid_amount)
+		updateMobVisuals(new_fluid_check.fluid_amount)
+
+/datum/component/movable_fluid_interaction/proc/startContinuousProcessing()
+	// Clear any existing timer first
+	if (process_timer)
+		deltimer(process_timer)
+
+	// Starting the clock (1 decisecond)
+	process_timer = addtimer(CALLBACK(src, PROC_REF(onProcess), src, 1), 1, TIMER_UNIQUE | TIMER_STOPPABLE)
+
+/datum/component/movable_fluid_interaction/proc/stopContinuousProcessing()
+	// Stop continuous processing timer
+	if (process_timer)
+		deltimer(process_timer)
+		process_timer = null
 
 /datum/component/movable_fluid_interaction/proc/onProcess(datum/component/movable_fluid_interaction/source_component, delta_time)
 	if (is_drowning)
@@ -102,10 +159,11 @@
 
 	var/datum/component/fluid/fluid_comp = T.GetComponent(/datum/component/fluid)
 	if (fluid_comp)
-		checkFluidState(fluid_comp.fluid_amount)
-		handleTemperatureEffects(fluid_comp.fluid_amount, fluid_comp.temperature, delta_time)
-		handleReagentEffects(fluid_comp, delta_time)
-		updateMobVisuals(fluid_comp.fluid_amount, delta_time)
+		if (istype(fluid_comp))
+			checkFluidState(fluid_comp.fluid_amount)
+			handleTemperatureEffects(fluid_comp.fluid_amount, fluid_comp.temperature, delta_time)
+			handleReagentEffects(fluid_comp, delta_time)
+			updateMobVisuals(fluid_comp.fluid_amount, delta_time)
 	else
 		stopSwimming()
 		stopDrowning()
@@ -119,9 +177,6 @@
 		var/mob/living/M = parent
 		if (M.stat == UNCONSCIOUS) // Prevent swimming if unconscious
 			stopSwimming()
-			stopDrowning()
-			is_waist_deep = FALSE
-			return
 
 	if (fluid_amount > FLUID_OVER_MOB_HEAD)
 		if (can_swim)
@@ -161,17 +216,18 @@
 	if (M.stat == UNCONSCIOUS) // Unconscious mobs cannot swim
 		return
 
+	// Update speed modifier even if already swimming
+	if (active_swim_modifier_key)
+		M.remove_movespeed_modifier(active_swim_modifier_key)
+	active_swim_modifier_key = "swimming_[src]"
+	M.add_movespeed_modifier(active_swim_modifier_key, new_speed_modifier)
+
 	if (!is_swimming)
 		is_swimming = TRUE
 		ADD_TRAIT(parent, TRAIT_MOVE_FLOATING, "swimming") // Add floating trait
 		if (QDELETED(src))
 			return
 		SEND_SIGNAL(src, COMSIG_FLUID_INTERACTION_SWIMMING_STATE_CHANGED, TRUE)
-		// Apply speed modifier to parent mob
-		if (active_swim_modifier_key)
-			M.remove_movespeed_modifier(active_swim_modifier_key) // Remove old one before applying new
-		active_swim_modifier_key = "swimming_[src]" // Unique key
-		M.add_movespeed_modifier(active_swim_modifier_key, new_speed_modifier)
 		if (is_drowning) // Apply additional modifier if drowning
 			M.add_movespeed_modifier("drowning_[src]", SWIM_SPEED_MODIFIER_DROWNING)
 
@@ -218,10 +274,10 @@
 
 	var/mob/living/M = parent
 
-	var/has_cold_resistance = HAS_TRAIT(M, TRAIT_RESISTCOLD)
-	var/has_heat_resistance = HAS_TRAIT(M, TRAIT_RESISTHEAT)
-
 	// Check for insulated clothing / Other heat/cold resistance; should probably be expanded once the weather framework is in based on clothing flags.(9.28.25)
+	var/has_cold_resistance = FALSE
+	var/has_heat_resistance = FALSE
+
 	if (istype(M, /mob/living/carbon))
 		var/mob/living/carbon/C = M
 		for (var/obj/item/I in C.get_all_gear())
@@ -240,12 +296,10 @@
 
 	if (fluid_amount > FLUID_SHALLOW) // Only apply temperature effects if submerged enough
 		if (fluid_temperature < FLUID_COLD_THRESHOLD)
-			if (has_cold_resistance)
-				return
-			// Cold water: slow stamina drain
 			M.apply_damage(1, STAMINA)
-			M.visible_message(span_notice("[M] shivers from the cold water."))
-			to_chat(M, span_danger("You feel a chill run down your spine from the temperature of the water!"))
+			if (prob(10)) // Only show message 10% of ticks
+				M.visible_message(span_notice("[M] shivers from the cold water."))
+				to_chat(M, span_danger("You feel a chill run down your spine from the temperature of the water!"))
 
 			// Cold exposure leading to unconsciousness
 			cold_exposure_timer += delta_time
@@ -317,7 +371,7 @@
 /datum/component/movable_fluid_interaction/proc/findUnderwaterTurf(x, y, z_level)
 	// First, try to locate the exact turf
 	var/turf/T = locate(x, y, z_level)
-	if (istype(T))
+	if (istype(T) && !T.density && !istype(T, /turf/open/space))
 		return T
 
 	// If not found, iterate randomly in a 3x3 area around the original coordinates
@@ -326,7 +380,7 @@
 			var/new_x = x + i
 			var/new_y = y + j
 			T = locate(new_x, new_y, z_level)
-			if (istype(T))
+			if (istype(T) && !T.density && !istype(T, /turf/open/space))
 				return T
 	return null // No suitable turf found in the 3x3 area.This seems unlikely to happen.
 
