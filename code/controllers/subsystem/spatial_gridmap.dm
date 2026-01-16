@@ -252,29 +252,47 @@ SUBSYSTEM_DEF(spatial_grid)
 		if(SPATIAL_GRID_CONTENTS_TYPE_CLIENTS)
 			for(var/row in BOUNDING_BOX_MIN(center_y) to BOUNDING_BOX_MAX(center_y, cells_on_y_axis))
 				for(var/x_index in BOUNDING_BOX_MIN(center_x) to BOUNDING_BOX_MAX(center_x, cells_on_x_axis))
-
-					. += grid_level[row][x_index].client_contents
+					var/list/cell_row = grid_level[row]
+					if(cell_row && length(cell_row) >= x_index)
+						var/datum/spatial_grid_cell/cell = cell_row[x_index]
+						if(cell)
+							. += cell.client_contents
 
 		if(SPATIAL_GRID_CONTENTS_TYPE_HEARING)
 			for(var/row in BOUNDING_BOX_MIN(center_y) to BOUNDING_BOX_MAX(center_y, cells_on_y_axis))
 				for(var/x_index in BOUNDING_BOX_MIN(center_x) to BOUNDING_BOX_MAX(center_x, cells_on_x_axis))
-
-					. += grid_level[row][x_index].hearing_contents
+					var/list/cell_row = grid_level[row]
+					if(cell_row && length(cell_row) >= x_index)
+						var/datum/spatial_grid_cell/cell = cell_row[x_index]
+						if(cell)
+							. += cell.hearing_contents
 
 		if(SPATIAL_GRID_CONTENTS_TYPE_ATMOS)
 			for(var/row in BOUNDING_BOX_MIN(center_y) to BOUNDING_BOX_MAX(center_y, cells_on_y_axis))
 				for(var/x_index in BOUNDING_BOX_MIN(center_x) to BOUNDING_BOX_MAX(center_x, cells_on_x_axis))
-					. += grid_level[row][x_index].atmos_contents
+					var/list/cell_row = grid_level[row]
+					if(cell_row && length(cell_row) >= x_index)
+						var/datum/spatial_grid_cell/cell = cell_row[x_index]
+						if(cell)
+							. += cell.atmos_contents
 
 		if(SPATIAL_GRID_CONTENTS_TYPE_RADIO_NONATMOS)
 			for(var/row in BOUNDING_BOX_MIN(center_y) to BOUNDING_BOX_MAX(center_y, cells_on_y_axis))
 				for(var/x_index in BOUNDING_BOX_MIN(center_x) to BOUNDING_BOX_MAX(center_x, cells_on_x_axis))
-					. += grid_level[row][x_index].radio_nonatmos_contents
+					var/list/cell_row = grid_level[row]
+					if(cell_row && length(cell_row) >= x_index)
+						var/datum/spatial_grid_cell/cell = cell_row[x_index]
+						if(cell)
+							. += cell.radio_nonatmos_contents
 
 		if(SPATIAL_GRID_CONTENTS_TYPE_RADIO_ATMOS)
 			for(var/row in BOUNDING_BOX_MIN(center_y) to BOUNDING_BOX_MAX(center_y, cells_on_y_axis))
 				for(var/x_index in BOUNDING_BOX_MIN(center_x) to BOUNDING_BOX_MAX(center_x, cells_on_x_axis))
-					. += grid_level[row][x_index].radio_atmos_contents
+					var/list/cell_row = grid_level[row]
+					if(cell_row && length(cell_row) >= x_index)
+						var/datum/spatial_grid_cell/cell = cell_row[x_index]
+						if(cell)
+							. += cell.radio_atmos_contents
 
 	return .
 
