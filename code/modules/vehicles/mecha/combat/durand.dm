@@ -40,10 +40,13 @@
 	if(defense_mode && !use_power(100)) //Defence mode can only be on with a occupant so we check if one of them can toggle it and toggle
 		for(var/O in occupants)
 			var/mob/living/occupant = O
-			var/datum/action/action = LAZYACCESSASSOC(occupant_actions, occupant, /datum/action/vehicle/sealed/mecha/mech_defense_mode)
-			if(action)
-				action.Trigger()
-				break
+			var/list/occupant_actions_list = occupant_actions
+			if(occupant_actions_list && occupant_actions_list[occupant])
+				var/list/occupant_specific_actions = occupant_actions_list[occupant]
+				var/datum/action/action = occupant_specific_actions[/datum/action/vehicle/sealed/mecha/mech_defense_mode]
+				if(action)
+					action.Trigger()
+					break
 
 /obj/vehicle/sealed/mecha/combat/durand/Move(direction)
 	. = ..()
@@ -57,9 +60,12 @@
 
 /obj/vehicle/sealed/mecha/combat/durand/mob_exit(mob/M, silent, randomstep, forced)
 	if(defense_mode)
-		var/datum/action/action = LAZYACCESSASSOC(occupant_actions, M, /datum/action/vehicle/sealed/mecha/mech_defense_mode)
-		if(action)
-			INVOKE_ASYNC(action, TYPE_PROC_REF(/datum/action, Trigger), FALSE)
+		var/list/occupant_actions_list = occupant_actions
+		if(occupant_actions_list && occupant_actions_list[M])
+			var/list/occupant_specific_actions = occupant_actions_list[M]
+			var/datum/action/action = occupant_specific_actions[/datum/action/vehicle/sealed/mecha/mech_defense_mode]
+			if(action)
+				INVOKE_ASYNC(action, TYPE_PROC_REF(/datum/action, Trigger), FALSE)
 	return ..()
 
 ///Relays the signal from the action button to the shield, and creates a new shield if the old one is MIA.
@@ -210,9 +216,13 @@ own integrity back to max. Shield is automatically dropped if we run out of powe
 	else
 		chassis.log_message("defense mode state changed -- now [chassis.defense_mode?"enabled":"disabled"].", LOG_MECHA)
 	for(var/occupant in chassis.occupants)
-		var/datum/action/button = chassis.occupant_actions[occupant][/datum/action/vehicle/sealed/mecha/mech_defense_mode]
-		button.button_icon_state = "mech_defense_mode_[chassis.defense_mode ? "on" : "off"]"
-		button.build_all_button_icons()
+		var/list/occupant_actions_list = chassis.occupant_actions
+		if(occupant_actions_list && occupant_actions_list[occupant])
+			var/list/occupant_specific_actions = occupant_actions_list[occupant]
+			var/datum/action/button = occupant_specific_actions[/datum/action/vehicle/sealed/mecha/mech_defense_mode]
+			if(button)
+				button.button_icon_state = "mech_defense_mode_[chassis.defense_mode ? "on" : "off"]"
+				button.build_all_button_icons()
 
 	set_light_on(chassis.defense_mode)
 
@@ -248,8 +258,12 @@ own integrity back to max. Shield is automatically dropped if we run out of powe
 		chassis.cell?.charge = 0
 		for(var/O in chassis.occupants)
 			var/mob/living/occupant = O
-			var/datum/action/action = LAZYACCESSASSOC(chassis.occupant_actions, occupant, /datum/action/vehicle/sealed/mecha/mech_defense_mode)
-			action.Trigger()
+			var/list/occupant_actions_list = chassis.occupant_actions
+			if(occupant_actions_list && occupant_actions_list[occupant])
+				var/list/occupant_specific_actions = occupant_actions_list[occupant]
+				var/datum/action/action = occupant_specific_actions[/datum/action/vehicle/sealed/mecha/mech_defense_mode]
+				if(action)
+					action.Trigger()
 	atom_integrity = 10000
 
 /obj/durand_shield/play_attack_sound()
