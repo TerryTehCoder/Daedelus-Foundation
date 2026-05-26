@@ -232,6 +232,12 @@
 	greyscale_colors = "#1a3a6a#4488ff"
 	saved_identification = "Command"
 
+/obj/item/modular_computer/tablet/pda/foundation_tribunal
+	name = "Tribunal PDA"
+	default_disk = /obj/item/computer_hardware/hard_drive/role/foundation_tribunal
+	greyscale_colors = "#2a0a2a#9933cc"
+	saved_identification = "Tribunal"
+
 /obj/item/modular_computer/tablet/pda/foundation_security
 	name = "Security PDA"
 	default_disk = /obj/item/computer_hardware/hard_drive/role/foundation_security

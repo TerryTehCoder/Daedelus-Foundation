@@ -407,7 +407,7 @@
 	else
 		step_rand(src)
 
-/mob/living/scp/scp682/verb/verb_rampage()
+/mob/living/scp/scp682/proc/verb_rampage()
 	set name = "Rampage"
 	set category = "SCP-682"
 	visible_message(span_danger("[src] goes on a rampage, lashing out at everything!"))

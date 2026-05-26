@@ -30,6 +30,8 @@
 #define DISK_SCP_PATROL (1<<27)
 #define DISK_SCP_DOORS (1<<28)
 #define DISK_SCP_INTERCOM (1<<29)
+#define DISK_SCP_SECDIR (1<<30)
+#define DISK_SCP_O5 (1<<31)
 
 // Used to stringify message targets before sending the signal datum.
 #define STRINGIFY_PDA_TARGET(name, job) "[name] ([job])"

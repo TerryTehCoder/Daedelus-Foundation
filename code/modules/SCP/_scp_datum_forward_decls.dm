@@ -1,18 +1,3 @@
-/datum/legal_case
-	var/case_id = ""
-	var/defendant_name = ""
-	var/defendant_job = ""
-	var/plaintiff_name = ""
-	var/plaintiff_job = ""
-	var/case_type = ""
-	var/charges = ""
-	var/defense = ""
-	var/status = "pending"
-	var/time_filed = 0
-	var/verdict = ""
-	var/verdict_notes = ""
-	var/sentencing = ""
-
 /datum/coordination_task
 	var/task_id = ""
 	var/task_type = ""

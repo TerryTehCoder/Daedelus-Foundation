@@ -1168,12 +1168,15 @@ var/global/datum/scp_documentation_manager/GLOB_SCP_DOCS = new /datum/scp_docume
 		return
 
 	var/active_scps = 0
+	var/component_scps = 0
 
 	for(var/mob/living/M in GLOB.mob_list)
 		if(QDELETED(M))
 			continue
 		if(M.SCP)
 			active_scps++
+			if(M.SCP.uses_advanced_components)
+				component_scps++
 
 	to_chat(src, span_boldnotice("=== Quick SCP Statistics ==="))
 	to_chat(src, span_notice("Active SCPs: [active_scps]"))

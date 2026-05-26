@@ -621,8 +621,6 @@ SUBSYSTEM_DEF(scp_gameplay)
 		report += "Ethics Violations: [SSethics_committee.violations.len] | Tests Reviewed: [SSethics_committee.total_reviews]"
 	if(SSinternal_tribunal)
 		report += "Tribunal Cases: [SSinternal_tribunal.total_cases]"
-	if(SSlegal_system)
-		report += "Legal Cases: [SSlegal_system.total_cases]"
 	report += "<hr>"
 
 	report += "<b>COMMAND AND COORDINATION</b>"

@@ -198,7 +198,7 @@
 	SCP?.award_research(src, "reproduction", 75)
 	on_egg_laid(egg)
 
-/mob/living/scp/scp3199/verb/verb_protect_hatchlings()
+/mob/living/scp/scp3199/proc/verb_protect_hatchlings()
 	set name = "Protect Hatchlings"
 	set category = "SCP-3199"
 	var/hatchling_count = 0

@@ -78,9 +78,11 @@
 	if(disk_flags & DISK_SCP_SCIENCE)
 		progs_to_store += new /datum/computer_file/program/scp_budget_console(src)
 		progs_to_store += new /datum/computer_file/program/scp_research_laboratory(src)
+		progs_to_store += new /datum/computer_file/program/scp_field_work(src)
 
 	if(disk_flags & DISK_SCP_MEDICAL)
 		progs_to_store += new /datum/computer_file/program/scp_psychology_console(src)
+		progs_to_store += new /datum/computer_file/program/scp_medical_work(src)
 
 	if(disk_flags & DISK_SCP_ETHICS)
 		progs_to_store += new /datum/computer_file/program/scp_ethics_review(src)
@@ -101,22 +103,30 @@
 		progs_to_store += new /datum/computer_file/program/scp_vip_protection(src)
 
 	if(disk_flags & DISK_SCP_LEGAL)
-		progs_to_store += new /datum/computer_file/program/scp_legal(src)
+		progs_to_store += new /datum/computer_file/program/scp_tribunal(src)
 
 	if(disk_flags & DISK_SCP_TESTING)
 		progs_to_store += new /datum/computer_file/program/research_laboratory(src)
 
 	if(disk_flags & DISK_SCP_IT)
 		progs_to_store += new /datum/computer_file/program/scp_it_network(src)
+		progs_to_store += new /datum/computer_file/program/scp_engineering_work(src)
 
 	if(disk_flags & DISK_SCP_PATROL)
 		progs_to_store += new /datum/computer_file/program/scp_guard_patrol(src)
+		progs_to_store += new /datum/computer_file/program/scp_field_work(src)
 
 	if(disk_flags & DISK_SCP_DOORS)
 		progs_to_store += new /datum/computer_file/program/scp_door_control(src)
 
 	if(disk_flags & DISK_SCP_INTERCOM)
 		progs_to_store += new /datum/computer_file/program/scp_intercom(src)
+
+	if(disk_flags & DISK_SCP_SECDIR)
+		progs_to_store += new /datum/computer_file/program/scp_security_director(src)
+
+	if(disk_flags & DISK_SCP_O5)
+		progs_to_store += new /datum/computer_file/program/scp_o5_terminal(src)
 
 	if(disk_flags & DISK_SCP_SCIENCE)
 		progs_to_store += new /datum/computer_file/program/research_laboratory(src)
@@ -318,12 +328,12 @@
 /obj/item/computer_hardware/hard_drive/role/foundation_command
 	name = "\improper Foundation Command disk"
 	icon_state = "datadisk8"
-	disk_flags = DISK_MANIFEST | DISK_SEC | DISK_SCP_COMMAND | DISK_SCP_SECURITY | DISK_SCP_ETHICS | DISK_SCP_GOI | DISK_BUDGET
+	disk_flags = DISK_MANIFEST | DISK_SEC | DISK_SCP_COMMAND | DISK_SCP_SECURITY | DISK_SCP_ETHICS | DISK_SCP_GOI | DISK_SCP_O5 | DISK_SCP_LEGAL | DISK_BUDGET
 
 /obj/item/computer_hardware/hard_drive/role/foundation_security
 	name = "\improper Foundation Security disk"
 	icon_state = "datadisk6"
-	disk_flags = DISK_SEC | DISK_SCP_SECURITY | DISK_SCP_INVESTIGATIONS | DISK_MANIFEST
+	disk_flags = DISK_SEC | DISK_SCP_SECURITY | DISK_SCP_INVESTIGATIONS | DISK_SCP_SECDIR | DISK_MANIFEST
 
 /obj/item/computer_hardware/hard_drive/role/foundation_science
 	name = "\improper Foundation Science disk"
@@ -369,3 +379,12 @@
 	name = "\improper Foundation Engineer disk"
 	icon_state = "datadisk2"
 	disk_flags = DISK_SCP_IT | DISK_POWER | DISK_ATMOS | DISK_ROBOS
+
+/obj/item/computer_hardware/hard_drive/role/foundation_tribunal
+	name = "\improper Foundation Tribunal disk"
+	icon_state = "datadisk6"
+	disk_flags = DISK_SCP_LEGAL | DISK_SCP_ETHICS | DISK_SCP_SECURITY | DISK_SEC | DISK_MANIFEST
+
+/obj/item/computer_hardware/hard_drive/role/foundation_tribunal/Initialize(mapload)
+	. = ..()
+	store_file(new /datum/computer_file/program/scp_tribunal(src))

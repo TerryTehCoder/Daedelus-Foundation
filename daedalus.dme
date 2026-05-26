@@ -4536,7 +4536,6 @@
 #include "code\modules\SCP\job_gameplay\site_director_command.dm"
 #include "code\modules\SCP\job_gameplay\goi_rep_terminal.dm"
 #include "code\modules\SCP\job_gameplay\ez_vip_protection.dm"
-#include "code\modules\SCP\job_gameplay\lawyer_legal_system.dm"
 #include "code\modules\SCP\job_gameplay\foundation19_science_jobs.dm"
 #include "code\modules\SCP\job_gameplay\assistant_director_coordination.dm"
 #include "code\modules\SCP\job_gameplay\investigations_agent.dm"
@@ -4557,6 +4556,9 @@
 #include "code\modules\SCP\job_gameplay\scp_medical_triage.dm"
 #include "code\modules\SCP\job_gameplay\scp_supply_operations.dm"
 #include "code\modules\SCP\job_gameplay\director_oversight.dm"
+#include "code\modules\SCP\job_gameplay\security_director_command.dm"
+#include "code\modules\SCP\job_gameplay\o5_council_terminal.dm"
+#include "code\modules\SCP\job_gameplay\job_gameplay_extensions.dm"
 
 #include "code\modules\SCP\scp_emergency_shelters.dm"
 #include "code\modules\SCP\scp_containment_signs.dm"

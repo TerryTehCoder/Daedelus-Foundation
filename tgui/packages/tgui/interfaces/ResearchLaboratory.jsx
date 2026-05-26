@@ -720,7 +720,6 @@ const ProjectsTab = (props) => {
   const [scpTargets, setScpTargets] = React.useState([]);
   const [riskLevel, setRiskLevel] = React.useState(1);
   const [researchPoints, setResearchPoints] = React.useState(100);
-  const [expandedProject, setExpandedProject] = React.useState(null);
   const [addTargetProject, setAddTargetProject] = React.useState(null);
   const [addTargetSCP, setAddTargetSCP] = React.useState('');
   const [assignTeamProject, setAssignTeamProject] = React.useState(null);
@@ -1034,36 +1033,6 @@ const TeamsTab = (props) => {
   const teamList = research_teams ? Object.values(research_teams) : [];
   const skills = researcher_skills || {};
   const joinRequests = pending_join_requests || [];
-
-  const userTeamId = (() => {
-    for (const team of teamList) {
-      for (const m of team.members || []) {
-        if (m.ckey === user_ckey) return team.id;
-      }
-    }
-    return null;
-  })();
-
-  const handleCreate = () => {
-    act('create_team', { name: teamName || undefined });
-    setTeamName('');
-    setShowCreate(false);
-  };
-
-  const userTeamId = (() => {
-    for (const team of teamList) {
-      for (const m of team.members || []) {
-        if (m.ckey === user_ckey) return team.id;
-      }
-    }
-    return null;
-  })();
-
-  const handleCreate = () => {
-    act('create_team', { name: teamName || undefined });
-    setTeamName('');
-    setShowCreate(false);
-  };
 
   const userTeamId = (() => {
     for (const team of teamList) {

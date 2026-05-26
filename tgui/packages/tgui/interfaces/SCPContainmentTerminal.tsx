@@ -653,59 +653,59 @@ export const SCPContainmentTerminal = (props) => {
                     NO INTERACTIONS AVAILABLE
                   </Box>
                 )}
-              </Box>
-
-              {!is_scp && (
-                <Box style={{ marginTop: '12px' }}>
-                  <Box
-                    style={{
-                      fontSize: '10px',
-                      color: C.textDim,
-                      letterSpacing: '0.18em',
-                      textTransform: 'uppercase',
-                      borderBottom: `1px solid ${C.border}`,
-                      paddingBottom: '4px',
-                      marginBottom: '8px',
-                    }}
-                  >
-                    RESEARCH ACTIONS
-                  </Box>
-                  <Box style={{ display: 'flex', gap: '4px', flexWrap: 'wrap' }}>
-                    <Button
-                      onClick={() => act('start_experiment')}
+                {!is_scp && (
+                  <Box style={{ marginTop: '12px' }}>
+                    <Box
                       style={{
-                        fontFamily: C.mono,
                         fontSize: '10px',
-                        letterSpacing: '0.1em',
-                        textTransform: 'uppercase',
-                        background: 'rgba(139,0,0,0.25)',
-                        border: `1px solid ${C.red}`,
-                        borderRadius: 0,
-                        color: C.textBright,
-                        padding: '3px 8px',
-                      }}
-                    >
-                      Start Experiment
-                    </Button>
-                    <Button
-                      onClick={() => act('request_subject')}
-                      style={{
-                        fontFamily: C.mono,
-                        fontSize: '10px',
-                        letterSpacing: '0.1em',
-                        textTransform: 'uppercase',
-                        background: 'transparent',
-                        border: `1px solid ${C.border}`,
-                        borderRadius: 0,
                         color: C.textDim,
-                        padding: '3px 8px',
+                        letterSpacing: '0.18em',
+                        textTransform: 'uppercase',
+                        borderBottom: `1px solid ${C.border}`,
+                        paddingBottom: '4px',
+                        marginBottom: '8px',
                       }}
                     >
-                      Request D-Class
-                    </Button>
+                      RESEARCH ACTIONS
+                    </Box>
+                    <Box style={{ display: 'flex', gap: '4px', flexWrap: 'wrap' }}>
+                      <Button
+                        onClick={() => act('start_experiment')}
+                        style={{
+                          fontFamily: C.mono,
+                          fontSize: '10px',
+                          letterSpacing: '0.1em',
+                          textTransform: 'uppercase',
+                          background: 'rgba(139,0,0,0.25)',
+                          border: `1px solid ${C.red}`,
+                          borderRadius: 0,
+                          color: C.textBright,
+                          padding: '3px 8px',
+                        }}
+                      >
+                        Start Experiment
+                      </Button>
+                      <Button
+                        onClick={() => act('request_subject')}
+                        style={{
+                          fontFamily: C.mono,
+                          fontSize: '10px',
+                          letterSpacing: '0.1em',
+                          textTransform: 'uppercase',
+                          background: 'transparent',
+                          border: `1px solid ${C.border}`,
+                          borderRadius: 0,
+                          color: C.textDim,
+                          padding: '3px 8px',
+                        }}
+                      >
+                        Request D-Class
+                      </Button>
+                    </Box>
                   </Box>
-                </Box>
-              )}
+                )}
+              </Box>
+            )}
 
             {selectedTab === 'log' && (
               <Box>

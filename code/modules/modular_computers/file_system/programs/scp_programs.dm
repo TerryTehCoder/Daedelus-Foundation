@@ -629,21 +629,12 @@
 	data["access_denied"] = FALSE
 	var/list/case_list = list()
 	for(var/datum/tribunal_case/C in SSinternal_tribunal.cases)
-		case_list += list(list(
-			"case_id" = C.case_id,
-			"defendant" = C.defendant_name,
-			"prosecutor" = C.prosecutor_name,
-			"charges" = C.charges,
-			"evidence" = C.evidence_summary,
-			"status" = C.get_status_text(),
-			"status_num" = C.status,
-			"sanction" = C.sanction_text,
-			"time" = C.time_filed,
-			"deliberation_progress" = C.deliberation_progress,
-		))
+		case_list += list(C.get_data())
 	data["cases"] = case_list
 	data["total_cases"] = SSinternal_tribunal.total_cases
 	data["active_case"] = SSinternal_tribunal.active_case ? TRUE : FALSE
+	data["statistics"] = SSinternal_tribunal.get_statistics()
+	data["sentencing_guidelines"] = SSinternal_tribunal.sentencing_guidelines
 	return data
 
 /datum/computer_file/program/scp_tribunal/ui_act(action, list/params, datum/tgui/ui, datum/ui_state/state)
@@ -696,6 +687,95 @@
 				if(C.case_id == case_id)
 					C.dismiss_case()
 					SSinternal_tribunal.active_case = null
+					. = TRUE
+					break
+		if("add_witness")
+			var/case_id = params["case_id"]
+			for(var/datum/tribunal_case/C in SSinternal_tribunal.cases)
+				if(C.case_id == case_id)
+					C.add_witness(params["witness_name"])
+					. = TRUE
+					break
+		if("remove_witness")
+			var/case_id = params["case_id"]
+			for(var/datum/tribunal_case/C in SSinternal_tribunal.cases)
+				if(C.case_id == case_id)
+					C.remove_witness(params["witness_name"])
+					. = TRUE
+					break
+		if("add_evidence")
+			var/case_id = params["case_id"]
+			for(var/datum/tribunal_case/C in SSinternal_tribunal.cases)
+				if(C.case_id == case_id)
+					C.add_evidence(params["evidence_text"])
+					. = TRUE
+					break
+		if("remove_evidence")
+			var/case_id = params["case_id"]
+			for(var/datum/tribunal_case/C in SSinternal_tribunal.cases)
+				if(C.case_id == case_id)
+					C.remove_evidence(params["evidence_idx"])
+					. = TRUE
+					break
+		if("add_note")
+			var/case_id = params["case_id"]
+			for(var/datum/tribunal_case/C in SSinternal_tribunal.cases)
+				if(C.case_id == case_id)
+					C.add_note(params["note_text"])
+					. = TRUE
+					break
+		if("set_defense_statement")
+			var/case_id = params["case_id"]
+			for(var/datum/tribunal_case/C in SSinternal_tribunal.cases)
+				if(C.case_id == case_id)
+					C.defense_statement = params["statement"]
+					. = TRUE
+					break
+		if("set_prosecution_statement")
+			var/case_id = params["case_id"]
+			for(var/datum/tribunal_case/C in SSinternal_tribunal.cases)
+				if(C.case_id == case_id)
+					C.prosecution_statement = params["statement"]
+					. = TRUE
+					break
+		if("set_severity")
+			var/case_id = params["case_id"]
+			for(var/datum/tribunal_case/C in SSinternal_tribunal.cases)
+				if(C.case_id == case_id)
+					C.severity_rating = text2num(params["severity"]) || 1
+					. = TRUE
+					break
+		if("set_recommendation")
+			var/case_id = params["case_id"]
+			for(var/datum/tribunal_case/C in SSinternal_tribunal.cases)
+				if(C.case_id == case_id)
+					C.recommendation = params["recommendation"]
+					. = TRUE
+					break
+		if("attach_document")
+			var/case_id = params["case_id"]
+			if(!case_id)
+				return
+			var/obj/item/paper/held_paper = H.get_active_held_item()
+			if(!istype(held_paper))
+				to_chat(H, span_warning("Hold a paper document in your active hand to attach it."))
+				return
+			for(var/datum/tribunal_case/C in SSinternal_tribunal.cases)
+				if(C.case_id == case_id)
+					if(C.attach_document(H, held_paper))
+						to_chat(H, span_notice("Document attached to case [C.case_id]."))
+					else
+						to_chat(H, span_warning("Failed to attach document."))
+					. = TRUE
+					break
+		if("remove_document")
+			var/case_id = params["case_id"]
+			var/doc_id = params["doc_id"]
+			if(!case_id || !doc_id)
+				return
+			for(var/datum/tribunal_case/C in SSinternal_tribunal.cases)
+				if(C.case_id == case_id)
+					C.remove_document(doc_id)
 					. = TRUE
 					break
 
@@ -1169,73 +1249,6 @@
 				if(D.detail_id == detail_id)
 					D.checkin()
 					break
-			. = TRUE
-
-/datum/computer_file/program/scp_legal
-	filename = "scp_legal"
-	filedesc = "Legal Records"
-	category = PROGRAM_CATEGORY_MISC
-	program_icon_state = "generic"
-	extended_desc = "File legal cases, submit defenses, and manage Foundation legal proceedings."
-	size = 2
-	tgui_id = "ScpLegalConsole"
-	program_icon = "balance-scale-left"
-	usage_flags = PROGRAM_ALL
-	available_on_ntnet = FALSE
-	required_access = list(ACCESS_ADMIN_LVL5)
-
-/datum/computer_file/program/scp_legal/ui_data(mob/user)
-	var/list/data = get_header_data()
-	var/list/case_list = list()
-	for(var/datum/legal_case/C in SSlegal_system.cases)
-		case_list += list(list(
-			"case_id" = C.case_id,
-			"defendant" = C.defendant_name,
-			"defendant_job" = C.defendant_job,
-			"plaintiff" = C.plaintiff_name,
-			"case_type" = C.case_type,
-			"charges" = C.charges,
-			"defense" = C.defense,
-			"status" = C.status,
-			"verdict" = C.verdict,
-			"sentencing" = C.sentencing,
-			"time" = C.time_filed,
-		))
-	data["cases"] = case_list
-	data["total_cases"] = SSlegal_system.total_cases
-	data["resolved_cases"] = SSlegal_system.resolved_cases
-	return data
-
-/datum/computer_file/program/scp_legal/ui_act(action, list/params, datum/tgui/ui, datum/ui_state/state)
-	. = ..()
-	if(.)
-		return
-	var/mob/living/carbon/human/H = ui.user
-	if(!istype(H))
-		return
-	var/obj/item/card/id/id_card = H.get_idcard(TRUE)
-	if(!id_card || !(ACCESS_ADMIN_LVL5 in id_card.access))
-		return
-	switch(action)
-		if("file_case")
-			var/defendant = params["defendant"]
-			var/ctype = params["case_type"]
-			var/charges = params["charges"]
-			var/datum/legal_case/C = new(null, H, ctype, charges)
-			C.defendant_name = defendant
-			SSlegal_system.file_case(C)
-			. = TRUE
-		if("submit_defense")
-			var/case_id = params["case_id"]
-			var/defense = params["defense"]
-			SSlegal_system.submit_defense(case_id, defense)
-			. = TRUE
-		if("render_verdict")
-			var/case_id = params["case_id"]
-			var/verdict = params["verdict"]
-			var/notes = params["notes"]
-			var/sentence = params["sentencing"]
-			SSlegal_system.render_verdict(case_id, verdict, notes, sentence)
 			. = TRUE
 
 /datum/computer_file/program/scp_it_network

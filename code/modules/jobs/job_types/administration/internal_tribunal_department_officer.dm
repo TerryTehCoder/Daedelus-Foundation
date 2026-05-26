@@ -61,7 +61,7 @@
 	backpack_contents = list(
 		/obj/item/assembly/flash/handheld = 1
 	)
-	belt = /obj/item/modular_computer/tablet/pda/foundation_command
+	belt = /obj/item/modular_computer/tablet/pda/foundation_tribunal
 	ears = /obj/item/radio/headset/heads/captain
 	glasses = /obj/item/clothing/glasses/sunglasses
 	gloves = /obj/item/clothing/gloves/color/white
