@@ -147,7 +147,7 @@ Comment these out for now, while I port everything else over.
 	name = "Atmospherics"
 
 /area/site104/engineering/engicontrol
-	name = "Engineering Control"
+	name = "Marine Control"
 
 //North-Rig Logistics
 

@@ -34,3 +34,10 @@
 	icon = 'icons/obj/aquaticprops.dmi'
 	icon_state = "fishtank"
 	layer = BELOW_OBJ_LAYER
+
+/obj/structure/decorativedish
+	name = "Radio Dish"
+	desc = "A radio dish designed to relay signals, though this one's purpose is questionable."
+	icon = 'icons/obj/aquaticprops.dmi'
+	icon_state = "satdish"
+	layer = ABOVE_MOB_LAYER

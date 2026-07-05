@@ -678,89 +678,40 @@
 		1 MINUTES + 30 SECONDS
 	)
 
-// SCP Tapes - Research
-
-/obj/item/tape/scp_test_001
-	name = "tape (SCP Test 001)"
-	desc = "A lost SCP test recording, designated 001."
-	icon_state = "tape_greyscale"
+/obj/item/tape/batsyinterview1
+	name = "tape (Batsy-1)"
+	desc = "An interview conducted by junior researcher Ilyanova."
+	icon_state = "tape_white"
 	storedinfo = list(
-		"\[00:01\] Dr. \[REDACTED\]: Test log 001. Subject D-5432 exposed to SCP-███ within containment chamber 7.",
-		"\[00:10\] (Sound of a low, resonant hum, growing steadily in intensity. Subject shifts nervously.)",
-		"\[00:25\] D-5432: What is that noise? It's... beautiful. Like a choir, but not.",
-		"\[00:40\] Dr. \[REDACTED\]: D-5432, report your current state. Any anomalous sensations?",
-		"\[00:55\] D-5432: (Giggles uncontrollably, voice unsteady) I can hear the colors! All the colors! They're singing!",
-		"\[01:10\] (Humming intensifies, becoming almost painful. Subject begins to twitch. A high-pitched whine overlays the hum.)",
-		"\[01:25\] Dr. \[REDACTED\]: Subject is exhibiting signs of extreme euphoria and sensory overload. Recommend immediate termination of exposure.",
-		"\[01:40\] (The whine becomes a piercing shriek. Subject collapses, convulsing. The hum reaches a crescendo.)",
-		"\[01:50\] (Abrupt silence. Then, a faint, rhythmic clicking sound. Static.)"
+		"\[00:01\] Jr Researcher. Ilyanova: Okay, my first experiment.. is the recorder going? Oh it's already on? I mean-",
+		"\[00:05\] (An awkward pause, with light background noise in the distance) ",
+		"\[00:10\] Jr Researcher. Ilyanova: Ahem, right.. this is Jr. Researcher Ilyanova interviewing.. Batsy the Cat?",
+		"\[00:15\] Jr Researcher. Ilyanova: This is part of the... (paper rustling)... Standard Cognitive Assessment intake form?",
+		"\[00:20\] Jr Researcher. Ilyanova: Just some routine questions to test for awareness..",
+		"\[00:30\] Jr Researcher. Ilyanova: Hello, can you understand me? My name is Doctor Ilyanova.",
+		"\[00:40\] Batsy: Mrrreeeow",
+		"\[00:50\] Jr Researcher. Ilyanova: Right.. uhm, do you understand what this is? For the record I am showing Batsy a mirror.",
+		"\[01:00\] Batsy: Mrrrr-Mrrp Mreeow!",
+		"\[01:10\] Jr Researcher. Ilyanova: Okay... a response is.. a good sign I think? Uhm, are we sure this isn't just a regular cat?",
+		"\[01:20\] Distant Voice (Doctor. Saiyovski): (Snickering in the distance from other voices) This is very invaluable data Ilyanova, please continue. ",
+		"\[01:30\] Batsy: Mrr- Mreeeow -Mrrrrer",
+		"\[01:32\] Jr Researcher. Ilyanova: No Batsy! Don't step on th-",
+		"\[01:33\] (Tape Ends)"
+
 	)
 	timestamp = list(
 		1 SECONDS,
+		5 SECONDS,
 		10 SECONDS,
-		25 SECONDS,
-		40 SECONDS,
-		55 SECONDS,
-		1 MINUTES + 10 SECONDS,
-		1 MINUTES + 25 SECONDS,
-		1 MINUTES + 40 SECONDS,
-		1 MINUTES + 50 SECONDS
-	)
-
-/obj/item/tape/scp_test_002
-	name = "tape (SCP Test 002)"
-	desc = "A lost SCP test recording, designated 002."
-	icon_state = "tape_greyscale"
-	storedinfo = list(
-		"\[00:01\] Researcher: Test log 002. Observation of SCP-███'s interaction with organic matter. Initiating exposure with porcine tissue sample.",
-		"\[00:15\] (Sound of dripping, followed by a wet, tearing noise. Environmental sensors detect a faint, sickly sweet odor.)",
-		"\[00:30\] Researcher: Fascinating. The tissue is being... reconfigured. Not consumed, but reshaped.",
-		"\[00:45\] (A faint, rhythmic thumping begins, as if something is growing or pulsating.)",
-		"\[01:00\] Researcher: It's forming a new structure. Unprecedented. Cellular integrity appears to be changing.",
-		"\[01:15\] (Thumping grows louder, accompanied by squelching. Pulsations become more distinct.)",
-		"\[01:30\] Researcher: (Voice strained, a hint of fear) It's... it's perceiving me. The structure has developed... sensory awareness.",
-		"\[01:40\] (A guttural, wet gasp from the researcher. The thumping becomes frantic.)",
-		"\[01:45\] (Sound of a chair scraping, a struggle. Loud, wet tearing followed by a choked scream.)",
-		"\[01:50\] (Silence, aside from the persistent thumping and a faint, wet slurping sound. Audio ends abruptly.)"
-	)
-	timestamp = list(
-		1 SECONDS,
 		15 SECONDS,
+		20 SECONDS,
 		30 SECONDS,
-		45 SECONDS,
-		1 MINUTES,
-		1 MINUTES + 15 SECONDS,
-		1 MINUTES + 30 SECONDS,
-		1 MINUTES + 40 SECONDS,
-		1 MINUTES + 45 SECONDS,
-		1 MINUTES + 50 SECONDS
-	)
-
-/obj/item/tape/scp_test_003
-	name = "tape (SCP Test 003)"
-	desc = "A lost SCP test recording, designated 003."
-	icon_state = "tape_greyscale"
-	storedinfo = list(
-		"\[00:01\] Agent \[REDACTED\]: Field recording, SCP-███ containment breach. We're in Sector C, attempting to re-establish perimeter.",
-		"\[00:10\] (Intense gunfire and shouting in the background. Explosions shake the area.)",
-		"\[00:25\] Agent \[REDACTED\]: We've lost visual on the anomaly! It's too fast! It just phased through the wall!",
-		"\[00:40\] (Sound of heavy metal tearing, followed by a distorted, high-pitched roar that seems to vibrate the air.)",
-		"\[00:55\] Agent \[REDACTED\]: Fall back! Fall back! It's adapting! It's learning our movements!",
-		"\[01:10\] (More frantic gunfire, then a series of wet, sickening impacts. A gurgling sound, then a scream cut short.)",
-		"\[01:20\] (Heavy, ragged breathing from Agent \[REDACTED\]. A faint, almost melodic hum begins to emanate from the darkness.)",
-		"\[01:25\] Agent \[REDACTED\]: (Whispering, terrified) It knows... it knows where we are. It's playing with us.",
-		"\[01:30\] (The humming grows louder, accompanied by a soft, rhythmic tapping. A final, wet crunch, impossibly close to the microphone.)",
-		"\[01:35\] (Silence, then a faint, satisfied sigh. Tape cuts out.)"
-	)
-	timestamp = list(
-		1 SECONDS,
-		10 SECONDS,
-		25 SECONDS,
 		40 SECONDS,
-		55 SECONDS,
+		50 SECONDS,
+		1 MINUTES,
 		1 MINUTES + 10 SECONDS,
 		1 MINUTES + 20 SECONDS,
-		1 MINUTES + 25 SECONDS,
 		1 MINUTES + 30 SECONDS,
-		1 MINUTES + 35 SECONDS
+		1 MINUTES + 32 SECONDS,
+		1 MINUTES + 33 SECONDS
 	)

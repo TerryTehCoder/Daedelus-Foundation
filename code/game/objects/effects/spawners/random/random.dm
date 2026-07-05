@@ -30,8 +30,35 @@
 	/// Whether the items should have a random pixel_x/y offset (maxium offset distance is ±16 pixels for x/y)
 	var/spawn_random_offset = FALSE
 
+	/// Global registry of offset pools, keyed by pool_id.
+	var/static/list/offset_pool_registry = list()
+	/* If set, this spawner registers its pixel_x/y into a shared offset pool
+	 *	and claims one slot when spawning. All spawners with the same pool_id
+	 *	share the pool and will never double-up on a position.
+	 *	Essentially a version of the same system from Baycode.
+	 */
+	var/pool_id = null
+	/// The name to give to spawned items that are part of a pool
+	/// Subsequent spawns suffixed #2, #3, etc.
+	var/pool_spawn_name = null
+	/// The description to give to spawned items that are part of a pool
+	var/pool_spawn_desc = null
+	/// Maximum number of items to spawn across the entire pool.
+	/// Defaults to -1 (no cap, every marker spawns one item as normal).
+	var/pool_spawn_max = -1
+	/// Weight of given location in pool. Higher = More Likely of being selected. 1 = equal
+	var/pool_spawn_weight = 1
+
 /obj/effect/spawner/random/Initialize(mapload)
 	. = ..()
+	if(pool_id)
+		if(!(pool_id in offset_pool_registry))
+			offset_pool_registry[pool_id] = list(
+				"offsets" = list(),
+				"spawn_count" = 0,
+				"spawn_max" = pool_spawn_max
+				)
+		offset_pool_registry[pool_id]["offsets"] += list(list(pixel_x, pixel_y))
 	spawn_loot()
 
 ///If the spawner has any loot defined, randomly picks some and spawns it. Does not cleanup the spawner.
@@ -71,18 +98,43 @@
 				if(istype(src, /obj/effect/spawner/random/trash/graffiti))
 					var/obj/effect/spawner/random/trash/graffiti/G = src
 					G.select_graffiti(spawned_loot)
-					//var/obj/graffiti = new /obj/effect/decal/cleanable/crayon(get_turf(src))
 
-				if (!spawn_loot_split && !spawn_random_offset)
-					if (pixel_x != 0)
+				// --- Pool offset ---
+				if(pool_id)
+					var/list/pool_entry = offset_pool_registry[pool_id]
+					var/spawn_max = pool_entry["spawn_max"]
+
+					if(spawn_max != -1 && pool_entry["spawn_count"] >= spawn_max)
+						return // Reached our Cap, No More spawns at this marker.
+
+					var/list/offsets = pool_entry["offsets"]
+					if(offsets?.len)
+						var/list/claimed = pick_weight(offsets)
+						offsets.Remove(claimed)
+						spawned_loot.pixel_x = claimed[1]
+						spawned_loot.pixel_y = claimed[2]
+
+					if(pool_spawn_name)
+						pool_entry["spawn_count"]++
+						var/count = pool_entry["spawn_count"]
+						if(count > 1)
+							spawned_loot.name = "[pool_spawn_name] #[count]"
+						else
+							spawned_loot.name = pool_spawn_name
+
+					if(pool_spawn_desc)
+						spawned_loot.desc = pool_spawn_desc
+				// --- No More Pool Offset ---
+				else if(!spawn_loot_split && !spawn_random_offset)
+					if(pixel_x != 0)
 						spawned_loot.pixel_x = pixel_x
-					if (pixel_y != 0)
+					if(pixel_y != 0)
 						spawned_loot.pixel_y = pixel_y
-				else if (spawn_random_offset)
+				else if(spawn_random_offset)
 					spawned_loot.pixel_x = rand(-16, 16)
 					spawned_loot.pixel_y = rand(-16, 16)
-				else if (spawn_loot_split)
-					if (loot_spawned)
+				else if(spawn_loot_split)
+					if(loot_spawned)
 						spawned_loot.pixel_x = spawned_loot.pixel_y = ((!(loot_spawned%2)*loot_spawned/2)*-1)+((loot_spawned%2)*(loot_spawned+1)/2*1)
 			loot_spawned++
 

@@ -71,22 +71,47 @@
 	name = "Site-104"
 
 /area/site104/surface
-	name = "Open Air"
+	name = "Surface Area"
 	requires_power = 0
-//	dynamic_lighting = 1
-//	ambience = list('sounds/ambience/Site104/BoatHorn.ogg', 'sounds/ambience/Site104/Wildlife/Seagulls1.ogg', 'sounds/ambience/Site104/Wildlife/Seagulls2.ogg')
+	ambientsounds = list(
+	'sounds/ambience/Site104/BoatHorn.ogg',
+	'sounds/ambience/Site104/Wildlife/Seagulls1.ogg',
+	'sounds/ambience/Site104/Wildlife/Seagulls2.ogg',
+	'sounds/ambience/Site104/WindyChains.ogg'
+	)
+
+	ambient_buzz = 'sounds/ambience/Site104/OutsideAmbience.ogg'
 
 /area/site104/surface/opendeck
 	name = "Weather Deck"
-//	sound_env = HANGAR
-//	forced_ambience = list('sounds/ambience/Site104/DeckAmbience.ogg') //Ahh, the sound of the ocean waves and the creaking metal beneath our feet...
+	ambientsounds = list(
+	'sounds/ambience/Site104/BoatHorn.ogg',
+	'sounds/ambience/Site104/Wildlife/Seagulls1.ogg',
+	'sounds/ambience/Site104/Wildlife/Seagulls1.ogg',
+	'sounds/ambience/Site104/Wildlife/Seagulls2.ogg',
+	'sounds/ambience/Site104/Wildlife/Seagulls2.ogg',
+	'sounds/ambience/Site104/WindyChains.ogg',
+	'sounds/ambience/Site104/WindyChains.ogg',
+
+	// We have no weighted ambience pick, and I don't want to touch ambi code and get yelled at ):
+	'sounds/ambience/Site104/Machinery/HydraulicPress.ogg',
+	'sounds/ambience/Site104/Machinery/HydraulicPress.ogg',
+	'sounds/ambience/Site104/Machinery/GenericPumpMotor.ogg',
+	'sounds/ambience/Site104/Machinery/GenericPumpMotor.ogg',
+	'sounds/ambience/Site104/Machinery/GasDecom.ogg',
+	'sounds/ambience/Site104/Machinery/GasDecom.ogg',
+	'sounds/ambience/Site104/Machinery/ForkliftBeepDistant.ogg',
+	'sounds/ambience/Site104/Machinery/ForkliftBeepDistant.ogg',
+	'sounds/ambience/Site104/Weather/DistantThunder.ogg',
+	'sounds/ambience/Site104/BuoyBell.ogg',
+	'sounds/ambience/Site104/BuoyBell.ogg'
+	)
 
 //Maintenance Areas
 
 /area/site104/maintenance/interior
 	name = "Site-104 Maintenance"
-//	ambience = list('sounds/ambience/Site104/RigMetalStress.ogg')
-
+	ambientsounds = list('sounds/ambience/Site104/RigMetalStress')
 
 	//Deck-1
 
