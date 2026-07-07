@@ -1,14 +1,4 @@
-/datum/map/site53
-
-	post_round_safe_areas = list (
-		/area/centcom,
-		/area/site53/surface/bunker,
-		)
-
-//Elevators
-
-/*
-Comment these out for now, while I port everything else over.
+/*Elevators
 
 /area/turbolift/site104/logilift1
 	name = "lift (Deck 1 - Engineering)"
@@ -62,7 +52,7 @@ Comment these out for now, while I port everything else over.
 	name = "Weather Deck"
 	lift_floor_label = "Floor-1"
 	lift_floor_name = "Main Weather Deck"
-	lift_announce_str = "Now arriving... weather deck" //Can we have no announcement?
+	lift_announce_str = "" //Can we have no announcement?
 	requires_power = 0
 	dynamic_lighting = 1
 
@@ -73,31 +63,57 @@ Comment these out for now, while I port everything else over.
 	lift_announce_str = "" //Can we have no announcement?
 	requires_power = 0
 	dynamic_lighting = 1
-
 */
 
 //Surface Areas
 
 /area/site104
-	base_turf = /turf/unsimulated/open
+	name = "Site-104"
 
 /area/site104/surface
-	name = "Open Air"
+	name = "Surface"
+	icon_state = "space"
 	requires_power = 0
-	dynamic_lighting = 1
-	ambience = list('sounds/ambience/Site104/BoatHorn.ogg', 'sounds/ambience/Site104/Wildlife/Seagulls1.ogg', 'sounds/ambience/Site104/Wildlife/Seagulls2.ogg')
+	ambientsounds = list(
+	'sounds/ambience/Site104/BoatHorn.ogg',
+	'sounds/ambience/Site104/BuoyBell.ogg',
+	'sounds/ambience/Site104/Wildlife/Seagulls1.ogg',
+	'sounds/ambience/Site104/Wildlife/Seagulls2.ogg',
+	'sounds/ambience/Site104/WindyChains.ogg'
+	)
+
+	ambient_buzz = 'sounds/ambience/Site104/OutsideAmbience.ogg'
 
 /area/site104/surface/opendeck
 	name = "Weather Deck"
-	sound_env = HANGAR
-	forced_ambience = list('sounds/ambience/Site104/DeckAmbience.ogg') //Ahh, the sound of the ocean waves and the creaking metal beneath our feet...
+	ambientsounds = list(
+	'sounds/ambience/Site104/BoatHorn.ogg',
+	'sounds/ambience/Site104/Wildlife/Seagulls1.ogg',
+	'sounds/ambience/Site104/Wildlife/Seagulls1.ogg',
+	'sounds/ambience/Site104/Wildlife/Seagulls2.ogg',
+	'sounds/ambience/Site104/Wildlife/Seagulls2.ogg',
+	'sounds/ambience/Site104/WindyChains.ogg',
+	'sounds/ambience/Site104/WindyChains.ogg',
+
+	// We have no weighted ambience pick, and I don't want to touch ambi code and get yelled at ):
+	'sounds/ambience/Site104/Machinery/HydraulicPress.ogg',
+	'sounds/ambience/Site104/Machinery/HydraulicPress.ogg',
+	'sounds/ambience/Site104/Machinery/GenericPumpMotor.ogg',
+	'sounds/ambience/Site104/Machinery/GenericPumpMotor.ogg',
+	'sounds/ambience/Site104/Machinery/GasDecom.ogg',
+	'sounds/ambience/Site104/Machinery/GasDecom.ogg',
+	'sounds/ambience/Site104/Machinery/ForkliftBeepDistant.ogg',
+	'sounds/ambience/Site104/Machinery/ForkliftBeepDistant.ogg',
+	'sounds/ambience/Site104/Weather/DistantThunder.ogg',
+	'sounds/ambience/Site104/BuoyBell.ogg',
+	'sounds/ambience/Site104/BuoyBell.ogg'
+	)
 
 //Maintenance Areas
 
 /area/site104/maintenance/interior
 	name = "Site-104 Maintenance"
-	ambience = list('sounds/ambience/Site104/RigMetalStress.ogg')
-
+	ambientsounds = list('sounds/ambience/Site104/RigMetalStress')
 
 	//Deck-1
 
@@ -126,7 +142,7 @@ Comment these out for now, while I port everything else over.
 //Engineering Areas North Rig
 
 /area/site104/engineering/reactor
-	name = "R-UST Reactor"
+	name = "Antiquated Reactor"
 
 /area/site104/engineering/powerbay
 	name = "Power Bay"
@@ -148,6 +164,9 @@ Comment these out for now, while I port everything else over.
 
 /area/site104/engineering/engicontrol
 	name = "Marine Control"
+
+/area/site104/engineering/warehouse
+	name = "Engineering Warehouse"
 
 //North-Rig Logistics
 
@@ -329,42 +348,11 @@ Comment these out for now, while I port everything else over.
 /area/site104/cryogenics/bay/commandbay
 	name = "Cryogenics Command Bay"
 
-/area/site104/lcz/
-	name = "Light Containment Zone"
-	requires_power = 0
-	dynamic_lighting = 1
-
-/area/site104/lcz/warehouse
-	name = "Light Containment Warehouse"
-
-/area/site104/lcz/warehouse/securityoffice
-	name = "LCZ Warehouse Security Office"
-
-/area/site104/lcz/warehouse/monitoring
-	name = "LCZ Warehouse Monitoring Center"
-
-/area/site104/lcz/warehouse/offloading
-	name = "LCZ Warehouse Secure Dock"
-
-/area/site104/lcz/warehousehall
-	name = "LCZ Warehouse Hallway"
-
-/area/site104/lcz/shelterc
-	name = "LCZ Blackout-Shelter C"
-
-/area/site104/lcz/entrancehall
-	name = "LCZ Entrance Hall"
-
-/area/site104/lcz/entrancecheckpoint
-	name = "LCZ Entrance Checkpoint"
-
-/area/site104/lcz/entranceexit
-	name = "LCZ External Airlock"
+// Heavy Containment Zone
 
 /area/site104/hcz
 	name = "Heavy Containment Zone"
 	requires_power = 0
-	dynamic_lighting = 1
 
 /area/site104/hcz/equipmentwarehouse
 	name = "Heavy Containment Warehouse A0"
