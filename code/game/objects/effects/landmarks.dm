@@ -685,3 +685,29 @@ INITIALIZE_IMMEDIATE(/obj/effect/landmark/start/new_player)
 
 /obj/effect/landmark/navigate_destination/disposals
 	location = "Disposals"
+
+//Site 104 Landmarks
+
+/obj/effect/landmark/navigate_destination/Site104/marinecontrol
+	location = "Marine Control"
+
+/obj/effect/landmark/navigate_destination/Site104/batteryfarm
+	location = "Battery Farm"
+
+/obj/effect/landmark/navigate_destination/Site104/engiwarehouse
+	location = "Engineering Warehouse"
+
+/obj/effect/landmark/navigate_destination/Site104/engiwarehouse
+	location = "Engineering Warehouse"
+
+/obj/effect/landmark/navigate_destination/Site104/engiworkshop
+	location = "Engineering Workshop"
+
+/obj/effect/landmark/navigate_destination/Site104/deepwatercaisson
+	location = "Deepwater Caisson"
+
+/obj/effect/landmark/navigate_destination/Site104/engigeneralstorage
+	location = "Engineering Warehouse"
+
+/obj/effect/landmark/navigate_destination/Site104/engisubstation
+	location = "Engineering Substation"

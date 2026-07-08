@@ -109,6 +109,39 @@
 	'sounds/ambience/Site104/BuoyBell.ogg'
 	)
 
+/area/site104/surface/northmaintplat
+	name = "North-Rig Maintenance Platform"
+
+/area/site104/surface/engineeringmaintplat
+	name = "Engineering External Maintenance Platform"
+
+/area/site104/surface/dredges
+	name = "The Dredges"
+
+/area/site104/surface/aiauxaccessplat
+	name = "Auxillary A.I.C Housing Access Catwalk"
+
+/area/site104/surface/aiextmaintenancering
+	name = "A.I.C Housing External Maintenance Ring"
+
+/area/site104/surface/miningdecknorthaccess
+	name = "Mining Deck External Maintenance Platform"
+
+/area/site104/surface/portforetensionlegext
+	name = "Port Fore Tension Leg Platform"
+
+/area/site104/surface/portafttensionlegext
+	name = "Port Aft Tension Leg Platform"
+
+/area/site104/surface/starboardforetensionlegext
+	name = "Starboard Fore Tension Leg Platform"
+
+/area/site104/surface/starboardafttensionlegext
+	name = "Starboard Aft Tension Leg Platform"
+
+/area/site104/surface/aichousingsecofficemaintplat
+	name = "A.I.C Housing Security Office Maintenance Platform"
+
 //Maintenance Areas
 
 /area/site104/maintenance/interior
@@ -123,9 +156,6 @@
 /area/site104/maintenance/interior/engimaints
 	name = "North Rig Deck-1 Port Maintenance"
 
-/area/site104/maintenance/exterior
-	name = "Under-Rig"
-
 	//Deck-2
 
 /area/site104/maintenance/interior/deck2port
@@ -136,8 +166,17 @@
 
 	//Deck-3
 
-/area/site104/maintenance/interior/deck3port
-	name = "Deck-3 Port Maintenance"
+/area/site104/maintenance/interior/southrigdeck3port
+	name = "South Rig Deck-3 Port Maintenance"
+
+/area/site104/maintenance/interior/northrigd3starboard
+	name = "North Rig Deck-3 Starboard Maintenance"
+
+/area/site104/maintenance/interior/northrigd3aft
+	name = "North Rig Deck-3 Aft Maintenance"
+
+/area/site104/maintenance/interior/northrigdeck3port
+	name = "North Rig Deck-3 Port Maintenance"
 
 //Engineering Areas North Rig
 
@@ -149,6 +188,16 @@
 
 /area/site104/engineering/workshop
 	name = "Workshop"
+	ambientsounds = list(
+	'sounds/ambience/Site104/BoatHorn.ogg',
+	'sounds/ambience/Site104/BuoyBell.ogg',
+	'sounds/ambience/Site104/Wildlife/Seagulls1.ogg',
+	'sounds/ambience/Site104/Wildlife/Seagulls2.ogg',
+	'sounds/ambience/Site104/WindyChains.ogg'
+	)
+
+	ambient_buzz = 'sounds/ambience/Site104/OutsideAmbience.ogg'
+	ambient_buzz_vol = 40
 
 /area/site104/engineering/lockers
 	name = "Engineering Lockers"
@@ -167,6 +216,65 @@
 
 /area/site104/engineering/warehouse
 	name = "Engineering Warehouse"
+	ambientsounds = list(
+	'sounds/ambience/Site104/BoatHorn.ogg',
+	'sounds/ambience/Site104/BuoyBell.ogg',
+	'sounds/ambience/Site104/Wildlife/Seagulls1.ogg',
+	'sounds/ambience/Site104/Wildlife/Seagulls2.ogg',
+	'sounds/ambience/Site104/WindyChains.ogg'
+	)
+
+	ambient_buzz = 'sounds/ambience/Site104/OutsideAmbience.ogg'
+	ambient_buzz_vol = 35
+
+/area/site104/engineering/entranceairlock
+	name = "Engineering Entrance Airlock"
+
+/area/site104/engineering/auxillaryairlock
+	name = "Engineering Auxillary Entrance Airlock"
+
+/area/site104/engineering/stairwell
+	name = "Engineering Stairwell"
+
+/area/site104/engineering/generalstorage
+	name = "Engineering General Storage"
+
+/area/site104/engineering/portforetensionlegint
+	name = "Port Fore Tension Leg"
+
+/area/site104/engineering/portafttensionlegint
+	name = "Port Aft Tension Leg"
+
+/area/site104/engineering/starboardforetensionlegint
+	name = "Starboard Fore Tension Leg"
+
+/area/site104/engineering/starboardafttensionlegint
+	name = "Starboard Aft Tension Leg"
+
+/area/site104/engineering/janitorialcloset
+	name = "Engineering Janitorial Closet"
+
+/area/site104/engineering/auxillaryrelaytowerbridge
+	name = "Auxillary Relay Tower Bridge"
+
+// Relay tower starts on Deck-2
+/area/site104/engineering/relaytower1
+	name = "Auxillary Relay Tower Deck-2"
+
+/area/site104/engineering/relaytower2
+	name = "Auxillary Relay Tower Deck-3"
+
+/area/site104/engineering/relaytower3
+	name = "Auxillary Relay Tower Deck-4"
+
+/area/site104/engineering/relaytower4
+	name = "Auxillary Relay Tower Deck-5"
+
+/area/site104/engineering/relaytower5
+	name = "Auxillary Relay Tower Deck-6"
+
+/area/site104/engineering/holding
+	name = "Engineering Temporary Holding"
 
 //North-Rig Logistics
 
@@ -206,6 +314,39 @@
 /area/site104/logistics/stairwell
 	name = "Logistics Stairwell"
 
+/area/site104/logistics/olddrillsite
+	name = "Old Drill Site"
+
+/area/site104/logistics/boilerplant
+	name = "Old Boiler Plant"
+
+/area/site104/logistics/gasfilt
+	name = "Old Gas Filtration Plant"
+
+/area/site104/logistics/personnellogi
+	name = "Old Processing Center Personnel Logistics"
+
+/area/site104/logistics/personnellogistorage
+	name = "Old Processing Center Personnel Logistics Storage"
+
+/area/site104/logistics/boilercontrol
+	name = "Boiler Control Center"
+
+/area/site104/logistics/personnellogisec
+	name = "Processing Security Center"
+
+/area/site104/logistics/shaleshakers
+	name = "Shale Shakers"
+
+/area/site104/logistics/flarestack
+	name = "Flare Stack"
+
+/area/site104/logistics/projectyard
+	name = "Logistics Project Yard"
+
+/area/site104/logistics/projectyardcontrol
+	name = "Logistics Yard Monitoring Station"
+
 //North Rig Deck-1 General
 
 /area/site104/northrig/eogstorage
@@ -216,6 +357,21 @@
 
 /area/site104/northrig/stairwell
 	name = "North Rig Deck-2 Stairwell"
+
+/area/site104/northrig/deck2hallway
+	name = "North Rig Deck 2 Hallway"
+
+/area/site104/northrig/deck2janitorial
+	name = "North Rig - Deck 2 Janitorial Closet"
+
+/area/site104/northrig/blackoutsheltera
+	name = "Blackout Shelter A"
+
+/area/site104/northrig/deck2secofficeextplatairlock // What in the world was I thinking with these names..
+	name = "A.I.C Security Office External Platform Airlock"
+
+/area/site104/northrig/deck2accessairlock
+	name = "North Rig Primary Weatherdeck Access"
 
 //North Rig Deck-3 General
 
@@ -229,6 +385,15 @@
 
 /area/site104/engineering/logisub
 	name = "Logistics Substation"
+
+/area/site104/aihousing/substation
+	name = "A.I.C Housing Substation"
+
+/area/site104/engineering/engisub
+	name = "Engineering Substation"
+
+/area/site104/engineering/northrigd2sub
+	name = "North Rig Deck 2 Substation"
 
 //Research Division
 
@@ -271,30 +436,6 @@
 /area/site104/research/anomalylab
 	name = "Anomaly Laboratory"
 
-/area/site104/maintenance/northrigstarboard
-	name = "North Rig Starboard Maintenance"
-
-/area/site104/maintenance/northrigaft
-	name = "North Rig Aft Maintenance"
-
-/area/site104/utilities/marinecontrol
-	name = "Marine Control"
-
-/area/site104/utilities/marinecontrol/reception
-	name = "Marine Control Reception"
-
-/area/site104/utilities/marinecontrol/breakroom
-	name = "Marine Control Breakroom"
-
-/area/site104/utilities/marinecontrol/equipment
-	name = "Marine Control Equipment Storage"
-
-/area/site104/utilities/marinecontrol/northserverfarm
-	name = "North Server Farm"
-
-/area/site104/utilities/marinecontrol/southserverfarm
-	name = "South Server Farm"
-
 //AIC Housing Areas
 
 /area/site104/aihousing/interiorsanctum
@@ -306,20 +447,32 @@
 /area/site104/aihousing/control1
 	name = "A.I.C Housing Control Center 1"
 
+/area/site104/aihousing/control2
+	name = "A.I.C Housing Control Center 2"
+
 /area/site104/aihousing/entrancehall
 	name = "South A.I.C Housing Hallway"
 
 /area/site104/aihousing/northhall
 	name = "North A.I.C Housing Hallway"
 
+/area/site104/aihousing/entrancehall
+	name = "A.I.C Complex Entrance Corridor"
+
 /area/site104/aihousing/itcenter
 	name = "A.I.C Housing Server Center"
 
-/area/site104/aihousing/substation
-	name = "A.I.C Housing Substation"
+/area/site104/aihousing/dronefab
+	name = "A.I.C Housing Drone Fabrication Bay"
 
 /area/site104/aihousing/dronefab
 	name = "A.I.C Housing Drone Fabrication Bay"
+
+/area/site104/aihousing/entrancesecurityoffice
+	name = "A.I.C Access Security Office"
+
+/area/site104/aihousing/entrancesecurityofficeholding
+	name = "A.I.C Access Security Office Holding"
 
 //Cryogenics Bay
 
