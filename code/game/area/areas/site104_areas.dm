@@ -150,18 +150,27 @@
 
 	//Deck-1
 
-/area/site104/maintenance/interior/deck1starboard
+/area/site104/maintenance/interior/northrigdeck1starboard
 	name = "North Rig Deck-1 Starboard Maintenance"
 
 /area/site104/maintenance/interior/engimaints
 	name = "North Rig Deck-1 Port Maintenance"
 
+/area/site104/logistics/mining/miningmaints
+	name = "Mining Floor Maintenance"
+
+/area/site104/maintenance/interior/southrigdeck1starboard
+	name = "South Rig Deck-1 Starboard Maintenance"
+
+/area/site104/maintenance/interior/southrigdeck1starboardaft
+	name = "South Rig Deck-1 Starboard Aft Maintenance"
+
 	//Deck-2
 
-/area/site104/maintenance/interior/deck2port
+/area/site104/maintenance/interior/northrigdeck2port
 	name = "North Rig Deck-2 Port Maintenance"
 
-/area/site104/maintenance/interior/deck2starboard
+/area/site104/maintenance/interior/northrigdeck2starboard
 	name = "North Rig Deck-2 Starboard Maintenance"
 
 	//Deck-3
@@ -347,6 +356,81 @@
 /area/site104/logistics/projectyardcontrol
 	name = "Logistics Yard Monitoring Station"
 
+//South Rig Logistics
+
+
+	//Mining
+/area/site104/logistics/mining/miningentranceoffice
+	name = "Mining Deck Registration Office"
+
+/area/site104/logistics/mining/miningentrancehall
+	name = "Mining Deck Entrance Hall"
+
+/area/site104/logistics/mining/miningoversight
+	name = "Mining Operations Center"
+
+/area/site104/logistics/mining/miningstagingarea
+	name = "Mining Operations Staging"
+
+/area/site104/logistics/mining/storagearea
+	name = "Mining Operations Holding"
+
+	//Boiler Floor
+
+/area/site104/logistics/mining/porthabcorridor
+	name = "Boiler Floor Port Habitation Corridor"
+
+/area/site104/logistics/mining/starboardhabcorridor
+	name = "Boiler Floor Port Habitation Corridor"
+
+/area/site104/logistics/mining/dorm1
+	name = "Boiler Dorm #1"
+
+/area/site104/logistics/mining/dorm2
+	name = "Boiler Dorm #2"
+
+/area/site104/logistics/mining/dorm3
+	name = "Boiler Dorm #3"
+
+/area/site104/logistics/mining/dorm4
+	name = "Boiler Dorm #4"
+
+/area/site104/logistics/mining/dorm5
+	name = "Boiler Dorm #5"
+
+/area/site104/logistics/mining/dorm6
+	name = "Boiler Dorm #6"
+
+/area/site104/logistics/mining/dorm7
+	name = "Boiler Dorm #7"
+
+/area/site104/logistics/mining/janitorialcloset
+	name = "Boiler Floor Custodial Closet"
+
+/area/site104/logistics/mining/incinerator
+	name = "The Boiler Furnace"
+
+/area/site104/logistics/mining/boilercorridor
+	name = "Boiler Floor"
+
+/area/site104/logistics/mining/emergencyshowers
+	name = "Boiler Floor Emergency Showers"
+
+/area/site104/logistics/mining/toolstorage
+	name = "Boiler Floor Tool Closet"
+
+/area/site104/logistics/mining/furnaceoversight
+	name = "Furnace Oversight"
+
+/area/site104/logistics/mining/boilerflooroversight
+	name = "Boiler Floor Monitoring"
+
+/area/site104/logistics/mining/boilerfloorent
+	name = "Boiler Floor Entrance Corridor"
+
+/area/site104/logistics/mining/dczloadingaccess
+	name = "Boiler Floor Loading Access"
+
 //North Rig Deck-1 General
 
 /area/site104/northrig/eogstorage
@@ -395,6 +479,12 @@
 /area/site104/engineering/northrigd2sub
 	name = "North Rig Deck 2 Substation"
 
+/area/site104/engineering/miningsub
+	name = "Mining Deck Substation"
+
+/area/site104/engineering/operatingsub
+	name = "Operating Theater Substation"
+
 //Research Division
 
 /area/site104/research/lobby
@@ -435,6 +525,41 @@
 
 /area/site104/research/anomalylab
 	name = "Anomaly Laboratory"
+
+//Medical Division
+
+/area/site104/medical/lobby
+	name = "Medical Lobby"
+
+/area/site104/medical/morgue
+	name = "Morgue"
+
+/area/site104/medical/storagebay
+	name = "Medical Supply Bay"
+
+/area/site104/medical/chemistry
+	name = "Pharmaceutical Laboratory"
+
+/area/site104/medical/treatmentcenter
+	name = "Treatment Center"
+
+/area/site104/medical/or1
+	name = "Operating Room #1"
+
+/area/site104/medical/or2
+	name = "Operating Room #2"
+
+/area/site104/medical/equipstorage
+	name = "Medical Equipment Storage"
+
+/area/site104/medical/medicalreception
+	name = "Medical Reception"
+
+/area/site104/medical/securityjunction
+	name = "Medical Security Junction"
+
+/area/site104/medical/assistdirectoroffice
+	name = "Assistant Medical Directors Office"
 
 //AIC Housing Areas
 
@@ -500,6 +625,9 @@
 
 /area/site104/cryogenics/bay/commandbay
 	name = "Cryogenics Command Bay"
+
+/area/site104/cryogenics/commandsecuritycenter
+	name = "Command Cryogenics Security Office"
 
 // Heavy Containment Zone
 
