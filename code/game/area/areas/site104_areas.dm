@@ -69,11 +69,13 @@
 
 /area/site104
 	name = "Site-104"
+	has_gravity = TRUE
 
 /area/site104/surface
 	name = "Surface"
 	icon_state = "space"
 	requires_power = 0
+	outdoors = TRUE
 	ambientsounds = list(
 	'sounds/ambience/Site104/BoatHorn.ogg',
 	'sounds/ambience/Site104/BuoyBell.ogg',
@@ -172,6 +174,15 @@
 
 /area/site104/maintenance/interior/northrigdeck2starboard
 	name = "North Rig Deck-2 Starboard Maintenance"
+
+/area/site104/maintenance/interior/southrigdeck2portfore
+	name = "South Rig Deck-2 Port Fore Maintenance"
+
+/area/site104/maintenance/interior/southrigdeck2starboardfore
+	name = "South Rig Deck-2 Starboard Fore Maintenance"
+
+/area/site104/maintenance/interior/southrigdeck2portaft
+	name = "South Rig Deck-2 Port Aft Maintenance"
 
 	//Deck-3
 
@@ -462,6 +473,56 @@
 /area/site104/northrig/hallway
 	name = "North Rig Deck-3 Central Hall"
 
+//South Rig Habitations
+
+/area/site104/southrig/habelevatorhall
+	name = "Acommodations Elevator Access"
+
+/area/site104/southrig/habgym
+	name = "Acommodations Gymnasium"
+
+/area/site104/southrig/recroom
+	name = "Acommodations Rec Room"
+
+/area/site104/southrig/treeloop
+	name = "Acommodations Tree Loop"
+
+/area/site104/southrig/temptransstorage
+	name = "Acommodations Temporary Transfer Holding Storage"
+
+/area/site104/southrig/acommodationsjunc
+	name = "Acommodations Hub Junction"
+
+/area/site104/southrig/acommodationsjuncsec
+	name = "Acommodations Hub Security office"
+
+/area/site104/southrig/kitchen
+	name = "Acoommodations Kitchen"
+
+/area/site104/southrig/kitchencoldroom
+	name = "Kitchen Coldroom"
+
+/area/site104/southrig/acommodationsauxcommunestorage
+	name = "Acommodations Auxillary Communal Storage"
+
+/area/site104/southrig/acommodationslaundry
+	name = "Acommodations Communal Laundry"
+
+/area/site104/southrig/habcustodialcloset
+	name = "Acommodations Custodial Closet"
+
+/area/site104/southrig/habwastedisposalcenter
+	name = "Acommodations Waste Disposal Center"
+
+/area/site104/southrig/antiquatedsecurity
+	name = "Antiquated Security Storage"
+
+/area/site104/southrig/d2extaccessjunc
+	name = "Acommodations External Access Corridor"
+
+/area/site104/southrig/acommodationweatherdeckairlock
+	name = "Acommodations Weather Deck Airlock"
+
 //Substations
 
 /area/site104/engineering/researchsub
@@ -476,6 +537,9 @@
 /area/site104/engineering/engisub
 	name = "Engineering Substation"
 
+/area/site104/engineering/medisub
+	name = "Medical Substation"
+
 /area/site104/engineering/northrigd2sub
 	name = "North Rig Deck 2 Substation"
 
@@ -484,6 +548,18 @@
 
 /area/site104/engineering/operatingsub
 	name = "Operating Theater Substation"
+
+/area/site104/engineering/habsub
+	name = "Habitation Substation"
+
+/area/site104/engineering/ezsecsub
+	name = "Acommodations Security Substation"
+
+/area/site104/engineering/lczsub
+	name = "Light Containment Zone Substation"
+
+/area/site104/engineering/hczsub
+	name = "Heavy Containment Zone Substation"
 
 //Research Division
 
