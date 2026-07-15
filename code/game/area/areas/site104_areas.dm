@@ -117,17 +117,19 @@
 /area/site104/surface/engineeringmaintplat
 	name = "Engineering External Maintenance Platform"
 
-/area/site104/surface/dredges
-	name = "The Dredges"
+	// Exterior Catwalks
 
 /area/site104/surface/aiauxaccessplat
-	name = "Auxillary A.I.C Housing Access Catwalk"
+	name = "Auxillary A.I.C Housing - Access Catwalk"
 
 /area/site104/surface/aiextmaintenancering
-	name = "A.I.C Housing External Maintenance Ring"
+	name = "A.I.C Housing - External Maintenance Ring"
 
 /area/site104/surface/miningdecknorthaccess
-	name = "Mining Deck External Maintenance Platform"
+	name = "Mining Deck - External Maintenance Platform"
+
+/area/site104/surface/dredges
+	name = "The Dredges"
 
 /area/site104/surface/portforetensionlegext
 	name = "Port Fore Tension Leg Platform"
@@ -143,6 +145,18 @@
 
 /area/site104/surface/aichousingsecofficemaintplat
 	name = "A.I.C Housing Security Office Maintenance Platform"
+
+/area/site104/surface/habsecmaintplat
+	name = "Acommodations Security - External Maintenance Platforms"
+
+/area/site104/surface/floodlinemaintplat
+	name = "Southrig - External Floodline Maintenance Platforms"
+
+/area/site104/surface/cryoextmaintplat
+	name = "Southrig - Cryogenics External Maintenance Platform"
+
+/area/site104/surface/humanoidhousingextplat
+	name = "LCZ - Humanoid Housing External Catwalk"
 
 //Maintenance Areas
 
@@ -184,6 +198,9 @@
 /area/site104/maintenance/interior/southrigdeck2portaft
 	name = "South Rig Deck-2 Port Aft Maintenance"
 
+/area/site104/maintenance/interior/southrigdeck2starboardaft
+	name = "South Rig Deck-2 Starboard Aft Maintenance"
+
 	//Deck-3
 
 /area/site104/maintenance/interior/southrigdeck3port
@@ -197,6 +214,14 @@
 
 /area/site104/maintenance/interior/northrigdeck3port
 	name = "North Rig Deck-3 Port Maintenance"
+
+	// South Rig
+
+/area/site104/maintenance/interior/southrigdeck3port
+	name = "South Rig Deck-3 Port Maintenance"
+
+/area/site104/maintenance/interior/southrigdeck3starboard
+	name = "South Rig Deck-3 Starboard Maintenance"
 
 //Engineering Areas North Rig
 
@@ -367,6 +392,9 @@
 /area/site104/logistics/projectyardcontrol
 	name = "Logistics Yard Monitoring Station"
 
+/area/site104/logistics/logid3corridor
+	name = "Logistics Deck-3 Corridor"
+
 //South Rig Logistics
 
 
@@ -505,6 +533,9 @@
 /area/site104/southrig/acommodationsauxcommunestorage
 	name = "Acommodations Auxillary Communal Storage"
 
+/area/site104/southrig/acommodationscommunestorage
+	name = "Acommodations Communal Storage"
+
 /area/site104/southrig/acommodationslaundry
 	name = "Acommodations Communal Laundry"
 
@@ -522,6 +553,57 @@
 
 /area/site104/southrig/acommodationweatherdeckairlock
 	name = "Acommodations Weather Deck Airlock"
+
+/area/site104/southrig/d2washroom
+	name = "Acommodations Washroom"
+
+/area/site104/southrig/d2showers
+	name = "Acommodations Showers"
+
+/area/site104/southrig/dormitoryhallway
+	name = "Acommodations Dormitory Corridor"
+
+/area/site104/southrig/mustera
+	name = "Acommodations Muster Point A"
+
+/area/site104/southrig/breakroom
+	name = "Acommodations Dormitory Breakroom"
+
+/area/site104/southrig/quietroom
+	name = "Acommodations Quiet Room"
+
+/area/site104/southrig/dormitoryutil
+	name = "Acommodations Dormitory Utility Closet"
+
+/area/site104/southrig/dorm1
+	name = "Dormitory #1"
+
+/area/site104/southrig/dorm2
+	name = "Dormitory #2"
+
+/area/site104/southrig/dorm3
+	name = "Dormitory #3"
+
+/area/site104/southrig/dorm4
+	name = "Dormitory #4"
+
+/area/site104/southrig/dorm5
+	name = "Dormitory #5"
+
+/area/site104/southrig/dorm6
+	name = "Dormitory #6"
+
+/area/site104/southrig/dorm7
+	name = "Dormitory #7"
+
+/area/site104/southrig/dorm8
+	name = "Dormitory #8"
+
+/area/site104/southrig/dorm9
+	name = "Dormitory #9"
+
+/area/site104/southrig/dorm10
+	name = "Dormitory #10"
 
 //Substations
 
@@ -636,6 +718,221 @@
 
 /area/site104/medical/assistdirectoroffice
 	name = "Assistant Medical Directors Office"
+
+//Acommodations (EZ) Security
+
+/area/site104/habsec/lobby
+	name = "Acommodations Security Lobby"
+
+/area/site104/habsec/reception
+	name = "Acommodations Security Reception"
+
+/area/site104/habsec/lockera
+	name = "Acommodations Security Locker Room A"
+
+/area/site104/habsec/lockerb
+	name = "Acommodations Security Locker Room B"
+
+/area/site104/habsec/armoryofficer
+	name = "Acommodations Security Armory Office"
+
+/area/site104/habsec/briefing
+	name = "Acommodations Security Briefing"
+
+/area/site104/habsec/dormsec
+	name = "Dormitory Security Office"
+
+/area/site104/habsec/armory
+	name = "Acommodations Security Armory"
+
+/area/site104/habsec/gen
+	name = "Acommodations Security"
+
+/area/site104/habsec/sgta
+	name = "Acommodations Security Sergeant A Quarters"
+
+/area/site104/habsec/sgtb
+	name = "Acommodations Security Sergeant B Quarters"
+
+/area/site104/habsec/lieutenantoffice
+	name = "Acommodations Security Lieutenant's Quarters"
+
+/area/site104/habsec/forensicslab
+	name = "Acommodations Forensics Laboratory"
+
+/area/site104/habsec/datastoragecloset
+	name = "Acommodations Data Storage Closet"
+
+/area/site104/habsec/autopsy
+	name = "Acommodations Forensics Laboratory - Autopsy Center"
+
+
+
+//LCZ
+
+/area/site104/lcz/elecorridor
+	name = "LCZ Elevator Hub"
+
+/area/site104/lcz/pubaccessairlock
+	name = "LCZ Public Access Airlock"
+
+/area/site104/lcz/elecorridor
+	name = "LCZ Elevator Hub Corridor"
+
+/area/site104/lcz/blackoutshelterc
+	name = "Blackout Shelter C"
+
+/area/site104/lcz/maincheckpoint
+	name = "LCZ Entrance Checkpoint"
+
+/area/site104/lcz/warehousecontrol
+	name = "LCZ Warehouse Operations Center"
+
+/area/site104/lcz/warehousesec
+	name = "LCZ Warehouse Security Office"
+
+/area/site104/lcz/warehousesecure
+	name = "LCZ Warehouse Secure Storage"
+
+/area/site104/lcz/warehouse
+	name = "LCZ Storage Warehouse"
+
+/area/site104/lcz/custodialcloset
+	name = "LCZ Custodial Closet"
+
+/area/site104/lcz/treeloop
+	name = "LCZ Tree Loop Corridor"
+
+/area/site104/lcz/lczrecep
+	name = "LCZ Reception"
+
+/area/site104/lcz/utilcloset
+	name = "LCZ Utility Closet"
+
+/area/site104/lcz/controlcenter
+	name = "LCZ Control Center"
+
+/area/site104/lcz/controlcenterstaging
+	name = "LCZ Staging Ring"
+
+/area/site104/lcz/seccenter
+	name = "LCZ Security Center"
+
+/area/site104/lcz/sgta
+	name = "LCZ Sergeant A Quarter"
+
+/area/site104/lcz/sgtb
+	name = "LCZ Sergeant B Quarter"
+
+/area/site104/lcz/secequip
+	name = "LCZ Security Equipment"
+
+/area/site104/lcz/portaftcorridor
+	name = "LCZ Port Aft Corridor"
+
+/area/site104/lcz/starboardaftcorridor
+	name = "LCZ Starboard Aft Corridor"
+
+/area/site104/lcz/portforecorridor
+	name = "LCZ Port Fore Corridor"
+
+/area/site104/lcz/starboardforecorridor
+	name = "LCZ Port Fore Corridor"
+
+/area/site104/lcz/lczvaultgen
+	name = "LCZ Object Storage Vault"
+
+/area/site104/lcz/vaultrecords
+	name = "LCZ Records Office"
+
+/area/site104/lcz/vaultspare
+	name = "LCZ Spare Object Storage Vault"
+
+/area/site104/lcz/vaultport
+	name = "LCZ Port Storage Vault"
+
+/area/site104/lcz/vaultstarboard
+	name = "LCZ Starboard Storage Vault"
+
+/area/site104/lcz/forecorridor
+	name = "LCZ Fore Corridor"
+
+/area/site104/lcz/aftcorridor
+	name = "LCZ Aft Corridor"
+
+/area/site104/lcz/westwing
+	name = "LCZ West Containment Wing"
+
+/area/site104/lcz/eastwing
+	name = "LCZ East Containment Wing"
+
+/area/site104/lcz/spareutilcloset
+	name = "LCZ Auxillary Utility Closet"
+
+/area/site104/lcz/testinglab1
+	name = "Testing Laboratory 1"
+
+/area/site104/lcz/testinglab2
+	name = "Testing Laboratory 2"
+
+/area/site104/lcz/refineryops
+	name = "Old Refinery Operations Center"
+
+/area/site104/lcz/humanoidhousingrecep
+	name = "Humanoid Housing Reception"
+
+/area/site104/lcz/humanoidhousingmain
+	name = "Low Risk Humanoid Housing"
+
+/area/site104/lcz/humanoidhousingkitchen
+	name = "Low Risk Humanoid Housing Kitchen"
+
+/area/site104/lcz/humanoidhousingmain
+	name = "Low Risk Humanoid Housing"
+
+/area/site104/lcz/humanoid527
+	name = "SCP-527's Quarters"
+
+	// LCZ Containments
+
+/area/site104/lcz/scp294
+	name = "SCP-294 Containment Storage"
+
+/area/site104/lcz/scp294control
+	name = "SCP-294 Storage Control"
+
+/area/site104/lcz/scp513
+	name = "SCP-513 Containment Storage"
+
+/area/site104/lcz/scp066
+	name = "SCP-066 Containment Area"
+
+/area/site104/lcz/scp151
+	name = "SCP-151 Containment Storage"
+
+/area/site104/lcz/scp012
+	name = "SCP-012 Containment Storage"
+
+/area/site104/lcz/scp529
+	name = "SCP-529 Containment Area"
+
+/area/site104/lcz/scp131
+	name = "SCP-131 Containment Area"
+
+/area/site104/lcz/scp912armory
+	name = "SCP-912 Storage Armory"
+
+/area/site104/lcz/scp999
+	name = "SCP-999 Containment Area"
+
+/area/site104/lcz/scp914
+	name = "SCP-914 Containment Storage"
+
+/area/site104/lcz/scp216
+	name = "SCP-216 Containment Storage"
+
+/area/site104/lcz/scp173
+	name = "SCP-173 Containment Area"
 
 //AIC Housing Areas
 
