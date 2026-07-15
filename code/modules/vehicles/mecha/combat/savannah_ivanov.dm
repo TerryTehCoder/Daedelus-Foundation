@@ -40,8 +40,13 @@
 	var/list/mob/drivers = return_drivers()
 	var/leap_state
 	if(length(drivers))
-		var/datum/action/vehicle/sealed/mecha/skyfall/action = LAZYACCESSASSOC(occupant_actions, drivers[1], /datum/action/vehicle/sealed/mecha/skyfall)
-		leap_state = action.skyfall_charge_level > 2 ? "leap_" : ""
+		var/list/occupant_actions_list = occupant_actions
+		if(occupant_actions_list && occupant_actions_list[drivers[1]])
+			var/list/driver_actions = occupant_actions_list[drivers[1]]
+			var/datum/action/vehicle/sealed/mecha/skyfall/action = driver_actions[/datum/action/vehicle/sealed/mecha/skyfall]
+			if(action)
+				leap_state = action.skyfall_charge_level > 2 ? "leap_" : ""
+
 	return "[base_icon_state]_[leap_state][gunner_present]_[driver_present]"
 
 /obj/vehicle/sealed/mecha/combat/savannah_ivanov/auto_assign_occupant_flags(mob/new_occupant)

@@ -103,8 +103,11 @@
 	log_message("Toggled strafing mode [strafe?"on":"off"].", LOG_MECHA)
 
 	for(var/occupant in occupants)
-		var/datum/action/action = LAZYACCESSASSOC(occupant_actions, occupant, /datum/action/vehicle/sealed/mecha/strafe)
-		action?.build_all_button_icons()
+		var/list/occupant_actions_list = occupant_actions
+		if(occupant_actions_list && occupant_actions_list[occupant])
+			var/list/occupant_specific_actions = occupant_actions_list[occupant]
+			var/datum/action/action = occupant_specific_actions[/datum/action/vehicle/sealed/mecha/strafe]
+			action?.build_all_button_icons()
 
 ///swap seats, for two person mecha
 /datum/action/vehicle/sealed/mecha/swap_seat

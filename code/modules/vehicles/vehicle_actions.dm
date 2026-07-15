@@ -66,11 +66,22 @@
 	if(isnull(LAZYACCESS(occupants, grant_to)) || !actiontype)
 		return FALSE
 	LAZYINITLIST(occupant_actions[grant_to])
-	if(occupant_actions[grant_to][actiontype])
-		return TRUE
+	var/list/occupant_actions_list = occupant_actions
+	if(occupant_actions_list && occupant_actions_list[grant_to])
+		var/list/grant_to_actions = occupant_actions_list[grant_to]
+		if(grant_to_actions[actiontype])
+			return TRUE
+
 	var/datum/action/action = generate_action_type(actiontype)
+
+	if(!action)
+		return FALSE
+
 	action.Grant(grant_to)
-	occupant_actions[grant_to][action.type] = action
+
+	if(occupant_actions_list && occupant_actions_list[grant_to])
+		occupant_actions_list[grant_to][action.type] = action
+
 	return TRUE
 
 /**
@@ -87,12 +98,15 @@
 	if(isnull(LAZYACCESS(occupants, take_from)) || !actiontype)
 		return FALSE
 	LAZYINITLIST(occupant_actions[take_from])
-	if(occupant_actions[take_from][actiontype])
-		var/datum/action/action = occupant_actions[take_from][actiontype]
-		// Actions don't dissipate on removal, they just sit around assuming they'll be reusued
-		// Gotta qdel
-		qdel(action)
-		occupant_actions[take_from] -= actiontype
+	var/list/occupant_actions_list = occupant_actions
+	if(occupant_actions_list && occupant_actions_list[take_from])
+		var/list/take_from_actions = occupant_actions_list[take_from]
+		if(take_from_actions[actiontype])
+			var/datum/action/action = take_from_actions[actiontype]
+			// Actions don't dissipate on removal, they just sit around assuming they'll be reusued
+			// Gotta qdel
+			qdel(action)
+			occupant_actions_list[take_from] -= actiontype
 	return TRUE
 
 /**
@@ -151,12 +165,17 @@
 /obj/vehicle/proc/cleanup_actions_for_mob(mob/M)
 	if(!istype(M))
 		return FALSE
-	for(var/path in occupant_actions[M])
-		stack_trace("Leftover action type [path] in vehicle type [type] for mob type [M.type] - THIS SHOULD NOT BE HAPPENING!")
-		var/datum/action/action = occupant_actions[M][path]
-		action.Remove(M)
-		occupant_actions[M] -= path
-	occupant_actions -= M
+
+	var/list/occupant_actions_list = occupant_actions
+	if(occupant_actions_list && occupant_actions_list[M])
+		var/list/M_actions = occupant_actions_list[M]
+		for(var/path in M_actions)
+			stack_trace("Leftover action type [path] in vehicle type [type] for mob type [M.type] - THIS SHOULD NOT BE HAPPENING!")
+			var/datum/action/action = M_actions[path]
+			action.Remove(M)
+			occupant_actions_list[M] -= path
+		occupant_actions_list -= M
+
 	return TRUE
 
 /***************** ACTION DATUMS *****************/
