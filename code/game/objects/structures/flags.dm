@@ -43,7 +43,7 @@
 	icon_state = "pole[current_pole_height]" // Set initial pole icon state
 	update_flag_overlay()
 
-/obj/structure/flag_base/Moved(atom/old_loc, dir)
+/obj/structure/flag_base/Moved(atom/old_loc, movement_dir, forced, list/old_locs, momentum_change = TRUE)
 	. = ..()
 	icon_state = "pole[current_pole_height]" // Update pole icon state when moved
 	update_flag_overlay()

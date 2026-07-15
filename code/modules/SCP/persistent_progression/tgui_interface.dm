@@ -181,7 +181,8 @@
 			class_data["exp_multiplier"] = class.experience_multiplier
 			class_data["max_rank"] = class.max_rank
 			class_data["current"] = (class_id == player_data.current_class_id)
-			class_data["available"] = (player_data.current_faction_id in SSpersistent_progression.factions && (class_id in SSpersistent_progression.get_faction(player_data.current_faction_id).faction_classes))
+			class_data["available"] = ((player_data.current_faction_id in SSpersistent_progression.factions) && (class_id in SSpersistent_progression.get_faction(player_data.current_faction_id).faction_classes))
+
 
 			// Compatible factions for this class
 			var/list/compatible_factions = list()

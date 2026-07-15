@@ -1,12 +1,5 @@
 import { useBackend } from '../backend';
-import {
-  Button,
-  LabeledList,
-  Section,
-  Box,
-  Stack,
-  ProgressBar,
-} from '../components';
+import { Box, LabeledList, ProgressBar, Section, Stack } from '../components';
 import { Window } from '../layouts';
 
 export const PersistentProgressionPlayerView = (props, context) => {
@@ -151,4 +144,3 @@ export const PersistentProgressionPlayerView = (props, context) => {
     </Window>
   );
 };
-
