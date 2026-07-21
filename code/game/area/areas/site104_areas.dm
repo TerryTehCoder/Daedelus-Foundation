@@ -69,7 +69,8 @@
 
 /area/site104
 	name = "Site-104"
-	has_gravity = TRUE
+	has_gravity = STANDARD_GRAVITY
+	area_flags = UNIQUE_AREA
 
 /area/site104/surface
 	name = "Surface"
@@ -77,42 +78,46 @@
 	requires_power = 0
 	outdoors = TRUE
 	ambientsounds = list(
-	'sounds/ambience/Site104/BoatHorn.ogg',
-	'sounds/ambience/Site104/BuoyBell.ogg',
-	'sounds/ambience/Site104/Wildlife/Seagulls1.ogg',
-	'sounds/ambience/Site104/Wildlife/Seagulls2.ogg',
-	'sounds/ambience/Site104/WindyChains.ogg'
+	'sound/ambience/Site104/BoatHorn.ogg',
+	'sound/ambience/Site104/BuoyBell.ogg',
+	'sound/ambience/Site104/Wildlife/Seagulls1.ogg',
+	'sound/ambience/Site104/Wildlife/Seagulls2.ogg',
+	'sound/ambience/Site104/WindyChains.ogg'
 	)
 
-	ambient_buzz = 'sounds/ambience/Site104/OutsideAmbience.ogg'
+	ambient_buzz = 'sound/ambience/Site104/OutsideAmbience.ogg'
 
 /area/site104/surface/opendeck
 	name = "Weather Deck"
 	ambientsounds = list(
-	'sounds/ambience/Site104/BoatHorn.ogg',
-	'sounds/ambience/Site104/Wildlife/Seagulls1.ogg',
-	'sounds/ambience/Site104/Wildlife/Seagulls1.ogg',
-	'sounds/ambience/Site104/Wildlife/Seagulls2.ogg',
-	'sounds/ambience/Site104/Wildlife/Seagulls2.ogg',
-	'sounds/ambience/Site104/WindyChains.ogg',
-	'sounds/ambience/Site104/WindyChains.ogg',
+	'sound/ambience/Site104/BoatHorn.ogg',
+	'sound/ambience/Site104/Wildlife/Seagulls1.ogg',
+	'sound/ambience/Site104/Wildlife/Seagulls1.ogg',
+	'sound/ambience/Site104/Wildlife/Seagulls2.ogg',
+	'sound/ambience/Site104/Wildlife/Seagulls2.ogg',
+	'sound/ambience/Site104/WindyChains.ogg',
+	'sound/ambience/Site104/WindyChains.ogg',
 
 	// We have no weighted ambience pick, and I don't want to touch ambi code and get yelled at ):
-	'sounds/ambience/Site104/Machinery/HydraulicPress.ogg',
-	'sounds/ambience/Site104/Machinery/HydraulicPress.ogg',
-	'sounds/ambience/Site104/Machinery/GenericPumpMotor.ogg',
-	'sounds/ambience/Site104/Machinery/GenericPumpMotor.ogg',
-	'sounds/ambience/Site104/Machinery/GasDecom.ogg',
-	'sounds/ambience/Site104/Machinery/GasDecom.ogg',
-	'sounds/ambience/Site104/Machinery/ForkliftBeepDistant.ogg',
-	'sounds/ambience/Site104/Machinery/ForkliftBeepDistant.ogg',
-	'sounds/ambience/Site104/Weather/DistantThunder.ogg',
-	'sounds/ambience/Site104/BuoyBell.ogg',
-	'sounds/ambience/Site104/BuoyBell.ogg'
+	'sound/ambience/Site104/Machinery/HydraulicPress.ogg',
+	'sound/ambience/Site104/Machinery/HydraulicPress.ogg',
+	'sound/ambience/Site104/Machinery/GenericPumpMotor.ogg',
+	'sound/ambience/Site104/Machinery/GenericPumpMotor.ogg',
+	'sound/ambience/Site104/Machinery/GasDecom.ogg',
+	'sound/ambience/Site104/Machinery/GasDecom.ogg',
+	'sound/ambience/Site104/Machinery/ForkliftBeepDistant.ogg',
+	'sound/ambience/Site104/Machinery/ForkliftBeepDistant.ogg',
+	'sound/ambience/Site104/Weather/DistantThunder.ogg',
+	'sound/ambience/Site104/BuoyBell.ogg',
+	'sound/ambience/Site104/BuoyBell.ogg'
 	)
+
+	ambient_buzz = 'sound/ambience/Site104/OutsideAmbience.ogg'
+	ambient_buzz_vol = 40
 
 /area/site104/surface/northmaintplat
 	name = "North-Rig Maintenance Platform"
+
 
 /area/site104/surface/engineeringmaintplat
 	name = "Engineering External Maintenance Platform"
@@ -162,7 +167,7 @@
 
 /area/site104/maintenance/interior
 	name = "Site-104 Maintenance"
-	ambientsounds = list('sounds/ambience/Site104/RigMetalStress')
+	ambientsounds = list('sound/ambience/Site104/RigMetalStress.ogg')
 
 	//Deck-1
 
@@ -227,6 +232,7 @@
 
 /area/site104/engineering/reactor
 	name = "Antiquated Reactor"
+	outdoors = TRUE
 
 /area/site104/engineering/powerbay
 	name = "Power Bay"
@@ -234,14 +240,14 @@
 /area/site104/engineering/workshop
 	name = "Workshop"
 	ambientsounds = list(
-	'sounds/ambience/Site104/BoatHorn.ogg',
-	'sounds/ambience/Site104/BuoyBell.ogg',
-	'sounds/ambience/Site104/Wildlife/Seagulls1.ogg',
-	'sounds/ambience/Site104/Wildlife/Seagulls2.ogg',
-	'sounds/ambience/Site104/WindyChains.ogg'
+	'sound/ambience/Site104/BoatHorn.ogg',
+	'sound/ambience/Site104/BuoyBell.ogg',
+	'sound/ambience/Site104/Wildlife/Seagulls1.ogg',
+	'sound/ambience/Site104/Wildlife/Seagulls2.ogg',
+	'sound/ambience/Site104/WindyChains.ogg'
 	)
 
-	ambient_buzz = 'sounds/ambience/Site104/OutsideAmbience.ogg'
+	ambient_buzz = 'sound/ambience/Site104/OutsideAmbience.ogg'
 	ambient_buzz_vol = 40
 
 /area/site104/engineering/lockers
@@ -262,14 +268,14 @@
 /area/site104/engineering/warehouse
 	name = "Engineering Warehouse"
 	ambientsounds = list(
-	'sounds/ambience/Site104/BoatHorn.ogg',
-	'sounds/ambience/Site104/BuoyBell.ogg',
-	'sounds/ambience/Site104/Wildlife/Seagulls1.ogg',
-	'sounds/ambience/Site104/Wildlife/Seagulls2.ogg',
-	'sounds/ambience/Site104/WindyChains.ogg'
+	'sound/ambience/Site104/BoatHorn.ogg',
+	'sound/ambience/Site104/BuoyBell.ogg',
+	'sound/ambience/Site104/Wildlife/Seagulls1.ogg',
+	'sound/ambience/Site104/Wildlife/Seagulls2.ogg',
+	'sound/ambience/Site104/WindyChains.ogg'
 	)
 
-	ambient_buzz = 'sounds/ambience/Site104/OutsideAmbience.ogg'
+	ambient_buzz = 'sound/ambience/Site104/OutsideAmbience.ogg'
 	ambient_buzz_vol = 35
 
 /area/site104/engineering/entranceairlock
@@ -301,6 +307,7 @@
 
 /area/site104/engineering/auxillaryrelaytowerbridge
 	name = "Auxillary Relay Tower Bridge"
+	outdoors = TRUE
 
 // Relay tower starts on Deck-2
 /area/site104/engineering/relaytower1
