@@ -26,8 +26,8 @@
 
 /obj/item/modular_computer/laptop/examine(mob/user)
 	. = ..()
-	if(screen_on)
-		. += span_notice("Alt-click to close it.")
+	. += span_notice("Alt-click to [screen_on ? "close" : "open"] it.")
+	. += span_notice ("Ctrl-Shift-Click to rotate it.")
 
 /obj/item/modular_computer/laptop/Initialize(mapload)
 	. = ..()
@@ -97,10 +97,22 @@
 	. = ..()
 	if(!can_interact(user))
 		return
-	if(screen_on) // Close it.
-		try_toggle_open(user)
-	else
-		return ..()
+
+	try_toggle_open(user)
+
+	return ..()
+
+/obj/item/modular_computer/laptop/CtrlShiftClick(mob/user)
+	. = ..()
+	if(!can_interact(user))
+		return
+
+	setDir(turn(dir, -90))
+	update_appearance()
+
+	return ..()
+
+/obj/item/modular_computer/laptop/ctrl
 
 /obj/item/modular_computer/laptop/proc/toggle_open(mob/living/user=null)
 	if(screen_on)

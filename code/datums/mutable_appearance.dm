@@ -11,7 +11,7 @@
 
 
 /// Helper similar to image()
-/proc/mutable_appearance(icon, icon_state = "", layer = FLOAT_LAYER, plane = FLOAT_PLANE, alpha = 255, appearance_flags = NONE, direction)
+/proc/mutable_appearance(icon, icon_state = "", layer = FLOAT_LAYER, plane = FLOAT_PLANE, alpha = 255, appearance_flags = NONE, direction, rotate_to_dir = null)
 	var/mutable_appearance/MA = new()
 	MA.icon = icon
 	MA.icon_state = icon_state
@@ -21,5 +21,10 @@
 	MA.appearance_flags |= appearance_flags
 	if(!isnull(direction))
 		MA.dir = direction
+
+	if(rotate_to_dir)
+		var/matrix/M = matrix()
+		M.Turn(dir2angle(rotate_to_dir))
+		MA.transform = M
 
 	return MA
