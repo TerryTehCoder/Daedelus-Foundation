@@ -642,16 +642,6 @@
 	desc = "A variant of telephone which has been mounted to a wall.. useful when one can't be bothered to find a table."
 	icon_state = "wallphone"
 
-/obj/machinery/telephone/wallphone/update_icon()
-	if(handset_state == HANDSET_ONHOOK)
-		if(state == STATE_ANSWER)
-			icon_state = "wallphone_ringing"
-		else
-			icon_state = "wallphone"
-	else
-		icon_state = "wallphone_answered"
-	return ..()
-
 /obj/machinery/telephone/wallphone/Initialize(mapload)
 	. = .. ()
 
