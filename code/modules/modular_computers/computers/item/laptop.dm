@@ -112,8 +112,6 @@
 
 	return ..()
 
-/obj/item/modular_computer/laptop/ctrl
-
 /obj/item/modular_computer/laptop/proc/toggle_open(mob/living/user=null)
 	if(screen_on)
 		to_chat(user, span_notice("You close \the [src]."))
